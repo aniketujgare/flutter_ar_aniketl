@@ -39,6 +39,8 @@ dependencies:
   arcore_flutter_plugin: ^0.1.0
   model_viewer_plus: ^1.7.0
   ditredi: ^2.0.0
+  path_provider: ^2.1.1
+  vector_math: ^2.1.4
 
 dev_dependencies:
   flutter_test:
@@ -67,6 +69,11 @@ flutter:
     - assets/
     - assets/BarramundiFish.gltf
     - assets/Chicken_01/
+    - assets/ui/
+    - assets/model_img/
+    - assets/dodo/model/
+    - assets/shark/model/
+    - assets/turtle/model/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
