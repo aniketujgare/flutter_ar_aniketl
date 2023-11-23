@@ -1,9 +1,15 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
+
 import 'package:flutter_ar/constants.dart';
 import 'package:flutter_ar/model_3d_view.dart';
 
 class HomeView extends StatelessWidget {
-  const HomeView({super.key});
+  final bool isMobile;
+  const HomeView({
+    Key? key,
+    required this.isMobile,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -11,8 +17,8 @@ class HomeView extends StatelessWidget {
       child: Scaffold(
         backgroundColor: const Color(0XFFF4F2FE),
         body: Padding(
-          padding:
-              const EdgeInsets.symmetric(horizontal: 110 / 2, vertical: 40 / 2),
+          padding: EdgeInsets.symmetric(
+              horizontal: isMobile ? 110 / 4 : 110 / 2, vertical: 40 / 2),
           child: Row(
             children: [
               SizedBox(
@@ -20,8 +26,8 @@ class HomeView extends StatelessWidget {
                 child: Stack(
                   children: [
                     Container(
-                      width: 120,
-                      height: 120,
+                      width: isMobile ? 75 : 120,
+                      height: isMobile ? 75 : 120,
                       padding: const EdgeInsets.only(top: 20),
                       child: Image.asset(
                         'assets/ui/image 40.png',
@@ -31,7 +37,9 @@ class HomeView extends StatelessWidget {
                     Align(
                       alignment: Alignment.center,
                       child: Padding(
-                        padding: const EdgeInsets.only(left: 20, right: 20),
+                        padding: EdgeInsets.only(
+                            left: isMobile ? 32 : 20,
+                            right: isMobile ? 32 : 20),
                         child: SizedBox(
                           width: 120,
                           height: 120,
@@ -46,16 +54,17 @@ class HomeView extends StatelessWidget {
               ),
               Expanded(
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 28 / 2),
-                  child: isMobile(context)
+                  padding: EdgeInsets.symmetric(
+                      horizontal: isMobile ? 28 / 2 : 14 / 2),
+                  child: isMobile
                       ? GridView.builder(
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
                           gridDelegate:
                               const SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 3,
-                            crossAxisSpacing: 10.0,
-                            mainAxisSpacing: 10.0,
+                            crossAxisSpacing: 15.0,
+                            mainAxisSpacing: 12.0,
                             childAspectRatio: 443 / 371,
                           ),
                           itemCount: 6,
@@ -64,7 +73,7 @@ class HomeView extends StatelessWidget {
                               image: models[index]['image']!,
                               name: models[index]['name']!,
                               model: models[index]['model']!,
-                              isMobile: isMobile(context),
+                              isMobile: isMobile,
                             );
                           },
                         )
@@ -84,7 +93,7 @@ class HomeView extends StatelessWidget {
                               image: models[index]['image']!,
                               name: models[index]['name']!,
                               model: models[index]['model']!,
-                              isMobile: isMobile(context),
+                              isMobile: isMobile,
                             );
                           },
                         ),
@@ -97,12 +106,12 @@ class HomeView extends StatelessWidget {
                     Align(
                       alignment: Alignment.bottomCenter,
                       child: Container(
-                        width: 120,
-                        height: 120,
+                        width: isMobile ? 75 : 120,
+                        height: isMobile ? 75 : 120,
                         padding: const EdgeInsets.only(top: 20),
                         child: Image.asset(
                           'assets/ui/Custom Buttons.002 1.png',
-                          fit: BoxFit.cover,
+                          fit: BoxFit.fitHeight,
                         ),
                       ),
                     ),
@@ -114,7 +123,9 @@ class HomeView extends StatelessWidget {
                           width: 120,
                           height: 120,
                           child: Padding(
-                            padding: const EdgeInsets.only(left: 20, right: 20),
+                            padding: EdgeInsets.only(
+                                left: isMobile ? 32 : 20,
+                                right: isMobile ? 32 : 20),
                             child: Image.asset(
                               'assets/ui/Group.png',
                               fit: BoxFit.contain,
@@ -226,9 +237,9 @@ class RoundedBox extends StatelessWidget {
                   alignment: Alignment.center,
                   child: Text(
                     name,
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: Colors.white,
-                      fontSize: 18,
+                      fontSize: isMobile ? 18 : 24,
                     ),
                   ),
                 ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_ar/constants.dart';
 import 'package:flutter_ar/homeview.dart';
 
 void main() {
@@ -21,8 +22,9 @@ class MyApp extends StatefulWidget {
 class MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: HomeView(),
+    bool device = isMobile(context);
+    return MaterialApp(
+      home: HomeView(isMobile: device),
     );
   }
 }
