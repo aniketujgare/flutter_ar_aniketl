@@ -1,7 +1,9 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
+import 'package:flutter_ar/box_page_view.dart';
 
 import 'package:flutter_ar/constants.dart';
+import 'package:flutter_ar/container_page_view.dart';
 import 'package:flutter_ar/model_3d_view.dart';
 
 class HomeView extends StatelessWidget {
@@ -18,7 +20,8 @@ class HomeView extends StatelessWidget {
         backgroundColor: const Color(0XFFF4F2FE),
         body: Padding(
           padding: EdgeInsets.symmetric(
-              horizontal: isMobile ? 110 / 4 : 110 / 2, vertical: 40 / 2),
+              horizontal: isMobile ? 110 / 4 : 110 / 2,
+              vertical: isMobile ? 0 : 40 / 2),
           child: Row(
             children: [
               SizedBox(
@@ -54,50 +57,111 @@ class HomeView extends StatelessWidget {
               ),
               Expanded(
                 child: Padding(
-                  padding: EdgeInsets.symmetric(
-                      horizontal: isMobile ? 28 / 2 : 14 / 2),
-                  child: isMobile
-                      ? GridView.builder(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 3,
-                            crossAxisSpacing: 15.0,
-                            mainAxisSpacing: 12.0,
-                            childAspectRatio: 443 / 371,
-                          ),
-                          itemCount: 6,
-                          itemBuilder: (BuildContext context, int index) {
-                            return RoundedBox(
-                              image: models[index]['image']!,
-                              name: models[index]['name']!,
-                              model: models[index]['model']!,
-                              isMobile: isMobile,
-                            );
-                          },
-                        )
-                      : GridView.builder(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 3,
-                            crossAxisSpacing: 28.0,
-                            mainAxisSpacing: 28.0,
-                            childAspectRatio: 443 / 371,
-                          ),
-                          itemCount: 6,
-                          itemBuilder: (BuildContext context, int index) {
-                            return RoundedBox(
-                              image: models[index]['image']!,
-                              name: models[index]['name']!,
-                              model: models[index]['model']!,
-                              isMobile: isMobile,
-                            );
-                          },
+                    padding: EdgeInsets.symmetric(
+                        horizontal: 14 / 2, vertical: isMobile ? 14 : 54),
+                    child: Column(
+                      children: [
+                        Expanded(
+                          child: Flex(
+                              direction: Axis.horizontal, // this is unique
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.max,
+                              verticalDirection: VerticalDirection.down,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              // verticalDirection: VerticalDirection.down,
+                              // textDirection: TextDirection.rtl,
+                              children: <Widget>[
+                                Expanded(
+                                  flex: 1,
+                                  child: Container(
+                                    padding: const EdgeInsets.all(8),
+                                    color: Colors.red,
+                                    // height: 55,
+                                    // width: 50,
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 1,
+                                  child: Container(
+                                    padding: const EdgeInsets.all(8),
+                                    // height: 55,
+                                    // width: 50,
+                                    color: Colors.green,
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Container(
+                                    padding: const EdgeInsets.all(8),
+                                    // height: 55,
+                                    // width: 50,
+                                    color: Colors.blue,
+                                  ),
+                                ),
+                              ]),
                         ),
-                ),
+                        Expanded(
+                          child: Flex(
+                              direction: Axis.horizontal, // this is unique
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.max,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              // verticalDirection: VerticalDirection.down,
+                              // textDirection: TextDirection.rtl,
+                              children: <Widget>[
+                                Expanded(
+                                  flex: 1,
+                                  child: Container(
+                                    padding: const EdgeInsets.all(8),
+                                    // height: 55,
+                                    // width: 50,
+                                    color: Colors.green,
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Container(
+                                    padding: const EdgeInsets.all(8),
+                                    // height: 55,
+                                    // width: 50,
+                                    color: Colors.blue,
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 1,
+                                  child: Container(
+                                    padding: const EdgeInsets.all(8),
+                                    color: Colors.red,
+                                    // height: 55,
+                                    // width: 50,
+                                  ),
+                                ),
+                              ]),
+                        ),
+                      ],
+                    )
+                    //     ContainerPageView(
+                    //   isMobile: isMobile,
+                    // )
+                    // : GridView.builder(
+                    //     shrinkWrap: true,
+                    //     physics: const NeverScrollableScrollPhysics(),
+                    //     gridDelegate:
+                    //         const SliverGridDelegateWithFixedCrossAxisCount(
+                    //       crossAxisCount: 3,
+                    //       crossAxisSpacing: 28.0,
+                    //       mainAxisSpacing: 28.0,
+                    //       childAspectRatio: 443 / 371,
+                    //     ),
+                    //     itemCount: 6,
+                    //     itemBuilder: (BuildContext context, int index) {
+                    //       return RoundedBox(
+                    //         image: models[index]['image']!,
+                    //         name: models[index]['name']!,
+                    //         model: models[index]['model']!,
+                    //         isMobile: isMobile,
+                    //       );
+                    //     },
+                    //   ),
+                    ),
               ),
               SizedBox(
                 width: 100,
@@ -144,39 +208,6 @@ class HomeView extends StatelessWidget {
     );
   }
 }
-
-List<Map<String, String>> models = [
-  {
-    'name': 'Rig Man',
-    'image': 'assets/model_img/rig_man.png',
-    'model': 'assets/g-man_rigged__animated.glb'
-  },
-  {
-    'name': 'Cylinder Engine',
-    'image': 'assets/model_img/cylinder_engine.png',
-    'model': 'assets/2CylinderEngine.glb'
-  },
-  {
-    'name': 'Astronaut',
-    'image': 'assets/model_img/astronaut.png',
-    'model': 'assets/Astronaut.glb'
-  },
-  {
-    'name': 'Dodo',
-    'image': 'assets/model_img/rig_man.png',
-    'model': 'assets/dodo/model/dodo.glb'
-  },
-  {
-    'name': 'Turtle',
-    'image': 'assets/model_img/cylinder_engine.png',
-    'model': 'assets/turtle/model/turtle.glb'
-  },
-  {
-    'name': 'Shark',
-    'image': 'assets/model_img/astronaut.png',
-    'model': 'assets/shark/model/shark.glb'
-  },
-];
 
 class RoundedBox extends StatelessWidget {
   final String image;

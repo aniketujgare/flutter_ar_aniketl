@@ -4,11 +4,11 @@ plugins {
     id "dev.flutter.flutter-gradle-plugin"
 }
 
-def keystoreProperties = new Properties()
-def keystorePropertiesFile = rootProject.file('key.properties')
-if (keystorePropertiesFile.exists()) {
-    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
-}
+// def keystoreProperties = new Properties()
+// def keystorePropertiesFile = rootProject.file('key.properties')
+// if (keystorePropertiesFile.exists()) {
+//     keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+// }
 
 def localProperties = new Properties()
 def localPropertiesFile = rootProject.file('local.properties')
@@ -57,17 +57,23 @@ android {
         versionName flutterVersionName
     }
     signingConfigs {
-         release {
-        storeFile file("C:/Users/anike/flutter_ar.jks")
-        storePassword "aniket281099"
-        keyAlias "flutterar"
-        keyPassword "aniket281099"
+    //      release {
+    //     storeFile file("C:/Users/anike/flutter_ar.jks")
+    //     storePassword "aniket281099"
+    //     keyAlias "flutterar"
+    //     keyPassword "aniket281099"
+    // }
+    debug {
+       
     }
     }
 
     buildTypes {
-         release {
-        signingConfig signingConfigs.release
+    //      release {
+    //     signingConfig signingConfigs.release
+    // }
+     debug {
+        signingConfig signingConfigs.debug
     }
     }
 }
@@ -81,4 +87,3 @@ dependencies {
     implementation 'com.google.ar.sceneform:core:1.8.0'
     implementation 'com.google.ar:core:1.8.0'
 }
-
