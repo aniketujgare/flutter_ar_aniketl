@@ -1,0 +1,4 @@
+https://cnpewunqs5.execute-api.ap-south-1.amazonaws.com/dev/getnewcategorylist
+
+
+https://cnpewunqs5.execute-api.ap-south-1.amazonaws.com/dev/getnewmodellistkids

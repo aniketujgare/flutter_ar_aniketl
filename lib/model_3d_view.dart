@@ -57,8 +57,7 @@ class _ModelViewState extends State<ModelView> {
               scale: '0.1 0.1 0.1',
               arPlacement: ArPlacement.floor,
               arModes: const ['scene-viewer'],
-              iosSrc:
-                  'https://modelviewer.dev/shared-assets/models/Astronaut.usdz',
+              iosSrc: widget.modelUrl,
               disableZoom: true,
             ),
             Positioned(
