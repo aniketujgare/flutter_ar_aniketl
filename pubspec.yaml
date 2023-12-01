@@ -42,6 +42,8 @@ dependencies:
   vector_math: ^2.1.4
   http: ^1.1.2
   flutter_archive: ^5.0.0
+  size_config: ^2.0.3
+  arkit_plugin: ^1.0.7
 
 dev_dependencies:
   flutter_test:

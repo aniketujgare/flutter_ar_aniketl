@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_ar/container_page_view.dart';
 import 'package:flutter_ar/model/ar_category.dart';
+import 'package:size_config/size_config.dart';
 
 class CategoryPageView extends StatelessWidget {
   final bool isMobile;
@@ -11,7 +12,12 @@ class CategoryPageView extends StatelessWidget {
     'assets/images/PNG Icons/sea life.png',
     'assets/images/PNG Icons/dinosaurs.png',
     'assets/images/PNG Icons/plants.png',
-    'assets/images/PNG Icons/trees.png'
+    'assets/images/PNG Icons/trees.png',
+    'assets/images/PNG Icons/Fruits & Vegetables.png',
+    'assets/images/PNG Icons/my body.png',
+    'assets/images/PNG Icons/monuments.png',
+    'assets/images/PNG Icons/vehicles.png',
+    'assets/images/PNG Icons/vehicles.png',
   ];
 
   CategoryPageView(
@@ -23,7 +29,15 @@ class CategoryPageView extends StatelessWidget {
       itemCount: (arCategoryies.length / 6)
           .ceil(), // 6 containers per page (2 rows with 3 containers each)
       itemBuilder: (context, pageIndex) {
-        return buildPage(pageIndex, context);
+        return isMobile
+            ? buildPage(pageIndex, context)
+            : Center(
+                child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  buildPage(pageIndex, context),
+                ],
+              ));
       },
     );
   }
@@ -35,8 +49,8 @@ class CategoryPageView extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        Expanded(child: buildRow(startIndex, endIndex, context)),
-        Expanded(child: buildRow(startIndex + 3, endIndex, context)),
+        buildRow(startIndex, endIndex, context),
+        buildRow(startIndex + 3, endIndex, context),
       ],
     );
   }
@@ -59,20 +73,6 @@ class CategoryPageView extends StatelessWidget {
                 )
               : Expanded(child: Container());
         },
-      ),
-    );
-  }
-
-  Widget buildContainer(Color color) {
-    return Expanded(
-      child: Container(
-        color: color,
-        child: Center(
-          child: Text(
-            color.toString(),
-            style: const TextStyle(color: Colors.white),
-          ),
-        ),
       ),
     );
   }
@@ -107,66 +107,77 @@ class BuildCategoryContainer extends StatelessWidget {
             ),
           );
         },
-        child: Container(
-          margin: EdgeInsets.symmetric(
-              horizontal: isMobile ? 6 : 14, vertical: isMobile ? 8 : 14),
-          decoration: BoxDecoration(
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.1),
-                spreadRadius: 5,
-                blurRadius: 7,
-                offset:
-                    const Offset(0, 3), // changes the position of the shadow
-              ),
-            ],
-            gradient: const LinearGradient(
-              colors: [Colors.white, Color(0XFF4F3A9C)],
-              tileMode: TileMode.decal,
-              stops: [0.7, 0.3],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-            ),
-            borderRadius: BorderRadius.circular(isMobile ? 20 : 40.0),
-            border: Border.all(
-              color: Colors.grey.shade100,
-              width: 0.5,
-            ),
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            maxHeight: MediaQuery.of(context).size.height *
+                (isMobile ? 0.5.h : 0.35.h),
+            // maxWidth: MediaQuery.of(context).size.height * 0.2.h,
           ),
-          child: LayoutBuilder(builder: (context, constraints) {
-            return Column(
-              children: [
-                SizedBox(
-                  height: constraints.maxHeight * 0.03,
+          child: Container(
+            // height: 200,
+            // width: 350,
+            margin: EdgeInsets.symmetric(horizontal: 40.w, vertical: 40.w),
+            decoration: BoxDecoration(
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.1),
+                  spreadRadius: 5,
+                  blurRadius: 7,
+                  offset:
+                      const Offset(0, 3), // changes the position of the shadow
                 ),
-                SizedBox(
-                  height: constraints.maxHeight * 0.65,
-                  child: Image.asset(
-                    image,
-                    fit: BoxFit.cover,
+              ],
+              gradient: LinearGradient(
+                colors: const [Colors.white, Color(0XFF4F3A9C)],
+                tileMode: TileMode.decal,
+                stops: [isMobile ? 0.7 : 0.75, isMobile ? 0.3 : 0.25],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+              ),
+              borderRadius: BorderRadius.circular(20.h),
+              border: Border.all(
+                color: Colors.grey.shade100,
+                width: 0.5,
+              ),
+            ),
+            child: LayoutBuilder(builder: (context, constraints) {
+              return Column(
+                children: [
+                  SizedBox(
+                    height: constraints.maxHeight * (isMobile ? 0.03 : 0.05),
                   ),
-                ),
-                SizedBox(
-                  height: constraints.maxHeight * 0.02,
-                ),
-                SizedBox(
-                  height: constraints.maxHeight * 0.3,
-                  child: Align(
-                    alignment: Alignment.center,
-                    child: Text(
-                      name,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: isMobile
-                            ? 7.5 * MediaQuery.of(context).size.aspectRatio
-                            : 16 * MediaQuery.of(context).size.aspectRatio,
+                  SizedBox(
+                    height: constraints.maxHeight * (isMobile ? 0.63 : 0.65),
+                    child: Image.asset(
+                      image,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  SizedBox(
+                    height: constraints.maxHeight * (isMobile ? 0.07 : 0.07),
+                  ),
+                  SizedBox(
+                    height: constraints.maxHeight * 0.2,
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        name,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontFamily: 'Nunito',
+                          fontWeight: FontWeight.w700,
+                          height: 0,
+                          fontSize: isMobile
+                              ? 110.sp
+                              : 16 * MediaQuery.of(context).size.aspectRatio,
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
-            );
-          }),
+                ],
+              );
+            }),
+          ),
         ),
       ),
     );
