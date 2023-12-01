@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:flutter_ar/model/ar_category.dart';
-import 'package:flutter_ar/model/ar_model.dart';
+import 'package:flutter_ar/data/models/ar_category.dart';
+import 'package:flutter_ar/data/models/ar_model.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:flutter_ar/api/api_string.dart';

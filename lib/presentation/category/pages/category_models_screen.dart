@@ -1,15 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ar/api/api.dart';
-import 'package:flutter_ar/category_page_view.dart';
-
-import 'package:flutter_ar/model_3d_view.dart';
+import 'package:flutter_ar/presentation/category/widgets/category_models.dart';
 import 'package:size_config/size_config.dart';
 
-import 'model/ar_category.dart';
-
-class HomeView extends StatelessWidget {
+class CategoryModelsScreen extends StatelessWidget {
   final bool isMobile;
-  const HomeView({
+  const CategoryModelsScreen({
     Key? key,
     required this.isMobile,
   }) : super(key: key);
@@ -26,17 +21,7 @@ class HomeView extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.fromLTRB((isMobile ? 450.w : 250.w), 0.h,
                     (isMobile ? 450.w : 250.w), 0.h),
-                child: FutureBuilder(
-                  future: API().getCategories(),
-                  builder: (BuildContext context,
-                      AsyncSnapshot<List<ArCategory>?> snapshot) {
-                    if (snapshot.hasData) {
-                      return CategoryPageView(
-                          isMobile: isMobile, arCategoryies: snapshot.data!);
-                    }
-                    return const Center(child: CircularProgressIndicator());
-                  },
-                ),
+                child: CategoryModels(isMobile: isMobile),
               ),
               Align(
                 alignment: Alignment.topLeft,

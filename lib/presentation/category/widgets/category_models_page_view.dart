@@ -1,18 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_ar/api/api.dart';
-import 'package:flutter_ar/model/ar_model.dart';
+import 'package:flutter_ar/data/models/ar_model.dart';
 import 'package:flutter_ar/model_3d_view.dart';
+import 'package:flutter_ar/presentation/category/bloc/category_page_cubit/category_page_cubit.dart';
+import 'package:flutter_ar/presentation/category/bloc/model_page_controler_cubit/models_page_controller_cubit.dart';
+import 'package:flutter_ar/presentation/category/bloc/models_cubit/models_cubit.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:size_config/size_config.dart';
 
-class ContainerPageView extends StatelessWidget {
+class CategoryModelsPageView extends StatelessWidget {
   final bool isMobile;
   final String category;
-  ContainerPageView(
+  CategoryModelsPageView(
       {super.key, required this.isMobile, required this.category});
 
   @override
   Widget build(BuildContext context) {
-    List<ArModel> arModels;
     return SafeArea(
       child: Scaffold(
         backgroundColor: const Color(0XFFF4F2FE),
@@ -23,26 +26,39 @@ class ContainerPageView extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.fromLTRB((isMobile ? 450.w : 250.w), 0.h,
                     (isMobile ? 450.w : 250.w), 0.h),
-                child: FutureBuilder(
-                  future: API().getModel(category),
-                  builder: (BuildContext context,
-                      AsyncSnapshot<dynamic> arModelsSnapshot) {
-                    if (arModelsSnapshot.hasData) {
-                      arModels = arModelsSnapshot.data;
-                      return PageView.builder(
-                        itemCount: (arModelsSnapshot.data.length / 6)
-                            .ceil(), // 6 containers per page (2 rows with 3 containers each)
-                        itemBuilder: (context, pageIndex) {
-                          return isMobile
-                              ? buildPage(pageIndex, arModelsSnapshot.data)
-                              : Center(
-                                  child: Column(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    buildPage(pageIndex, arModelsSnapshot.data),
-                                  ],
-                                ));
+                child: BlocBuilder<ModelsCubit, ModelsState>(
+                  builder: (context, state) {
+                    if (state is ModelsLoaded) {
+                      context
+                          .read<ModelsPageControllerCubit>()
+                          .setmaxLength((state.arModels.length / 6).ceil());
+                      return BlocBuilder<ModelsPageControllerCubit, int>(
+                        builder: (context, index) {
+                          return PageView.builder(
+                            itemCount: (state.arModels.length / 6)
+                                .ceil(), // 6 containers per page (2 rows with 3 containers each)
+                            controller: context
+                                .read<ModelsPageControllerCubit>()
+                                .pageCont,
+                            onPageChanged: (value) {
+                              context
+                                  .read<ModelsPageControllerCubit>()
+                                  .setPage(value);
+                              debugPrint('page changed $value');
+                            },
+                            itemBuilder: (context, pageIndex) {
+                              return isMobile
+                                  ? buildPage(pageIndex, state.arModels)
+                                  : Center(
+                                      child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        buildPage(pageIndex, state.arModels),
+                                      ],
+                                    ));
+                            },
+                          );
                         },
                       );
                     }
@@ -68,11 +84,18 @@ class ContainerPageView extends StatelessWidget {
                   child: SizedBox(
                     height: 45.h,
                     width: 45.h,
-                    child: Image.asset(
-                      'assets/ui/Group.png', // left arrow
-                      fit: BoxFit.scaleDown,
-                      height: 45.h,
-                      width: 45.h,
+                    child: GestureDetector(
+                      onTap: () {
+                        context
+                            .read<ModelsPageControllerCubit>()
+                            .setPreviousPage();
+                      },
+                      child: Image.asset(
+                        'assets/ui/Group.png', // left arrow
+                        fit: BoxFit.scaleDown,
+                        height: 45.h,
+                        width: 45.h,
+                      ),
                     ),
                   ),
                 ),
@@ -102,11 +125,18 @@ class ContainerPageView extends StatelessWidget {
                     width: 45.h,
                     child: RotatedBox(
                       quarterTurns: 2,
-                      child: Image.asset(
-                        'assets/ui/Group.png', // right arrow
-                        fit: BoxFit.scaleDown,
-                        height: 45.h,
-                        width: 45.h,
+                      child: GestureDetector(
+                        onTap: () {
+                          context
+                              .read<ModelsPageControllerCubit>()
+                              .setNextPage();
+                        },
+                        child: Image.asset(
+                          'assets/ui/Group.png', // right arrow
+                          fit: BoxFit.scaleDown,
+                          height: 45.h,
+                          width: 45.h,
+                        ),
                       ),
                     ),
                   ),
@@ -132,43 +162,6 @@ class ContainerPageView extends StatelessWidget {
     );
   }
 
-  // List<Map<String, String>> models = [
-  //   {
-  //     'name': 'Rig Man',
-  //     'image': 'assets/model_img/rig_man.png',
-  //     'model': 'assets/g-man_rigged__animated.glb'
-  //   },
-  //   {
-  //     'name': 'Cylinder Engine',
-  //     'image': 'assets/model_img/cylinder_engine.png',
-  //     'model': 'assets/2CylinderEngine.glb'
-  //   },
-  //   {
-  //     'name': 'Astronaut',
-  //     'image': 'assets/model_img/astronaut.png',
-  //     'model': 'assets/Astronaut.glb'
-  //   },
-  //   {
-  //     'name': 'Dodo',
-  //     'image': 'assets/model_img/rig_man.png',
-  //     'model': 'assets/dodo/model/dodo.glb'
-  //   },
-  //   {
-  //     'name': 'Turtle',
-  //     'image': 'assets/model_img/cylinder_engine.png',
-  //     'model': 'assets/turtle/model/turtle.glb'
-  //   },
-  //   {
-  //     'name': 'Shark',
-  //     'image': 'assets/model_img/astronaut.png',
-  //     'model': 'assets/shark/model/shark.glb'
-  //   },
-  //   {
-  //     'name': 'Shark',
-  //     'image': 'assets/model_img/astronaut.png',
-  //     'model': 'assets/shark/model/shark.glb'
-  //   },
-  // ];
   Widget buildRow(int startIndex, int endIndex, List<ArModel> arModels) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -185,7 +178,9 @@ class ContainerPageView extends StatelessWidget {
                       'https://d3ag5oij4wsyi3.cloudfront.net/kidsappmodellist/models/${arModels[colorIndex].modelId}.glb',
                   isMobile: isMobile,
                 )
-              : Expanded(child: Container());
+              : Expanded(
+                  child: EmptyBox(isMobile: isMobile),
+                );
         },
       ),
     );
@@ -204,6 +199,47 @@ class ContainerPageView extends StatelessWidget {
             style: const TextStyle(color: Colors.white),
           ),
         ),
+      ),
+    );
+  }
+}
+
+class EmptyBox extends StatelessWidget {
+  const EmptyBox({
+    super.key,
+    required this.isMobile,
+  });
+
+  final bool isMobile;
+
+  @override
+  Widget build(BuildContext context) {
+    return ConstrainedBox(
+      constraints: BoxConstraints(
+        maxHeight:
+            MediaQuery.of(context).size.height * (isMobile ? 0.5.h : 0.35.h),
+        // maxWidth: MediaQuery.of(context).size.height * 0.2.h,
+      ),
+      child: Container(
+        margin: EdgeInsets.symmetric(horizontal: 40.w, vertical: 40.w),
+        child: LayoutBuilder(builder: (context, constraints) {
+          return Column(
+            children: [
+              SizedBox(
+                height: constraints.maxHeight * (isMobile ? 0.03 : 0.05),
+              ),
+              SizedBox(
+                height: constraints.maxHeight * (isMobile ? 0.63 : 0.65),
+              ),
+              SizedBox(
+                height: constraints.maxHeight * (isMobile ? 0.07 : 0.07),
+              ),
+              SizedBox(
+                height: constraints.maxHeight * 0.2,
+              ),
+            ],
+          );
+        }),
       ),
     );
   }

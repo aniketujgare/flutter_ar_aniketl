@@ -1,6 +1,12 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_ar/container_page_view.dart';
-import 'package:flutter_ar/model/ar_category.dart';
+import 'package:flutter_ar/presentation/category/bloc/category_cubit/category_cubit.dart';
+import 'package:flutter_ar/presentation/category/bloc/category_page_cubit/category_page_cubit.dart';
+import 'package:flutter_ar/presentation/category/bloc/models_cubit/models_cubit.dart';
+import 'package:flutter_ar/presentation/category/widgets/category_models_page_view.dart';
+import 'package:flutter_ar/data/models/ar_category.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:size_config/size_config.dart';
 
 class CategoryPageView extends StatelessWidget {
@@ -19,25 +25,39 @@ class CategoryPageView extends StatelessWidget {
     'assets/images/PNG Icons/vehicles.png',
     'assets/images/PNG Icons/vehicles.png',
   ];
-
   CategoryPageView(
       {super.key, required this.isMobile, required this.arCategoryies});
 
   @override
   Widget build(BuildContext context) {
-    return PageView.builder(
-      itemCount: (arCategoryies.length / 6)
-          .ceil(), // 6 containers per page (2 rows with 3 containers each)
-      itemBuilder: (context, pageIndex) {
-        return isMobile
-            ? buildPage(pageIndex, context)
-            : Center(
-                child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  buildPage(pageIndex, context),
-                ],
-              ));
+    context
+        .read<CategoryPageCubit>()
+        .setmaxLength((arCategoryies.length / 6).ceil());
+    return BlocBuilder<CategoryPageCubit, int>(
+      builder: (context, index) {
+        print('page ni $index');
+        return PageView.builder(
+          controller: context.read<CategoryPageCubit>().pageCont,
+          scrollDirection: Axis.horizontal,
+          onPageChanged: (value) {
+            context.read<CategoryPageCubit>().setPage(value);
+            debugPrint('page changed $value');
+          },
+          itemCount: (arCategoryies.length / 6)
+              .ceil(), // 6 containers per page (2 rows with 3 containers each)
+          itemBuilder: (context, a) {
+            debugPrint('itemBuilder $a');
+            return isMobile
+                ? buildPage(a, context)
+                : Center(
+                    child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      buildPage(a, context),
+                    ],
+                  ));
+          },
+        );
       },
     );
   }
@@ -98,14 +118,18 @@ class BuildCategoryContainer extends StatelessWidget {
     return Expanded(
       child: GestureDetector(
         onTap: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (BuildContext context) {
-                return ContainerPageView(
-                    isMobile: isMobile, category: category);
-              },
-            ),
-          );
+          var state = context.read<CategoryCubit>().state;
+          if (state is CategoryLoaded) {
+            context.read<ModelsCubit>().loadModels(category);
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (BuildContext context) {
+                  return CategoryModelsPageView(
+                      isMobile: isMobile, category: category);
+                },
+              ),
+            );
+          }
         },
         child: ConstrainedBox(
           constraints: BoxConstraints(
