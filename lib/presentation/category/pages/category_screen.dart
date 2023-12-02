@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ar/presentation/category/bloc/category_page_cubit/category_page_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:size_config/size_config.dart';
+import '../bloc/category_page_cubit/category_page_cubit.dart';
 import '../widgets/category_list.dart';
 
 class CategoryScreen extends StatelessWidget {
   final bool isMobile;
+
   const CategoryScreen({
     Key? key,
     required this.isMobile,

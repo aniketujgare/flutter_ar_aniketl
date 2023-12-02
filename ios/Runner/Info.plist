@@ -49,6 +49,7 @@
   	<true/>
 	<key>NSCameraUsageDescription</key>
 	<string>We need access to the camera for scanning QR codes.</string>
-
+	<key>Privacy - Camera Usage Description</key>
+	<string>$(PRODUCT_NAME) uses Cameras</string>
 </dict>
 </plist>

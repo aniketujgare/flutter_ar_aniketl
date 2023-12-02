@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_ar/constants.dart';
 import 'package:flutter_ar/core/route/route_name.dart';
-import 'package:flutter_ar/presentation/category/pages/category_models_screen.dart';
 import 'package:flutter_ar/presentation/category/pages/category_screen.dart';
 import 'package:go_router/go_router.dart';
 
@@ -24,14 +23,14 @@ class GoRouterProvider {
                     child: CategoryScreen(isMobile: isMobile(context)));
               },
               routes: [
-                GoRoute(
-                    path: 'category_models',
-                    name: categoryModelsRoute,
-                    pageBuilder: (context, state) {
-                      return MaterialPage(
-                          child: CategoryModelsScreen(
-                              isMobile: isMobile(context)));
-                    })
+                // GoRoute(
+                //     path: 'category_models',
+                //     name: categoryModelsRoute,
+                //     pageBuilder: (context, state) {
+                //       return MaterialPage(
+                //           child: CategoryModelsScreen(
+                //               isMobile: isMobile(context)));
+                //     })
               ]),
         ]);
   }

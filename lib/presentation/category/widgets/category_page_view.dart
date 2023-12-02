@@ -124,8 +124,7 @@ class BuildCategoryContainer extends StatelessWidget {
             Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (BuildContext context) {
-                  return CategoryModelsPageView(
-                      isMobile: isMobile, category: category);
+                  return CategoryModelsPageView(isMobile: isMobile);
                 },
               ),
             );
