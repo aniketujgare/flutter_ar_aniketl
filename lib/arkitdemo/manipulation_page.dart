@@ -82,11 +82,12 @@ class _ManipulationPageState extends State<ManipulationPage> {
         assetType: AssetType.flutterAsset,
         // Box model from
         // https://github.com/KhronosGroup/glTF-Sample-Models/raw/master/2.0/Box/glTF-Binary/Box.glb
-        url: 'assets/dodo/model/dodo.glb',
-        scale: vector.Vector3(0.001, 0.001, 0.001),
+        url: 'assets/temp/snail.glb',
+        scale: vector.Vector3(1, 1, 1),
         position: position,
       );
   void _onPinchHandler(List<ARKitNodePinchResult> pinch) {
+    debugPrint('pinch node 1');
     final pinchNode = pinch.firstWhereOrNull(
       (e) => e.nodeName == boxNode?.name,
     );
@@ -97,6 +98,7 @@ class _ManipulationPageState extends State<ManipulationPage> {
   }
 
   void _onPanHandler(List<ARKitNodePanResult> pan) {
+    debugPrint('pan node 1');
     final panNode = pan.firstWhereOrNull((e) => e.nodeName == boxNode?.name);
     if (panNode != null) {
       final old = boxNode?.eulerAngles;
