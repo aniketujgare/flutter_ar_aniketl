@@ -23,6 +23,27 @@ class AnimatedBuilderExampleState extends State<AnimatedBuilderExample>
   late AnimationController _controllerKidsLogo;
   late Animation<double> _animationKidsLogo;
   double _opacityKidsLogo = 0;
+  double _opacityKidsLogo2 = 0;
+  double _opacitySmartXRLogo2 = 0;
+  double _opacitySmallCircle = 0;
+  double _opacityBigCircle = 0;
+
+  // logos flip out controller
+  // late AnimationController _controllerSmartXRLogoOut;
+  // late Animation<double> _animationSmartXRLogoOut;
+
+  // late AnimationController _controllerKidsLogoOut;
+  // late Animation<double> _animationKidsLogoOut;
+
+  // both logos flip
+  late AnimationController _controllerlogosFlip;
+  late Animation<double> _animationlogosFlip;
+  // circle
+  late AnimationController _controllerCircle;
+  late Animation<double> _animationCircle;
+
+  late AnimationController _controllerBigCircle;
+  late Animation<double> _animationBigCircle;
 
 //opacities
   double _opacityDodoLeg = 0;
@@ -40,7 +61,32 @@ class AnimatedBuilderExampleState extends State<AnimatedBuilderExample>
         curve: Curves.easeInOutBack,
       ),
     );
+
+    ////////////////////////////
+    _controllerlogosFlip = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 400),
+    );
+
+    _animationlogosFlip = Tween<double>(begin: 0, end: 1).animate(
+      CurvedAnimation(
+        parent: _controllerlogosFlip,
+        curve: Curves.linear,
+      ),
+    );
+    ////////////////////////////
+    _controllerCircle =
+        AnimationController(vsync: this, duration: const Duration(seconds: 1));
+    _animationCircle =
+        CurvedAnimation(parent: _controllerCircle, curve: Curves.easeInOut);
+
+    _controllerBigCircle =
+        AnimationController(vsync: this, duration: const Duration(seconds: 1));
+    _animationBigCircle =
+        CurvedAnimation(parent: _controllerBigCircle, curve: Curves.easeInOut);
+
     smartXRLogoInit();
+
     // kidsLogoInit();
     super.initState();
   }
@@ -49,6 +95,9 @@ class AnimatedBuilderExampleState extends State<AnimatedBuilderExample>
   void dispose() {
     _controllerSmartXRLogo.dispose();
     _controllerKidsLogo.dispose();
+
+    // _controllerSmartXRLogoOut.dispose(); // Dispose added controllers
+    // _controllerKidsLogoOut.dispose(); // Dispose added controllers
     super.dispose();
   }
 
@@ -74,21 +123,54 @@ class AnimatedBuilderExampleState extends State<AnimatedBuilderExample>
     //   duration: const Duration(milliseconds: 500),
     // );
 
-    // _animationKidsLogo = Tween<double>(begin: 0.5, end: 1).animate(
+    // _animationKidsLogo = Tween<double>(begin: 0, end: 0.5).animate(
     //   CurvedAnimation(
     //     parent: _controllerKidsLogo,
     //     curve: Curves.easeInOutBack,
     //   ),
     // );
-    _controllerKidsLogo.forward();
     _controllerKidsLogo.addListener(() {
       setState(() {
         _opacityKidsLogo = 0 + _controllerKidsLogo.value;
       });
     });
-    await Future.delayed(const Duration(milliseconds: 1600), () {
-      // _opacityKidsLogo = 1;
+    _controllerKidsLogo.forward().then((value) async {
+      //Delay of 0.8 ms
+      await Future.delayed(const Duration(milliseconds: 800));
+
+      setState(() {
+        _opacitySmartXRLogo = 0;
+        _opacityKidsLogo = 0;
+        _opacityKidsLogo2 = 1;
+        _opacitySmartXRLogo2 = 1;
+      });
+      _controllerlogosFlip.forward().then((value) {
+        //!Circle  Part
+
+        setState(() {
+          _opacityKidsLogo2 = 0;
+          _opacitySmartXRLogo2 = 0;
+          _opacitySmallCircle = 1;
+        });
+
+        _controllerCircle.forward().then((value) => {
+              // setState(() {
+              //   // _opacityKidsLogo2 = 0;
+              //   // _opacitySmartXRLogo2 = 0;
+              //   _opacitySmallCircle = 0;
+              //   _opacityBigCircle = 1;
+              //   _controllerBigCircle.forward();
+              // })
+            });
+      });
     });
+
+    // _controllerSmartXRLogo.forward();
+    // _controllerSmartXRLogo.addListener(() {
+    //   setState(() {
+    //     _opacitySmartXRLogo = 0 + _controllerSmartXRLogo.value;
+    //   });
+    // });
   }
 
   @override
@@ -143,6 +225,26 @@ class AnimatedBuilderExampleState extends State<AnimatedBuilderExample>
                                   ),
                                 ),
                               ),
+                              AnimatedBuilder(
+                                animation: _animationlogosFlip,
+                                builder: (context, child) {
+                                  return Transform(
+                                    alignment: Alignment.center,
+                                    transform: Matrix4.rotationY(
+                                        _animationlogosFlip.value *
+                                            (3.14 / 2)), // Rotation
+                                    child: Opacity(
+                                      opacity: _opacitySmartXRLogo2,
+                                      child: SizedBox(
+                                        width: 770.w,
+                                        child: Image.asset(
+                                            'assets/images/PNG Icons/SmartXR Logo P.png',
+                                            width: 770.w),
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
                               Positioned(
                                 top: 23.h,
                                 child: SizedBox(
@@ -165,6 +267,84 @@ class AnimatedBuilderExampleState extends State<AnimatedBuilderExample>
                                     ),
                                   ),
                                 ),
+                              ),
+                              Positioned(
+                                top: 23.h,
+                                child: SizedBox(
+                                  width: 500.w,
+                                  child: AnimatedBuilder(
+                                    animation: _animationlogosFlip,
+                                    builder: (context, child) {
+                                      return Transform(
+                                        transform: Matrix4.rotationY(
+                                            _animationlogosFlip.value *
+                                                (3.14 / 2)),
+                                        child: child,
+                                        alignment: Alignment.center,
+                                      );
+                                    },
+                                    child: Opacity(
+                                      opacity: _opacityKidsLogo2,
+                                      child: Image.asset(
+                                          'assets/images/PNG Icons/kids 1.png',
+                                          width: 770.w),
+                                    ),
+                                  ),
+                                ),
+                              ),
+
+                              // //! Circle Big
+                              Positioned(
+                                top: 25.h,
+                                child: AnimatedBuilder(
+                                    animation: _animationBigCircle,
+                                    builder: (context, _) {
+                                      return Container(
+                                        // color: Colors.red,
+                                        width:
+                                            100.w + _controllerBigCircle.value,
+                                        height:
+                                            100.w + _controllerBigCircle.value,
+
+                                        child: Opacity(
+                                          opacity: _opacityBigCircle,
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                                color: AppColors.secondaryColor,
+                                                shape: BoxShape.circle),
+                                            // height: 100,
+                                            // width: 100,
+                                          ),
+                                        ),
+                                      );
+                                    }),
+                              ), //! Circle
+                              Positioned(
+                                top: 25.h,
+                                child: AnimatedBuilder(
+                                    animation: _animationCircle,
+                                    builder: (context, _) {
+                                      return Container(
+                                        // color: Colors.red,
+                                        width: 500.w *
+                                            6.5 *
+                                            _controllerCircle.value,
+                                        height: 500.w *
+                                            6.5 *
+                                            _controllerCircle.value,
+
+                                        child: Opacity(
+                                          opacity: _opacitySmallCircle,
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                                color: AppColors.secondaryColor,
+                                                shape: BoxShape.circle),
+                                            // height: 100,
+                                            // width: 100,
+                                          ),
+                                        ),
+                                      );
+                                    }),
                               ),
                             ],
                           ),
