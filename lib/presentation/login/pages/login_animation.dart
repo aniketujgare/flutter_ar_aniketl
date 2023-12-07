@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ar/presentation/animations/fadeinsclae.dart';
 import 'package:size_config/size_config.dart';
-
+import 'dart:math';
 import '../../../core/util/device_type.dart';
 import '../../../core/util/styles.dart';
 import 'login_screen.dart';
@@ -15,364 +14,265 @@ class AnimatedBuilderExample extends StatefulWidget {
 
 class AnimatedBuilderExampleState extends State<AnimatedBuilderExample>
     with TickerProviderStateMixin {
-  //SmartXRLogo
-  late final AnimationController _controllerSmartXRLogo;
-  late final Animation<double> _animationSmartXRLogo;
-  double _opacitySmartXRLogo = 0;
-  //Kids Logo
-  late AnimationController _controllerKidsLogo;
-  late Animation<double> _animationKidsLogo;
-  double _opacityKidsLogo = 0;
-  double _opacityKidsLogo2 = 0;
-  double _opacitySmartXRLogo2 = 0;
-  double _opacitySmallCircle = 0;
-  double _opacityBigCircle = 0;
-
-  // logos flip out controller
-  // late AnimationController _controllerSmartXRLogoOut;
-  // late Animation<double> _animationSmartXRLogoOut;
-
-  // late AnimationController _controllerKidsLogoOut;
-  // late Animation<double> _animationKidsLogoOut;
-
-  // both logos flip
-  late AnimationController _controllerlogosFlip;
-  late Animation<double> _animationlogosFlip;
-  // circle
-  late AnimationController _controllerCircle;
-  late Animation<double> _animationCircle;
-
-  late AnimationController _controllerBigCircle;
-  late Animation<double> _animationBigCircle;
-
-//opacities
-  double _opacityDodoLeg = 0;
-  double _opacityForm = 0;
+  late final AnimationController _controller;
+  late final Animation<double> _sizeAnimationSmartXRLogo;
+  late final Animation<double> _opacityAnimationSmartXRLogo;
+  late final Animation<double> _rotateAnimationKidsLogo;
+  late final Animation<double> _opacityAnimationKidsLogo;
+  late final Animation<double> _flipLogosAnimation;
+  late final Animation<double> _opacityCircle;
+  late final Animation<double> _animationCircle;
+  late final Animation<double> _opacityPaws;
+  late final Animation<Offset> _animationPaws;
+  late final Animation<double> _animationPawsStreatch;
+  late final Animation<bool> _animationDodoVisible;
+  late final Animation<double> _animationDodoTranslate;
+  late final Animation<double> _opacityLoginForm;
+  bool dodoVisible = false;
   @override
   void initState() {
-    _controllerKidsLogo = AnimationController(
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 5900),
       vsync: this,
-      duration: const Duration(milliseconds: 500),
     );
 
-    _animationKidsLogo = Tween<double>(begin: 0.5, end: 1).animate(
+    _sizeAnimationSmartXRLogo = Tween<double>(
+      begin: 0.7,
+      end: 1.0,
+    ).animate(
       CurvedAnimation(
-        parent: _controllerKidsLogo,
-        curve: Curves.easeInOutBack,
+        parent: _controller,
+        curve: const Interval(0, 0.17, curve: Curves.easeOut),
+      ),
+    );
+    _opacityAnimationSmartXRLogo = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: const Interval(0, 0.17, curve: Curves.easeOut),
+      ),
+    );
+    _rotateAnimationKidsLogo = Tween<double>(begin: 3.14, end: 6.28).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: const Interval(0.17, 0.31, curve: Curves.bounceOut),
+      ),
+    );
+    _opacityAnimationKidsLogo = Tween<double>(begin: 0, end: 1).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: const Interval(0.17, 0.31, curve: Curves.easeOut),
       ),
     );
 
-    ////////////////////////////
-    _controllerlogosFlip = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 400),
-    );
-
-    _animationlogosFlip = Tween<double>(begin: 0, end: 1).animate(
+    _flipLogosAnimation = Tween<double>(
+      begin: 0,
+      end: 1.0,
+    ).animate(
       CurvedAnimation(
-        parent: _controllerlogosFlip,
-        curve: Curves.linear,
+        parent: _controller,
+        curve: const Interval(0.306, 0.34, curve: Curves.easeOut),
       ),
     );
-    ////////////////////////////
-    _controllerCircle =
-        AnimationController(vsync: this, duration: const Duration(seconds: 1));
-    _animationCircle =
-        CurvedAnimation(parent: _controllerCircle, curve: Curves.easeInOut);
 
-    _controllerBigCircle =
-        AnimationController(vsync: this, duration: const Duration(seconds: 1));
-    _animationBigCircle =
-        CurvedAnimation(parent: _controllerBigCircle, curve: Curves.easeInOut);
-
-    smartXRLogoInit();
-
-    // kidsLogoInit();
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _controllerSmartXRLogo.dispose();
-    _controllerKidsLogo.dispose();
-
-    // _controllerSmartXRLogoOut.dispose(); // Dispose added controllers
-    // _controllerKidsLogoOut.dispose(); // Dispose added controllers
-    super.dispose();
-  }
-
-  void smartXRLogoInit() async {
-    _controllerSmartXRLogo = AnimationController(
-      duration: const Duration(seconds: 1),
-      vsync: this,
+    _opacityCircle = Tween<double>(begin: 0, end: 1).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: const Interval(0.35, 0.386, curve: Curves.linear),
+      ),
     );
-    _animationSmartXRLogo = CurvedAnimation(
-        parent: _controllerSmartXRLogo, curve: Curves.linearToEaseOut);
 
-    _controllerSmartXRLogo.forward().then((value) => kidsLogoInit());
-    _controllerSmartXRLogo.addListener(() {
-      setState(() {
-        _opacitySmartXRLogo = 0 + _controllerSmartXRLogo.value;
-      });
+    _animationCircle = TweenSequence<double>([
+      TweenSequenceItem(tween: Tween(begin: 50.h, end: 60.h), weight: 2),
+      TweenSequenceItem(tween: Tween(begin: 60.h, end: 50.h), weight: 2),
+      // TweenSequenceItem(tween: Tween(begin: 50.h, end: 100.h), weight: 3),
+      TweenSequenceItem(tween: Tween(begin: 50.h, end: 1400.h), weight: 2),
+    ]).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: const Interval(0.386, 0.483, curve: Curves.easeIn),
+      ),
+    );
+
+    _opacityPaws = Tween<double>(begin: 0, end: 1).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: const Interval(0.483, 0.483, curve: Curves.linear),
+      ),
+    );
+    _animationPaws = TweenSequence<Offset>([
+      TweenSequenceItem(
+          tween: Tween(begin: Offset(0, 0.h), end: Offset(0, 190.h)),
+          weight: 1),
+      TweenSequenceItem(
+          tween: Tween(begin: Offset(0, 190.h), end: Offset(0, 0.h)),
+          weight: 1),
+    ]).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: const Interval(0.483, 0.55, curve: Curves.easeIn),
+      ),
+    );
+    _animationPawsStreatch = TweenSequence<double>([
+      TweenSequenceItem(tween: Tween(begin: 0, end: 20), weight: 1),
+      TweenSequenceItem(tween: Tween(begin: 20, end: 0), weight: 1),
+    ]).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: const Interval(0.5, 0.58, curve: Curves.easeInOut),
+      ),
+    );
+    _animationDodoVisible = Tween<bool>(begin: false, end: true).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: const Interval(0.58, 0.58, curve: Curves.linear),
+      ),
+    );
+    _animationDodoTranslate = Tween<double>(begin: 220, end: -40).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: const Interval(0.58, 0.64, curve: Curves.linear),
+      ),
+    );
+    _opacityLoginForm = Tween<double>(begin: 0, end: 1).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: const Interval(0.64, 0.8, curve: Curves.linear),
+      ),
+    );
+    /////////////////////////////
+    ///
+    _controller.forward().then((value) => dodoVisible = true);
+    // _controller.repeat();
+    _controller.addListener(() {
+      setState(() {});
     });
-  }
-
-  void kidsLogoInit() async {
-    // _controllerKidsLogo = AnimationController(
-    //   vsync: this,
-    //   duration: const Duration(milliseconds: 500),
-    // );
-
-    // _animationKidsLogo = Tween<double>(begin: 0, end: 0.5).animate(
-    //   CurvedAnimation(
-    //     parent: _controllerKidsLogo,
-    //     curve: Curves.easeInOutBack,
-    //   ),
-    // );
-    _controllerKidsLogo.addListener(() {
-      setState(() {
-        _opacityKidsLogo = 0 + _controllerKidsLogo.value;
-      });
-    });
-    _controllerKidsLogo.forward().then((value) async {
-      //Delay of 0.8 ms
-      await Future.delayed(const Duration(milliseconds: 800));
-
-      setState(() {
-        _opacitySmartXRLogo = 0;
-        _opacityKidsLogo = 0;
-        _opacityKidsLogo2 = 1;
-        _opacitySmartXRLogo2 = 1;
-      });
-      _controllerlogosFlip.forward().then((value) {
-        //!Circle  Part
-
-        setState(() {
-          _opacityKidsLogo2 = 0;
-          _opacitySmartXRLogo2 = 0;
-          _opacitySmallCircle = 1;
-        });
-
-        _controllerCircle.forward().then((value) => {
-              // setState(() {
-              //   // _opacityKidsLogo2 = 0;
-              //   // _opacitySmartXRLogo2 = 0;
-              //   _opacitySmallCircle = 0;
-              //   _opacityBigCircle = 1;
-              //   _controllerBigCircle.forward();
-              // })
-            });
-      });
-    });
-
-    // _controllerSmartXRLogo.forward();
-    // _controllerSmartXRLogo.addListener(() {
-    //   setState(() {
-    //     _opacitySmartXRLogo = 0 + _controllerSmartXRLogo.value;
-    //   });
-    // });
   }
 
   @override
   Widget build(BuildContext context) {
-    print(_animationKidsLogo.value);
+    print(_animationPaws.value);
     return Scaffold(
         resizeToAvoidBottomInset: false,
         extendBody: true,
-        backgroundColor: AppColors.accentColor,
+        backgroundColor: Color(0XffD1CBF9),
         body: Padding(
-          padding: EdgeInsets.fromLTRB(
-              0, DeviceType().isMobile ? 100.h : 80.h, 0, 0),
+          padding:
+              EdgeInsets.fromLTRB(0, DeviceType().isMobile ? 0.h : 80.h, 0, 0),
           child: Stack(
-            alignment: Alignment.center,
+            alignment: Alignment.topCenter,
             clipBehavior: Clip.none,
             children: [
-              Align(
-                alignment: Alignment.topCenter,
-                child: Opacity(
-                  opacity: _opacityDodoLeg,
-                  child: Image.asset(
-                    'assets/images/Dog/dog01.png',
-                    height: 200.h,
-                  ),
-                ),
-              ),
-              RotatedBox(
-                quarterTurns: 4,
-                child: ClipPath(
-                  clipper: CurvedTopRectangleClipper(),
-                  child: Container(
-                    color: AppColors.accentColor,
-                    child: Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          SizedBox(height: 280.h),
-                          Stack(
-                            clipBehavior: Clip.none,
-                            alignment: Alignment.topCenter,
-                            children: [
-                              SizedBox(
-                                width: 770.w,
-                                child: ScaleTransition(
-                                  scale: _animationSmartXRLogo,
-                                  alignment: Alignment.center,
-                                  child: Opacity(
-                                    opacity: _opacitySmartXRLogo,
-                                    child: Image.asset(
-                                        'assets/images/PNG Icons/SmartXR Logo P.png',
-                                        width: 770.w),
-                                  ),
-                                ),
-                              ),
-                              AnimatedBuilder(
-                                animation: _animationlogosFlip,
-                                builder: (context, child) {
-                                  return Transform(
-                                    alignment: Alignment.center,
-                                    transform: Matrix4.rotationY(
-                                        _animationlogosFlip.value *
-                                            (3.14 / 2)), // Rotation
-                                    child: Opacity(
-                                      opacity: _opacitySmartXRLogo2,
-                                      child: SizedBox(
-                                        width: 770.w,
-                                        child: Image.asset(
-                                            'assets/images/PNG Icons/SmartXR Logo P.png',
-                                            width: 770.w),
-                                      ),
-                                    ),
-                                  );
-                                },
-                              ),
-                              Positioned(
-                                top: 23.h,
-                                child: SizedBox(
-                                  width: 500.w,
-                                  child: AnimatedBuilder(
-                                    animation: _animationKidsLogo,
-                                    builder: (context, child) {
-                                      return Transform(
-                                        transform: Matrix4.rotationY(
-                                            _animationKidsLogo.value * 6.28),
-                                        child: child,
-                                        alignment: Alignment.center,
-                                      );
-                                    },
-                                    child: Opacity(
-                                      opacity: _opacityKidsLogo,
-                                      child: Image.asset(
-                                          'assets/images/PNG Icons/kids 1.png',
-                                          width: 770.w),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Positioned(
-                                top: 23.h,
-                                child: SizedBox(
-                                  width: 500.w,
-                                  child: AnimatedBuilder(
-                                    animation: _animationlogosFlip,
-                                    builder: (context, child) {
-                                      return Transform(
-                                        transform: Matrix4.rotationY(
-                                            _animationlogosFlip.value *
-                                                (3.14 / 2)),
-                                        child: child,
-                                        alignment: Alignment.center,
-                                      );
-                                    },
-                                    child: Opacity(
-                                      opacity: _opacityKidsLogo2,
-                                      child: Image.asset(
-                                          'assets/images/PNG Icons/kids 1.png',
-                                          width: 770.w),
-                                    ),
-                                  ),
-                                ),
-                              ),
-
-                              // //! Circle Big
-                              Positioned(
-                                top: 25.h,
-                                child: AnimatedBuilder(
-                                    animation: _animationBigCircle,
-                                    builder: (context, _) {
-                                      return Container(
-                                        // color: Colors.red,
-                                        width:
-                                            100.w + _controllerBigCircle.value,
-                                        height:
-                                            100.w + _controllerBigCircle.value,
-
-                                        child: Opacity(
-                                          opacity: _opacityBigCircle,
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                                color: AppColors.secondaryColor,
-                                                shape: BoxShape.circle),
-                                            // height: 100,
-                                            // width: 100,
-                                          ),
-                                        ),
-                                      );
-                                    }),
-                              ), //! Circle
-                              Positioned(
-                                top: 25.h,
-                                child: AnimatedBuilder(
-                                    animation: _animationCircle,
-                                    builder: (context, _) {
-                                      return Container(
-                                        // color: Colors.red,
-                                        width: 500.w *
-                                            6.5 *
-                                            _controllerCircle.value,
-                                        height: 500.w *
-                                            6.5 *
-                                            _controllerCircle.value,
-
-                                        child: Opacity(
-                                          opacity: _opacitySmallCircle,
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                                color: AppColors.secondaryColor,
-                                                shape: BoxShape.circle),
-                                            // height: 100,
-                                            // width: 100,
-                                          ),
-                                        ),
-                                      );
-                                    }),
-                              ),
-                            ],
-                          ),
-                          Opacity(opacity: _opacityForm, child: loginForm()),
-                        ],
-                      ),
+              Positioned(
+                top: 0.h,
+                child: Transform.translate(
+                  offset: Offset(0, _animationDodoTranslate.value.h),
+                  child: Visibility(
+                    visible: _animationDodoVisible.value,
+                    child: Image.asset(
+                      'assets/images/Dog/Dodo Animation.gif',
+                      height: 350.h,
+                      width: 350.h,
+                      fit: BoxFit.cover,
                     ),
                   ),
                 ),
               ),
-              Opacity(
-                opacity: _opacityDodoLeg,
-                child: Positioned(
-                  top: 140.h,
+              Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 260.h),
+                    Stack(
+                      clipBehavior: Clip.none,
+                      alignment: Alignment.topCenter,
+                      children: [
+                        Transform(
+                          transform: Matrix4.rotationY(
+                              _flipLogosAnimation.value * -1 * 3 * 3.14 / 6)
+                            ..setEntry(3, 2, 0.001),
+                          alignment: Alignment.center,
+                          child: SizedBox(
+                            width: 1900.w * _sizeAnimationSmartXRLogo.value,
+                            child: Opacity(
+                              opacity: _opacityAnimationSmartXRLogo.value,
+                              child: Image.asset(
+                                  'assets/images/PNG Icons/SmartXR Logo P.png',
+                                  width: 770.w),
+                            ),
+                          ),
+                        ),
+                        Positioned(
+                          top: 50.h,
+                          child: Transform(
+                            // origin: Offset(dx, dy),
+                            transform: Matrix4.rotationY(
+                                _flipLogosAnimation.value * -1 * 3 * 3.14 / 6)
+                              ..setEntry(3, 2, 0.001),
+                            alignment: Alignment.center,
+                            child: SizedBox(
+                              width: 990.w,
+                              // height: 2000.h,
+                              child: Opacity(
+                                opacity: _opacityAnimationKidsLogo.value,
+                                child: Transform(
+                                  alignment: Alignment.center,
+                                  transform: Matrix4.rotationY(
+                                      _rotateAnimationKidsLogo.value),
+                                  child: Image.asset(
+                                    'assets/images/PNG Icons/kids 1.png',
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Positioned(
+                          top: 28.h,
+                          child: SizedBox(
+                            height: _animationCircle.value,
+                            width: _animationCircle.value,
+                            child: Opacity(
+                              opacity: _opacityCircle.value,
+                              child: CircleAvatar(
+                                backgroundColor: AppColors.secondaryColor,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Positioned(
+                          top: 0,
+                          child: Transform.translate(
+                            offset: -_animationPaws.value,
+                            child: Opacity(
+                              opacity: _opacityPaws.value,
+                              child: Image.asset(
+                                'assets/images/Dog/Paws_First-Login.png',
+                                width: 420.h + _animationPawsStreatch.value,
+                                height: 90.h,
+                                fit: BoxFit.fill,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Opacity(
+                        opacity: _opacityLoginForm.value, child: loginForm()),
+                  ],
+                ),
+              ),
+              Positioned(
+                top: 140.h,
+                child: Opacity(
+                  opacity: 0,
                   child: Image.asset(
                     'assets/images/Dog/dog03.png',
                     height: 100.h,
                     alignment: Alignment.topCenter,
-                  ),
-                ),
-              ),
-              Opacity(
-                opacity: _opacityDodoLeg,
-                child: Positioned(
-                  top: 150.h,
-                  child: Image.asset(
-                    'assets/images/Dog/Paws.png',
-                    height: 100.h,
                   ),
                 ),
               ),
@@ -382,10 +282,61 @@ class AnimatedBuilderExampleState extends State<AnimatedBuilderExample>
   }
 }
 
+class ExpampleWidget extends StatefulWidget {
+  const ExpampleWidget({
+    super.key,
+  });
+
+  @override
+  State<ExpampleWidget> createState() => _ExpampleWidgetState();
+}
+
+class _ExpampleWidgetState extends State<ExpampleWidget> {
+  @override
+  Widget build(BuildContext context) {
+    double _sliderValue = 0;
+    return Scaffold(
+      body: Column(
+        children: [
+          Slider(
+            value: _sliderValue,
+            onChanged: (value) {
+              setState(() {
+                _sliderValue = value;
+                print(_sliderValue);
+              });
+            },
+            min: 0.0,
+            max: 100.0,
+            divisions: 100, // Optional: Number of divisions between min and max
+            label: '$_sliderValue',
+          ),
+          Transform(
+            transform: Matrix4.rotationY(-pi * 80),
+            alignment: Alignment.center,
+            child: SizedBox(
+              width: 500.w,
+              child: Opacity(
+                opacity: 1,
+                child: Transform(
+                  alignment: Alignment.center,
+                  transform: Matrix4.rotationY(180 / pi * _sliderValue),
+                  child: Image.asset('assets/images/PNG Icons/kids 1.png',
+                      width: 770.w),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 Column loginForm() {
   return Column(
     children: [
-      SizedBox(height: 70.h),
+      SizedBox(height: 20.h),
       Text(
         'Welcome!',
         textAlign: TextAlign.center,
