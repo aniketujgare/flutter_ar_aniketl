@@ -2,7 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_ar/data/models/ar_model.dart';
 
-import '../../../../api/api.dart';
+import '../../../../core/util/api/api.dart';
 
 part 'models_state.dart';
 

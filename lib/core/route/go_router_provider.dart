@@ -4,6 +4,7 @@ import 'package:flutter_ar/core/route/route_name.dart';
 import 'package:flutter_ar/presentation/category/pages/category_screen.dart';
 import 'package:flutter_ar/presentation/login/login_page.dart';
 import 'package:flutter_ar/presentation/login/pages/login_screen.dart';
+import 'package:flutter_ar/presentation/splash_screen/splash_screen_animation.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../presentation/login/pages/login_animation.dart';
@@ -40,7 +41,7 @@ class GoRouterProvider {
             path: '/',
             name: loginRoute,
             pageBuilder: (context, state) {
-              return MaterialPage(child: AnimatedBuilderExample());
+              return MaterialPage(child: LoginScreen());
             },
           ),
         ]);

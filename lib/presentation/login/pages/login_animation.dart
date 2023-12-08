@@ -1,18 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_ar/presentation/login/widgets/login_page3_parent_details.dart';
 import 'package:size_config/size_config.dart';
-import 'dart:math';
+
 import '../../../core/util/device_type.dart';
 import '../../../core/util/styles.dart';
-import 'login_screen.dart';
+import '../widgets/login_page1_mobile_numbaer.dart';
+import '../widgets/login_page2_otp.dart';
 
-class AnimatedBuilderExample extends StatefulWidget {
-  const AnimatedBuilderExample({Key? key}) : super(key: key);
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({Key? key}) : super(key: key);
 
   @override
-  AnimatedBuilderExampleState createState() => AnimatedBuilderExampleState();
+  LoginScreenState createState() => LoginScreenState();
 }
 
-class AnimatedBuilderExampleState extends State<AnimatedBuilderExample>
+class LoginScreenState extends State<LoginScreen>
     with TickerProviderStateMixin {
   late final AnimationController _controller;
   late final Animation<double> _sizeAnimationSmartXRLogo;
@@ -28,7 +31,6 @@ class AnimatedBuilderExampleState extends State<AnimatedBuilderExample>
   late final Animation<bool> _animationDodoVisible;
   late final Animation<double> _animationDodoTranslate;
   late final Animation<double> _opacityLoginForm;
-  bool dodoVisible = false;
   @override
   void initState() {
     _controller = AnimationController(
@@ -144,11 +146,29 @@ class AnimatedBuilderExampleState extends State<AnimatedBuilderExample>
     );
     /////////////////////////////
     ///
-    _controller.forward().then((value) => dodoVisible = true);
+    _controller.forward();
     // _controller.repeat();
     _controller.addListener(() {
       setState(() {});
     });
+
+    super.initState();
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.landscapeRight,
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+    super.dispose();
   }
 
   @override
@@ -157,7 +177,7 @@ class AnimatedBuilderExampleState extends State<AnimatedBuilderExample>
     return Scaffold(
         resizeToAvoidBottomInset: false,
         extendBody: true,
-        backgroundColor: Color(0XffD1CBF9),
+        backgroundColor: const Color(0XffD1CBF9),
         body: Padding(
           padding:
               EdgeInsets.fromLTRB(0, DeviceType().isMobile ? 0.h : 80.h, 0, 0),
@@ -261,7 +281,8 @@ class AnimatedBuilderExampleState extends State<AnimatedBuilderExample>
                       ],
                     ),
                     Opacity(
-                        opacity: _opacityLoginForm.value, child: loginForm()),
+                        opacity: _opacityLoginForm.value,
+                        child: const LoginPage1MobileNumber()),
                   ],
                 ),
               ),
@@ -280,118 +301,4 @@ class AnimatedBuilderExampleState extends State<AnimatedBuilderExample>
           ),
         ));
   }
-}
-
-class ExpampleWidget extends StatefulWidget {
-  const ExpampleWidget({
-    super.key,
-  });
-
-  @override
-  State<ExpampleWidget> createState() => _ExpampleWidgetState();
-}
-
-class _ExpampleWidgetState extends State<ExpampleWidget> {
-  @override
-  Widget build(BuildContext context) {
-    double _sliderValue = 0;
-    return Scaffold(
-      body: Column(
-        children: [
-          Slider(
-            value: _sliderValue,
-            onChanged: (value) {
-              setState(() {
-                _sliderValue = value;
-                print(_sliderValue);
-              });
-            },
-            min: 0.0,
-            max: 100.0,
-            divisions: 100, // Optional: Number of divisions between min and max
-            label: '$_sliderValue',
-          ),
-          Transform(
-            transform: Matrix4.rotationY(-pi * 80),
-            alignment: Alignment.center,
-            child: SizedBox(
-              width: 500.w,
-              child: Opacity(
-                opacity: 1,
-                child: Transform(
-                  alignment: Alignment.center,
-                  transform: Matrix4.rotationY(180 / pi * _sliderValue),
-                  child: Image.asset('assets/images/PNG Icons/kids 1.png',
-                      width: 770.w),
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-Column loginForm() {
-  return Column(
-    children: [
-      SizedBox(height: 20.h),
-      Text(
-        'Welcome!',
-        textAlign: TextAlign.center,
-        style: DeviceType().isMobile
-            ? AppTextStyles.unitedRounded270w700
-            : AppTextStyles.unitedRounded140w700,
-      ),
-      SizedBox(height: 25.h),
-      Text(
-        'Enter your mobile number to login',
-        textAlign: TextAlign.center,
-        style: DeviceType().isMobile
-            ? AppTextStyles.nunito110w400white
-            : AppTextStyles.nunito56w400white,
-      ),
-      SizedBox(
-        height: 20.h,
-      ),
-      const ReusableTextField(),
-      SizedBox(
-        height: 20.h,
-      ),
-      SizedBox(
-        width: 2000.w,
-        height: 75.h,
-        child: ReusableButton(
-          buttonColor: AppColors.primaryColor,
-          text: 'Send OTP',
-          textColor: Colors.white,
-          onPressed: () {},
-        ),
-      ),
-      SizedBox(
-        height: 70.h,
-      ),
-      Text(
-        'or continue as guest ',
-        textAlign: TextAlign.center,
-        style: DeviceType().isMobile
-            ? AppTextStyles.nunito110w400white
-            : AppTextStyles.nunito56w400white,
-      ),
-      SizedBox(
-        height: 20.h,
-      ),
-      SizedBox(
-        width: 2000.w,
-        height: 75.h,
-        child: ReusableButton(
-          text: 'Guest',
-          buttonColor: AppColors.accentColor,
-          textColor: AppColors.primaryColor,
-          onPressed: () {},
-        ),
-      ),
-    ],
-  );
 }

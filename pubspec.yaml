@@ -53,6 +53,7 @@ dependencies:
   dartz: ^0.10.1
   go_router: ^12.1.1
   google_fonts: ^6.1.0
+  firebase_auth: ^4.15.2
 
 dev_dependencies:
   flutter_test:
@@ -108,6 +109,11 @@ flutter:
         - asset: fonts/Nunito-Regular.ttf
         # - asset: fonts/Schyler-Italic.ttf
         #   style: italic
+    - family: Uniform Rounded
+      fonts:
+        - asset: fonts/Uniform Rounded.otf
+        - asset: fonts/Uniform Rounded Bold.otf
+          weight: 700
     # - family: Trajan Pro
     #   fonts:
     #     - asset: fonts/TrajanPro.ttf

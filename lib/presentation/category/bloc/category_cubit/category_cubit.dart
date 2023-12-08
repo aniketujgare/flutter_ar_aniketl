@@ -1,4 +1,4 @@
-import 'package:flutter_ar/api/api.dart';
+import 'package:flutter_ar/core/util/api/api.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 

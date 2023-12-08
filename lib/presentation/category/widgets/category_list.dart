@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_ar/presentation/category/bloc/category_cubit/category_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../api/api.dart';
+import '../../../core/util/api/api.dart';
 import 'category_page_view.dart';
 
 class CategoryList extends StatelessWidget {

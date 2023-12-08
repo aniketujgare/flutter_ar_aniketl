@@ -1,9 +1,4 @@
 // import 'package:flutter/material.dart';
-// import 'package:get/get.dart';
-// import 'package:login_page/controller/auth_service.dart';
-// import 'package:login_page/custom%20widgets/login_ui.dart';
-// import 'package:login_page/main%20screens/home_screen.dart';
-// import 'package:pinput/pinput.dart';
 
 // class OtpPage extends StatefulWidget {
 //   const OtpPage({super.key});
@@ -51,7 +46,7 @@
 //         body: Stack(
 //           //fit: StackFit.loose,
 //           children: [
-//             const LoginUiWidget(),
+//             // const LoginUiWidget(),
 //             Positioned(
 //               top: MediaQuery.of(context).size.height * 0.45,
 //               right: MediaQuery.of(context).size.width * 0.1,
@@ -82,26 +77,26 @@
 //                     SizedBox(
 //                       height: MediaQuery.of(context).size.height * 0.02,
 //                     ),
-//                     Form(
-//                       key: _otpKey,
-//                       child: Pinput(
-//                         controller: _pinController,
-//                         length: 6,
-//                         defaultPinTheme: defaultPinTheme,
-//                         focusedPinTheme: focusedPinTheme,
-//                         submittedPinTheme: submittedPinTheme,
-//                         validator: (value) {
-//                           if (value!.length != 6)
-//                             // ignore: curly_braces_in_flow_control_structures
-//                             return "Invalid OTP";
-//                           return null;
-//                         },
-//                         pinputAutovalidateMode: PinputAutovalidateMode.onSubmit,
-//                         showCursor: true,
-//                         // ignore: avoid_print
-//                         onCompleted: (pin) => print(pin),
-//                       ),
-//                     ),
+//                     // Form(
+//                     //   key: _otpKey,
+//                     //   child: Pinput(
+//                     //     controller: _pinController,
+//                     //     length: 6,
+//                     //     defaultPinTheme: defaultPinTheme,
+//                     //     focusedPinTheme: focusedPinTheme,
+//                     //     submittedPinTheme: submittedPinTheme,
+//                     //     validator: (value) {
+//                     //       if (value!.length != 6)
+//                     //         // ignore: curly_braces_in_flow_control_structures
+//                     //         return "Invalid OTP";
+//                     //       return null;
+//                     //     },
+//                     //     // pinputAutovalidateMode: PinputAutovalidateMode.onSubmit,
+//                     //     showCursor: true,
+//                     //     // ignore: avoid_print
+//                     //     onCompleted: (pin) => print(pin),
+//                     //   ),
+//                     // ),
 //                     SizedBox(
 //                       height: MediaQuery.of(context).size.height * 0.02,
 //                     ),
@@ -131,17 +126,17 @@
 //                     // ),
 //                     ElevatedButton(
 //                       onPressed: () {
-//                         if (_otpKey.currentState!.validate()) {
-//                           AuthService.loginWithOtp(otp: _pinController.text)
-//                               .then((value) {
-//                             if (value == "success") {
-//                               Get.to(const HomeScreen());
-//                             } else {
-//                               Get.snackbar(
-//                                   "Error ", "Please check the OTP entered. ");
-//                             }
-//                           });
-//                         }
+//                         // if (_otpKey.currentState!.validate()) {
+//                         //   AuthService.loginWithOtp(otp: _pinController.text)
+//                         //       .then((value) {
+//                         //     if (value == "success") {
+//                         //       Get.to(const HomeScreen());
+//                         //     } else {
+//                         //       Get.snackbar(
+//                         //           "Error ", "Please check the OTP entered. ");
+//                         //     }
+//                         //   });
+//                         // }
 //                       },
 //                       style: ElevatedButton.styleFrom(
 //                         shape: const RoundedRectangleBorder(
@@ -163,7 +158,7 @@
 //                     ),
 //                     OutlinedButton(
 //                         onPressed: () {
-//                           Get.to(const HomeScreen());
+//                           // Get.to(const HomeScreen());
 //                         },
 //                         child: const Text("Home Screen "))
 //                   ],

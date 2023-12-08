@@ -9,39 +9,56 @@ class AppColors {
 
   static var primaryColor = _createColor(0xFF4F3A9C);
   static var secondaryColor = _createColor(0xFF8C7DF0);
-  static var accentColor = _createColor(0xFFF4F2FE);
+  static var accentColor = _createColor(0XffD1CBF9);
+  static var textFieldTextColor = _createColor(0xFF212121);
+  static var textFieldFillColorWhite = _createColor(0xFFF4F2FE);
+  static var submitGreenColor = _createColor(0xFF45C375);
+  static var hintTextColor = _createColor(0xFFBCBCBC);
 }
 
 class AppTextStyles {
-  static TextStyle _createTextStyle({
-    String fontFamily = "Uniform Rounded",
-    double fontSize = 14,
-    FontWeight fontWeight = FontWeight.normal,
-    Color color = Colors.black,
-  }) {
+  static TextStyle _createTextStyle(
+      {String fontFamily = "Uniform Rounded",
+      double fontSize = 14,
+      FontWeight fontWeight = FontWeight.normal,
+      Color color = Colors.black,
+      FontStyle? fontStyle = FontStyle.normal}) {
     return TextStyle(
       fontFamily: fontFamily,
       fontSize: fontSize,
       fontWeight: fontWeight,
       color: color,
+      fontStyle: fontStyle,
     );
   }
 
   /// Nunito
-  static var nunito110w400white = _createTextStyle(
+  static var nunito95w400white = _createTextStyle(
       fontFamily: "Nunito",
-      fontSize: 110.sp,
+      fontSize: 100.sp,
       fontWeight: FontWeight.w400,
       color: Colors.white);
+  static var nunito100w700black = _createTextStyle(
+    color: AppColors.textFieldTextColor,
+    fontSize: 100.sp,
+    fontFamily: 'Nunito',
+    fontWeight: FontWeight.w700,
+  );
   static var nunito56w400white = _createTextStyle(
       fontFamily: "Nunito",
       fontSize: 56.sp,
       fontWeight: FontWeight.w400,
       color: Colors.white);
-
-  static var nunito120w700white = _createTextStyle(
+  static var nunito100w400hintText = _createTextStyle(
+    color: AppColors.hintTextColor,
+    fontSize: 100.sp,
+    fontStyle: FontStyle.italic,
+    fontFamily: 'Nunito',
+    fontWeight: FontWeight.w400,
+  );
+  static var nunito100w700white = _createTextStyle(
       fontFamily: "Nunito",
-      fontSize: 120.sp,
+      fontSize: 100.sp,
       fontWeight: FontWeight.w700,
       color: Colors.white);
 
@@ -52,17 +69,16 @@ class AppTextStyles {
       color: Colors.white);
 
   /// United Rounded
-  ///  TextStyle(
-  //   color: Color(0xFF4F3A9C),
-  //   fontSize: DeviceType().isMobile ? 270.sp : 140.sp,
-  //   fontFamily: 'Uniform Rounded',
-  //   fontWeight: FontWeight.w700,
-  //   height: 0,
-  // ),
+
   static var unitedRounded270w700 = _createTextStyle(
       fontFamily: 'Uniform Rounded',
       fontSize: 270.sp,
       fontWeight: FontWeight.w700,
+      color: AppColors.primaryColor);
+  static var uniformRounded100Bold = _createTextStyle(
+      fontFamily: 'Uniform Rounded',
+      fontSize: 200.sp,
+      fontWeight: FontWeight.w900,
       color: AppColors.primaryColor);
   static var unitedRounded140w700 = _createTextStyle(
       fontFamily: 'Uniform Rounded',
