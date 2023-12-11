@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_ar/presentation/login/bloc/login_bloc/login_bloc.dart';
 import 'package:flutter_ar/presentation/login/widgets/login_page3_parent_details.dart';
+import 'package:flutter_ar/presentation/login/widgets/login_page4_guest.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:size_config/size_config.dart';
 
 import '../../../core/util/device_type.dart';
@@ -282,7 +285,36 @@ class LoginScreenState extends State<LoginScreen>
                     ),
                     Opacity(
                         opacity: _opacityLoginForm.value,
-                        child: const LoginPage1MobileNumber()),
+                        child: BlocConsumer<LoginBloc, LoginState>(
+                          listener: (context, state) {
+                            if (state.status == LoginStatus.error) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text(state.errorMessage)));
+                              context.read<LoginBloc>().add(
+                                  const LoginEvent.updateStatus(
+                                      status: LoginStatus.phoneNo1));
+                            }
+                          },
+                          builder: (context, state) {
+                            // return const LoginPage4Guest();
+                            switch (state.status) {
+                              case LoginStatus.loading:
+                                return const Center(
+                                    child: CircularProgressIndicator());
+                              case LoginStatus.phoneNo1:
+                                return const LoginPage1MobileNumber();
+                              case LoginStatus.otp2:
+                                return const LoginPage2Otp();
+                              case LoginStatus.parents3:
+                                return const LoginPage3ParentDetails();
+                              case LoginStatus.guest:
+                                return const LoginPage4Guest();
+                              default:
+                                return const Center(
+                                    child: Text("Error on login"));
+                            }
+                          },
+                        )),
                   ],
                 ),
               ),

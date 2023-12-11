@@ -7,11 +7,13 @@ class ReusableTextField extends StatelessWidget {
   final bool countryCodeVisible;
   final String hintText;
   final TextInputType? textInputType;
+  final Function(String)? onChanged;
   const ReusableTextField({
     super.key,
     this.countryCodeVisible = true,
     this.hintText = '',
     this.textInputType,
+    this.onChanged,
   });
 
   @override
@@ -21,6 +23,7 @@ class ReusableTextField extends StatelessWidget {
       height: 65.h,
       child: TextFormField(
         keyboardType: textInputType,
+        onChanged: onChanged,
         decoration: InputDecoration(
           hintText: hintText,
           isCollapsed: true,

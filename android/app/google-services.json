@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "159319816092",
+    "project_id": "smartxr-kids",
+    "storage_bucket": "smartxr-kids.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:159319816092:android:e878497c4b7e228327ba59",
+        "android_client_info": {
+          "package_name": "com.example.flutter_ar"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBaxHyuOYcSoWeewXZE4MCMln1Z0rc5G54"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

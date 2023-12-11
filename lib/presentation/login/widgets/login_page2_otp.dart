@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_ar/presentation/login/bloc/login_bloc/login_bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:size_config/size_config.dart';
 
 import '../../../core/util/device_type.dart';
@@ -105,6 +107,15 @@ class _LoginPage2OtpState extends State<LoginPage2Otp> {
                 otp4String +
                 otp5String +
                 otp6String);
+
+            context.read<LoginBloc>().add(LoginEvent.verifyOtp(
+                verificationId: '',
+                smsCode: otp1String +
+                    otp2String +
+                    otp3String +
+                    otp4String +
+                    otp5String +
+                    otp6String));
           },
         ),
       ],

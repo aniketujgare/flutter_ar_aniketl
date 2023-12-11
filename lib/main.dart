@@ -1,21 +1,29 @@
 import 'dart:io';
 
 import 'package:ar_flutter_plugin/ar_flutter_plugin.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_ar/core/util/styles.dart';
+import 'package:flutter_ar/domain/repositories/authentication_repository.dart';
+import 'package:flutter_ar/presentation/login/bloc/login_bloc/login_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:size_config/size_config.dart';
 
 import 'core/route/go_router_provider.dart';
 import 'core/util/device_type.dart';
+import 'core/util/styles.dart';
+import 'firebase_options.dart';
 import 'presentation/category/bloc/category_cubit/category_cubit.dart';
 import 'presentation/category/bloc/category_page_cubit/category_page_cubit.dart';
 import 'presentation/category/bloc/model_page_controler_cubit/models_page_controller_cubit.dart';
 import 'presentation/category/bloc/models_cubit/models_cubit.dart';
 
-void main() {
+final authenticationRepository = AuthenticationRepository();
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
   // SystemChrome.setPreferredOrientations([
   //   DeviceOrientation.landscapeLeft,
@@ -91,6 +99,9 @@ class MyAppState extends State<MyApp> {
             ),
             BlocProvider(
               create: (context) => ModelsCubit(),
+            ),
+            BlocProvider(
+              create: (context) => LoginBloc(authenticationRepository),
             ),
           ],
           child: MaterialApp.router(
