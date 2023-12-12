@@ -35,7 +35,7 @@ class LoginPage1MobileNumber extends StatelessWidget {
           textAlign: TextAlign.center,
           style: DeviceType().isMobile
               ? AppTextStyles.nunito95w400white
-              : AppTextStyles.nunito56w400white,
+              : AppTextStyles.nunito100w400white,
         ),
         SizedBox(
           height: 16.h,
@@ -58,17 +58,6 @@ class LoginPage1MobileNumber extends StatelessWidget {
             context
                 .read<LoginBloc>()
                 .add(CheckMobileNoExists(mobileNumber: mobNo));
-            // var isMobileExists =
-            //     await AuthenticationRepository().checkMobNoExists(mobNo);
-            // print(isMobileExists);
-            // if (!isMobileExists) {
-            //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            //       content: Text("You'r mobile no $mobNo is not registered!")));
-            // } else {
-            //   ScaffoldMessenger.of(context)
-            //       .showSnackBar(SnackBar(content: Text("registered $mobNo")));
-            //   await AuthenticationRepository().phoneAuth(mobNo, context);
-            // }
           },
         ),
         SizedBox(
@@ -79,7 +68,7 @@ class LoginPage1MobileNumber extends StatelessWidget {
           textAlign: TextAlign.center,
           style: DeviceType().isMobile
               ? AppTextStyles.nunito95w400white
-              : AppTextStyles.nunito56w400white,
+              : AppTextStyles.nunito100w400white,
         ),
         SizedBox(
           height: 16.h,

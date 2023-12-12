@@ -33,7 +33,7 @@ class LoginPage4Guest extends StatelessWidget {
           textAlign: TextAlign.center,
           style: DeviceType().isMobile
               ? AppTextStyles.nunito95w400white
-              : AppTextStyles.nunito56w400white,
+              : AppTextStyles.nunito100w400white,
         ),
         SizedBox(
           height: 16.h,
@@ -61,9 +61,8 @@ class LoginPage4Guest extends StatelessWidget {
           text: 'Send Otp',
           textColor: Colors.white,
           onPressed: () {
-            context
-                .read<LoginBloc>()
-                .add(LoginEvent.guestLogin(mobileNumber: mobileNumber));
+            context.read<LoginBloc>().add(LoginEvent.guestLogin(
+                mobileNumber: mobileNumber, parentsName: parentsName));
           },
         ),
       ],

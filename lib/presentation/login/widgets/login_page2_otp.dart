@@ -6,7 +6,6 @@ import 'package:size_config/size_config.dart';
 
 import '../../../core/util/device_type.dart';
 import '../../../core/util/reusable_widgets/reusable_button.dart';
-import '../../../core/util/reusable_widgets/reusable_textfield.dart';
 import '../../../core/util/styles.dart';
 
 class LoginPage2Otp extends StatefulWidget {
@@ -74,7 +73,7 @@ class _LoginPage2OtpState extends State<LoginPage2Otp> {
           textAlign: TextAlign.center,
           style: DeviceType().isMobile
               ? AppTextStyles.nunito95w400white
-              : AppTextStyles.nunito56w400white,
+              : AppTextStyles.nunito100w400white,
         ),
         SizedBox(
           height: 16.h,
@@ -96,27 +95,81 @@ class _LoginPage2OtpState extends State<LoginPage2Otp> {
         SizedBox(
           height: 20.h,
         ),
-        ReusableButton(
-          text: 'Submit',
-          buttonColor: AppColors.submitGreenColor,
-          textColor: Colors.white,
-          onPressed: () {
-            debugPrint(otp1String +
-                otp2String +
-                otp3String +
-                otp4String +
-                otp5String +
-                otp6String);
-
-            context.read<LoginBloc>().add(LoginEvent.verifyOtp(
-                verificationId: '',
-                smsCode: otp1String +
-                    otp2String +
-                    otp3String +
-                    otp4String +
-                    otp5String +
-                    otp6String));
-          },
+        if (context.read<LoginBloc>().state.status != LoginStatus.wrongOtp)
+          ReusableButton(
+            buttonColor: AppColors.submitGreenColor,
+            text: 'Submit',
+            textColor: Colors.white,
+            onPressed: () {
+              debugPrint(otp1String +
+                  otp2String +
+                  otp3String +
+                  otp4String +
+                  otp5String +
+                  otp6String);
+              context.read<LoginBloc>().add(LoginEvent.verifyOtp(
+                  verificationId: '',
+                  smsCode: otp1String +
+                      otp2String +
+                      otp3String +
+                      otp4String +
+                      otp5String +
+                      otp6String));
+            },
+          ),
+        if (context.read<LoginBloc>().state.status == LoginStatus.wrongOtp)
+          Padding(
+            padding: EdgeInsets.symmetric(
+                vertical: 25.h,
+                horizontal: MediaQuery.of(context).size.width *
+                    (DeviceType().isMobile ? 0.2 : 0.3)),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Expanded(
+                  child: SizedBox(
+                    width: 150,
+                    child: ReusableButton(
+                        padding: EdgeInsets.symmetric(horizontal: 10.h),
+                        buttonColor: AppColors.primaryColor,
+                        text: 'Resend',
+                        textColor: Colors.white,
+                        onPressed: () {
+                          context
+                              .read<LoginBloc>()
+                              .add(const LoginEvent.resendOtp());
+                        }),
+                  ),
+                ),
+                Expanded(
+                  child: ReusableButton(
+                    padding: EdgeInsets.symmetric(horizontal: 10.h),
+                    buttonColor: AppColors.submitGreenColor,
+                    text: 'Submit',
+                    textColor: Colors.white,
+                    onPressed: () {
+                      debugPrint(otp1String +
+                          otp2String +
+                          otp3String +
+                          otp4String +
+                          otp5String +
+                          otp6String);
+                      context.read<LoginBloc>().add(LoginEvent.verifyOtp(
+                          verificationId: '',
+                          smsCode: otp1String +
+                              otp2String +
+                              otp3String +
+                              otp4String +
+                              otp5String +
+                              otp6String));
+                    },
+                  ),
+                )
+              ],
+            ),
+          ),
+        SizedBox(
+          height: 30.h,
         ),
       ],
     );
@@ -132,55 +185,62 @@ class _LoginPage2OtpState extends State<LoginPage2Otp> {
       decoration: ShapeDecoration(
         color: Colors.white,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(80.w),
+          borderRadius:
+              BorderRadius.circular(DeviceType().isMobile ? 80.w : 40.w),
         ),
       ),
-      child: TextField(
-        // autofocus: true,
-        inputFormatters: [
-          LengthLimitingTextInputFormatter(1),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          TextField(
+            textAlign: TextAlign.center,
+            textAlignVertical: TextAlignVertical.center,
+            // autofocus: true,
+            inputFormatters: [
+              LengthLimitingTextInputFormatter(1),
+            ],
+            keyboardType: TextInputType.number,
+
+            onChanged: (value) {
+              switch (nodeIdx) {
+                case 1:
+                  otp1String = value;
+                  break;
+
+                case 2:
+                  otp2String = value;
+                  break;
+                case 3:
+                  otp3String = value;
+                  break;
+                case 4:
+                  otp4String = value;
+                  break;
+                case 5:
+                  otp5String = value;
+                  break;
+                case 6:
+                  otp6String = value;
+                  break;
+              }
+              if (value.length == 1 && nodeIdx == 6) {
+                FocusScope.of(context).unfocus();
+              }
+              if (value.length == 1 && nodeIdx != 6) {
+                FocusScope.of(context).nextFocus();
+              }
+              if (value.length == 0 && nodeIdx != 1) {
+                FocusScope.of(context).previousFocus();
+              }
+            },
+
+            focusNode: focusNode,
+            decoration: const InputDecoration(
+                contentPadding: EdgeInsets.all(0),
+                border: OutlineInputBorder(borderSide: BorderSide.none)),
+            style: AppTextStyles.nunito100w700black.copyWith(fontSize: 155.sp),
+          ),
         ],
-        keyboardType: TextInputType.number,
-
-        onChanged: (value) {
-          switch (nodeIdx) {
-            case 1:
-              otp1String = value;
-              break;
-
-            case 2:
-              otp2String = value;
-              break;
-            case 3:
-              otp3String = value;
-              break;
-            case 4:
-              otp4String = value;
-              break;
-            case 5:
-              otp5String = value;
-              break;
-            case 6:
-              otp6String = value;
-              break;
-          }
-          if (value.length == 1 && nodeIdx == 6) {
-            FocusScope.of(context).unfocus();
-          }
-          if (value.length == 1 && nodeIdx != 6) {
-            FocusScope.of(context).nextFocus();
-          }
-          if (value.length == 0 && nodeIdx != 1) {
-            FocusScope.of(context).previousFocus();
-          }
-        },
-        focusNode: focusNode,
-        textAlignVertical: TextAlignVertical.center,
-        textAlign: TextAlign.center,
-        decoration: const InputDecoration(
-            border: OutlineInputBorder(borderSide: BorderSide.none)),
-        style: AppTextStyles.nunito100w700black
-            .copyWith(fontSize: 155.sp, height: 7.sp),
       ),
     );
   }

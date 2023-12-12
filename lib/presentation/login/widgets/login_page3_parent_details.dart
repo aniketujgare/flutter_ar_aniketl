@@ -29,19 +29,21 @@ class LoginPage3ParentDetails extends StatelessWidget {
           textAlign: TextAlign.center,
           style: DeviceType().isMobile
               ? AppTextStyles.nunito95w400white
-              : AppTextStyles.nunito56w400white,
+              : AppTextStyles.nunito100w400white,
         ),
         SizedBox(
           height: 16.h,
         ),
         const ReusableTextField(
           countryCodeVisible: false,
-          hintText: 'Enter a parent’s full name',
+          hintText: '    Enter a parent’s full name',
         ),
         SizedBox(
           height: 16.h,
         ),
-        const ReusableTextField(),
+        const ReusableTextField(
+          textInputType: TextInputType.number,
+        ),
         SizedBox(
           height: 16.h,
         ),

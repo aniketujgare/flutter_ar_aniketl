@@ -23,6 +23,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         verifyOtp: (event) async => await _verifyOtp(event, emit),
         error: (event) async => await _error(event, emit),
         guestLogin: (event) async => await _guestLogin(event, emit),
+        resendOtp: (_) async => await _resendOtp(emit),
       );
     });
   }
@@ -47,13 +48,18 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       var resu = await _firebaseAuth.signInWithCredential(credential);
       if (resu.user != null) {
         if (state.isGuest) {
-          // authenticationRepository.sendGuestDataToServer(guestName: state);
+          //Todo:Implement Succes state UI
+          emit(state.copyWith(status: LoginStatus.phoneNo1));
+          await authenticationRepository.sendGuestDataToServer(
+              guestName: state.parentName, guestPhone: state.mobileNumber);
         } else {
           emit(state.copyWith(status: LoginStatus.parents3));
         }
       }
     } catch (e) {
-      add(LoginEvent.error(errorMessage: '$e'));
+      emit(state.copyWith(status: LoginStatus.wrongOtp));
+
+      // add(LoginEvent.error(errorMessage: '$e'));
     }
   }
 
@@ -83,7 +89,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   _phoneNumberAuth(PhoneNumberAuth event, Emitter<LoginState> emit) async {
     debugPrint('inside pohone no auth ${event.mobileNumber}');
     try {
-      emit(state.copyWith(status: LoginStatus.loading));
+      emit(state.copyWith(
+          status: LoginStatus.loading, mobileNumber: event.mobileNumber));
 
       await _firebaseAuth.verifyPhoneNumber(
         phoneNumber: '+91${event.mobileNumber}',
@@ -102,7 +109,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         codeAutoRetrievalTimeout: (String verificationId) {},
       );
     } catch (e) {
-      add(LoginEvent.error(errorMessage: '$e'));
+      add(const LoginEvent.error(errorMessage: 'Wrong OTP entered'));
     }
   }
 
@@ -116,7 +123,14 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   }
 
   _guestLogin(GuestLogin event, Emitter<LoginState> emit) {
-    emit(state.copyWith(isGuest: true));
+    emit(state.copyWith(
+        isGuest: true,
+        parentName: event.parentsName,
+        mobileNumber: event.mobileNumber));
     add(LoginEvent.phoneNumberAuth(mobileNumber: event.mobileNumber));
+  }
+
+  _resendOtp(Emitter<LoginState> emit) async {
+    add(LoginEvent.phoneNumberAuth(mobileNumber: state.mobileNumber));
   }
 }

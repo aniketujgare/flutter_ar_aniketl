@@ -26,6 +26,7 @@ class LoginScreenState extends State<LoginScreen>
   late final Animation<double> _rotateAnimationKidsLogo;
   late final Animation<double> _opacityAnimationKidsLogo;
   late final Animation<double> _flipLogosAnimation;
+  late final Animation<double> _opacityLogos;
   late final Animation<double> _opacityCircle;
   late final Animation<double> _animationCircle;
   late final Animation<double> _opacityPaws;
@@ -81,7 +82,15 @@ class LoginScreenState extends State<LoginScreen>
         curve: const Interval(0.306, 0.34, curve: Curves.easeOut),
       ),
     );
-
+    _opacityLogos = Tween<double>(
+      begin: 1.0,
+      end: 0.0,
+    ).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: const Interval(0.33, 0.34, curve: Curves.easeOut),
+      ),
+    );
     _opacityCircle = Tween<double>(begin: 0, end: 1).animate(
       CurvedAnimation(
         parent: _controller,
@@ -154,12 +163,11 @@ class LoginScreenState extends State<LoginScreen>
     _controller.addListener(() {
       setState(() {});
     });
-
-    super.initState();
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
+    super.initState();
   }
 
   @override
@@ -176,7 +184,6 @@ class LoginScreenState extends State<LoginScreen>
 
   @override
   Widget build(BuildContext context) {
-    print(_animationPaws.value);
     return Scaffold(
         resizeToAvoidBottomInset: false,
         extendBody: true,
@@ -212,41 +219,47 @@ class LoginScreenState extends State<LoginScreen>
                       clipBehavior: Clip.none,
                       alignment: Alignment.topCenter,
                       children: [
-                        Transform(
-                          transform: Matrix4.rotationY(
-                              _flipLogosAnimation.value * -1 * 3 * 3.14 / 6)
-                            ..setEntry(3, 2, 0.001),
-                          alignment: Alignment.center,
-                          child: SizedBox(
-                            width: 1900.w * _sizeAnimationSmartXRLogo.value,
-                            child: Opacity(
-                              opacity: _opacityAnimationSmartXRLogo.value,
-                              child: Image.asset(
-                                  'assets/images/PNG Icons/SmartXR Logo P.png',
-                                  width: 770.w),
-                            ),
-                          ),
-                        ),
-                        Positioned(
-                          top: 50.h,
+                        Opacity(
+                          opacity: _opacityLogos.value,
                           child: Transform(
-                            // origin: Offset(dx, dy),
                             transform: Matrix4.rotationY(
                                 _flipLogosAnimation.value * -1 * 3 * 3.14 / 6)
                               ..setEntry(3, 2, 0.001),
                             alignment: Alignment.center,
                             child: SizedBox(
-                              width: 990.w,
-                              // height: 2000.h,
+                              width: 1900.w * _sizeAnimationSmartXRLogo.value,
                               child: Opacity(
-                                opacity: _opacityAnimationKidsLogo.value,
-                                child: Transform(
-                                  alignment: Alignment.center,
-                                  transform: Matrix4.rotationY(
-                                      _rotateAnimationKidsLogo.value),
-                                  child: Image.asset(
-                                    'assets/images/PNG Icons/kids 1.png',
-                                    fit: BoxFit.cover,
+                                opacity: _opacityAnimationSmartXRLogo.value,
+                                child: Image.asset(
+                                    'assets/images/PNG Icons/SmartXR Logo P.png',
+                                    width: 770.w),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Positioned(
+                          top: 50.h,
+                          child: Opacity(
+                            opacity: _opacityLogos.value,
+                            child: Transform(
+                              // origin: Offset(dx, dy),
+                              transform: Matrix4.rotationY(
+                                  _flipLogosAnimation.value * -1 * 3 * 3.14 / 6)
+                                ..setEntry(3, 2, 0.001),
+                              alignment: Alignment.center,
+                              child: SizedBox(
+                                width: 990.w,
+                                // height: 2000.h,
+                                child: Opacity(
+                                  opacity: _opacityAnimationKidsLogo.value,
+                                  child: Transform(
+                                    alignment: Alignment.center,
+                                    transform: Matrix4.rotationY(
+                                        _rotateAnimationKidsLogo.value),
+                                    child: Image.asset(
+                                      'assets/images/PNG Icons/kids_1.png',
+                                      fit: BoxFit.cover,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -294,9 +307,13 @@ class LoginScreenState extends State<LoginScreen>
                                   const LoginEvent.updateStatus(
                                       status: LoginStatus.phoneNo1));
                             }
+                            if (state.status == LoginStatus.wrongOtp) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content: Text("Wrong OTP entered")));
+                            }
                           },
                           builder: (context, state) {
-                            // return const LoginPage4Guest();
                             switch (state.status) {
                               case LoginStatus.loading:
                                 return const Center(
@@ -305,11 +322,13 @@ class LoginScreenState extends State<LoginScreen>
                                 return const LoginPage1MobileNumber();
                               case LoginStatus.otp2:
                                 return const LoginPage2Otp();
+                              case LoginStatus.wrongOtp:
+                                return const LoginPage2Otp();
                               case LoginStatus.parents3:
                                 return const LoginPage3ParentDetails();
                               case LoginStatus.guest:
                                 return const LoginPage4Guest();
-                              default:
+                              case LoginStatus.error:
                                 return const Center(
                                     child: Text("Error on login"));
                             }

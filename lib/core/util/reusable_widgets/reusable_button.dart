@@ -9,18 +9,20 @@ class ReusableButton extends StatelessWidget {
   final Color buttonColor;
   final Color textColor;
   final VoidCallback? onPressed;
+  final EdgeInsetsGeometry? padding;
   const ReusableButton({
     super.key,
     required this.buttonColor,
     required this.text,
     required this.textColor,
     this.onPressed,
+    this.padding,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 45.h),
+      padding: padding ?? EdgeInsets.symmetric(horizontal: 45.h),
       height: 70.h,
       width: double.maxFinite,
       child: ElevatedButton(

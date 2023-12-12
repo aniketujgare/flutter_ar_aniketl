@@ -59,7 +59,7 @@ class AuthenticationRepository {
     }
   }
 
-  void sendGuestDataToServer(
+  Future<void> sendGuestDataToServer(
       {required String guestName, required String guestPhone}) async {
     final response = await http.post(
       Uri.parse(

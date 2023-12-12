@@ -51,5 +51,18 @@
 	<string>We need access to the camera for scanning QR codes.</string>
 	<key>Privacy - Camera Usage Description</key>
 	<string>$(PRODUCT_NAME) uses Cameras</string>
+	<key>CFBundleURLTypes</key>
+<array>
+    <dict>
+        <key>CFBundleIdentifier</key>
+        <string></string>
+        <key>CFBundleTypeRole</key>
+        <string>Editor</string>
+        <key>CFBundleURLSchemes</key>
+        <array>
+            <string>app-1-159319816092-ios-2a47ad6a8fac132327ba59</string>
+        </array>
+    </dict>
+</array>
 </dict>
 </plist>

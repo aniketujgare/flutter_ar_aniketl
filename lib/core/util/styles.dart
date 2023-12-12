@@ -44,9 +44,9 @@ class AppTextStyles {
     fontFamily: 'Nunito',
     fontWeight: FontWeight.w700,
   );
-  static var nunito56w400white = _createTextStyle(
+  static var nunito100w400white = _createTextStyle(
       fontFamily: "Nunito",
-      fontSize: 56.sp,
+      fontSize: 100.sp,
       fontWeight: FontWeight.w400,
       color: Colors.white);
   static var nunito100w400hintText = _createTextStyle(

@@ -29,6 +29,7 @@ mixin _$LoginEvent {
     required TResult Function(String errorMessage) error,
     required TResult Function(String parentsName, String mobileNumber)
         guestLogin,
+    required TResult Function() resendOtp,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -41,6 +42,7 @@ mixin _$LoginEvent {
     TResult? Function(String mobileNumber)? phoneNumberAuth,
     TResult? Function(String errorMessage)? error,
     TResult? Function(String parentsName, String mobileNumber)? guestLogin,
+    TResult? Function()? resendOtp,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -53,6 +55,7 @@ mixin _$LoginEvent {
     TResult Function(String mobileNumber)? phoneNumberAuth,
     TResult Function(String errorMessage)? error,
     TResult Function(String parentsName, String mobileNumber)? guestLogin,
+    TResult Function()? resendOtp,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -65,6 +68,7 @@ mixin _$LoginEvent {
     required TResult Function(PhoneNumberAuth value) phoneNumberAuth,
     required TResult Function(LoginError value) error,
     required TResult Function(GuestLogin value) guestLogin,
+    required TResult Function(ResendOTP value) resendOtp,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -76,6 +80,7 @@ mixin _$LoginEvent {
     TResult? Function(PhoneNumberAuth value)? phoneNumberAuth,
     TResult? Function(LoginError value)? error,
     TResult? Function(GuestLogin value)? guestLogin,
+    TResult? Function(ResendOTP value)? resendOtp,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -87,6 +92,7 @@ mixin _$LoginEvent {
     TResult Function(PhoneNumberAuth value)? phoneNumberAuth,
     TResult Function(LoginError value)? error,
     TResult Function(GuestLogin value)? guestLogin,
+    TResult Function(ResendOTP value)? resendOtp,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -195,6 +201,7 @@ class _$RequestOtpImpl implements RequestOtp {
     required TResult Function(String errorMessage) error,
     required TResult Function(String parentsName, String mobileNumber)
         guestLogin,
+    required TResult Function() resendOtp,
   }) {
     return requestOtp(verificationId, resendToken);
   }
@@ -210,6 +217,7 @@ class _$RequestOtpImpl implements RequestOtp {
     TResult? Function(String mobileNumber)? phoneNumberAuth,
     TResult? Function(String errorMessage)? error,
     TResult? Function(String parentsName, String mobileNumber)? guestLogin,
+    TResult? Function()? resendOtp,
   }) {
     return requestOtp?.call(verificationId, resendToken);
   }
@@ -225,6 +233,7 @@ class _$RequestOtpImpl implements RequestOtp {
     TResult Function(String mobileNumber)? phoneNumberAuth,
     TResult Function(String errorMessage)? error,
     TResult Function(String parentsName, String mobileNumber)? guestLogin,
+    TResult Function()? resendOtp,
     required TResult orElse(),
   }) {
     if (requestOtp != null) {
@@ -243,6 +252,7 @@ class _$RequestOtpImpl implements RequestOtp {
     required TResult Function(PhoneNumberAuth value) phoneNumberAuth,
     required TResult Function(LoginError value) error,
     required TResult Function(GuestLogin value) guestLogin,
+    required TResult Function(ResendOTP value) resendOtp,
   }) {
     return requestOtp(this);
   }
@@ -257,6 +267,7 @@ class _$RequestOtpImpl implements RequestOtp {
     TResult? Function(PhoneNumberAuth value)? phoneNumberAuth,
     TResult? Function(LoginError value)? error,
     TResult? Function(GuestLogin value)? guestLogin,
+    TResult? Function(ResendOTP value)? resendOtp,
   }) {
     return requestOtp?.call(this);
   }
@@ -271,6 +282,7 @@ class _$RequestOtpImpl implements RequestOtp {
     TResult Function(PhoneNumberAuth value)? phoneNumberAuth,
     TResult Function(LoginError value)? error,
     TResult Function(GuestLogin value)? guestLogin,
+    TResult Function(ResendOTP value)? resendOtp,
     required TResult orElse(),
   }) {
     if (requestOtp != null) {
@@ -387,6 +399,7 @@ class _$VerifyOtpImpl implements VerifyOtp {
     required TResult Function(String errorMessage) error,
     required TResult Function(String parentsName, String mobileNumber)
         guestLogin,
+    required TResult Function() resendOtp,
   }) {
     return verifyOtp(verificationId, resendToken, smsCode);
   }
@@ -402,6 +415,7 @@ class _$VerifyOtpImpl implements VerifyOtp {
     TResult? Function(String mobileNumber)? phoneNumberAuth,
     TResult? Function(String errorMessage)? error,
     TResult? Function(String parentsName, String mobileNumber)? guestLogin,
+    TResult? Function()? resendOtp,
   }) {
     return verifyOtp?.call(verificationId, resendToken, smsCode);
   }
@@ -417,6 +431,7 @@ class _$VerifyOtpImpl implements VerifyOtp {
     TResult Function(String mobileNumber)? phoneNumberAuth,
     TResult Function(String errorMessage)? error,
     TResult Function(String parentsName, String mobileNumber)? guestLogin,
+    TResult Function()? resendOtp,
     required TResult orElse(),
   }) {
     if (verifyOtp != null) {
@@ -435,6 +450,7 @@ class _$VerifyOtpImpl implements VerifyOtp {
     required TResult Function(PhoneNumberAuth value) phoneNumberAuth,
     required TResult Function(LoginError value) error,
     required TResult Function(GuestLogin value) guestLogin,
+    required TResult Function(ResendOTP value) resendOtp,
   }) {
     return verifyOtp(this);
   }
@@ -449,6 +465,7 @@ class _$VerifyOtpImpl implements VerifyOtp {
     TResult? Function(PhoneNumberAuth value)? phoneNumberAuth,
     TResult? Function(LoginError value)? error,
     TResult? Function(GuestLogin value)? guestLogin,
+    TResult? Function(ResendOTP value)? resendOtp,
   }) {
     return verifyOtp?.call(this);
   }
@@ -463,6 +480,7 @@ class _$VerifyOtpImpl implements VerifyOtp {
     TResult Function(PhoneNumberAuth value)? phoneNumberAuth,
     TResult Function(LoginError value)? error,
     TResult Function(GuestLogin value)? guestLogin,
+    TResult Function(ResendOTP value)? resendOtp,
     required TResult orElse(),
   }) {
     if (verifyOtp != null) {
@@ -562,6 +580,7 @@ class _$UpdateStatusImpl implements UpdateStatus {
     required TResult Function(String errorMessage) error,
     required TResult Function(String parentsName, String mobileNumber)
         guestLogin,
+    required TResult Function() resendOtp,
   }) {
     return updateStatus(status);
   }
@@ -577,6 +596,7 @@ class _$UpdateStatusImpl implements UpdateStatus {
     TResult? Function(String mobileNumber)? phoneNumberAuth,
     TResult? Function(String errorMessage)? error,
     TResult? Function(String parentsName, String mobileNumber)? guestLogin,
+    TResult? Function()? resendOtp,
   }) {
     return updateStatus?.call(status);
   }
@@ -592,6 +612,7 @@ class _$UpdateStatusImpl implements UpdateStatus {
     TResult Function(String mobileNumber)? phoneNumberAuth,
     TResult Function(String errorMessage)? error,
     TResult Function(String parentsName, String mobileNumber)? guestLogin,
+    TResult Function()? resendOtp,
     required TResult orElse(),
   }) {
     if (updateStatus != null) {
@@ -610,6 +631,7 @@ class _$UpdateStatusImpl implements UpdateStatus {
     required TResult Function(PhoneNumberAuth value) phoneNumberAuth,
     required TResult Function(LoginError value) error,
     required TResult Function(GuestLogin value) guestLogin,
+    required TResult Function(ResendOTP value) resendOtp,
   }) {
     return updateStatus(this);
   }
@@ -624,6 +646,7 @@ class _$UpdateStatusImpl implements UpdateStatus {
     TResult? Function(PhoneNumberAuth value)? phoneNumberAuth,
     TResult? Function(LoginError value)? error,
     TResult? Function(GuestLogin value)? guestLogin,
+    TResult? Function(ResendOTP value)? resendOtp,
   }) {
     return updateStatus?.call(this);
   }
@@ -638,6 +661,7 @@ class _$UpdateStatusImpl implements UpdateStatus {
     TResult Function(PhoneNumberAuth value)? phoneNumberAuth,
     TResult Function(LoginError value)? error,
     TResult Function(GuestLogin value)? guestLogin,
+    TResult Function(ResendOTP value)? resendOtp,
     required TResult orElse(),
   }) {
     if (updateStatus != null) {
@@ -734,6 +758,7 @@ class _$CheckMobileNoExistsImpl implements CheckMobileNoExists {
     required TResult Function(String errorMessage) error,
     required TResult Function(String parentsName, String mobileNumber)
         guestLogin,
+    required TResult Function() resendOtp,
   }) {
     return checkMobileNoExists(mobileNumber);
   }
@@ -749,6 +774,7 @@ class _$CheckMobileNoExistsImpl implements CheckMobileNoExists {
     TResult? Function(String mobileNumber)? phoneNumberAuth,
     TResult? Function(String errorMessage)? error,
     TResult? Function(String parentsName, String mobileNumber)? guestLogin,
+    TResult? Function()? resendOtp,
   }) {
     return checkMobileNoExists?.call(mobileNumber);
   }
@@ -764,6 +790,7 @@ class _$CheckMobileNoExistsImpl implements CheckMobileNoExists {
     TResult Function(String mobileNumber)? phoneNumberAuth,
     TResult Function(String errorMessage)? error,
     TResult Function(String parentsName, String mobileNumber)? guestLogin,
+    TResult Function()? resendOtp,
     required TResult orElse(),
   }) {
     if (checkMobileNoExists != null) {
@@ -782,6 +809,7 @@ class _$CheckMobileNoExistsImpl implements CheckMobileNoExists {
     required TResult Function(PhoneNumberAuth value) phoneNumberAuth,
     required TResult Function(LoginError value) error,
     required TResult Function(GuestLogin value) guestLogin,
+    required TResult Function(ResendOTP value) resendOtp,
   }) {
     return checkMobileNoExists(this);
   }
@@ -796,6 +824,7 @@ class _$CheckMobileNoExistsImpl implements CheckMobileNoExists {
     TResult? Function(PhoneNumberAuth value)? phoneNumberAuth,
     TResult? Function(LoginError value)? error,
     TResult? Function(GuestLogin value)? guestLogin,
+    TResult? Function(ResendOTP value)? resendOtp,
   }) {
     return checkMobileNoExists?.call(this);
   }
@@ -810,6 +839,7 @@ class _$CheckMobileNoExistsImpl implements CheckMobileNoExists {
     TResult Function(PhoneNumberAuth value)? phoneNumberAuth,
     TResult Function(LoginError value)? error,
     TResult Function(GuestLogin value)? guestLogin,
+    TResult Function(ResendOTP value)? resendOtp,
     required TResult orElse(),
   }) {
     if (checkMobileNoExists != null) {
@@ -907,6 +937,7 @@ class _$PhoneNumberAuthImpl implements PhoneNumberAuth {
     required TResult Function(String errorMessage) error,
     required TResult Function(String parentsName, String mobileNumber)
         guestLogin,
+    required TResult Function() resendOtp,
   }) {
     return phoneNumberAuth(mobileNumber);
   }
@@ -922,6 +953,7 @@ class _$PhoneNumberAuthImpl implements PhoneNumberAuth {
     TResult? Function(String mobileNumber)? phoneNumberAuth,
     TResult? Function(String errorMessage)? error,
     TResult? Function(String parentsName, String mobileNumber)? guestLogin,
+    TResult? Function()? resendOtp,
   }) {
     return phoneNumberAuth?.call(mobileNumber);
   }
@@ -937,6 +969,7 @@ class _$PhoneNumberAuthImpl implements PhoneNumberAuth {
     TResult Function(String mobileNumber)? phoneNumberAuth,
     TResult Function(String errorMessage)? error,
     TResult Function(String parentsName, String mobileNumber)? guestLogin,
+    TResult Function()? resendOtp,
     required TResult orElse(),
   }) {
     if (phoneNumberAuth != null) {
@@ -955,6 +988,7 @@ class _$PhoneNumberAuthImpl implements PhoneNumberAuth {
     required TResult Function(PhoneNumberAuth value) phoneNumberAuth,
     required TResult Function(LoginError value) error,
     required TResult Function(GuestLogin value) guestLogin,
+    required TResult Function(ResendOTP value) resendOtp,
   }) {
     return phoneNumberAuth(this);
   }
@@ -969,6 +1003,7 @@ class _$PhoneNumberAuthImpl implements PhoneNumberAuth {
     TResult? Function(PhoneNumberAuth value)? phoneNumberAuth,
     TResult? Function(LoginError value)? error,
     TResult? Function(GuestLogin value)? guestLogin,
+    TResult? Function(ResendOTP value)? resendOtp,
   }) {
     return phoneNumberAuth?.call(this);
   }
@@ -983,6 +1018,7 @@ class _$PhoneNumberAuthImpl implements PhoneNumberAuth {
     TResult Function(PhoneNumberAuth value)? phoneNumberAuth,
     TResult Function(LoginError value)? error,
     TResult Function(GuestLogin value)? guestLogin,
+    TResult Function(ResendOTP value)? resendOtp,
     required TResult orElse(),
   }) {
     if (phoneNumberAuth != null) {
@@ -1079,6 +1115,7 @@ class _$LoginErrorImpl implements LoginError {
     required TResult Function(String errorMessage) error,
     required TResult Function(String parentsName, String mobileNumber)
         guestLogin,
+    required TResult Function() resendOtp,
   }) {
     return error(errorMessage);
   }
@@ -1094,6 +1131,7 @@ class _$LoginErrorImpl implements LoginError {
     TResult? Function(String mobileNumber)? phoneNumberAuth,
     TResult? Function(String errorMessage)? error,
     TResult? Function(String parentsName, String mobileNumber)? guestLogin,
+    TResult? Function()? resendOtp,
   }) {
     return error?.call(errorMessage);
   }
@@ -1109,6 +1147,7 @@ class _$LoginErrorImpl implements LoginError {
     TResult Function(String mobileNumber)? phoneNumberAuth,
     TResult Function(String errorMessage)? error,
     TResult Function(String parentsName, String mobileNumber)? guestLogin,
+    TResult Function()? resendOtp,
     required TResult orElse(),
   }) {
     if (error != null) {
@@ -1127,6 +1166,7 @@ class _$LoginErrorImpl implements LoginError {
     required TResult Function(PhoneNumberAuth value) phoneNumberAuth,
     required TResult Function(LoginError value) error,
     required TResult Function(GuestLogin value) guestLogin,
+    required TResult Function(ResendOTP value) resendOtp,
   }) {
     return error(this);
   }
@@ -1141,6 +1181,7 @@ class _$LoginErrorImpl implements LoginError {
     TResult? Function(PhoneNumberAuth value)? phoneNumberAuth,
     TResult? Function(LoginError value)? error,
     TResult? Function(GuestLogin value)? guestLogin,
+    TResult? Function(ResendOTP value)? resendOtp,
   }) {
     return error?.call(this);
   }
@@ -1155,6 +1196,7 @@ class _$LoginErrorImpl implements LoginError {
     TResult Function(PhoneNumberAuth value)? phoneNumberAuth,
     TResult Function(LoginError value)? error,
     TResult Function(GuestLogin value)? guestLogin,
+    TResult Function(ResendOTP value)? resendOtp,
     required TResult orElse(),
   }) {
     if (error != null) {
@@ -1260,6 +1302,7 @@ class _$GuestLoginImpl implements GuestLogin {
     required TResult Function(String errorMessage) error,
     required TResult Function(String parentsName, String mobileNumber)
         guestLogin,
+    required TResult Function() resendOtp,
   }) {
     return guestLogin(parentsName, mobileNumber);
   }
@@ -1275,6 +1318,7 @@ class _$GuestLoginImpl implements GuestLogin {
     TResult? Function(String mobileNumber)? phoneNumberAuth,
     TResult? Function(String errorMessage)? error,
     TResult? Function(String parentsName, String mobileNumber)? guestLogin,
+    TResult? Function()? resendOtp,
   }) {
     return guestLogin?.call(parentsName, mobileNumber);
   }
@@ -1290,6 +1334,7 @@ class _$GuestLoginImpl implements GuestLogin {
     TResult Function(String mobileNumber)? phoneNumberAuth,
     TResult Function(String errorMessage)? error,
     TResult Function(String parentsName, String mobileNumber)? guestLogin,
+    TResult Function()? resendOtp,
     required TResult orElse(),
   }) {
     if (guestLogin != null) {
@@ -1308,6 +1353,7 @@ class _$GuestLoginImpl implements GuestLogin {
     required TResult Function(PhoneNumberAuth value) phoneNumberAuth,
     required TResult Function(LoginError value) error,
     required TResult Function(GuestLogin value) guestLogin,
+    required TResult Function(ResendOTP value) resendOtp,
   }) {
     return guestLogin(this);
   }
@@ -1322,6 +1368,7 @@ class _$GuestLoginImpl implements GuestLogin {
     TResult? Function(PhoneNumberAuth value)? phoneNumberAuth,
     TResult? Function(LoginError value)? error,
     TResult? Function(GuestLogin value)? guestLogin,
+    TResult? Function(ResendOTP value)? resendOtp,
   }) {
     return guestLogin?.call(this);
   }
@@ -1336,6 +1383,7 @@ class _$GuestLoginImpl implements GuestLogin {
     TResult Function(PhoneNumberAuth value)? phoneNumberAuth,
     TResult Function(LoginError value)? error,
     TResult Function(GuestLogin value)? guestLogin,
+    TResult Function(ResendOTP value)? resendOtp,
     required TResult orElse(),
   }) {
     if (guestLogin != null) {
@@ -1357,9 +1405,154 @@ abstract class GuestLogin implements LoginEvent {
 }
 
 /// @nodoc
+abstract class _$$ResendOTPImplCopyWith<$Res> {
+  factory _$$ResendOTPImplCopyWith(
+          _$ResendOTPImpl value, $Res Function(_$ResendOTPImpl) then) =
+      __$$ResendOTPImplCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$ResendOTPImplCopyWithImpl<$Res>
+    extends _$LoginEventCopyWithImpl<$Res, _$ResendOTPImpl>
+    implements _$$ResendOTPImplCopyWith<$Res> {
+  __$$ResendOTPImplCopyWithImpl(
+      _$ResendOTPImpl _value, $Res Function(_$ResendOTPImpl) _then)
+      : super(_value, _then);
+}
+
+/// @nodoc
+
+class _$ResendOTPImpl implements ResendOTP {
+  const _$ResendOTPImpl();
+
+  @override
+  String toString() {
+    return 'LoginEvent.resendOtp()';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _$ResendOTPImpl);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(String verificationId, int? resendToken)
+        requestOtp,
+    required TResult Function(
+            String verificationId, int? resendToken, String smsCode)
+        verifyOtp,
+    required TResult Function(LoginStatus status) updateStatus,
+    required TResult Function(String mobileNumber) checkMobileNoExists,
+    required TResult Function(String mobileNumber) phoneNumberAuth,
+    required TResult Function(String errorMessage) error,
+    required TResult Function(String parentsName, String mobileNumber)
+        guestLogin,
+    required TResult Function() resendOtp,
+  }) {
+    return resendOtp();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(String verificationId, int? resendToken)? requestOtp,
+    TResult? Function(String verificationId, int? resendToken, String smsCode)?
+        verifyOtp,
+    TResult? Function(LoginStatus status)? updateStatus,
+    TResult? Function(String mobileNumber)? checkMobileNoExists,
+    TResult? Function(String mobileNumber)? phoneNumberAuth,
+    TResult? Function(String errorMessage)? error,
+    TResult? Function(String parentsName, String mobileNumber)? guestLogin,
+    TResult? Function()? resendOtp,
+  }) {
+    return resendOtp?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(String verificationId, int? resendToken)? requestOtp,
+    TResult Function(String verificationId, int? resendToken, String smsCode)?
+        verifyOtp,
+    TResult Function(LoginStatus status)? updateStatus,
+    TResult Function(String mobileNumber)? checkMobileNoExists,
+    TResult Function(String mobileNumber)? phoneNumberAuth,
+    TResult Function(String errorMessage)? error,
+    TResult Function(String parentsName, String mobileNumber)? guestLogin,
+    TResult Function()? resendOtp,
+    required TResult orElse(),
+  }) {
+    if (resendOtp != null) {
+      return resendOtp();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(RequestOtp value) requestOtp,
+    required TResult Function(VerifyOtp value) verifyOtp,
+    required TResult Function(UpdateStatus value) updateStatus,
+    required TResult Function(CheckMobileNoExists value) checkMobileNoExists,
+    required TResult Function(PhoneNumberAuth value) phoneNumberAuth,
+    required TResult Function(LoginError value) error,
+    required TResult Function(GuestLogin value) guestLogin,
+    required TResult Function(ResendOTP value) resendOtp,
+  }) {
+    return resendOtp(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(RequestOtp value)? requestOtp,
+    TResult? Function(VerifyOtp value)? verifyOtp,
+    TResult? Function(UpdateStatus value)? updateStatus,
+    TResult? Function(CheckMobileNoExists value)? checkMobileNoExists,
+    TResult? Function(PhoneNumberAuth value)? phoneNumberAuth,
+    TResult? Function(LoginError value)? error,
+    TResult? Function(GuestLogin value)? guestLogin,
+    TResult? Function(ResendOTP value)? resendOtp,
+  }) {
+    return resendOtp?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(RequestOtp value)? requestOtp,
+    TResult Function(VerifyOtp value)? verifyOtp,
+    TResult Function(UpdateStatus value)? updateStatus,
+    TResult Function(CheckMobileNoExists value)? checkMobileNoExists,
+    TResult Function(PhoneNumberAuth value)? phoneNumberAuth,
+    TResult Function(LoginError value)? error,
+    TResult Function(GuestLogin value)? guestLogin,
+    TResult Function(ResendOTP value)? resendOtp,
+    required TResult orElse(),
+  }) {
+    if (resendOtp != null) {
+      return resendOtp(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class ResendOTP implements LoginEvent {
+  const factory ResendOTP() = _$ResendOTPImpl;
+}
+
+/// @nodoc
 mixin _$LoginState {
   LoginStatus get status => throw _privateConstructorUsedError;
   String get mobileNumber => throw _privateConstructorUsedError;
+  String get parentName => throw _privateConstructorUsedError;
   String get errorMessage => throw _privateConstructorUsedError;
   bool get isGuest => throw _privateConstructorUsedError;
 
@@ -1377,6 +1570,7 @@ abstract class $LoginStateCopyWith<$Res> {
   $Res call(
       {LoginStatus status,
       String mobileNumber,
+      String parentName,
       String errorMessage,
       bool isGuest});
 }
@@ -1396,6 +1590,7 @@ class _$LoginStateCopyWithImpl<$Res, $Val extends LoginState>
   $Res call({
     Object? status = null,
     Object? mobileNumber = null,
+    Object? parentName = null,
     Object? errorMessage = null,
     Object? isGuest = null,
   }) {
@@ -1407,6 +1602,10 @@ class _$LoginStateCopyWithImpl<$Res, $Val extends LoginState>
       mobileNumber: null == mobileNumber
           ? _value.mobileNumber
           : mobileNumber // ignore: cast_nullable_to_non_nullable
+              as String,
+      parentName: null == parentName
+          ? _value.parentName
+          : parentName // ignore: cast_nullable_to_non_nullable
               as String,
       errorMessage: null == errorMessage
           ? _value.errorMessage
@@ -1431,6 +1630,7 @@ abstract class _$$InitialImplCopyWith<$Res>
   $Res call(
       {LoginStatus status,
       String mobileNumber,
+      String parentName,
       String errorMessage,
       bool isGuest});
 }
@@ -1448,6 +1648,7 @@ class __$$InitialImplCopyWithImpl<$Res>
   $Res call({
     Object? status = null,
     Object? mobileNumber = null,
+    Object? parentName = null,
     Object? errorMessage = null,
     Object? isGuest = null,
   }) {
@@ -1459,6 +1660,10 @@ class __$$InitialImplCopyWithImpl<$Res>
       mobileNumber: null == mobileNumber
           ? _value.mobileNumber
           : mobileNumber // ignore: cast_nullable_to_non_nullable
+              as String,
+      parentName: null == parentName
+          ? _value.parentName
+          : parentName // ignore: cast_nullable_to_non_nullable
               as String,
       errorMessage: null == errorMessage
           ? _value.errorMessage
@@ -1478,6 +1683,7 @@ class _$InitialImpl implements Initial {
   const _$InitialImpl(
       {this.status = LoginStatus.phoneNo1,
       this.mobileNumber = "",
+      this.parentName = "",
       this.errorMessage = "",
       this.isGuest = false});
 
@@ -1489,6 +1695,9 @@ class _$InitialImpl implements Initial {
   final String mobileNumber;
   @override
   @JsonKey()
+  final String parentName;
+  @override
+  @JsonKey()
   final String errorMessage;
   @override
   @JsonKey()
@@ -1496,7 +1705,7 @@ class _$InitialImpl implements Initial {
 
   @override
   String toString() {
-    return 'LoginState(status: $status, mobileNumber: $mobileNumber, errorMessage: $errorMessage, isGuest: $isGuest)';
+    return 'LoginState(status: $status, mobileNumber: $mobileNumber, parentName: $parentName, errorMessage: $errorMessage, isGuest: $isGuest)';
   }
 
   @override
@@ -1507,14 +1716,16 @@ class _$InitialImpl implements Initial {
             (identical(other.status, status) || other.status == status) &&
             (identical(other.mobileNumber, mobileNumber) ||
                 other.mobileNumber == mobileNumber) &&
+            (identical(other.parentName, parentName) ||
+                other.parentName == parentName) &&
             (identical(other.errorMessage, errorMessage) ||
                 other.errorMessage == errorMessage) &&
             (identical(other.isGuest, isGuest) || other.isGuest == isGuest));
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, status, mobileNumber, errorMessage, isGuest);
+  int get hashCode => Object.hash(
+      runtimeType, status, mobileNumber, parentName, errorMessage, isGuest);
 
   @JsonKey(ignore: true)
   @override
@@ -1527,6 +1738,7 @@ abstract class Initial implements LoginState {
   const factory Initial(
       {final LoginStatus status,
       final String mobileNumber,
+      final String parentName,
       final String errorMessage,
       final bool isGuest}) = _$InitialImpl;
 
@@ -1534,6 +1746,8 @@ abstract class Initial implements LoginState {
   LoginStatus get status;
   @override
   String get mobileNumber;
+  @override
+  String get parentName;
   @override
   String get errorMessage;
   @override

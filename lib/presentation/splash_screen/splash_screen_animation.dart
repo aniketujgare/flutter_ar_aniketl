@@ -570,7 +570,7 @@ Column loginForm() {
         textAlign: TextAlign.center,
         style: DeviceType().isMobile
             ? AppTextStyles.nunito95w400white
-            : AppTextStyles.nunito56w400white,
+            : AppTextStyles.nunito100w400white,
       ),
       SizedBox(
         height: 20.h,
@@ -597,7 +597,7 @@ Column loginForm() {
         textAlign: TextAlign.center,
         style: DeviceType().isMobile
             ? AppTextStyles.nunito95w400white
-            : AppTextStyles.nunito56w400white,
+            : AppTextStyles.nunito100w400white,
       ),
       SizedBox(
         height: 20.h,
