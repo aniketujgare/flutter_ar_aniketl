@@ -3,8 +3,9 @@ import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_ar/domain/repositories/authentication_repository.dart';
-import 'package:flutter_ar/presentation/login/bloc/login_bloc/login_bloc.dart';
+import 'package:flutter_ar/presentation/login/bloc/guest_validation_bloc/guest_validation_bloc.dart';
+import 'domain/repositories/authentication_repository.dart';
+import 'presentation/login/bloc/login_bloc/login_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:size_config/size_config.dart';
 
@@ -16,6 +17,7 @@ import 'presentation/category/bloc/category_cubit/category_cubit.dart';
 import 'presentation/category/bloc/category_page_cubit/category_page_cubit.dart';
 import 'presentation/category/bloc/model_page_controler_cubit/models_page_controller_cubit.dart';
 import 'presentation/category/bloc/models_cubit/models_cubit.dart';
+import 'presentation/login/bloc/login_validation_bloc/login_validation_bloc.dart';
 
 final authenticationRepository = AuthenticationRepository();
 void main() async {
@@ -101,6 +103,12 @@ class MyAppState extends State<MyApp> {
             ),
             BlocProvider(
               create: (context) => LoginBloc(authenticationRepository),
+            ),
+            BlocProvider(
+              create: (context) => LoginValidationBloc(),
+            ),
+            BlocProvider(
+              create: (context) => GuestValidationBloc(),
             ),
           ],
           child: MaterialApp.router(

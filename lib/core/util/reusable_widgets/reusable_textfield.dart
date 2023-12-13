@@ -7,14 +7,18 @@ import '../styles.dart';
 class ReusableTextField extends StatelessWidget {
   final bool countryCodeVisible;
   final String hintText;
+  final String? errorText;
   final TextInputType? textInputType;
   final Function(String)? onChanged;
+  final FocusNode? focusNode;
   const ReusableTextField({
     super.key,
     this.countryCodeVisible = true,
     this.hintText = '',
     this.textInputType,
     this.onChanged,
+    this.errorText,
+    this.focusNode,
   });
 
   @override
@@ -26,14 +30,7 @@ class ReusableTextField extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           TextFormField(
-            validator: (string) {
-              RegExp regex =
-                  RegExp(r'/^\(?(\d{3})\)?[- ]?(\d{3})[- ]?(\d{4})$/');
-              if (!regex.hasMatch(string!))
-                print('phone is valid');
-              else
-                print('phone invalid');
-            },
+            focusNode: focusNode,
             keyboardType: textInputType,
             onChanged: onChanged,
             textAlignVertical: TextAlignVertical.center,
@@ -41,6 +38,7 @@ class ReusableTextField extends StatelessWidget {
               hintText: hintText,
               isCollapsed: true,
               hintStyle: AppTextStyles.nunito100w400hintText,
+              errorText: errorText,
               prefixIcon: countryCodeVisible
                   ? Container(
                       padding: EdgeInsets.fromLTRB(60.w, 0, 0, 0),
@@ -60,8 +58,8 @@ class ReusableTextField extends StatelessWidget {
                   OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
               contentPadding: EdgeInsets.only(
                   left: 60.w,
-                  top: DeviceType().isMobile ? 20.h : 5.h,
-                  bottom: DeviceType().isMobile ? 20.h : 5.h),
+                  top: DeviceType().isMobile ? 15.h : 5.h,
+                  bottom: DeviceType().isMobile ? 15.h : 5.h),
               filled: true,
               fillColor: Colors.white,
             ),

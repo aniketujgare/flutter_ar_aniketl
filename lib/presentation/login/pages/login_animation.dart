@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_ar/presentation/login/bloc/login_bloc/login_bloc.dart';
-import 'package:flutter_ar/presentation/login/widgets/login_page3_parent_details.dart';
-import 'package:flutter_ar/presentation/login/widgets/login_page4_guest.dart';
+import 'package:flutter_ar/data/models/phone_number.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:formz/formz.dart';
 import 'package:size_config/size_config.dart';
 
 import '../../../core/util/device_type.dart';
 import '../../../core/util/styles.dart';
+import '../bloc/login_bloc/login_bloc.dart';
+import '../bloc/login_validation_bloc/login_validation_bloc.dart';
 import '../widgets/login_page1_mobile_numbaer.dart';
 import '../widgets/login_page2_otp.dart';
+import '../widgets/login_page3_parent_details.dart';
+import '../widgets/login_page4_guest.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
