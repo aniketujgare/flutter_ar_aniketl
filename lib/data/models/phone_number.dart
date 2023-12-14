@@ -25,7 +25,7 @@ final class PhoneNumber extends FormzInput<String, PhoneNumberValidationError> {
   }
 }
 
-extension on PhoneNumberValidationError {
+extension ErrorString on PhoneNumberValidationError {
   String text() {
     switch (this) {
       case PhoneNumberValidationError.invalid:

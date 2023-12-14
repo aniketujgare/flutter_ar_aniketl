@@ -23,30 +23,14 @@ class LoginPage1MobileNumber extends StatelessWidget {
     return BlocListener<LoginValidationBloc, LoginValidationState>(
       listenWhen: (p, c) => p != c,
       listener: (context, state) {
-        // print('validation status ' + state.status.toString());
         if (state.status.isFailure) {
-          if (state.phoneNumber.error == PhoneNumberValidationError.digitLess) {
-            ScaffoldMessenger.of(context).removeCurrentSnackBar();
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content:
-                    Text('The mobile number contains fewer than 10 digits.'),
-              ),
-            );
-          }
-        } else if (state.phoneNumber.error ==
-            PhoneNumberValidationError.digitExcess) {
           ScaffoldMessenger.of(context).removeCurrentSnackBar();
-
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-              content: Text('The mobile number exceeds 10 digits.')));
-        } else if (state.phoneNumber.error ==
-            PhoneNumberValidationError.invalid) {
-          ScaffoldMessenger.of(context).removeCurrentSnackBar();
-
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-              content:
-                  Text('Please ensure the phone number entered is valid')));
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              backgroundColor: AppColors.primaryColor,
+              content: Text('! ${state.phoneNumber.error!.text()}'),
+            ),
+          );
         }
       },
       child: Column(

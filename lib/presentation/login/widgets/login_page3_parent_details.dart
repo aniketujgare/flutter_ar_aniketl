@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ar/data/models/guest_name.dart';
+import 'package:flutter_ar/data/models/phone_number.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
 import 'package:size_config/size_config.dart';
@@ -22,8 +24,21 @@ class LoginPage3ParentDetails extends StatelessWidget {
       listenWhen: (p, c) => p != c,
       listener: (context, state) {
         if (state.status.isFailure) {
+          ScaffoldMessenger.of(context).removeCurrentSnackBar();
           ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text("Please enter valid details")));
+            SnackBar(
+              backgroundColor: AppColors.primaryColor,
+              content: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (state.guestName.error != null)
+                    Text('! ${state.guestName.error!.text()}'),
+                  if (state.phoneNumber.error != null)
+                    Text('! ${state.phoneNumber.error!.text()}'),
+                ],
+              ),
+            ),
+          );
         }
       },
       child: Column(
