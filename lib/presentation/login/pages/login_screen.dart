@@ -1,206 +1,239 @@
-// import 'package:flutter/material.dart';
-// import 'package:flutter_ar/core/util/device_type.dart';
-// import 'package:flutter_ar/core/util/styles.dart';
-// import 'package:size_config/size_config.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:size_config/size_config.dart';
 
-// class LoginScreen extends StatelessWidget {
-//   const LoginScreen({super.key});
+import '../../../core/util/animations/login_screen_animation_controller.dart';
+import '../../../core/util/device_type.dart';
+import '../../../core/util/styles.dart';
+import '../bloc/login_bloc/login_bloc.dart';
+import '../widgets/login_page1_mobile_numbaer.dart';
+import '../widgets/login_page2_otp.dart';
+import '../widgets/login_page3_parent_details.dart';
+import '../widgets/login_page4_guest.dart';
 
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//         resizeToAvoidBottomInset: false,
-//         extendBody: true,
-//         backgroundColor: AppColors.accentColor,
-//         body: Padding(
-//           padding: EdgeInsets.fromLTRB(
-//               0, DeviceType().isMobile ? 100.h : 40.h, 0, 0),
-//           child: Stack(
-//             alignment: Alignment.center,
-//             clipBehavior: Clip.none,
-//             children: [
-//               Align(
-//                 alignment: Alignment.topCenter,
-//                 child: Image.asset(
-//                   'assets/images/Dog/dog01.png',
-//                   height: 200.h,
-//                 ),
-//               ),
-//               RotatedBox(
-//                 quarterTurns: 4,
-//                 child: ClipPath(
-//                   clipper: CurvedTopRectangleClipper(),
-//                   child: Container(
-//                     color: AppColors.secondaryColor,
-//                     child: Center(
-//                       child: Column(
-//                         mainAxisAlignment: MainAxisAlignment.start,
-//                         children: [
-//                           SizedBox(height: 280.h),
-//                           Text(
-//                             'Welcome!',
-//                             textAlign: TextAlign.center,
-//                             style: DeviceType().isMobile
-//                                 ? AppTextStyles.unitedRounded270w700
-//                                 : AppTextStyles.unitedRounded140w700,
-//                           ),
-//                           SizedBox(height: 25.h),
-//                           Text(
-//                             'Enter your mobile number to login',
-//                             textAlign: TextAlign.center,
-//                             style: DeviceType().isMobile
-//                                 ? AppTextStyles.nunito110w400white
-//                                 : AppTextStyles.nunito56w400white,
-//                           ),
-//                           SizedBox(
-//                             height: 20.h,
-//                           ),
-//                           const ReusableTextField(),
-//                           SizedBox(
-//                             height: 20.h,
-//                           ),
-//                           SizedBox(
-//                             width: 2000.w,
-//                             height: 75.h,
-//                             child: ReusableButton(
-//                               buttonColor: AppColors.primaryColor,
-//                               text: 'Send OTP',
-//                               textColor: Colors.white,
-//                               onPressed: () {},
-//                             ),
-//                           ),
-//                           SizedBox(
-//                             height: 70.h,
-//                           ),
-//                           Text(
-//                             'or continue as guest ',
-//                             textAlign: TextAlign.center,
-//                             style: DeviceType().isMobile
-//                                 ? AppTextStyles.nunito110w400white
-//                                 : AppTextStyles.nunito56w400white,
-//                           ),
-//                           SizedBox(
-//                             height: 20.h,
-//                           ),
-//                           SizedBox(
-//                             width: 2000.w,
-//                             height: 75.h,
-//                             child: ReusableButton(
-//                               text: 'Guest',
-//                               buttonColor: AppColors.accentColor,
-//                               textColor: AppColors.primaryColor,
-//                               onPressed: () {},
-//                             ),
-//                           ),
-//                         ],
-//                       ),
-//                     ),
-//                   ),
-//                 ),
-//               ),
-//               Positioned(
-//                 top: 140.h,
-//                 child: Image.asset(
-//                   'assets/images/Dog/dog03.png',
-//                   height: 100.h,
-//                   alignment: Alignment.topCenter,
-//                 ),
-//               ),
-//               Positioned(
-//                 top: 150.h,
-//                 child: Image.asset(
-//                   'assets/images/Dog/Paws.png',
-//                   height: 100.h,
-//                 ),
-//               ),
-//             ],
-//           ),
-//         ));
-//   }
-// }
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({Key? key}) : super(key: key);
 
-// class ReusableButton extends StatelessWidget {
-//   final String text;
-//   final Color buttonColor;
-//   final Color textColor;
-//   final VoidCallback? onPressed;
-//   const ReusableButton({
-//     super.key,
-//     required this.buttonColor,
-//     required this.text,
-//     required this.textColor,
-//     this.onPressed,
-//   });
+  @override
+  LoginScreenState createState() => LoginScreenState();
+}
 
-//   @override
-//   Widget build(BuildContext context) {
-//     return ElevatedButton(
-//       onPressed: onPressed,
-//       style: ElevatedButton.styleFrom(
-//           shape: const RoundedRectangleBorder(
-//               borderRadius: BorderRadius.all(Radius.circular(18))),
-//           backgroundColor: buttonColor),
-//       child: Text(
-//         text,
-//         style: DeviceType().isMobile
-//             ? AppTextStyles.nunito120w700white.copyWith(color: textColor)
-//             : AppTextStyles.nunito80w700white.copyWith(color: textColor),
-//         textAlign: TextAlign.center,
-//       ),
-//     );
-//   }
-// }
+class LoginScreenState extends State<LoginScreen>
+    with TickerProviderStateMixin {
+  late final LoginScreenAnimationController _animationController;
 
-// class ReusableTextField extends StatelessWidget {
-//   const ReusableTextField({
-//     super.key,
-//   });
+  @override
+  void initState() {
+    _animationController = LoginScreenAnimationController(this);
+    _animationController.initializeAnimations();
+    _animationController.controller.addListener(() {
+      setState(() {});
+    });
 
-//   @override
-//   Widget build(BuildContext context) {
-//     return SizedBox(
-//       width: 2000.w,
-//       height: 75.h,
-//       child: TextFormField(
-//         keyboardType: TextInputType.phone,
-//         decoration: InputDecoration(
-//           border: OutlineInputBorder(borderRadius: BorderRadius.circular(30)),
-//           contentPadding: const EdgeInsets.all(15),
-//           filled: true,
-//           fillColor: Colors.white,
-//           prefixText: "+91",
-//           prefixStyle: TextStyle(
-//             color: Colors.black,
-//             fontFamily: "Nunito",
-//             fontWeight: FontWeight.w700,
-//             fontSize: MediaQuery.of(context).size.width * 0.05,
-//           ),
-//         ),
-//         style: AppTextStyles.nunito80w700white,
-//       ),
-//     );
-//   }
-// }
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+    super.initState();
+  }
 
-// class CurvedTopRectangleClipper extends CustomClipper<Path> {
-//   @override
-//   Path getClip(Size size) {
-//     final path = Path()
-//       ..moveTo(0, DeviceType().isMobile ? 250.h : 350.h) // Move to top-left
-//       ..quadraticBezierTo(
-//           size.width / 2,
-//           DeviceType().isMobile ? 70.h : 0,
-//           size.width,
-//           DeviceType().isMobile ? 250.h : 350.h) // Curve to top-right
-//       ..lineTo(size.width, size.height) // Line to bottom-right
-//       ..lineTo(0, size.height) // Line to bottom-left
-//       ..close(); // Close the path
+  @override
+  void dispose() {
+    _animationController.dispose();
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.landscapeRight,
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+    super.dispose();
+  }
 
-//     return path;
-//   }
-
-//   @override
-//   bool shouldReclip(covariant CustomClipper<Path> oldClipper) {
-//     return false;
-//   }
-// }
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        resizeToAvoidBottomInset: false,
+        extendBody: true,
+        backgroundColor: const Color(0XffD1CBF9),
+        body: Padding(
+          padding:
+              EdgeInsets.fromLTRB(0, DeviceType().isMobile ? 0.h : 80.h, 0, 0),
+          child: Stack(
+            alignment: Alignment.topCenter,
+            clipBehavior: Clip.none,
+            children: [
+              Positioned(
+                top: 0.h,
+                child: Transform.translate(
+                  offset: Offset(
+                      0, _animationController.animationDodoTranslate.value.h),
+                  child: Visibility(
+                    visible: _animationController.animationDodoVisible.value,
+                    child: Image.asset(
+                      'assets/images/Dog/Dodo Animation.gif',
+                      height: 350.h,
+                      width: 350.h,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+              ),
+              Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 260.h),
+                    Stack(
+                      clipBehavior: Clip.none,
+                      alignment: Alignment.topCenter,
+                      children: [
+                        Opacity(
+                          opacity: _animationController.opacityLogos.value,
+                          child: Transform(
+                            transform: Matrix4.rotationY(
+                                _animationController.flipLogosAnimation.value *
+                                    -1 *
+                                    3 *
+                                    3.14 /
+                                    6)
+                              ..setEntry(3, 2, 0.001),
+                            alignment: Alignment.center,
+                            child: SizedBox(
+                              width: 1900.w *
+                                  _animationController
+                                      .sizeAnimationSmartXRLogo.value,
+                              child: Opacity(
+                                opacity: _animationController
+                                    .opacityAnimationSmartXRLogo.value,
+                                child: Image.asset(
+                                    'assets/images/PNG Icons/SmartXR Logo P.png',
+                                    width: 770.w),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Positioned(
+                          top: 50.h,
+                          child: Opacity(
+                            opacity: _animationController.opacityLogos.value,
+                            child: Transform(
+                              // origin: Offset(dx, dy),
+                              transform: Matrix4.rotationY(_animationController
+                                      .flipLogosAnimation.value *
+                                  -1 *
+                                  3 *
+                                  3.14 /
+                                  6)
+                                ..setEntry(3, 2, 0.001),
+                              alignment: Alignment.center,
+                              child: SizedBox(
+                                width: 990.w,
+                                // height: 2000.h,
+                                child: Opacity(
+                                  opacity: _animationController
+                                      .opacityAnimationKidsLogo.value,
+                                  child: Transform(
+                                    alignment: Alignment.center,
+                                    transform: Matrix4.rotationY(
+                                        _animationController
+                                            .rotateAnimationKidsLogo.value),
+                                    child: Image.asset(
+                                      'assets/images/PNG Icons/kids_1.png',
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Positioned(
+                          top: 28.h,
+                          child: SizedBox(
+                            height: _animationController.animationCircle.value,
+                            width: _animationController.animationCircle.value,
+                            child: Opacity(
+                              opacity: _animationController.opacityCircle.value,
+                              child: CircleAvatar(
+                                backgroundColor: AppColors.secondaryColor,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Positioned(
+                          top: 0,
+                          child: Transform.translate(
+                            offset: -_animationController.animationPaws.value,
+                            child: Opacity(
+                              opacity: _animationController.opacityPaws.value,
+                              child: Image.asset(
+                                'assets/images/Dog/Paws_First-Login.png',
+                                width: 420.h +
+                                    _animationController
+                                        .animationPawsStreatch.value,
+                                height: 90.h,
+                                fit: BoxFit.fill,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Opacity(
+                        opacity: _animationController.opacityLoginForm.value,
+                        child: BlocConsumer<LoginBloc, LoginState>(
+                          listener: (context, state) {
+                            if (state.status == LoginStatus.error) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text(state.errorMessage)));
+                              context.read<LoginBloc>().add(
+                                  const LoginEvent.updateStatus(
+                                      status: LoginStatus.phoneNo1));
+                            }
+                            if (state.status == LoginStatus.wrongOtp) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content: Text("Wrong OTP entered")));
+                            }
+                          },
+                          builder: (context, state) {
+                            switch (state.status) {
+                              case LoginStatus.loading:
+                                return const Center(
+                                    child: CircularProgressIndicator());
+                              case LoginStatus.phoneNo1:
+                                return const LoginPage1MobileNumber();
+                              case LoginStatus.otp2:
+                                return const LoginPage2Otp();
+                              case LoginStatus.wrongOtp:
+                                return const LoginPage2Otp();
+                              case LoginStatus.parents3:
+                                return const LoginPage3ParentDetails();
+                              case LoginStatus.guest:
+                                return const LoginPage4Guest();
+                              case LoginStatus.error:
+                                return const Center(
+                                    child: Text("Error on login"));
+                            }
+                          },
+                        )),
+                  ],
+                ),
+              ),
+              Positioned(
+                top: 140.h,
+                child: Opacity(
+                  opacity: 0,
+                  child: Image.asset(
+                    'assets/images/Dog/dog03.png',
+                    height: 100.h,
+                    alignment: Alignment.topCenter,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ));
+  }
+}

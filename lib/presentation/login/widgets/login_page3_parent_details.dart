@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:formz/formz.dart';
 import 'package:size_config/size_config.dart';
 
 import '../../../core/util/device_type.dart';
 import '../../../core/util/reusable_widgets/reusable_button.dart';
 import '../../../core/util/reusable_widgets/reusable_textfield.dart';
 import '../../../core/util/styles.dart';
+import '../bloc/guest_validation_bloc/guest_validation_bloc.dart';
 
 class LoginPage3ParentDetails extends StatelessWidget {
   const LoginPage3ParentDetails({
@@ -13,47 +16,82 @@ class LoginPage3ParentDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        SizedBox(height: 20.h),
-        Text(
-          'Welcome!',
-          textAlign: TextAlign.center,
-          style: DeviceType().isMobile
-              ? AppTextStyles.uniformRounded100Bold.copyWith(fontSize: 220.sp)
-              : AppTextStyles.uniformRounded100Bold,
-        ),
-        SizedBox(height: 20.h),
-        Text(
-          'Enter your mobile number to login',
-          textAlign: TextAlign.center,
-          style: DeviceType().isMobile
-              ? AppTextStyles.nunito95w400white
-              : AppTextStyles.nunito100w400white,
-        ),
-        SizedBox(
-          height: 16.h,
-        ),
-        const ReusableTextField(
-          countryCodeVisible: false,
-          hintText: '    Enter a parent’s full name',
-        ),
-        SizedBox(
-          height: 16.h,
-        ),
-        const ReusableTextField(
-          textInputType: TextInputType.number,
-        ),
-        SizedBox(
-          height: 16.h,
-        ),
-        ReusableButton(
-          buttonColor: AppColors.primaryColor,
-          text: 'Send OTP',
-          textColor: Colors.white,
-          onPressed: () {},
-        ),
-      ],
+    String parentsName = '';
+    String mobileNumber = '';
+    return BlocListener<GuestValidationBloc, GuestValidationState>(
+      listenWhen: (p, c) => p != c,
+      listener: (context, state) {
+        if (state.status.isFailure) {
+          ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text("Please enter valid details")));
+        }
+      },
+      child: Column(
+        children: [
+          SizedBox(height: 20.h),
+          Text(
+            'Welcome!',
+            textAlign: TextAlign.center,
+            style: DeviceType().isMobile
+                ? AppTextStyles.uniformRounded100Bold.copyWith(fontSize: 220.sp)
+                : AppTextStyles.uniformRounded100Bold,
+          ),
+          SizedBox(height: 20.h),
+          Text(
+            'Enter your mobile number to login',
+            textAlign: TextAlign.center,
+            style: DeviceType().isMobile
+                ? AppTextStyles.nunito95w400white
+                : AppTextStyles.nunito100w400white,
+          ),
+          SizedBox(
+            height: 16.h,
+          ),
+          BlocBuilder<GuestValidationBloc, GuestValidationState>(
+            builder: (context, state) {
+              return ReusableTextField(
+                countryCodeVisible: false,
+                hintText: 'Enter a parent’s full name',
+                onChanged: (value) {
+                  parentsName = value;
+                  context
+                      .read<GuestValidationBloc>()
+                      .add(GuestNameChanged(guestName: value));
+                },
+              );
+            },
+          ),
+          SizedBox(
+            height: 16.h,
+          ),
+          BlocBuilder<GuestValidationBloc, GuestValidationState>(
+            builder: (context, state) {
+              return ReusableTextField(
+                onChanged: (value) {
+                  mobileNumber = value;
+                  context
+                      .read<GuestValidationBloc>()
+                      .add(PhoneNumberChanged(phoneNumber: value));
+                },
+                textInputType: TextInputType.number,
+              );
+            },
+          ),
+          SizedBox(
+            height: 16.h,
+          ),
+          ReusableButton(
+            buttonColor: AppColors.primaryColor,
+            text: 'Send OTP',
+            textColor: Colors.white,
+            onPressed: () {
+              context
+                  .read<GuestValidationBloc>()
+                  .add(const GuestFormSubmitted());
+            },
+          ),
+        ],
+      ),
     );
   }
 }

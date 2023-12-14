@@ -7,19 +7,19 @@ final class PhoneNumber extends FormzInput<String, PhoneNumberValidationError> {
   const PhoneNumber.dirty([super.value = '']) : super.dirty();
 
   static final _mobileNumberRegex = RegExp(
-    r'^[6-9]{1}[0-9]{9}$',
+    r'^(?:\+91)?[6-9]\d{9}$',
   );
 
   @override
   PhoneNumberValidationError? validator(String? value) {
-    print(value);
-    print(_mobileNumberRegex.hasMatch(value ?? ''));
-    if (value!.length < 10) {
+    value = trimCountryCode(value ?? '');
+
+    if (value.length < 10) {
       return PhoneNumberValidationError.digitLess;
     } else if (value.length > 10) {
       return PhoneNumberValidationError.digitExcess;
     }
-    return _mobileNumberRegex.hasMatch(value ?? '')
+    return _mobileNumberRegex.hasMatch(value)
         ? null
         : PhoneNumberValidationError.invalid;
   }
@@ -36,4 +36,11 @@ extension on PhoneNumberValidationError {
         return 'The mobile number exceeds 10 digits.';
     }
   }
+}
+
+String trimCountryCode(String phoneNumber) {
+  if (phoneNumber.startsWith('+91')) {
+    return phoneNumber.substring(3);
+  }
+  return phoneNumber;
 }

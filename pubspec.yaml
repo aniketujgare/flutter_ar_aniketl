@@ -94,6 +94,18 @@ flutter:
     - assets/ui_new/
     - assets/temp/
     - assets/images/Dog/
+    - assets/vehicles/
+    - assets/vehicles/ambulance/
+    - assets/vehicles/dump_truck/
+    - assets/vehicles/Fighter_jett/
+    - assets/vehicles/hatchback/
+    - assets/vehicles/helicopters/
+    - assets/vehicles/motorcycle/
+    - assets/vehicles/Pickup_truck/
+    - assets/vehicles/police_car/
+    - assets/vehicles/Sportscar/
+    - assets/vehicles/tram/
+
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

@@ -20,6 +20,7 @@ class LoginPage4Guest extends StatelessWidget {
     String parentsName = '';
     String mobileNumber = '';
     return BlocListener<GuestValidationBloc, GuestValidationState>(
+      listenWhen: (p, c) => p != c,
       listener: (context, state) {
         if (state.status.isFailure) {
           ScaffoldMessenger.of(context).showSnackBar(

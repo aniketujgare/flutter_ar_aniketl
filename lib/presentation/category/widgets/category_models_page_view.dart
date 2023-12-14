@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_ar/data/models/ar_model.dart';
-import 'package:flutter_ar/model_3d_view.dart';
 import 'package:flutter_ar/presentation/category/bloc/model_page_controler_cubit/models_page_controller_cubit.dart';
 import 'package:flutter_ar/presentation/category/bloc/models_cubit/models_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:size_config/size_config.dart';
+
+import '../../../demo/model_3d_view.dart';
 
 class CategoryModelsPageView extends StatelessWidget {
   final bool isMobile;

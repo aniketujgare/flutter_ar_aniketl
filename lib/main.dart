@@ -3,20 +3,20 @@ import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_ar/presentation/login/bloc/guest_validation_bloc/guest_validation_bloc.dart';
-import 'domain/repositories/authentication_repository.dart';
-import 'presentation/login/bloc/login_bloc/login_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:size_config/size_config.dart';
 
 import 'core/route/go_router_provider.dart';
 import 'core/util/device_type.dart';
 import 'core/util/styles.dart';
-import 'firebase_options.dart';
+import 'demo/firebase_options.dart';
+import 'domain/repositories/authentication_repository.dart';
 import 'presentation/category/bloc/category_cubit/category_cubit.dart';
 import 'presentation/category/bloc/category_page_cubit/category_page_cubit.dart';
 import 'presentation/category/bloc/model_page_controler_cubit/models_page_controller_cubit.dart';
 import 'presentation/category/bloc/models_cubit/models_cubit.dart';
+import 'presentation/login/bloc/guest_validation_bloc/guest_validation_bloc.dart';
+import 'presentation/login/bloc/login_bloc/login_bloc.dart';
 import 'presentation/login/bloc/login_validation_bloc/login_validation_bloc.dart';
 
 final authenticationRepository = AuthenticationRepository();
@@ -51,34 +51,6 @@ class MyApp extends StatefulWidget {
 }
 
 class MyAppState extends State<MyApp> {
-  String _platformVersion = 'Unknown';
-  static const String _title = 'AR Plugin Demo';
-
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   initPlatformState();
-  // }
-
-  // Platform messages are asynchronous, so we initialize in an async method.
-  // Future<void> initPlatformState() async {
-  //   String platformVersion;
-  //   // Platform messages may fail, so we use a try/catch PlatformException.
-  //   try {
-  //     platformVersion = await ArFlutterPlugin.platformVersion;
-  //   } on PlatformException {
-  //     platformVersion = 'Failed to get platform version.';
-  //   }
-
-  //   // If the widget was removed from the tree while the asynchronous platform
-  //   // message was in flight, we want to discard the reply rather than calling
-  //   // setState to update our non-existent appearance.
-  //   if (!mounted) return;
-  //   setState(() {
-  //     _platformVersion = platformVersion;
-  //   });
-  // }
-
   @override
   Widget build(BuildContext context) {
     DeviceType();

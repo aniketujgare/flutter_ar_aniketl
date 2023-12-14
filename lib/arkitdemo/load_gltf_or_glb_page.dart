@@ -1,4 +1,5 @@
 import 'package:arkit_plugin/arkit_plugin.dart';
+// ignore: depend_on_referenced_packages
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:vector_math/vector_math_64.dart' as vector;
@@ -95,6 +96,7 @@ class _LoadGltfOrGlbFilePageState extends State<LoadGltfOrGlbFilePage> {
   void _onRotationHandler(List<ARKitNodeRotationResult> rotation) {
     debugPrint('rotate the model');
     final rotationNode = rotation.first;
+    // ignore: unnecessary_null_comparison
     if (rotationNode != null) {
       final rotation = arNode?.eulerAngles ??
           vector.Vector3.zero() + vector.Vector3.all(rotationNode.rotation);
