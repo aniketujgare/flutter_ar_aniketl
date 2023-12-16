@@ -40,54 +40,27 @@ class _ManipulationPageState extends State<ManipulationPage> {
         (rotation) => _onRotationHandler(rotation);
     addNode();
   }
-// void _onARTapHandler(ARKitTestResult point) {
-//     final position = vector.Vector3(
-//       point.worldTransform.getColumn(3).x,
-//       point.worldTransform.getColumn(3).y,
-//       point.worldTransform.getColumn(3).z,
-//     );
 
-//     final node = _getNodeFromFlutterAsset(position);
-//     // final node = _getNodeFromNetwork(position);
-//     arkitController.add(node);
-//     arNode = node;
-//     print('arnodename' + arNode!.name.toString());
-//   }
-
-// }
   void addNode() {
-    // final material = ARKitMaterial(
-    //   lightingModelName: ARKitLightingModel.physicallyBased,
-    //   diffuse: ARKitMaterialProperty.color(
-    //     Color((math.Random().nextDouble() * 0xFFFFFF).toInt() << 0)
-    //         .withOpacity(1.0),
-    //   ),
-    // );
-    // final box =
-    //     ARKitBox(materials: [material], width: 0.1, height: 0.1, length: 0.1);
+    final material = ARKitMaterial(
+      lightingModelName: ARKitLightingModel.physicallyBased,
+      diffuse: ARKitMaterialProperty.color(
+        Color((math.Random().nextDouble() * 0xFFFFFF).toInt() << 0)
+            .withOpacity(1.0),
+      ),
+    );
+    final box =
+        ARKitBox(materials: [material], width: 0.1, height: 0.1, length: 0.1);
 
-    // final node = ARKitNode(
-    //   geometry: box,
-    //   position: vector.Vector3(0, 0, -0.5),
-    // );
-    final position = vector.Vector3(0, 0, -0.5);
-
-    final node = _getNodeFromFlutterAsset(position);
+    final node = ARKitNode(
+      geometry: box,
+      position: vector.Vector3(0, 0, -0.5),
+    );
     arkitController.add(node);
     boxNode = node;
   }
 
-  ARKitGltfNode _getNodeFromFlutterAsset(vector.Vector3 position) =>
-      ARKitGltfNode(
-        assetType: AssetType.flutterAsset,
-        // Box model from
-        // https://github.com/KhronosGroup/glTF-Sample-Models/raw/master/2.0/Box/glTF-Binary/Box.glb
-        url: 'assets/temp/snail.glb',
-        scale: vector.Vector3(1, 1, 1),
-        position: position,
-      );
   void _onPinchHandler(List<ARKitNodePinchResult> pinch) {
-    debugPrint('pinch node 1');
     final pinchNode = pinch.firstWhereOrNull(
       (e) => e.nodeName == boxNode?.name,
     );
@@ -98,7 +71,6 @@ class _ManipulationPageState extends State<ManipulationPage> {
   }
 
   void _onPanHandler(List<ARKitNodePanResult> pan) {
-    debugPrint('pan node 1');
     final panNode = pan.firstWhereOrNull((e) => e.nodeName == boxNode?.name);
     if (panNode != null) {
       final old = boxNode?.eulerAngles;
@@ -109,7 +81,6 @@ class _ManipulationPageState extends State<ManipulationPage> {
   }
 
   void _onRotationHandler(List<ARKitNodeRotationResult> rotation) {
-    debugPrint('rotation node 1');
     final rotationNode = rotation.firstWhereOrNull(
       (e) => e.nodeName == boxNode?.name,
     );

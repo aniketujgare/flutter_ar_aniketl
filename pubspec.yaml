@@ -95,7 +95,7 @@ flutter:
     - assets/temp/
     - assets/images/Dog/
     - assets/vehicles/
-    - assets/vehicles/ambulance/
+    # - assets/vehicles/ambulance/
     - assets/vehicles/dump_truck/
     - assets/vehicles/Fighter_jett/
     - assets/vehicles/hatchback/

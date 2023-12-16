@@ -23,6 +23,6 @@ final class GuestName extends FormzInput<String, GuestNameValidationError> {
 
 extension ErrorString on GuestNameValidationError {
   String text() {
-    return 'Please ensure that the name consists only of alphabet characters.';
+    return 'Please ensure name only contains alphabets';
   }
 }
