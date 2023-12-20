@@ -10,7 +10,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:size_config/size_config.dart';
 
 class CategoryPageView extends StatelessWidget {
-  final bool isMobile;
+  final bool isMobile = true;
   final List<ArCategory> arCategoryies;
   var categoryImgList = [
     'assets/images/PNG Icons/Animals.png',
@@ -25,8 +25,7 @@ class CategoryPageView extends StatelessWidget {
     'assets/images/PNG Icons/vehicles.png',
     'assets/images/PNG Icons/vehicles.png',
   ];
-  CategoryPageView(
-      {super.key, required this.isMobile, required this.arCategoryies});
+  CategoryPageView({super.key, required this.arCategoryies});
 
   @override
   Widget build(BuildContext context) {
@@ -91,7 +90,7 @@ class CategoryPageView extends StatelessWidget {
                   isMobile: isMobile,
                   category: '${arCategoryies[colorIndex].categoryId}',
                 )
-              : Expanded(child: Container());
+              : Expanded(child: EmptyBox());
         },
       ),
     );
@@ -124,7 +123,7 @@ class BuildCategoryContainer extends StatelessWidget {
             Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (BuildContext context) {
-                  return CategoryModelsPageView(isMobile: isMobile);
+                  return CategoryModelsPageView();
                 },
               ),
             );
@@ -206,3 +205,44 @@ class BuildCategoryContainer extends StatelessWidget {
     );
   }
 }
+
+var modleList = [
+  ['assets/Crocodile/Crocodile.glb', 'assets/Snake/Snake.glb'],
+  [
+    'assets/Bat_animated/Bat.glb',
+    'assets/Dodo_animated/Dodo.glb',
+    'assets/Eagle_animated/Eagle.glb',
+    'assets/Hummingbird_animated/Humming_Bird.glb',
+  ],
+  [
+    'assets/dolphin_animated/Dolphine.glb',
+    'assets/eel_animated/Eel.glb',
+    'assets/hammerhead_shark_animated/Hammerhead_shark.glb',
+    'assets/Shark_animated/Shark.glb',
+    'assets/turtle_animated/Turtle.glb',
+  ],
+];
+var modleCategoryList = [
+  'Animal',
+  'Birds',
+  'Sea Life',
+];
+var modleImageList = [
+  [
+    'assets/Crocodile/Crocodile.png',
+    'assets/Snake/Snake.png',
+  ],
+  [
+    'assets/Bat_animated/Bat.png',
+    'assets/Dodo_animated/Dodo.png',
+    'assets/Eagle_animated/Eagle.png',
+    'assets/Hummingbird_animated/Humming_bird.png',
+  ],
+  [
+    'assets/dolphin_animated/Dolphine.png',
+    'assets/eel_animated/Eel.png',
+    'assets/hammerhead_shark_animated/Hammerhead_shark.png',
+    'assets/Snake/Snake.png',
+    'assets/turtle_animated/Turtle.png',
+  ],
+];

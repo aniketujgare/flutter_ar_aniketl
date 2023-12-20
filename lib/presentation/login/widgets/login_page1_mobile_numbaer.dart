@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ar/domain/repositories/authentication_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
+import 'package:hive/hive.dart';
 import 'package:size_config/size_config.dart';
 
 import '../../../core/util/device_type.dart';
@@ -12,11 +14,16 @@ import '../bloc/login_bloc/login_bloc.dart';
 import '../bloc/login_validation_bloc/login_validation_bloc.dart';
 
 // SmartXR@devteam1
-class LoginPage1MobileNumber extends StatelessWidget {
+class LoginPage1MobileNumber extends StatefulWidget {
   const LoginPage1MobileNumber({
     super.key,
   });
 
+  @override
+  State<LoginPage1MobileNumber> createState() => _LoginPage1MobileNumberState();
+}
+
+class _LoginPage1MobileNumberState extends State<LoginPage1MobileNumber> {
   @override
   Widget build(BuildContext context) {
     String mobNo = '';
@@ -76,16 +83,25 @@ class LoginPage1MobileNumber extends StatelessWidget {
             text: 'Send OTP',
             textColor: Colors.white,
             onPressed: () async {
+              // var kidsAppBox = await Hive.openBox("kidsApp");
+              // var isLoggedIn = kidsAppBox.put('isLoggedIn', false);
+              // print('isLoggedIn, $isLoggedIn');
+
+              FocusScope.of(context).unfocus();
               context
                   .read<LoginValidationBloc>()
                   .add(const PhoneNumberSubmitted());
               final isValid = context.read<LoginValidationBloc>().state.isValid;
               if (isValid) {
+                // AuthenticationRepository().getParentId(mobNo);
+                // AuthenticationRepository().getallstandardsofschool();
+                // AuthenticationRepository().getstudentprofilesnew();
+
                 context
                     .read<LoginBloc>()
                     .add(CheckMobileNoExists(mobileNumber: mobNo));
               }
-              // print(mobNo);
+              print(mobNo);
             },
           ),
           SizedBox(
@@ -105,9 +121,13 @@ class LoginPage1MobileNumber extends StatelessWidget {
             text: 'Guest',
             buttonColor: AppColors.textFieldFillColorWhite,
             textColor: AppColors.primaryColor,
-            onPressed: () {
-              context.read<LoginBloc>().add(
-                  const LoginEvent.updateStatus(status: LoginStatus.guest));
+            onPressed: () async {
+              var kidsAppBox = await Hive.openBox("kidsApp");
+              var isLoggedIn = kidsAppBox.get('isLoggedIn');
+              print('isLoggedIn, $isLoggedIn');
+
+              // context.read<LoginBloc>().add(
+              //     const LoginEvent.updateStatus(status: LoginStatus.guest));
             },
           ),
         ],

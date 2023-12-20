@@ -1,5 +1,7 @@
 import 'package:arkit_plugin/arkit_plugin.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:vector_math/vector_math.dart';
 import 'package:vector_math/vector_math_64.dart' as vector;
 import 'package:collection/collection.dart';
 
@@ -11,7 +13,7 @@ class CustomObjectPage extends StatefulWidget {
 class _CustomObjectPageState extends State<CustomObjectPage> {
   late ARKitController arkitController;
   ARKitNode? node;
-
+  double _value = 0.0;
   @override
   void dispose() {
     arkitController.dispose();
@@ -22,24 +24,30 @@ class _CustomObjectPageState extends State<CustomObjectPage> {
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
           title: Text('Custom object on plane Sample'),
-          actions: [
-            IconButton(
-                onPressed: _rotateobj, icon: Icon(Icons.rotate_90_degrees_ccw))
-          ],
         ),
-        body: Column(
-          children: [
-            // Slider(value: 1.0, onChanged: onChanged),
-            Container(
-              child: ARKitSceneView(
-                showFeaturePoints: true,
-                planeDetection: ARPlaneDetection.horizontal,
-                enablePinchRecognizer: true,
-                enableRotationRecognizer: true,
-                onARKitViewCreated: onARKitViewCreated,
-              ),
-            ),
-          ],
+        bottomSheet: SizedBox(
+          width: 500,
+          height: 100,
+          child: CupertinoSlider(
+            min: 0.0,
+            max: 6.28,
+            value: _value,
+            onChanged: (value) {
+              _value = value;
+              setState(() {
+                _rotateModel();
+              });
+            },
+          ),
+        ),
+        body: Container(
+          child: ARKitSceneView(
+            showFeaturePoints: true,
+            planeDetection: ARPlaneDetection.horizontal,
+            enablePinchRecognizer: true,
+            enableRotationRecognizer: true,
+            onARKitViewCreated: onARKitViewCreated,
+          ),
         ),
       );
 
@@ -65,10 +73,10 @@ class _CustomObjectPageState extends State<CustomObjectPage> {
     }
     arkitController.getCameraEulerAngles().then((rotationVector) {
       node = ARKitGltfNode(
-        assetType: AssetType.flutterAsset,
+        assetType: AssetType.documents,
         // Box model from
         // https://github.com/KhronosGroup/glTF-Sample-Models/raw/master/2.0/Box/glTF-Binary/Box.glb
-        url: 'assets/vehicles/Sportscar/Sportscar.glb',
+        url: 'assets/vehicles/Fighter_jett/Fighter_jett.glb',
         eulerAngles: vector.Vector3(rotationVector.y, 0,
             0), //And here is the line of code you are looking for
 
@@ -90,13 +98,19 @@ class _CustomObjectPageState extends State<CustomObjectPage> {
   _onRotationHandler(List<ARKitNodeRotationResult> rotation) {
     final rotationNode = rotation.first;
     if (rotationNode != null) {
-      debugPrint('rotation node');
-      // final double rotation = node?.transform.rotateY(rotationNode.rotation);
-      node?.transform.setRotationY(rotationNode.rotation);
+      final rotation = vector.Vector3.zero() +
+          vector.Vector3(
+              (rotationNode.rotation.abs() * 50).clamp(0, 6.28), 0, 0);
+      debugPrint(
+          'rotation node ${(rotationNode.rotation.abs() * 50).clamp(0, 6.28)}');
+      node?.eulerAngles = rotation;
     }
   }
 
-  _rotateobj() {
-    node?.transform.setRotationY(23);
+  _rotateModel() {
+    print(node?.name);
+    final rotation = vector.Vector3.zero() + vector.Vector3(_value, 0, 0);
+    node?.eulerAngles = rotation;
+    debugPrint('rotation ${rotation}');
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_ar/demo/model_list.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:size_config/size_config.dart';
 
@@ -167,13 +168,18 @@ class LoginScreenState extends State<LoginScreen>
                             offset: -_animationController.animationPaws.value,
                             child: Opacity(
                               opacity: _animationController.opacityPaws.value,
-                              child: Image.asset(
-                                'assets/images/Dog/Paws_First-Login.png',
-                                width: 420.h +
-                                    _animationController
-                                        .animationPawsStreatch.value,
-                                height: 90.h,
-                                fit: BoxFit.fill,
+                              child: GestureDetector(
+                                onTap: () => Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                        builder: (context) => ModelsList3D())),
+                                child: Image.asset(
+                                  'assets/images/Dog/Paws_First-Login.png',
+                                  width: 420.h +
+                                      _animationController
+                                          .animationPawsStreatch.value,
+                                  height: 90.h,
+                                  fit: BoxFit.fill,
+                                ),
                               ),
                             ),
                           ),

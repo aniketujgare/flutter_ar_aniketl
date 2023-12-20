@@ -101,6 +101,8 @@ class _LoginPage2OtpState extends State<LoginPage2Otp> {
             text: 'Submit',
             textColor: Colors.white,
             onPressed: () {
+              FocusScope.of(context).unfocus();
+
               debugPrint(otp1String +
                   otp2String +
                   otp3String +
@@ -148,6 +150,8 @@ class _LoginPage2OtpState extends State<LoginPage2Otp> {
                     text: 'Submit',
                     textColor: Colors.white,
                     onPressed: () {
+                      FocusScope.of(context).unfocus();
+
                       debugPrint(otp1String +
                           otp2String +
                           otp3String +

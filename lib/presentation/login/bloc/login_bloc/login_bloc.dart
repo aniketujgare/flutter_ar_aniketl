@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart' show debugPrint;
 import 'package:flutter_ar/domain/repositories/authentication_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:hive/hive.dart';
 
 part 'login_event.dart';
 part 'login_state.dart';
@@ -49,10 +50,18 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       if (resu.user != null) {
         if (state.isGuest) {
           //Todo:Implement Succes state UI
-          emit(state.copyWith(status: LoginStatus.phoneNo1));
+          //Save to hivebox
+
+          var kidsAppBox = await Hive.openBox("kidsApp");
+          var isLoggedIn = kidsAppBox.put('isLoggedIn', true);
           await authenticationRepository.sendGuestDataToServer(
               guestName: state.parentName, guestPhone: state.mobileNumber);
+
+          emit(state.copyWith(status: LoginStatus.phoneNo1));
         } else {
+          var kidsAppBox = await Hive.openBox("kidsApp");
+          var isLoggedIn = kidsAppBox.put('isLoggedIn', true);
+
           emit(state.copyWith(status: LoginStatus.parents3));
         }
       }
@@ -76,6 +85,9 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         // add(LoginEvent.phoneNumberAuth(mobileNumber: event.mobileNumber));
         debugPrint('checking ${event.mobileNumber}');
         add(LoginEvent.phoneNumberAuth(mobileNumber: event.mobileNumber));
+        AuthenticationRepository().getParentId(event.mobileNumber);
+        AuthenticationRepository().getallstandardsofschool();
+        AuthenticationRepository().getstudentprofilesnew();
       } else {
         add(const LoginEvent.error(
             errorMessage: 'Your mobile is not registered!'));

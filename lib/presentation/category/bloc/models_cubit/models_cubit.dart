@@ -8,10 +8,13 @@ part 'models_state.dart';
 
 class ModelsCubit extends Cubit<ModelsState> {
   ModelsCubit() : super(ModelsInitial());
+  List<ArModel>? arModelsLocal;
   void loadModels(String category) async {
-    emit(ModelsLoading());
-    var ar_models = await API().getModel(category);
-    print('categories loaded$category');
-    emit(ModelsLoaded(arModels: ar_models!));
+    if (arModelsLocal == null) {
+      emit(ModelsLoading());
+      var arModelsLocal = await API().getModel(category);
+      print('categories loaded$category');
+      emit(ModelsLoaded(arModels: arModelsLocal!));
+    }
   }
 }

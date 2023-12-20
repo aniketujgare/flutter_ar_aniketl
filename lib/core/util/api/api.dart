@@ -37,10 +37,10 @@ class API {
       url,
       headers: {
         "Content-Type": "application/json",
-        // "Access-Control-Allow-Origin":
-        //     "https://d3ag5oij4wsyi3.cloudfront.net/kidsappmodel/models",
-        // "Access-Control-Allow-Methods": "*",
-        // "Access-Control-Allow-Headers": "X-Requested-With"
+        "Access-Control-Allow-Origin":
+            "https://d3ag5oij4wsyi3.cloudfront.net/kidsappmodel/models",
+        "Access-Control-Allow-Methods": "*",
+        "Access-Control-Allow-Headers": "X-Requested-With"
       },
       body: requestBody,
     );

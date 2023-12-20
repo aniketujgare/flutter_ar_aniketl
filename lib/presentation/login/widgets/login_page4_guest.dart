@@ -101,6 +101,7 @@ class LoginPage4Guest extends StatelessWidget {
             text: 'Send Otp',
             textColor: Colors.white,
             onPressed: () {
+              FocusScope.of(context).unfocus();
               context
                   .read<GuestValidationBloc>()
                   .add(const GuestFormSubmitted());

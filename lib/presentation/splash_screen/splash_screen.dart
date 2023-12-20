@@ -3,10 +3,17 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_ar/core/route/route_name.dart';
+import 'package:flutter_ar/core/util/device_type.dart';
+import 'package:flutter_ar/presentation/login/pages/login_screen.dart';
+import 'package:flutter_ar/presentation/main_menu/main_menu_screen.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:size_config/size_config.dart';
 
 import '../../core/util/animations/splash_screen_animation_controller.dart';
 import '../../core/util/styles.dart';
+import 'bloc/splash_animation_bloc.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -18,7 +25,6 @@ class SplashScreen extends StatefulWidget {
 class SplashScreenState extends State<SplashScreen>
     with TickerProviderStateMixin {
   late final SplashScreenAnimationController _animationController;
-
   @override
   void initState() {
     _animationController = SplashScreenAnimationController(this);
@@ -36,6 +42,7 @@ class SplashScreenState extends State<SplashScreen>
   @override
   void dispose() {
     _animationController.dispose();
+
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.landscapeRight,
       DeviceOrientation.landscapeLeft,
@@ -47,7 +54,6 @@ class SplashScreenState extends State<SplashScreen>
 
   @override
   Widget build(BuildContext context) {
-    // print(_animationPaws.value);
     return Scaffold(
         // resizeToAvoidBottomInset: false,
         // extendBody: true,
@@ -81,7 +87,7 @@ class SplashScreenState extends State<SplashScreen>
               ),
             ),
             Positioned(
-              top: 250.h,
+              top: DeviceType().isMobile ? 250.h : 265.h,
               child: Transform(
                 transform: Matrix4.rotationY(
                     _animationController.flipLogosAnimation.value *
@@ -141,17 +147,14 @@ class SplashScreenState extends State<SplashScreen>
                   width: _animationController.animationInnerCircle.value,
                   height: _animationController.animationInnerCircle.value,
                   color: AppColors.accentColor,
-                  child: Positioned(
-                    top: 0.h,
-                    child: Visibility(
-                      visible: _animationController.animationDodoVisible.value,
-                      child: Transform.translate(
-                        offset: Offset(0,
-                            _animationController.animationDodoTranslate.value),
-                        child: Image.asset(
-                          'assets/images/Dog/Dodo Animation.gif',
-                          fit: BoxFit.contain,
-                        ),
+                  child: Visibility(
+                    visible: _animationController.animationDodoVisible.value,
+                    child: Transform.translate(
+                      offset: Offset(
+                          0, _animationController.animationDodoTranslate.value),
+                      child: Image.asset(
+                        'assets/images/Dog/Dodo Animation.gif',
+                        fit: BoxFit.contain,
                       ),
                     ),
                   ), // Adjust the color as needed
@@ -218,7 +221,8 @@ class SplashScreenState extends State<SplashScreen>
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           SizedBox(
-            height: MediaQuery.of(context).size.height * 0.15,
+            height: MediaQuery.of(context).size.height *
+                (DeviceType().isMobile ? 0.15 : 0.2),
           ),
           Transform(
             alignment: Alignment.center,
@@ -231,7 +235,7 @@ class SplashScreenState extends State<SplashScreen>
             ),
           ),
           SizedBox(
-            height: 40.h,
+            height: DeviceType().isMobile ? 40.h : 50.h,
           ),
           Padding(
             padding: EdgeInsets.symmetric(
@@ -244,68 +248,28 @@ class SplashScreenState extends State<SplashScreen>
                   transform: Matrix4.rotationY(2 * pi -
                       (pi / 3 -
                           _animationController.animationFlipProfile1.value)),
-                  child: Column(
-                    children: [
-                      Image.asset(
-                        'assets/images/PNG Icons/CustomButtons001.png',
-                        height: 115.h,
-                      ),
-                      Text(
-                        'Shardul',
-                        style: AppTextStyles.unitedRounded140w700.copyWith(
-                            height: 1.8,
-                            fontSize: 120.sp,
-                            color: AppColors.accentColor),
-                      ),
-                    ],
-                  ),
+                  child: profileIcon(context, 'Shardul'),
                 ),
                 Transform(
                   alignment: Alignment.center,
                   transform: Matrix4.rotationY(2 * pi -
                       (pi / 3 -
                           _animationController.animationFlipProfile2.value)),
-                  child: Column(
-                    children: [
-                      Image.asset(
-                        'assets/images/PNG Icons/CustomButtons001.png',
-                        height: 115.h,
-                      ),
-                      Text(
-                        'Sneha',
-                        style: AppTextStyles.unitedRounded140w700.copyWith(
-                            height: 1.8,
-                            fontSize: 120.sp,
-                            color: AppColors.accentColor),
-                      ),
-                    ],
-                  ),
+                  child: profileIcon(context, 'Sneha'),
                 ),
                 Transform(
                   alignment: Alignment.center,
                   transform: Matrix4.rotationY(2 * pi -
                       (pi / 3 -
                           _animationController.animationFlipProfile3.value)),
-                  child: Column(
-                    children: [
-                      Image.asset(
-                        'assets/images/PNG Icons/CustomButtons001.png',
-                        height: 115.h,
-                      ),
-                      Text(
-                        'Person 1',
-                        style: AppTextStyles.unitedRounded140w700.copyWith(
-                            height: 1.8,
-                            fontSize: 120.sp,
-                            color: AppColors.accentColor),
-                      ),
-                    ],
-                  ),
+                  child: profileIcon(context, 'Person 1'),
                 ),
               ],
             ),
           ),
-          SizedBox(height: MediaQuery.of(context).size.height * 0.18),
+          SizedBox(
+              height: MediaQuery.of(context).size.height *
+                  (DeviceType().isMobile ? 0.18 : 0.3)),
           Transform(
             alignment: Alignment.center,
             transform: Matrix4.rotationY(2 * pi -
@@ -315,6 +279,26 @@ class SplashScreenState extends State<SplashScreen>
               style: AppTextStyles.unitedRounded140w700
                   .copyWith(fontSize: 120.sp, color: AppColors.accentColor),
             ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  GestureDetector profileIcon(BuildContext context, String name) {
+    return GestureDetector(
+      onTap: () => Navigator.of(context)
+          .push(MaterialPageRoute(builder: (context) => MainMenuScreen())),
+      child: Column(
+        children: [
+          Image.asset(
+            'assets/images/PNG Icons/CustomButtons001.png',
+            height: 115.h,
+          ),
+          Text(
+            name,
+            style: AppTextStyles.unitedRounded140w700.copyWith(
+                height: 1.8, fontSize: 120.sp, color: AppColors.accentColor),
           ),
         ],
       ),

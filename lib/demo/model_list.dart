@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_ar/core/util/styles.dart';
 
-import 'model_3d_view.dart';
+import '../presentation/category/widgets/model_3d_view.dart';
 
 class ModelsList3D extends StatelessWidget {
   ModelsList3D({super.key});

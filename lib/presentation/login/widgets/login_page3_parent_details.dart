@@ -100,6 +100,8 @@ class LoginPage3ParentDetails extends StatelessWidget {
             text: 'Send OTP',
             textColor: Colors.white,
             onPressed: () {
+              FocusScope.of(context).unfocus();
+
               context
                   .read<GuestValidationBloc>()
                   .add(const GuestFormSubmitted());

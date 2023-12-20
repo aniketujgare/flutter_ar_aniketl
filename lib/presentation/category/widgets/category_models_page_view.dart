@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ar/data/models/ar_model.dart';
 import 'package:flutter_ar/presentation/category/bloc/model_page_controler_cubit/models_page_controller_cubit.dart';
@@ -5,12 +6,12 @@ import 'package:flutter_ar/presentation/category/bloc/models_cubit/models_cubit.
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:size_config/size_config.dart';
 
-import '../../../demo/model_3d_view.dart';
+import '../../../core/util/device_type.dart';
+import 'model_3d_view.dart';
 
 class CategoryModelsPageView extends StatelessWidget {
-  final bool isMobile;
   // final String category;
-  CategoryModelsPageView({super.key, required this.isMobile});
+  CategoryModelsPageView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -22,8 +23,11 @@ class CategoryModelsPageView extends StatelessWidget {
           child: Stack(
             children: [
               Padding(
-                padding: EdgeInsets.fromLTRB((isMobile ? 450.w : 250.w), 0.h,
-                    (isMobile ? 450.w : 250.w), 0.h),
+                padding: EdgeInsets.fromLTRB(
+                    (DeviceType().isMobile ? 450.w : 250.w),
+                    0.h,
+                    (DeviceType().isMobile ? 450.w : 250.w),
+                    0.h),
                 child: BlocBuilder<ModelsCubit, ModelsState>(
                   builder: (context, state) {
                     if (state is ModelsLoaded) {
@@ -45,7 +49,7 @@ class CategoryModelsPageView extends StatelessWidget {
                               debugPrint('page changed $value');
                             },
                             itemBuilder: (context, pageIndex) {
-                              return isMobile
+                              return DeviceType().isMobile
                                   ? buildPage(pageIndex, state.arModels)
                                   : Center(
                                       child: Column(
@@ -78,7 +82,8 @@ class CategoryModelsPageView extends StatelessWidget {
               Align(
                 alignment: Alignment.centerLeft,
                 child: Padding(
-                  padding: EdgeInsets.only(left: isMobile ? 130.w : 50.w),
+                  padding: EdgeInsets.only(
+                      left: DeviceType().isMobile ? 130.w : 50.w),
                   child: SizedBox(
                     height: 45.h,
                     width: 45.h,
@@ -117,7 +122,8 @@ class CategoryModelsPageView extends StatelessWidget {
               Align(
                 alignment: Alignment.centerRight,
                 child: Padding(
-                  padding: EdgeInsets.only(right: isMobile ? 130.w : 50.w),
+                  padding: EdgeInsets.only(
+                      right: DeviceType().isMobile ? 130.w : 50.w),
                   child: SizedBox(
                     height: 45.h,
                     width: 45.h,
@@ -174,10 +180,9 @@ class CategoryModelsPageView extends StatelessWidget {
                   name: arModels[colorIndex].modelName,
                   model:
                       'https://d3ag5oij4wsyi3.cloudfront.net/kidsappmodellist/models/${arModels[colorIndex].modelId}.glb',
-                  isMobile: isMobile,
                 )
               : Expanded(
-                  child: EmptyBox(isMobile: isMobile),
+                  child: EmptyBox(),
                 );
         },
       ),
@@ -205,17 +210,14 @@ class CategoryModelsPageView extends StatelessWidget {
 class EmptyBox extends StatelessWidget {
   const EmptyBox({
     super.key,
-    required this.isMobile,
   });
-
-  final bool isMobile;
 
   @override
   Widget build(BuildContext context) {
     return ConstrainedBox(
       constraints: BoxConstraints(
-        maxHeight:
-            MediaQuery.of(context).size.height * (isMobile ? 0.5.h : 0.35.h),
+        maxHeight: MediaQuery.of(context).size.height *
+            (DeviceType().isMobile ? 0.5.h : 0.35.h),
         // maxWidth: MediaQuery.of(context).size.height * 0.2.h,
       ),
       child: Container(
@@ -224,13 +226,16 @@ class EmptyBox extends StatelessWidget {
           return Column(
             children: [
               SizedBox(
-                height: constraints.maxHeight * (isMobile ? 0.03 : 0.05),
+                height: constraints.maxHeight *
+                    (DeviceType().isMobile ? 0.03 : 0.05),
               ),
               SizedBox(
-                height: constraints.maxHeight * (isMobile ? 0.63 : 0.65),
+                height: constraints.maxHeight *
+                    (DeviceType().isMobile ? 0.63 : 0.65),
               ),
               SizedBox(
-                height: constraints.maxHeight * (isMobile ? 0.07 : 0.07),
+                height: constraints.maxHeight *
+                    (DeviceType().isMobile ? 0.07 : 0.07),
               ),
               SizedBox(
                 height: constraints.maxHeight * 0.2,
@@ -247,13 +252,11 @@ class BuildModelContainer extends StatelessWidget {
   final String image;
   final String name;
   final String model;
-  final bool isMobile;
   const BuildModelContainer({
     super.key,
     required this.image,
     required this.name,
     required this.model,
-    required this.isMobile,
   });
 
   @override
@@ -266,7 +269,7 @@ class BuildModelContainer extends StatelessWidget {
         child: ConstrainedBox(
           constraints: BoxConstraints(
             maxHeight: MediaQuery.of(context).size.height *
-                (isMobile ? 0.5.h : 0.35.h),
+                (DeviceType().isMobile ? 0.5.h : 0.35.h),
             // maxWidth: MediaQuery.of(context).size.height * 0.2.h,
           ),
           child: Container(
@@ -284,7 +287,10 @@ class BuildModelContainer extends StatelessWidget {
               gradient: LinearGradient(
                 colors: const [Colors.white, Color(0XFF4F3A9C)],
                 tileMode: TileMode.decal,
-                stops: [isMobile ? 0.7 : 0.75, isMobile ? 0.3 : 0.25],
+                stops: [
+                  DeviceType().isMobile ? 0.7 : 0.75,
+                  DeviceType().isMobile ? 0.3 : 0.25
+                ],
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
               ),
@@ -298,17 +304,20 @@ class BuildModelContainer extends StatelessWidget {
               return Column(
                 children: [
                   SizedBox(
-                    height: constraints.maxHeight * (isMobile ? 0.03 : 0.05),
+                    height: constraints.maxHeight *
+                        (DeviceType().isMobile ? 0.03 : 0.05),
                   ),
                   SizedBox(
-                    height: constraints.maxHeight * (isMobile ? 0.63 : 0.65),
-                    child: Image.network(
-                      image,
+                    height: constraints.maxHeight *
+                        (DeviceType().isMobile ? 0.63 : 0.65),
+                    child: CachedNetworkImage(
                       fit: BoxFit.cover,
+                      imageUrl: image,
                     ),
                   ),
                   SizedBox(
-                    height: constraints.maxHeight * (isMobile ? 0.07 : 0.07),
+                    height: constraints.maxHeight *
+                        (DeviceType().isMobile ? 0.07 : 0.07),
                   ),
                   SizedBox(
                     height: constraints.maxHeight * 0.2,
@@ -321,7 +330,7 @@ class BuildModelContainer extends StatelessWidget {
                           fontFamily: 'Nunito',
                           fontWeight: FontWeight.w700,
                           height: 0,
-                          fontSize: isMobile
+                          fontSize: DeviceType().isMobile
                               ? 110.sp
                               : 16 * MediaQuery.of(context).size.aspectRatio,
                         ),

@@ -38,7 +38,6 @@ class ReusableTextField extends StatelessWidget {
               hintText: hintText,
               isCollapsed: true,
               hintStyle: AppTextStyles.nunito100w400hintText,
-              errorText: errorText,
               prefixIcon: countryCodeVisible
                   ? Container(
                       padding: EdgeInsets.fromLTRB(60.w, 0, 0, 0),

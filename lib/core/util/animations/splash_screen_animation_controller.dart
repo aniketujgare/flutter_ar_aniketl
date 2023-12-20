@@ -1,4 +1,7 @@
 import 'package:flutter/animation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_ar/core/util/device_type.dart';
+import 'package:go_router/go_router.dart';
 import 'package:size_config/size_config.dart';
 
 import '../../../presentation/splash_screen/splash_screen.dart';
@@ -108,10 +111,14 @@ class SplashScreenAnimationController {
     );
     animationPaws = TweenSequence<Offset>([
       TweenSequenceItem(
-          tween: Tween(begin: Offset(0, 390.h), end: Offset(0, 320.h)),
+          tween: Tween(
+              begin: Offset(0, DeviceType().isMobile ? 390.h : 560.h),
+              end: Offset(0, DeviceType().isMobile ? 320.h : 400.h)),
           weight: 1),
       TweenSequenceItem(
-          tween: Tween(begin: Offset(0, 320.h), end: Offset(0, 390.h)),
+          tween: Tween(
+              begin: Offset(0, DeviceType().isMobile ? 320.h : 400.h),
+              end: Offset(0, DeviceType().isMobile ? 390.h : 560.h)),
           weight: 1),
     ]).animate(
       CurvedAnimation(

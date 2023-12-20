@@ -8,10 +8,14 @@ part 'category_state.dart';
 
 class CategoryCubit extends Cubit<CategoryState> {
   CategoryCubit() : super(CategoryInitial());
+  List<ArCategory>? arCategoryLocal;
 
   void loadCategory() async {
-    emit(CategoryLoading());
-    var ar_category = await API().getCategories();
-    emit(CategoryLoaded(arCategory: ar_category!));
+    if (arCategoryLocal == null) {
+      emit(CategoryLoading());
+
+      arCategoryLocal = await API().getCategories();
+      emit(CategoryLoaded(arCategory: arCategoryLocal!));
+    }
   }
 }
