@@ -1,17 +1,31 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_ar/presentation/category/bloc/category_cubit/category_cubit.dart';
-import 'package:flutter_ar/presentation/category/bloc/category_page_cubit/category_page_cubit.dart';
-import 'package:flutter_ar/presentation/category/bloc/models_cubit/models_cubit.dart';
-import 'package:flutter_ar/presentation/category/widgets/category_models_page_view.dart';
-import 'package:flutter_ar/data/models/ar_category.dart';
+import 'package:flutter_ar/core/util/device_type.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:size_config/size_config.dart';
 
-class CategoryPageView extends StatelessWidget {
-  final bool isMobile = true;
-  final List<ArCategory> arCategoryies;
+import '../../../data/models/ar_category.dart';
+import '../bloc/category_new_cubit/category_new_cubit.dart';
+import '../bloc/category_page_cubit/category_page_cubit.dart';
+import '../bloc/models_new_cubit/models_new_cubit.dart';
+import 'category_models_page_view.dart';
+
+class CategoryPageView extends StatefulWidget {
+  late final List<ArCategory> arCategoryies;
+
+  CategoryPageView({super.key});
+
+  @override
+  State<CategoryPageView> createState() => _CategoryPageViewState();
+}
+
+class _CategoryPageViewState extends State<CategoryPageView> {
+  @override
+  void initState() {
+    widget.arCategoryies = context.read<CategoryNewCubit>().state.arCategory;
+    super.initState();
+  }
+
+  // final List<ArCategory> arCategoryies;
   var categoryImgList = [
     'assets/images/PNG Icons/Animals.png',
     'assets/images/PNG Icons/birds.png',
@@ -25,13 +39,13 @@ class CategoryPageView extends StatelessWidget {
     'assets/images/PNG Icons/vehicles.png',
     'assets/images/PNG Icons/vehicles.png',
   ];
-  CategoryPageView({super.key, required this.arCategoryies});
 
   @override
   Widget build(BuildContext context) {
+    // var arCategoryies = context.read<CategoryNewCubit>().state.arCategory;
     context
         .read<CategoryPageCubit>()
-        .setmaxLength((arCategoryies.length / 6).ceil());
+        .setmaxLength((widget.arCategoryies.length / 6).ceil());
     return BlocBuilder<CategoryPageCubit, int>(
       builder: (context, index) {
         print('page ni $index');
@@ -42,11 +56,11 @@ class CategoryPageView extends StatelessWidget {
             context.read<CategoryPageCubit>().setPage(value);
             debugPrint('page changed $value');
           },
-          itemCount: (arCategoryies.length / 6)
+          itemCount: (widget.arCategoryies.length / 6)
               .ceil(), // 6 containers per page (2 rows with 3 containers each)
           itemBuilder: (context, a) {
             debugPrint('itemBuilder $a');
-            return isMobile
+            return DeviceType().isMobile
                 ? buildPage(a, context)
                 : Center(
                     child: Column(
@@ -81,16 +95,15 @@ class CategoryPageView extends StatelessWidget {
         3,
         (index) {
           final colorIndex = startIndex + index;
-          return colorIndex < arCategoryies.length
+          return colorIndex < widget.arCategoryies.length
               ? BuildCategoryContainer(
                   image: categoryImgList[colorIndex],
-                  name: arCategoryies[colorIndex].categoryName,
+                  name: widget.arCategoryies[colorIndex].categoryName,
                   model:
                       'https://d3ag5oij4wsyi3.cloudfront.net/kidsappmodel/models/{arModels[colorIndex].modelId}.glb',
-                  isMobile: isMobile,
-                  category: '${arCategoryies[colorIndex].categoryId}',
+                  category: '${widget.arCategoryies[colorIndex].categoryId}',
                 )
-              : Expanded(child: EmptyBox());
+              : const Expanded(child: EmptyBox());
         },
       ),
     );
@@ -101,14 +114,12 @@ class BuildCategoryContainer extends StatelessWidget {
   final String image;
   final String name;
   final String model;
-  final bool isMobile;
   final String category;
   const BuildCategoryContainer({
     super.key,
     required this.image,
     required this.name,
     required this.model,
-    required this.isMobile,
     required this.category,
   });
 
@@ -117,9 +128,9 @@ class BuildCategoryContainer extends StatelessWidget {
     return Expanded(
       child: GestureDetector(
         onTap: () {
-          var state = context.read<CategoryCubit>().state;
-          if (state is CategoryLoaded) {
-            context.read<ModelsCubit>().loadModels(category);
+          var state = context.read<CategoryNewCubit>().state;
+          if (state.status == CategoryStatus.loaded) {
+            context.read<ModelsNewCubit>().loadModels(category);
             Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (BuildContext context) {
@@ -132,7 +143,7 @@ class BuildCategoryContainer extends StatelessWidget {
         child: ConstrainedBox(
           constraints: BoxConstraints(
             maxHeight: MediaQuery.of(context).size.height *
-                (isMobile ? 0.5.h : 0.35.h),
+                (DeviceType().isMobile ? 0.5.h : 0.35.h),
             // maxWidth: MediaQuery.of(context).size.height * 0.2.h,
           ),
           child: Container(
@@ -152,7 +163,10 @@ class BuildCategoryContainer extends StatelessWidget {
               gradient: LinearGradient(
                 colors: const [Colors.white, Color(0XFF4F3A9C)],
                 tileMode: TileMode.decal,
-                stops: [isMobile ? 0.7 : 0.75, isMobile ? 0.3 : 0.25],
+                stops: [
+                  DeviceType().isMobile ? 0.7 : 0.75,
+                  DeviceType().isMobile ? 0.3 : 0.25
+                ],
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
               ),
@@ -166,17 +180,20 @@ class BuildCategoryContainer extends StatelessWidget {
               return Column(
                 children: [
                   SizedBox(
-                    height: constraints.maxHeight * (isMobile ? 0.03 : 0.05),
+                    height: constraints.maxHeight *
+                        (DeviceType().isMobile ? 0.03 : 0.05),
                   ),
                   SizedBox(
-                    height: constraints.maxHeight * (isMobile ? 0.63 : 0.65),
+                    height: constraints.maxHeight *
+                        (DeviceType().isMobile ? 0.63 : 0.65),
                     child: Image.asset(
                       image,
                       fit: BoxFit.cover,
                     ),
                   ),
                   SizedBox(
-                    height: constraints.maxHeight * (isMobile ? 0.07 : 0.07),
+                    height: constraints.maxHeight *
+                        (DeviceType().isMobile ? 0.07 : 0.07),
                   ),
                   SizedBox(
                     height: constraints.maxHeight * 0.2,
@@ -189,7 +206,7 @@ class BuildCategoryContainer extends StatelessWidget {
                           fontFamily: 'Nunito',
                           fontWeight: FontWeight.w700,
                           height: 0,
-                          fontSize: isMobile
+                          fontSize: DeviceType().isMobile
                               ? 110.sp
                               : 16 * MediaQuery.of(context).size.aspectRatio,
                         ),

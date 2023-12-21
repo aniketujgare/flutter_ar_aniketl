@@ -37,7 +37,7 @@ class CategoryScreen extends StatelessWidget {
                       0.h,
                       (DeviceType().isMobile ? 450.w : 250.w),
                       0.h),
-                  child: CategoryList(),
+                  child: const CategoryList(),
                 ),
                 // Positioned(
                 //   top: 55.h,
@@ -93,7 +93,7 @@ class CategoryScreen extends StatelessWidget {
                   child: GestureDetector(
                     onTap: () {
                       Navigator.of(context).pushReplacement(MaterialPageRoute(
-                          builder: (context) => MainMenuScreen()));
+                          builder: (context) => const MainMenuScreen()));
                     },
                     child: SizedBox(
                       height: 85.h,

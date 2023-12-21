@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ar/presentation/category/bloc/category_cubit/category_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../core/util/api/api.dart';
+import '../bloc/category_new_cubit/category_new_cubit.dart';
 import 'category_page_view.dart';
 
 class CategoryList extends StatelessWidget {
@@ -12,9 +11,10 @@ class CategoryList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<CategoryCubit, CategoryState>(builder: (context, state) {
-      if (state is CategoryLoaded) {
-        return CategoryPageView(arCategoryies: state.arCategory);
+    return BlocBuilder<CategoryNewCubit, CategoryNewState>(
+        builder: (context, state) {
+      if (state.status == CategoryStatus.loaded) {
+        return CategoryPageView();
       }
       return const Center(child: CircularProgressIndicator());
     });

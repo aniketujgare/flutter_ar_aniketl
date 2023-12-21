@@ -1,12 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_ar/data/models/ar_model.dart';
-import 'package:flutter_ar/presentation/category/bloc/model_page_controler_cubit/models_page_controller_cubit.dart';
-import 'package:flutter_ar/presentation/category/bloc/models_cubit/models_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:size_config/size_config.dart';
 
 import '../../../core/util/device_type.dart';
+import '../../../data/models/ar_model.dart';
+import '../bloc/model_page_controler_cubit/models_page_controller_cubit.dart';
+import '../bloc/models_new_cubit/models_new_cubit.dart';
 import 'model_3d_view.dart';
 
 class CategoryModelsPageView extends StatelessWidget {
@@ -28,9 +28,9 @@ class CategoryModelsPageView extends StatelessWidget {
                     0.h,
                     (DeviceType().isMobile ? 450.w : 250.w),
                     0.h),
-                child: BlocBuilder<ModelsCubit, ModelsState>(
+                child: BlocBuilder<ModelsNewCubit, ModelsNewState>(
                   builder: (context, state) {
-                    if (state is ModelsLoaded) {
+                    if (state.status == ModelsStatus.loaded) {
                       context
                           .read<ModelsPageControllerCubit>()
                           .setmaxLength((state.arModels.length / 6).ceil());
