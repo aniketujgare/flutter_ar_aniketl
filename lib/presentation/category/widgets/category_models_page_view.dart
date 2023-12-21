@@ -1,9 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lottie/lottie.dart';
 import 'package:size_config/size_config.dart';
 
 import '../../../core/util/device_type.dart';
+import '../../../core/util/styles.dart';
 import '../../../data/models/ar_model.dart';
 import '../bloc/model_page_controler_cubit/models_page_controller_cubit.dart';
 import '../bloc/models_new_cubit/models_new_cubit.dart';
@@ -64,7 +66,10 @@ class CategoryModelsPageView extends StatelessWidget {
                         },
                       );
                     }
-                    return const Center(child: CircularProgressIndicator());
+                    return Center(
+                        child: Lottie.asset('assets/Loading.json',
+                            height:
+                                DeviceType().resposnsiveLength(400.h, 400.h)));
                   },
                 ),
               ),
@@ -268,9 +273,9 @@ class BuildModelContainer extends StatelessWidget {
         )),
         child: ConstrainedBox(
           constraints: BoxConstraints(
-            maxHeight: MediaQuery.of(context).size.height *
-                (DeviceType().isMobile ? 0.5.h : 0.35.h),
-            // maxWidth: MediaQuery.of(context).size.height * 0.2.h,
+            maxHeight: (MediaQuery.of(context).size.height - 80.h) *
+                (DeviceType().isMobile ? 0.5 : 0.5),
+            //Todo: Adjust card size for tablet
           ),
           child: Container(
             margin: EdgeInsets.symmetric(horizontal: 40.w, vertical: 40.w),
@@ -288,8 +293,8 @@ class BuildModelContainer extends StatelessWidget {
                 colors: const [Colors.white, Color(0XFF4F3A9C)],
                 tileMode: TileMode.decal,
                 stops: [
-                  DeviceType().isMobile ? 0.7 : 0.75,
-                  DeviceType().isMobile ? 0.3 : 0.25
+                  DeviceType().isMobile ? 0.75 : 0.75,
+                  DeviceType().isMobile ? 0.25 : 0.25
                 ],
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
@@ -301,42 +306,66 @@ class BuildModelContainer extends StatelessWidget {
               ),
             ),
             child: LayoutBuilder(builder: (context, constraints) {
+              //Todo: check for tab models page
               return Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   SizedBox(
                     height: constraints.maxHeight *
-                        (DeviceType().isMobile ? 0.03 : 0.05),
-                  ),
-                  SizedBox(
-                    height: constraints.maxHeight *
-                        (DeviceType().isMobile ? 0.63 : 0.65),
-                    child: CachedNetworkImage(
-                      fit: BoxFit.cover,
-                      imageUrl: image,
-                    ),
-                  ),
-                  SizedBox(
-                    height: constraints.maxHeight *
-                        (DeviceType().isMobile ? 0.07 : 0.07),
-                  ),
-                  SizedBox(
-                    height: constraints.maxHeight * 0.2,
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: Text(
-                        name,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontFamily: 'Nunito',
-                          fontWeight: FontWeight.w700,
-                          height: 0,
-                          fontSize: DeviceType().isMobile
-                              ? 110.sp
-                              : 16 * MediaQuery.of(context).size.aspectRatio,
-                        ),
+                        (DeviceType().isMobile ? 0.75 : 0.05),
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(vertical: 10.h),
+                      child: CachedNetworkImage(
+                        fit: BoxFit.cover,
+                        imageUrl: image,
                       ),
                     ),
                   ),
+                  SizedBox(
+                    height: constraints.maxHeight *
+                        (DeviceType().isMobile ? 0.25 : 0.05),
+                    child: Center(
+                      //Todo: check font size for tab
+                      child: Text(
+                        name,
+                        style: AppTextStyles.nunito100w700white,
+                      ),
+                    ),
+                  ),
+                  // SizedBox(
+                  //   height: constraints.maxHeight *
+                  //       (DeviceType().isMobile ? 0.03 : 0.05),
+                  // ),
+                  // SizedBox(
+                  //   height: constraints.maxHeight *
+                  //       (DeviceType().isMobile ? 0.63 : 0.65),
+                  //   child: CachedNetworkImage(
+                  //     fit: BoxFit.cover,
+                  //     imageUrl: image,
+                  //   ),
+                  // ),
+                  // SizedBox(
+                  //   height: constraints.maxHeight *
+                  //       (DeviceType().isMobile ? 0.07 : 0.07),
+                  // ),
+                  // SizedBox(
+                  //   height: constraints.maxHeight * 0.2,
+                  //   child: Align(
+                  //     alignment: Alignment.center,
+                  //     child: Text(
+                  //       name,
+                  //       style: TextStyle(
+                  //         color: Colors.white,
+                  //         fontFamily: 'Nunito',
+                  //         fontWeight: FontWeight.w700,
+                  //         height: 0,
+                  //         fontSize: DeviceType().isMobile
+                  //             ? 110.sp
+                  //             : 16 * MediaQuery.of(context).size.aspectRatio,
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
                 ],
               );
             }),

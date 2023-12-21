@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_ar/core/util/device_type.dart';
+import 'package:flutter_ar/core/util/styles.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:size_config/size_config.dart';
 
@@ -11,6 +12,7 @@ import 'category_models_page_view.dart';
 
 class CategoryPageView extends StatefulWidget {
   late final List<ArCategory> arCategoryies;
+  late List<String> categoryImgList;
 
   CategoryPageView({super.key});
 
@@ -22,23 +24,10 @@ class _CategoryPageViewState extends State<CategoryPageView> {
   @override
   void initState() {
     widget.arCategoryies = context.read<CategoryNewCubit>().state.arCategory;
+    widget.categoryImgList =
+        context.read<CategoryNewCubit>().state.categoryImgList;
     super.initState();
   }
-
-  // final List<ArCategory> arCategoryies;
-  var categoryImgList = [
-    'assets/images/PNG Icons/Animals.png',
-    'assets/images/PNG Icons/birds.png',
-    'assets/images/PNG Icons/sea life.png',
-    'assets/images/PNG Icons/dinosaurs.png',
-    'assets/images/PNG Icons/plants.png',
-    'assets/images/PNG Icons/trees.png',
-    'assets/images/PNG Icons/Fruits & Vegetables.png',
-    'assets/images/PNG Icons/my body.png',
-    'assets/images/PNG Icons/monuments.png',
-    'assets/images/PNG Icons/vehicles.png',
-    'assets/images/PNG Icons/vehicles.png',
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +37,6 @@ class _CategoryPageViewState extends State<CategoryPageView> {
         .setmaxLength((widget.arCategoryies.length / 6).ceil());
     return BlocBuilder<CategoryPageCubit, int>(
       builder: (context, index) {
-        print('page ni $index');
         return PageView.builder(
           controller: context.read<CategoryPageCubit>().pageCont,
           scrollDirection: Axis.horizontal,
@@ -97,7 +85,7 @@ class _CategoryPageViewState extends State<CategoryPageView> {
           final colorIndex = startIndex + index;
           return colorIndex < widget.arCategoryies.length
               ? BuildCategoryContainer(
-                  image: categoryImgList[colorIndex],
+                  image: widget.categoryImgList[colorIndex],
                   name: widget.arCategoryies[colorIndex].categoryName,
                   model:
                       'https://d3ag5oij4wsyi3.cloudfront.net/kidsappmodel/models/{arModels[colorIndex].modelId}.glb',
@@ -142,9 +130,9 @@ class BuildCategoryContainer extends StatelessWidget {
         },
         child: ConstrainedBox(
           constraints: BoxConstraints(
-            maxHeight: MediaQuery.of(context).size.height *
-                (DeviceType().isMobile ? 0.5.h : 0.35.h),
-            // maxWidth: MediaQuery.of(context).size.height * 0.2.h,
+            maxHeight: (MediaQuery.of(context).size.height - 80.h) *
+                (DeviceType().isMobile ? 0.5 : 0.5),
+            //Todo: Adjust card size for tablet
           ),
           child: Container(
             // height: 200,
@@ -164,8 +152,8 @@ class BuildCategoryContainer extends StatelessWidget {
                 colors: const [Colors.white, Color(0XFF4F3A9C)],
                 tileMode: TileMode.decal,
                 stops: [
-                  DeviceType().isMobile ? 0.7 : 0.75,
-                  DeviceType().isMobile ? 0.3 : 0.25
+                  DeviceType().isMobile ? 0.75 : 0.75,
+                  DeviceType().isMobile ? 0.25 : 0.25
                 ],
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
@@ -177,39 +165,30 @@ class BuildCategoryContainer extends StatelessWidget {
               ),
             ),
             child: LayoutBuilder(builder: (context, constraints) {
+              //Todo: check for tab category page
               return Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   SizedBox(
                     height: constraints.maxHeight *
-                        (DeviceType().isMobile ? 0.03 : 0.05),
-                  ),
-                  SizedBox(
-                    height: constraints.maxHeight *
-                        (DeviceType().isMobile ? 0.63 : 0.65),
-                    child: Image.asset(
-                      image,
-                      fit: BoxFit.cover,
+                        (DeviceType().isMobile ? 0.75 : 0.05),
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(vertical: 10.h),
+                      child: Image.asset(
+                        // 'assets/images/PNG Icons/Dog3.png',
+                        image,
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
                   SizedBox(
                     height: constraints.maxHeight *
-                        (DeviceType().isMobile ? 0.07 : 0.07),
-                  ),
-                  SizedBox(
-                    height: constraints.maxHeight * 0.2,
-                    child: Align(
-                      alignment: Alignment.center,
+                        (DeviceType().isMobile ? 0.25 : 0.05),
+                    child: Center(
+                      //Todo: check font size for tab
                       child: Text(
                         name,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontFamily: 'Nunito',
-                          fontWeight: FontWeight.w700,
-                          height: 0,
-                          fontSize: DeviceType().isMobile
-                              ? 110.sp
-                              : 16 * MediaQuery.of(context).size.aspectRatio,
-                        ),
+                        style: AppTextStyles.nunito100w700white,
                       ),
                     ),
                   ),
@@ -222,44 +201,3 @@ class BuildCategoryContainer extends StatelessWidget {
     );
   }
 }
-
-var modleList = [
-  ['assets/Crocodile/Crocodile.glb', 'assets/Snake/Snake.glb'],
-  [
-    'assets/Bat_animated/Bat.glb',
-    'assets/Dodo_animated/Dodo.glb',
-    'assets/Eagle_animated/Eagle.glb',
-    'assets/Hummingbird_animated/Humming_Bird.glb',
-  ],
-  [
-    'assets/dolphin_animated/Dolphine.glb',
-    'assets/eel_animated/Eel.glb',
-    'assets/hammerhead_shark_animated/Hammerhead_shark.glb',
-    'assets/Shark_animated/Shark.glb',
-    'assets/turtle_animated/Turtle.glb',
-  ],
-];
-var modleCategoryList = [
-  'Animal',
-  'Birds',
-  'Sea Life',
-];
-var modleImageList = [
-  [
-    'assets/Crocodile/Crocodile.png',
-    'assets/Snake/Snake.png',
-  ],
-  [
-    'assets/Bat_animated/Bat.png',
-    'assets/Dodo_animated/Dodo.png',
-    'assets/Eagle_animated/Eagle.png',
-    'assets/Hummingbird_animated/Humming_bird.png',
-  ],
-  [
-    'assets/dolphin_animated/Dolphine.png',
-    'assets/eel_animated/Eel.png',
-    'assets/hammerhead_shark_animated/Hammerhead_shark.png',
-    'assets/Snake/Snake.png',
-    'assets/turtle_animated/Turtle.png',
-  ],
-];

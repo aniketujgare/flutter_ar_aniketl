@@ -28,11 +28,5 @@ class ModelsNewCubit extends Cubit<ModelsNewState> {
           arModelss: newArModelss,
           arModels: arModelsLocal));
     }
-    // if (state.arModelss.containsKey(category)) {
-    // emit(state.copyWith(status: ModelsStatus.loading));
-    // var arModelsLocal = await API().getModel(category);
-    // emit(state.copyWith(
-    //     status: ModelsStatus.loaded, arModels: arModelsLocal ?? []));
-    // }
   }
 }

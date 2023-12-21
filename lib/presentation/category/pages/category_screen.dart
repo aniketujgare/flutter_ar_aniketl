@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_ar/core/util/styles.dart';
-import 'package:flutter_ar/presentation/main_menu/main_menu_screen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:size_config/size_config.dart';
+
 import '../../../core/util/device_type.dart';
+import '../../main_menu/main_menu_screen.dart';
 import '../bloc/category_page_cubit/category_page_cubit.dart';
 import '../widgets/category_list.dart';
 
@@ -72,12 +73,10 @@ class CategoryScreen extends StatelessWidget {
                       height: 45.h,
                       width: 45.h,
                       child: GestureDetector(
-                        onTap: () {
-                          context.read<CategoryPageCubit>().setPreviousPage();
-
-                          print(
-                              'tapped${context.read<CategoryPageCubit>().curridx}');
-                        },
+                        // splashColor: AppColors.secondaryColor,
+                        // borderRadius: BorderRadius.circular(50),
+                        onTap: () =>
+                            context.read<CategoryPageCubit>().setPreviousPage(),
                         child: Image.asset(
                           'assets/ui/Group.png', // left arrow
                           fit: BoxFit.scaleDown,
@@ -110,18 +109,16 @@ class CategoryScreen extends StatelessWidget {
                   child: Padding(
                     padding: EdgeInsets.only(
                         right: DeviceType().isMobile ? 130.w : 50.w),
-                    child: SizedBox(
-                      height: 45.h,
-                      width: 45.h,
-                      child: RotatedBox(
-                        quarterTurns: 2,
-                        child: GestureDetector(
-                          onTap: () {
-                            context.read<CategoryPageCubit>().setNextPage();
-
-                            print(
-                                'tapped${context.read<CategoryPageCubit>().curridx}');
-                          },
+                    child: GestureDetector(
+                      // splashColor:  AppColors.secondaryColor,
+                      // borderRadius: BorderRadius.circular(50),
+                      onTap: () =>
+                          context.read<CategoryPageCubit>().setNextPage(),
+                      child: SizedBox(
+                        height: 45.h,
+                        width: 45.h,
+                        child: RotatedBox(
+                          quarterTurns: 2,
                           child: Image.asset(
                             'assets/ui/Group.png', // right arrow
                             fit: BoxFit.scaleDown,

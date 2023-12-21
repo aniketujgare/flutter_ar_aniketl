@@ -22,7 +22,6 @@ class GoRouterProvider {
         redirect: (context, state) async {
           var kidsAppBox = await Hive.openBox("kidsApp");
           var v = kidsAppBox.get('isLoggedIn');
-          print(v);
           if (kidsAppBox.get('isLoggedIn') == null ||
               kidsAppBox.get('isLoggedIn') == false) {
             return '/login';
