@@ -5,9 +5,6 @@ import 'package:flutter_ar/core/util/styles.dart';
 import 'package:flutter_ar/presentation/category/pages/category_screen.dart';
 import 'package:size_config/size_config.dart';
 
-import '../../demo/constants.dart';
-import '../category/widgets/category_list.dart';
-
 class MainMenuScreen extends StatelessWidget {
   const MainMenuScreen({super.key});
 
@@ -24,34 +21,41 @@ class MainMenuScreen extends StatelessWidget {
           backgroundColor: const Color(0XFFF4F2FE),
           body: Padding(
             padding: DeviceType().isMobile
-                ? EdgeInsets.fromLTRB(160.w, 35.h, 160.w, 35.h)
+                ? EdgeInsets.fromLTRB(160.w, 40.h, 160.w, 40.h)
                 : EdgeInsets.fromLTRB(116.w, 40.h, 116.w, 40.h),
             child: Stack(
               children: [
                 Align(
                   alignment: Alignment.center,
                   child: Container(
-                    padding: EdgeInsets.fromLTRB(
-                        (DeviceType().isMobile ? 350.w : 150.w),
-                        0.h,
-                        (DeviceType().isMobile ? 350.w : 150.w),
-                        0.h),
+                    // padding: EdgeInsets.symmetric(
+                    //     horizontal: (MediaQuery.of(context).size.width -
+                    //             (DeviceType().isMobile ? 320.w : 232.w)) *
+                    //         0.001,
+                    //     vertical: MediaQuery.of(context).size.width * 0.01),
+
+                    // padding: EdgeInsets.fromLTRB(
+                    //     (DeviceType().isMobile ? 350.w : 150.w),
+                    //     0.h,
+                    //     (DeviceType().isMobile ? 350.w : 150.w),
+                    //     0.h),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.4,
+                          width: MediaQuery.of(context).size.width * 0.45,
                           child: Image.asset(
                             'assets/images/PNG Icons/LessonsMenu.png',
                             fit: BoxFit.cover,
                           ),
                         ),
                         SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.4,
+                            width: MediaQuery.of(context).size.width * 0.45,
                             child: GestureDetector(
                               onTap: () => Navigator.of(context).push(
                                   MaterialPageRoute(
-                                      builder: (context) => CategoryScreen())),
+                                      builder: (context) =>
+                                          const CategoryScreen())),
                               child: Image.asset(
                                 'assets/images/PNG Icons/othermenu.png',
                                 fit: BoxFit.cover,
@@ -64,8 +68,8 @@ class MainMenuScreen extends StatelessWidget {
                 Align(
                   alignment: Alignment.topLeft,
                   child: SizedBox(
-                    height: 85.h,
-                    width: 85.h,
+                    height: 70.h,
+                    width: 70.h,
                     child: Image.asset(
                       'assets/ui/image 40.png', // User Icon
                       fit: BoxFit.contain,
@@ -78,8 +82,8 @@ class MainMenuScreen extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       SizedBox(
-                        // height: 110.h,
-                        width: DeviceType().resposnsiveLength(800.w, 110.h),
+                        height: DeviceType().resposnsiveLength(110.h, 70.h),
+                        // width: DeviceType().resposnsiveLength(800.w, 110.h),
                         child: Stack(
                           clipBehavior: Clip.none,
                           children: [
@@ -87,18 +91,18 @@ class MainMenuScreen extends StatelessWidget {
                               'assets/images/PNG Icons/esr.001.png', // User Icon
                               fit: BoxFit.contain,
                             ),
-                            Positioned(
-                              right: 13.h,
-                              top: 15.h,
-                              child: Text(
-                                '999',
-                                style:
-                                    AppTextStyles.nunito100w700white.copyWith(
-                                  fontSize: DeviceType()
-                                      .resposnsiveLength(140.sp, 160.sp),
-                                ),
-                              ),
-                            ),
+                            // Positioned(
+                            //   right: 13.h,
+                            //   top: 15.h,
+                            //   child: Text(
+                            //     '999',
+                            //     style:
+                            //         AppTextStyles.nunito100w700white.copyWith(
+                            //       fontSize: DeviceType()
+                            //           .resposnsiveLength(140.sp, 160.sp),
+                            //     ),
+                            //   ),
+                            // ),
                           ],
                         ),
                       ),

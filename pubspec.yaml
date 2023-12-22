@@ -94,6 +94,8 @@ flutter:
     - assets/images/PNG Icons/
     - assets/ui_new/
     - assets/images/Dog/
+    - assets/images/parent_zone/
+    - assets/images/reusable_icons/
 
   #   - images/a_dot_ham.jpeg
 

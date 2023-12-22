@@ -14,6 +14,7 @@ class AppColors {
   static var textFieldFillColorWhite = _createColor(0xFFF4F2FE);
   static var submitGreenColor = _createColor(0xFF45C375);
   static var hintTextColor = _createColor(0xFFBCBCBC);
+  static var parentZoneScaffoldColor = _createColor(0xFFF4F2FE);
 }
 
 class AppTextStyles {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ar/arkitdemo/custom_object_page.dart';
 import 'package:flutter_ar/core/util/device_type.dart';
 import 'package:flutter_ar/core/util/styles.dart';
 import 'package:flutter_ar/presentation/category/widgets/ar_view_ios.dart';
@@ -83,9 +84,9 @@ class _ModelViewState extends State<ModelView> {
                 Align(
                   alignment: Alignment.bottomRight,
                   child: GestureDetector(
+                    //? IOS AR View
                     onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) =>
-                            ARViewIOS(modelUrl: widget.modelUrl))),
+                        builder: (context) => CustomObjectPage())),
                     child: SizedBox(
                         height: 65.h,
                         width: 65.h,
