@@ -22,9 +22,9 @@ class ReportsView extends StatelessWidget {
       ),
       padding: DeviceType().isMobile
           ? EdgeInsets.fromLTRB(0, 40.h, 0, 40.h)
-          : EdgeInsets.fromLTRB(0, 40.h, 0, 30.h),
+          : EdgeInsets.fromLTRB(0, 20.h, 0, 20.h),
       margin: DeviceType().isMobile
-          ? EdgeInsets.fromLTRB(170.w, 30.h, 170.w, 0.h)
+          ? EdgeInsets.fromLTRB(3.wp, 30.h, 3.wp, 0.h)
           : EdgeInsets.fromLTRB(116.w, 40.h, 116.w, 30.h),
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 5.wp, vertical: 3.hp),

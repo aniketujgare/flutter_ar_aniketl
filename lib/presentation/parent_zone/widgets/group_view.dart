@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ar/core/util/device_type.dart';
 import 'package:flutter_ar/core/util/styles.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:size_config/size_config.dart';
@@ -94,13 +95,10 @@ class GroupNotification extends StatelessWidget {
             child: Center(
               child: Text(
                 subject,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 115.sp,
-                  fontFamily: 'Nunito',
-                  fontWeight: FontWeight.w700,
-                  height: 0,
-                ),
+                style: DeviceType().isMobile
+                    ? AppTextStyles.nunito115w700white
+                    : AppTextStyles.nunito115w700white
+                        .copyWith(fontSize: 115.sp * 0.7),
               ),
             ),
           ),
@@ -115,13 +113,10 @@ class GroupNotification extends StatelessWidget {
                 SizedBox(
                   child: Text(
                     title,
-                    style: TextStyle(
-                      color: const Color(0xFF212121),
-                      fontSize: 105.sp,
-                      fontFamily: 'Nunito',
-                      fontWeight: FontWeight.w700,
-                      height: 0,
-                    ),
+                    style: DeviceType().isMobile
+                        ? AppTextStyles.nunito105w700Text
+                        : AppTextStyles.nunito105w700Text
+                            .copyWith(fontSize: 105.sp * 0.7),
                   ),
                 ),
                 Wrap(
@@ -131,12 +126,10 @@ class GroupNotification extends StatelessWidget {
                     Text(
                       subtitle,
                       // softWrap: true, // Allow the text to wrap
-                      style: TextStyle(
-                          color: const Color(0xFF4D4D4D),
-                          fontSize: 85.sp,
-                          fontFamily: 'Nunito',
-                          fontWeight: FontWeight.w400,
-                          height: 0),
+                      style: DeviceType().isMobile
+                          ? AppTextStyles.nunito85w400Text
+                          : AppTextStyles.nunito85w400Text
+                              .copyWith(fontSize: 85.sp * 0.7),
                     ),
                   ],
                 ),
@@ -152,28 +145,22 @@ class GroupNotification extends StatelessWidget {
                   Text(
                     'Now',
                     textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: const Color(0xFF4D4D4D),
-                      fontSize: 75.sp,
-                      fontFamily: 'Nunito',
-                      fontWeight: FontWeight.w400,
-                      height: 0,
-                    ),
+                    style: DeviceType().isMobile
+                        ? AppTextStyles.nunito75w400Text
+                        : AppTextStyles.nunito75w400Text
+                            .copyWith(fontSize: 75.sp * 0.7),
                   ),
                   5.verticalSpacer,
                   CircleAvatar(
-                    radius: 60.w,
+                    radius: DeviceType().isMobile ? 60.w : 40.w,
                     backgroundColor: const Color(0xFFFF644E),
                     child: Text(
                       '4',
                       textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 75.sp,
-                        fontFamily: 'Nunito',
-                        fontWeight: FontWeight.w700,
-                        height: 0,
-                      ),
+                      style: DeviceType().isMobile
+                          ? AppTextStyles.nunito75w700TextWhite
+                          : AppTextStyles.nunito75w700TextWhite
+                              .copyWith(fontSize: 75.sp * 0.7),
                     ),
                   )
                 ],
@@ -185,13 +172,10 @@ class GroupNotification extends StatelessWidget {
               child: Text(
                 trailing,
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: const Color(0xFF4D4D4D),
-                  fontSize: 75.sp,
-                  fontFamily: 'Nunito',
-                  fontWeight: FontWeight.w400,
-                  height: 0,
-                ),
+                style: DeviceType().isMobile
+                    ? AppTextStyles.nunito75w400Text
+                    : AppTextStyles.nunito75w400Text
+                        .copyWith(fontSize: 75.sp * 0.7),
               ),
             ),
         ],

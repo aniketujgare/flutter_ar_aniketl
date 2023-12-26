@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_ar/core/util/reusable_widgets/reusable_button.dart';
 import 'package:size_config/size_config.dart';
 
@@ -10,47 +11,54 @@ class MessageView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+        overlays: [SystemUiOverlay.top, SystemUiOverlay.bottom]);
     return Scaffold(
       backgroundColor: AppColors.parentZoneScaffoldColor,
       appBar: AppBar(
         backgroundColor: AppColors.accentColor,
-        leading: GestureDetector(
-          child: Padding(
-            padding: EdgeInsets.only(left: 200.w),
-            child: Image.asset(
-              'assets/images/reusable_icons/back_button_primary.png',
-            ),
-          ),
-          onTap: () => Navigator.pop(context),
-        ),
         title: Row(
           children: [
+            GestureDetector(
+              onTap: () => Navigator.pop(context),
+              child: Container(
+                margin: EdgeInsets.only(left: 2.wp, right: 3.wp),
+                height: 36.h,
+                width: 36.h,
+                child: Image.asset(
+                  'assets/images/reusable_icons/back_button_primary.png',
+                ),
+              ),
+            ),
             Container(
-              margin: EdgeInsets.only(right: 3.wp),
-              height: 56.h,
-              width: 56.h,
+              margin: EdgeInsets.only(right: 1.wp),
+              height: DeviceType().isMobile ? 56.h : 50.h,
+              width: DeviceType().isMobile ? 56.h : 50.h,
               decoration: BoxDecoration(
                 color: AppColors.primaryColor,
                 shape: BoxShape.circle,
               ),
               child: Center(
                 child: Text('EVS',
-                    style: AppTextStyles.nunito100w700white
-                        .copyWith(fontSize: 85.sp)),
+                    style: DeviceType().isMobile
+                        ? AppTextStyles.nunito85w700white
+                        : AppTextStyles.nunito85w700white
+                            .copyWith(fontSize: 85.sp * 0.7, height: 0)),
               ),
             ),
-            5.horizontalSpacer,
+            // 5.horizontalSpacer,
             Text(
               'Teacher Name',
-              style: AppTextStyles.uniformRounded136BoldAppBarStyle,
+              style: DeviceType().isMobile
+                  ? AppTextStyles.uniformRounded136BoldAppBarStyle
+                  : AppTextStyles.uniformRounded136BoldAppBarStyle
+                      .copyWith(fontSize: 136.sp * 0.7),
             ),
           ],
         ),
       ),
       body: Padding(
-        padding: DeviceType().isMobile
-            ? EdgeInsets.fromLTRB(8.wp, 40.h, 8.wp, 40.h)
-            : EdgeInsets.fromLTRB(116.w, 40.h, 116.w, 40.h),
+        padding: EdgeInsets.fromLTRB(4.wp, 0, 4.wp, 0),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -75,10 +83,10 @@ class MessageView extends StatelessWidget {
                   ),
                   Container(
                     width: 40.wp,
-                    height: 80.h,
+                    // height: 78.h,
                     clipBehavior: Clip.antiAlias,
                     padding:
-                        EdgeInsets.symmetric(horizontal: 3.wp, vertical: 12.h),
+                        EdgeInsets.symmetric(horizontal: 3.wp, vertical: 10.h),
                     decoration: ShapeDecoration(
                       color: AppColors.redMessageSharedFileContainerColor,
                       shape: RoundedRectangleBorder(
@@ -97,6 +105,8 @@ class MessageView extends StatelessWidget {
                           flex: 4,
                           child: SizedBox(
                             child: Text('Holiday tomorrow.pdf',
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
                                 style: AppTextStyles.nunito100w400white
                                     .copyWith(fontSize: 75.sp)),
                           ),
@@ -105,13 +115,14 @@ class MessageView extends StatelessWidget {
                           flex: 1,
                         ),
                         Expanded(
-                          flex: 2,
+                          flex: 1,
                           child: Container(
-                            // width: 100.w,
-                            padding: EdgeInsets.symmetric(vertical: 2.2.wp),
+                            // width: 45.h,
+                            // height: 45.h,
+                            padding: EdgeInsets.symmetric(vertical: 1.wp),
                             child: Image.asset(
                               'assets/images/PNG Icons/download_button.png',
-                              fit: BoxFit.scaleDown,
+                              fit: BoxFit.fitWidth,
                               alignment: Alignment.centerRight,
                             ),
                           ),
@@ -135,7 +146,8 @@ class MessageView extends StatelessWidget {
                     ),
                     Container(
                       width: double.maxFinite,
-                      height: 239.h,
+                      // height: 239.h,
+                      padding: EdgeInsets.symmetric(vertical: 3.wp),
                       clipBehavior: Clip.antiAlias,
                       decoration: ShapeDecoration(
                         color: AppColors.accentColor,

@@ -64,10 +64,19 @@ class AppTextStyles {
       fontSize: 100.sp,
       fontWeight: FontWeight.w700,
       color: Colors.white);
-
+  static var nunito85w700white = _createTextStyle(
+      fontFamily: "Nunito",
+      fontSize: 85.sp,
+      fontWeight: FontWeight.w700,
+      color: Colors.white);
   static var nunito80w700white = _createTextStyle(
       fontFamily: "Nunito",
       fontSize: 80.sp,
+      fontWeight: FontWeight.w700,
+      color: Colors.white);
+  static var nunito115w700white = _createTextStyle(
+      fontFamily: "Nunito",
+      fontSize: 115.sp,
       fontWeight: FontWeight.w700,
       color: Colors.white);
   static var nunito62w400TextItalic = _createTextStyle(
@@ -81,9 +90,31 @@ class AppTextStyles {
       fontSize: 88.sp,
       fontWeight: FontWeight.w400,
       color: AppColors.textFieldTextColor);
+
+  static var nunito85w400Text = _createTextStyle(
+      fontFamily: "Nunito",
+      fontSize: 88.sp,
+      fontWeight: FontWeight.w400,
+      color: AppColors.textFieldTextColor);
+  static var nunito75w400Text = _createTextStyle(
+      fontFamily: "Nunito",
+      fontSize: 75.sp,
+      fontWeight: FontWeight.w400,
+      color: const Color(0xFF4D4D4D));
+  static var nunito75w700TextWhite = _createTextStyle(
+      fontFamily: "Nunito",
+      fontSize: 75.sp,
+      fontWeight: FontWeight.w700,
+      color: Colors.white);
+
   static var nunito88w700Text = _createTextStyle(
       fontFamily: "Nunito",
       fontSize: 88.sp,
+      fontWeight: FontWeight.w700,
+      color: AppColors.textFieldTextColor);
+  static var nunito105w700Text = _createTextStyle(
+      fontFamily: "Nunito",
+      fontSize: 105.sp,
       fontWeight: FontWeight.w700,
       color: AppColors.textFieldTextColor);
 
@@ -107,6 +138,11 @@ class AppTextStyles {
   static var uniformRounded136BoldAppBarStyle = _createTextStyle(
       fontFamily: 'Uniform Rounded',
       fontSize: 136.sp,
+      fontWeight: FontWeight.w700,
+      color: AppColors.primaryColor);
+  static var uniformRounded205BoldAppBarStyle = _createTextStyle(
+      fontFamily: 'Uniform Rounded',
+      fontSize: 205.sp,
       fontWeight: FontWeight.w700,
       color: AppColors.primaryColor);
 }

@@ -12,9 +12,7 @@ class HomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: DeviceType().isMobile
-          ? EdgeInsets.fromLTRB(170.w, 40.h, 170.w, 40.h)
-          : EdgeInsets.fromLTRB(116.w, 40.h, 116.w, 40.h),
+      padding: EdgeInsets.fromLTRB(4.wp, 20.h, 4.wp, 0),
       child: Column(
         children: [
           studentProfile(),

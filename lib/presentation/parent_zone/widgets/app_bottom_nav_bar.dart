@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ar/core/util/device_type.dart';
 import 'package:flutter_ar/core/util/styles.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:size_config/size_config.dart';
@@ -58,8 +59,8 @@ class AppBottomNavBar extends StatelessWidget {
           // splashRadius: 1,
           // padding: const EdgeInsets.symmetric(horizontal: 25),
           child: SizedBox(
-            height: 340.w,
-            width: 340.w,
+            height: DeviceType().isMobile ? 340.w : 300.w,
+            width: DeviceType().isMobile ? 340.w : 300.w,
             child: Image.asset(
               pngIcon,
             ),

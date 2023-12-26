@@ -7,6 +7,7 @@ import 'package:flutter_ar/presentation/parent_zone/widgets/message_view.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:size_config/size_config.dart';
 
+import '../../../core/util/device_type.dart';
 import '../widgets/home_view.dart';
 import '../widgets/group_view.dart';
 import '../widgets/reports_view.dart';
@@ -20,7 +21,7 @@ class ParentZoneScreen extends StatelessWidget {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
         overlays: [SystemUiOverlay.top]);
     SystemChrome.setPreferredOrientations([
-      // DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
     return AnnotatedRegion<SystemUiOverlayStyle>(
@@ -32,22 +33,32 @@ class ParentZoneScreen extends StatelessWidget {
             backgroundColor: AppColors.parentZoneScaffoldColor,
             appBar: AppBar(
               backgroundColor: AppColors.accentColor,
-              leading: context.watch<AppNavigatorCubit>().state.index == 0
-                  ? GestureDetector(
-                      child: Padding(
-                        padding: EdgeInsets.only(left: 200.w),
-                        child: Image.asset(
-                          'assets/images/reusable_icons/back_button_primary.png',
-                        ),
-                      ),
-                      onTap: () => Navigator.pop(context),
-                    )
-                  : null,
               title: BlocBuilder<AppNavigatorCubit, AppNavigatorState>(
                 builder: (context, state) {
-                  return Text(
-                    appBarTitle[state.index],
-                    style: AppTextStyles.uniformRounded136BoldAppBarStyle,
+                  return Row(
+                    children: [
+                      if (context.watch<AppNavigatorCubit>().state.index == 0)
+                        GestureDetector(
+                          onTap: () => Navigator.pop(context),
+                          child: Container(
+                            margin: EdgeInsets.only(left: 2.wp, right: 3.wp),
+                            height: 36.h,
+                            width: 36.h,
+                            child: Image.asset(
+                              'assets/images/reusable_icons/back_button_primary.png',
+                            ),
+                          ),
+                        ),
+                      if (context.watch<AppNavigatorCubit>().state.index != 0)
+                        SizedBox(width: 3.wp),
+                      Text(
+                        appBarTitle[state.index],
+                        style: DeviceType().isMobile
+                            ? AppTextStyles.uniformRounded136BoldAppBarStyle
+                            : AppTextStyles.uniformRounded136BoldAppBarStyle
+                                .copyWith(fontSize: 136.sp * 0.7),
+                      ),
+                    ],
                   );
                 },
               ),
