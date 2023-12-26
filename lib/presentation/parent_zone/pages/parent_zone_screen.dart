@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_ar/core/util/styles.dart';
-import 'package:flutter_ar/presentation/category/pages/category_screen.dart';
 import 'package:flutter_ar/presentation/parent_zone/bloc/navbar_cubit/app_navigator_cubit.dart';
 import 'package:flutter_ar/presentation/parent_zone/widgets/app_bottom_nav_bar.dart';
+import 'package:flutter_ar/presentation/parent_zone/widgets/message_view.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:size_config/size_config.dart';
 
@@ -20,7 +20,7 @@ class ParentZoneScreen extends StatelessWidget {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
         overlays: [SystemUiOverlay.top]);
     SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
+      // DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
     return AnnotatedRegion<SystemUiOverlayStyle>(
@@ -47,13 +47,7 @@ class ParentZoneScreen extends StatelessWidget {
                 builder: (context, state) {
                   return Text(
                     appBarTitle[state.index],
-                    style: TextStyle(
-                      color: AppColors.primaryColor,
-                      fontSize: 160.sp,
-                      fontFamily: 'Uniform Rounded',
-                      fontWeight: FontWeight.w700,
-                      height: 0,
-                    ),
+                    style: AppTextStyles.uniformRounded136BoldAppBarStyle,
                   );
                 },
               ),

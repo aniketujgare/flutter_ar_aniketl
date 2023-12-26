@@ -207,7 +207,9 @@ class LoginScreenState extends State<LoginScreen>
                             switch (state.status) {
                               case LoginStatus.loading:
                                 return const Center(
-                                    child: CircularProgressIndicator());
+                                    child: CircularProgressIndicator.adaptive(
+                                  strokeCap: StrokeCap.round,
+                                ));
                               case LoginStatus.phoneNo1:
                                 return const LoginPage1MobileNumber();
                               case LoginStatus.otp2:

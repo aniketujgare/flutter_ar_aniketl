@@ -15,6 +15,8 @@ class AppColors {
   static var submitGreenColor = _createColor(0xFF45C375);
   static var hintTextColor = _createColor(0xFFBCBCBC);
   static var parentZoneScaffoldColor = _createColor(0xFFF4F2FE);
+  static var redMessageSharedFileContainerColor = _createColor(0xFFFF8371);
+  static var messageContainerColor = _createColor(0xFFE9E9E9);
 }
 
 class AppTextStyles {
@@ -68,8 +70,24 @@ class AppTextStyles {
       fontSize: 80.sp,
       fontWeight: FontWeight.w700,
       color: Colors.white);
+  static var nunito62w400TextItalic = _createTextStyle(
+      fontFamily: "Nunito",
+      fontSize: 62.sp,
+      fontStyle: FontStyle.italic,
+      fontWeight: FontWeight.w400,
+      color: AppColors.textFieldTextColor);
+  static var nunito88w400Text = _createTextStyle(
+      fontFamily: "Nunito",
+      fontSize: 88.sp,
+      fontWeight: FontWeight.w400,
+      color: AppColors.textFieldTextColor);
+  static var nunito88w700Text = _createTextStyle(
+      fontFamily: "Nunito",
+      fontSize: 88.sp,
+      fontWeight: FontWeight.w700,
+      color: AppColors.textFieldTextColor);
 
-  /// United Rounded
+  /// Uniform Rounded
 
   static var unitedRounded270w700 = _createTextStyle(
       fontFamily: 'Uniform Rounded',
@@ -84,6 +102,11 @@ class AppTextStyles {
   static var unitedRounded140w700 = _createTextStyle(
       fontFamily: 'Uniform Rounded',
       fontSize: 140.sp,
+      fontWeight: FontWeight.w700,
+      color: AppColors.primaryColor);
+  static var uniformRounded136BoldAppBarStyle = _createTextStyle(
+      fontFamily: 'Uniform Rounded',
+      fontSize: 136.sp,
       fontWeight: FontWeight.w700,
       color: AppColors.primaryColor);
 }

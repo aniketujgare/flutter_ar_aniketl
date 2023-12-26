@@ -3,6 +3,7 @@ import 'package:flutter_ar/demo/animation_playground.dart';
 import 'package:flutter_ar/presentation/login/pages/login_screen.dart';
 import 'package:flutter_ar/presentation/main_menu/main_menu_screen.dart';
 import 'package:flutter_ar/presentation/parent_zone/pages/parent_zone_screen.dart';
+import 'package:flutter_ar/presentation/parent_zone/widgets/message_view.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hive/hive.dart';
 
@@ -35,7 +36,7 @@ class GoRouterProvider {
             path: '/',
             name: 'splashRoute',
             pageBuilder: (context, state) {
-              return const MaterialPage(child: ParentZoneScreen());
+              return const MaterialPage(child: MessageView());
               // return MaterialPage(child: ModelsList3D());
             },
           ),
