@@ -36,7 +36,7 @@ class GoRouterProvider {
             path: '/',
             name: 'splashRoute',
             pageBuilder: (context, state) {
-              return const MaterialPage(child: MainMenuScreen());
+              return const MaterialPage(child: ParentZoneScreen());
               // return MaterialPage(child: ModelsList3D());
             },
           ),
@@ -52,7 +52,7 @@ class GoRouterProvider {
             path: '/$mainMenuRoute',
             name: mainMenuRoute,
             pageBuilder: (context, state) {
-              return MaterialPage(child: MainMenuScreen());
+              return MaterialPage(child: MessageView());
             },
           ),
           GoRoute(

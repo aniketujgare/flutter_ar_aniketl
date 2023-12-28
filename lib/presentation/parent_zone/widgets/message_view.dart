@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_ar/core/util/reusable_widgets/reusable_button.dart';
+import 'package:flutter_ar/data/models/teacher_message.dart';
+import 'package:flutter_ar/presentation/parent_zone/bloc/teacher_message_cubit/teacher_message_cubit.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:size_config/size_config.dart';
 
 import '../../../core/util/device_type.dart';
@@ -20,6 +24,7 @@ class _MessageViewState extends State<MessageView> {
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
     ]);
+    context.read<TeacherMessageCubit>().loadMessages();
   }
 
   @override
@@ -81,8 +86,126 @@ class _MessageViewState extends State<MessageView> {
         ),
         body: Padding(
           padding: EdgeInsets.fromLTRB(4.wp, 0, 4.wp, 0),
-          child: SingleChildScrollView(
-            child: Column(
+          child: BlocBuilder<TeacherMessageCubit, TeacherMessageState>(
+            builder: (context, state) {
+              switch (state.status) {
+                case TeacherMessageStatus.initial:
+                  return const Center(child: CircularProgressIndicator());
+                case TeacherMessageStatus.loading:
+                  return const Center(child: CircularProgressIndicator());
+                case TeacherMessageStatus.error:
+                  return const Center(child: Text('Failed to load messages'));
+                case TeacherMessageStatus.loaded:
+                  return ListView.separated(
+                    itemCount: state.teachersMessages.length,
+                    separatorBuilder: (BuildContext context, int index) {
+                      return SizedBox(height: 20.h);
+                    },
+                    itemBuilder: (BuildContext context, int index) {
+                      var message = state.teachersMessages[index];
+                      switch (message.type) {
+                        case MessageType.LESSON:
+                          //! View Lesson
+                          return Container(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  // message.date + message.time,
+                                  DateFormat('h:mm a MMM d').format(
+                                      createDateTime(
+                                          message.date, message.time)),
+                                  // '3:11 PM Dec 21',
+                                  style: AppTextStyles.nunito62w400TextItalic,
+                                ),
+                                Container(
+                                  width: 50.wp,
+                                  // height: 239.h,
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: 3.wp, horizontal: 2.wp),
+                                  clipBehavior: Clip.antiAlias,
+                                  decoration: ShapeDecoration(
+                                    color: AppColors.accentColor,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(4.wp)),
+                                    ),
+                                  ),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text.rich(
+                                        TextSpan(
+                                          children: [
+                                            TextSpan(
+                                              text: '${message.subject.name}\n',
+                                              // 'EVS Lesson:\n',
+                                              style: AppTextStyles
+                                                  .nunito88w400Text,
+                                            ),
+                                            TextSpan(
+                                              text: message.content,
+                                              // 'Parts of a Plant',
+                                              style: AppTextStyles
+                                                  .nunito88w700Text,
+                                            ),
+                                          ],
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                      10.verticalSpacer,
+                                      Text.rich(
+                                        TextSpan(
+                                          children: [
+                                            TextSpan(
+                                              text: 'Published on:\n',
+                                              style: AppTextStyles
+                                                  .nunito88w400Text,
+                                            ),
+                                            TextSpan(
+                                              text: DateFormat('MMM d, yyyy')
+                                                  .format(convertToDate(
+                                                      message.date)),
+                                              // 'April 28, 2023',
+                                              style: AppTextStyles
+                                                  .nunito88w700Text,
+                                            ),
+                                          ],
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                      10.verticalSpacer,
+                                      ReusableButton(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 0),
+                                        onPressed: () {},
+                                        buttonColor: AppColors.primaryColor,
+                                        text: 'View Lesson',
+                                        textColor: Colors.white,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+
+                        case MessageType.TEXT:
+                          return Text(state.teachersMessages[index].content);
+                      }
+                    },
+                  );
+              }
+            },
+          ),
+          /*
+          SingleChildScrollView(
+            child: 
+            
+            Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -262,9 +385,35 @@ class _MessageViewState extends State<MessageView> {
                 ),
               ],
             ),
+            
           ),
+          */
         ),
       ),
     );
   }
+}
+
+DateTime createDateTime(String dateStr, String timeStr) {
+  List<int> dateParts =
+      dateStr.split('-').map((part) => int.parse(part)).toList();
+
+  List<String> timeParts = timeStr.split(' ');
+  List<int> timeHourMinute =
+      timeParts[0].split(':').map((part) => int.parse(part)).toList();
+
+  int hour = timeHourMinute[0];
+  int minute = timeHourMinute[1];
+
+  if (timeParts[1] == 'pm' && hour != 12) {
+    hour += 12;
+  }
+
+  return DateTime(dateParts[0], dateParts[1], dateParts[2], hour, minute);
+}
+
+DateTime convertToDate(String dateString) {
+  List<int> dateParts =
+      dateString.split('-').map((part) => int.parse(part)).toList();
+  return DateTime(dateParts[0], dateParts[1], dateParts[2]);
 }

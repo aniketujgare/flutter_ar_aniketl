@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_ar/presentation/parent_zone/bloc/navbar_cubit/app_navigator_cubit.dart';
+import 'package:flutter_ar/presentation/parent_zone/bloc/teacher_message_cubit/teacher_message_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:size_config/size_config.dart';
@@ -20,6 +21,7 @@ import 'presentation/category/bloc/models_new_cubit/models_new_cubit.dart';
 import 'presentation/login/bloc/guest_validation_bloc/guest_validation_bloc.dart';
 import 'presentation/login/bloc/login_bloc/login_bloc.dart';
 import 'presentation/login/bloc/login_validation_bloc/login_validation_bloc.dart';
+import 'presentation/parent_zone/bloc/teacher_list_bloc/teacher_list_bloc.dart';
 import 'presentation/splash_screen/bloc/splash_animation_bloc.dart';
 
 final authenticationRepository = AuthenticationRepository();
@@ -93,6 +95,12 @@ class MyAppState extends State<MyApp> {
             ),
             BlocProvider(
               create: (context) => AppNavigatorCubit(),
+            ),
+            BlocProvider(
+              create: (context) => TeacherListBloc(),
+            ),
+            BlocProvider(
+              create: (context) => TeacherMessageCubit(),
             ),
           ],
           child: MaterialApp.router(

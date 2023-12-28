@@ -39,7 +39,7 @@ class CategoryScreen extends StatelessWidget {
                       ),
                       GestureDetector(
                         onTap: () =>
-                            context.read<CategoryPageCubit>().setNextPage(),
+                            context.read<CategoryPageCubit>().setPreviousPage(),
                         child: SizedBox(
                           height: 45.h,
                           width: 45.h,

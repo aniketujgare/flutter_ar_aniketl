@@ -66,6 +66,7 @@ dependencies:
   auto_orientation: ^2.3.1
   orientation_widget: ^1.1.0
   firebase_core: ^2.24.2
+  intl: ^0.19.0
 
 dev_dependencies:
   build_runner: ^2.4.7
