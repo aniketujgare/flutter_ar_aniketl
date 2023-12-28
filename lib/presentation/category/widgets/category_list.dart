@@ -19,9 +19,10 @@ class CategoryList extends StatelessWidget {
       if (state.status == CategoryStatus.loaded) {
         return CategoryPageView();
       }
-      return Center(
-          child: Lottie.asset('assets/Loading.json',
-              height: DeviceType().resposnsiveLength(400.h, 400.h)));
+      return const Center(
+          child: CircularProgressIndicator.adaptive(
+        strokeCap: StrokeCap.round,
+      ));
     });
   }
 }

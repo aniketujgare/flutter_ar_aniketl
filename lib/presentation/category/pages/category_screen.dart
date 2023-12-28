@@ -16,48 +16,111 @@ class CategoryScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.landscapeRight,
-      DeviceOrientation.landscapeLeft,
-    ]);
-
-    return WillPopScope(
-      onWillPop: () async => false,
+    return PopScope(
+      canPop: false,
       child: SafeArea(
         child: Scaffold(
-          backgroundColor: const Color(0XFFF4F2FE),
+          backgroundColor: AppColors.parentZoneScaffoldColor,
           body: Padding(
-            padding: DeviceType().isMobile
-                ? EdgeInsets.fromLTRB(116.w, 40.h, 116.w, 40.h)
-                : EdgeInsets.fromLTRB(116.w, 40.h, 116.w, 40.h),
-            child: Stack(
+              padding: EdgeInsets.fromLTRB(8.wp, 4.wp, 8.wp, 4.wp),
+              child: Row(
+                children: [
+                  //! left part
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      SizedBox(
+                        width: 75.h,
+                        child: Image.asset(
+                          'assets/ui/image 40.png', // User Icon
+                          fit: BoxFit.contain,
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () =>
+                            context.read<CategoryPageCubit>().setNextPage(),
+                        child: SizedBox(
+                          height: 45.h,
+                          width: 45.h,
+                          child: Image.asset(
+                            'assets/ui/Group.png', // right arrow
+                            fit: BoxFit.scaleDown,
+                            height: 45.h,
+                            width: 45.h,
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 75.h,
+                        height: 75.h,
+                      ),
+                    ],
+                  ),
+                  //! center part
+                  Expanded(child: CategoryList()),
+                  //! right part
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      SizedBox(
+                        width: 75.h,
+                        height: 75.h,
+                      ),
+                      GestureDetector(
+                        onTap: () =>
+                            context.read<CategoryPageCubit>().setNextPage(),
+                        child: RotatedBox(
+                          quarterTurns: 2,
+                          child: SizedBox(
+                            height: 45.h,
+                            width: 45.h,
+                            child: Image.asset(
+                              'assets/ui/Group.png', // right arrow
+                              fit: BoxFit.scaleDown,
+                              height: 45.h,
+                              width: 45.h,
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 75.h,
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const MainMenuScreen()));
+                          },
+                          child: SizedBox(
+                            height: 75.h,
+                            width: 75.h,
+                            child: Image.asset(
+                              'assets/ui/Custom Buttons.002 1.png', // Home Icon
+                              fit: BoxFit.contain,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
+                ],
+              )
+
+              /*
+            Stack(
               children: [
                 Padding(
-                  padding: EdgeInsets.fromLTRB(
-                      (DeviceType().isMobile ? 450.w : 250.w),
-                      0.h,
-                      (DeviceType().isMobile ? 450.w : 250.w),
-                      0.h),
+                  padding: EdgeInsets.fromLTRB(8.wp, 4.wp, 8.wp, 4.wp),
                   child: const CategoryList(),
                 ),
-                // Positioned(
-                //   top: 55.h,
-                //   left: 275.w,
-                //   child: SizedBox(
-                //     height: 85.h,
-                //     // width: 85.h,
-                //     child: Text(
-                //       'Shardul',
-                //       style: AppTextStyles.uniformRounded100Bold
-                //           .copyWith(fontSize: 70.sp),
-                //     ),
-                //   ),
-                // ),
                 Align(
                   alignment: Alignment.topLeft,
                   child: SizedBox(
-                    height: 85.h,
-                    width: 85.h,
+                    height: 75.h,
+                    width: 75.h,
                     child: Image.asset(
                       'assets/ui/image 40.png', // User Icon
                       fit: BoxFit.contain,
@@ -95,8 +158,8 @@ class CategoryScreen extends StatelessWidget {
                           builder: (context) => const MainMenuScreen()));
                     },
                     child: SizedBox(
-                      height: 85.h,
-                      width: 85.h,
+                      height: 75.h,
+                      width: 75.h,
                       child: Image.asset(
                         'assets/ui/Custom Buttons.002 1.png', // Home Icon
                         fit: BoxFit.contain,
@@ -132,7 +195,8 @@ class CategoryScreen extends StatelessWidget {
                 ),
               ],
             ),
-          ),
+            */
+              ),
         ),
       ),
     );

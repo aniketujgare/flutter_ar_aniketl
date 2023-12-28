@@ -31,11 +31,6 @@ void main() async {
   await Hive.initFlutter();
   await Hive.openBox('kidsApp');
 
-  SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
-  // SystemChrome.setPreferredOrientations([
-  //   DeviceOrientation.landscapeLeft,
-  //   DeviceOrientation.landscapeRight,
-  // ]);
   if (Platform.isAndroid) {
     // Include Android-specific AR code
     print('Platform.isAndroid');
@@ -46,7 +41,11 @@ void main() async {
     // Handle other platforms or provide a message
     print('AR functionality not supported on this platform.');
   }
-  runApp(const MyApp());
+  SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeLeft])
+      .then((_) {
+    return runApp(const MyApp());
+  });
+  // runApp(const MyApp());
 }
 
 class MyApp extends StatefulWidget {
@@ -98,6 +97,12 @@ class MyAppState extends State<MyApp> {
           ],
           child: MaterialApp.router(
             debugShowCheckedModeBanner: false,
+            themeMode: ThemeMode.light,
+            theme: ThemeData(
+                appBarTheme: AppBarTheme(
+                    systemOverlayStyle: SystemUiOverlayStyle(
+                        statusBarBrightness: Brightness.light,
+                        statusBarColor: AppColors.accentColor))),
             routerConfig: GoRouterProvider().goRouter(),
           ),
         );

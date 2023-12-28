@@ -34,7 +34,7 @@ class LoginScreenState extends State<LoginScreen>
 
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown,
+      // DeviceOrientation.portraitDown,
     ]);
     super.initState();
   }
@@ -43,10 +43,10 @@ class LoginScreenState extends State<LoginScreen>
   void dispose() {
     _animationController.dispose();
     SystemChrome.setPreferredOrientations([
-      DeviceOrientation.landscapeRight,
+      // DeviceOrientation.landscapeRight,
       DeviceOrientation.landscapeLeft,
-      DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown,
+      // DeviceOrientation.portraitUp,
+      // DeviceOrientation.portraitDown,
     ]);
     super.dispose();
   }

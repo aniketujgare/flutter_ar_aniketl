@@ -66,10 +66,10 @@ class CategoryModelsPageView extends StatelessWidget {
                         },
                       );
                     }
-                    return Center(
-                        child: Lottie.asset('assets/Loading.json',
-                            height:
-                                DeviceType().resposnsiveLength(400.h, 400.h)));
+                    return const Center(
+                        child: CircularProgressIndicator.adaptive(
+                      strokeCap: StrokeCap.round,
+                    ));
                   },
                 ),
               ),
@@ -219,35 +219,30 @@ class EmptyBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ConstrainedBox(
-      constraints: BoxConstraints(
-        maxHeight: MediaQuery.of(context).size.height *
-            (DeviceType().isMobile ? 0.5.h : 0.35.h),
-        // maxWidth: MediaQuery.of(context).size.height * 0.2.h,
-      ),
-      child: Container(
-        margin: EdgeInsets.symmetric(horizontal: 40.w, vertical: 40.w),
-        child: LayoutBuilder(builder: (context, constraints) {
-          return Column(
-            children: [
-              SizedBox(
-                height: constraints.maxHeight *
-                    (DeviceType().isMobile ? 0.03 : 0.05),
-              ),
-              SizedBox(
-                height: constraints.maxHeight *
-                    (DeviceType().isMobile ? 0.63 : 0.65),
-              ),
-              SizedBox(
-                height: constraints.maxHeight *
-                    (DeviceType().isMobile ? 0.07 : 0.07),
-              ),
-              SizedBox(
-                height: constraints.maxHeight * 0.2,
-              ),
-            ],
-          );
-        }),
+    return Expanded(
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          maxHeight: (MediaQuery.of(context).size.height - 80.h) *
+              (DeviceType().isMobile ? 0.5 : 0.5),
+          //Todo: Adjust card size for tablet
+        ),
+        child: Container(
+          margin: EdgeInsets.symmetric(horizontal: 40.w, vertical: 40.w),
+          child: LayoutBuilder(builder: (context, constraints) {
+            return Column(
+              children: [
+                SizedBox(
+                  height: constraints.maxHeight *
+                      (DeviceType().isMobile ? 0.75 : 0.05),
+                ),
+                SizedBox(
+                  height: constraints.maxHeight *
+                      (DeviceType().isMobile ? 0.25 : 0.05),
+                ),
+              ],
+            );
+          }),
+        ),
       ),
     );
   }

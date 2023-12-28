@@ -55,12 +55,8 @@ class AppBottomNavBar extends StatelessWidget {
           onTap: () {
             context.read<AppNavigatorCubit>().gotoPageAtIndex(index);
           },
-          // iconSize: 36.h,
-          // splashRadius: 1,
-          // padding: const EdgeInsets.symmetric(horizontal: 25),
-          child: SizedBox(
-            height: DeviceType().isMobile ? 340.w : 300.w,
-            width: DeviceType().isMobile ? 340.w : 300.w,
+          child: Padding(
+            padding: EdgeInsets.symmetric(vertical: 10.h),
             child: Image.asset(
               pngIcon,
             ),

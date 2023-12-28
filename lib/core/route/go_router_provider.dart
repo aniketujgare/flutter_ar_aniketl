@@ -20,23 +20,23 @@ class GoRouterProvider {
   GoRouter goRouter() {
     return GoRouter(
         navigatorKey: _rootNavigatorKey,
-        // initialLocation: '/$mainMenuRoute',
-        redirect: (context, state) async {
-          var kidsAppBox = await Hive.openBox("kidsApp");
-          var v = kidsAppBox.get('isLoggedIn');
-          if (kidsAppBox.get('isLoggedIn') == null ||
-              kidsAppBox.get('isLoggedIn') == false) {
-            return '/login';
-          } else {
-            return '/';
-          }
-        },
+        initialLocation: '/$mainMenuRoute',
+        // redirect: (context, state) async {
+        //   var kidsAppBox = await Hive.openBox("kidsApp");
+        //   var v = kidsAppBox.get('isLoggedIn');
+        //   if (kidsAppBox.get('isLoggedIn') == null ||
+        //       kidsAppBox.get('isLoggedIn') == false) {
+        //     return '/login';
+        //   } else {
+        //     return '/';
+        //   }
+        // },
         routes: [
           GoRoute(
             path: '/',
             name: 'splashRoute',
             pageBuilder: (context, state) {
-              return const MaterialPage(child: MessageView());
+              return const MaterialPage(child: MainMenuScreen());
               // return MaterialPage(child: ModelsList3D());
             },
           ),
