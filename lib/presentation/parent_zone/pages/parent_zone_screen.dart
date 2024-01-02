@@ -40,6 +40,7 @@ class _ParentZoneScreenState extends State<ParentZoneScreen> {
   void dispose() {
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.landscapeLeft,
+      DeviceOrientation.landscapeRight,
     ]);
     super.dispose();
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);

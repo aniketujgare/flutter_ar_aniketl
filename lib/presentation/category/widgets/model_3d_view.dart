@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_ar/arkitdemo/custom_object_page.dart';
 import 'package:flutter_ar/core/util/device_type.dart';
 import 'package:flutter_ar/core/util/styles.dart';
+import 'package:flutter_ar/presentation/ar_core/flutter_ar.dart';
 import 'package:flutter_ar/presentation/category/widgets/ar_view_ios.dart';
 import 'package:model_viewer_plus/model_viewer_plus.dart';
 import 'package:size_config/size_config.dart';
@@ -60,7 +61,7 @@ class _ModelViewState extends State<ModelView> {
                   backgroundColor: const Color(0XFFF4F2FE),
                   src: widget.modelUrl,
                   alt: 'A 3D model of an astronaut',
-                  ar: true,
+                  ar: false,
                   autoPlay: true,
                   autoRotate: true,
                   scale: '0.1 0.1 0.1',
@@ -80,28 +81,29 @@ class _ModelViewState extends State<ModelView> {
                       fit: BoxFit.cover,
                     )),
               ),
-              if (!DeviceType().isMobile)
-                Align(
-                  alignment: Alignment.bottomRight,
-                  child: GestureDetector(
-                    //? IOS AR View
-                    onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => CustomObjectPage())),
-                    child: SizedBox(
-                        height: 65.h,
-                        width: 65.h,
-                        child: CircleAvatar(
-                          radius: 30,
-                          backgroundColor: Colors.green,
-                          child: Padding(
-                            padding: EdgeInsets.all(13.h),
-                            child: Image.asset(
-                              'assets/images/PNG Icons/AR Icon.png',
-                            ),
+              // if (!DeviceType().isMobile)
+              Align(
+                alignment: Alignment.bottomRight,
+                child: GestureDetector(
+                  //? IOS AR View
+                  // onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                  //     builder: (context) =>
+                  //         FlutterAR(modelUrl: widget.modelUrl))),
+                  child: SizedBox(
+                      height: 65.h,
+                      width: 65.h,
+                      child: CircleAvatar(
+                        radius: 30,
+                        backgroundColor: Colors.green,
+                        child: Padding(
+                          padding: EdgeInsets.all(13.h),
+                          child: Image.asset(
+                            'assets/images/PNG Icons/AR Icon.png',
                           ),
-                        )),
-                  ),
+                        ),
+                      )),
                 ),
+              ),
               Align(
                 alignment: Alignment.topLeft,
                 child: SizedBox(

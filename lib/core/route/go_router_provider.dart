@@ -20,7 +20,7 @@ class GoRouterProvider {
   GoRouter goRouter() {
     return GoRouter(
         navigatorKey: _rootNavigatorKey,
-        initialLocation: '/$mainMenuRoute',
+        initialLocation: '/',
         // redirect: (context, state) async {
         //   var kidsAppBox = await Hive.openBox("kidsApp");
         //   var v = kidsAppBox.get('isLoggedIn');
@@ -36,7 +36,7 @@ class GoRouterProvider {
             path: '/',
             name: 'splashRoute',
             pageBuilder: (context, state) {
-              return const MaterialPage(child: ParentZoneScreen());
+              return const MaterialPage(child: SplashScreen());
               // return MaterialPage(child: ModelsList3D());
             },
           ),
@@ -52,7 +52,7 @@ class GoRouterProvider {
             path: '/$mainMenuRoute',
             name: mainMenuRoute,
             pageBuilder: (context, state) {
-              return MaterialPage(child: MessageView());
+              return MaterialPage(child: MainMenuScreen());
             },
           ),
           GoRoute(

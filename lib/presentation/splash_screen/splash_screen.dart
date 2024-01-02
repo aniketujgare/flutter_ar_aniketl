@@ -34,8 +34,8 @@ class SplashScreenState extends State<SplashScreen>
     });
     super.initState();
     SystemChrome.setPreferredOrientations([
-      // DeviceOrientation.landscapeRight,
       DeviceOrientation.landscapeLeft,
+      DeviceOrientation.landscapeRight,
     ]);
   }
 

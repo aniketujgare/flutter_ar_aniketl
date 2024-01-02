@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_ar/presentation/ar_core/arcore.dart';
 import 'package:flutter_ar/presentation/parent_zone/bloc/navbar_cubit/app_navigator_cubit.dart';
 import 'package:flutter_ar/presentation/parent_zone/bloc/teacher_message_cubit/teacher_message_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,6 +15,7 @@ import 'core/util/device_type.dart';
 import 'core/util/styles.dart';
 import 'demo/firebase_options.dart';
 import 'domain/repositories/authentication_repository.dart';
+import 'presentation/ar_core/ar_core.dart';
 import 'presentation/category/bloc/category_new_cubit/category_new_cubit.dart';
 import 'presentation/category/bloc/category_page_cubit/category_page_cubit.dart';
 import 'presentation/category/bloc/model_page_controler_cubit/models_page_controller_cubit.dart';
@@ -25,6 +27,13 @@ import 'presentation/parent_zone/bloc/teacher_list_bloc/teacher_list_bloc.dart';
 import 'presentation/splash_screen/bloc/splash_animation_bloc.dart';
 
 final authenticationRepository = AuthenticationRepository();
+// void main() async {
+//   print('ARCORE IS AVAILABLE?');
+//   // print(await ArCoreController.checkArCoreAvailability());
+//   // print('\nAR SERVICES INSTALLED?');
+//   // print(await ArCoreController.checkIsArCoreInstalled());
+//   runApp(ArCoreEzxample());
+// }
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -43,7 +52,8 @@ void main() async {
     // Handle other platforms or provide a message
     print('AR functionality not supported on this platform.');
   }
-  SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeLeft])
+  SystemChrome.setPreferredOrientations(
+          [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight])
       .then((_) {
     return runApp(const MyApp());
   });
