@@ -4,6 +4,7 @@ import 'package:flutter_ar/core/util/reusable_widgets/reusable_button.dart';
 import 'package:flutter_ar/data/models/teacher_message.dart';
 import 'package:flutter_ar/presentation/parent_zone/bloc/teacher_message_cubit/teacher_message_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:size_config/size_config.dart';
 
@@ -11,7 +12,8 @@ import '../../../core/util/device_type.dart';
 import '../../../core/util/styles.dart';
 
 class MessageView extends StatefulWidget {
-  const MessageView({super.key});
+  final int teaherUserId;
+  const MessageView({super.key, required this.teaherUserId});
 
   @override
   State<MessageView> createState() => _MessageViewState();
@@ -24,7 +26,9 @@ class _MessageViewState extends State<MessageView> {
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
     ]);
-    context.read<TeacherMessageCubit>().loadMessages();
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light
+        .copyWith(systemNavigationBarColor: AppColors.parentZoneScaffoldColor));
+    context.read<TeacherMessageCubit>().loadMessages('${widget.teaherUserId}');
   }
 
   @override
@@ -34,8 +38,6 @@ class _MessageViewState extends State<MessageView> {
 
   @override
   Widget build(BuildContext context) {
-    // SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
-    //     overlays: [SystemUiOverlay.top, SystemUiOverlay.bottom]);
     return PopScope(
       canPop: false,
       child: Scaffold(
@@ -90,13 +92,20 @@ class _MessageViewState extends State<MessageView> {
             builder: (context, state) {
               switch (state.status) {
                 case TeacherMessageStatus.initial:
-                  return const Center(child: CircularProgressIndicator());
+                  return const Center(
+                      child: CircularProgressIndicator.adaptive(
+                    strokeCap: StrokeCap.round,
+                  ));
                 case TeacherMessageStatus.loading:
-                  return const Center(child: CircularProgressIndicator());
+                  return const Center(
+                      child: CircularProgressIndicator.adaptive(
+                    strokeCap: StrokeCap.round,
+                  ));
                 case TeacherMessageStatus.error:
                   return const Center(child: Text('Failed to load messages'));
                 case TeacherMessageStatus.loaded:
                   return ListView.separated(
+                    // reverse: true,
                     itemCount: state.teachersMessages.length,
                     separatorBuilder: (BuildContext context, int index) {
                       return SizedBox(height: 20.h);
@@ -104,9 +113,10 @@ class _MessageViewState extends State<MessageView> {
                     itemBuilder: (BuildContext context, int index) {
                       var message = state.teachersMessages[index];
                       switch (message.type) {
-                        case MessageType.LESSON:
-                          //! View Lesson
+                        //! View Lesson
+                        case "lesson":
                           return Container(
+                            margin: EdgeInsets.only(bottom: 10.h),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisSize: MainAxisSize.min,
@@ -125,7 +135,6 @@ class _MessageViewState extends State<MessageView> {
                                   // height: 239.h,
                                   padding: EdgeInsets.symmetric(
                                       vertical: 3.wp, horizontal: 2.wp),
-                                  clipBehavior: Clip.antiAlias,
                                   decoration: ShapeDecoration(
                                     color: AppColors.accentColor,
                                     shape: RoundedRectangleBorder(
@@ -141,7 +150,7 @@ class _MessageViewState extends State<MessageView> {
                                         TextSpan(
                                           children: [
                                             TextSpan(
-                                              text: '${message.subject.name}\n',
+                                              text: '${message.subject}\n',
                                               // 'EVS Lesson:\n',
                                               style: AppTextStyles
                                                   .nunito88w400Text,
@@ -193,8 +202,36 @@ class _MessageViewState extends State<MessageView> {
                             ),
                           );
 
-                        case MessageType.TEXT:
-                          return Text(state.teachersMessages[index].content);
+                        case "text":
+                          return //!Message
+                              Container(
+                            margin: EdgeInsets.only(bottom: 10.h),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  '3:11 PM Dec 21',
+                                  style: AppTextStyles.nunito62w400TextItalic,
+                                ),
+                                Container(
+                                    width: double.maxFinite,
+                                    padding: EdgeInsets.all(3.wp),
+                                    decoration: ShapeDecoration(
+                                      color: AppColors.messageContainerColor,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(4.wp)),
+                                      ),
+                                    ),
+                                    child: Text(
+                                      message.content,
+                                      style: AppTextStyles.nunito88w400Text,
+                                    )),
+                              ],
+                            ),
+                          );
                       }
                     },
                   );

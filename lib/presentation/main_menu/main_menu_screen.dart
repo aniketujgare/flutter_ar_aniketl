@@ -40,21 +40,19 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
         else {
           return PopScope(
             canPop: false,
-            child: SafeArea(
-              child: Scaffold(
-                backgroundColor: AppColors.parentZoneScaffoldColor,
-                body: Padding(
-                  padding: EdgeInsets.fromLTRB(8.wp, 4.wp, 8.wp, 4.wp),
-                  child: Column(
-                    children: [
-                      //! Top
-                      buildTop(context),
-                      //! Center
-                      buildCenter(context),
-                      //! Bottom
-                      buildBottom(context),
-                    ],
-                  ),
+            child: Scaffold(
+              backgroundColor: AppColors.parentZoneScaffoldColor,
+              body: Padding(
+                padding: EdgeInsets.fromLTRB(8.wp, 4.wp, 8.wp, 4.wp),
+                child: Column(
+                  children: [
+                    //! Top
+                    buildTop(context),
+                    //! Center
+                    buildCenter(context),
+                    //! Bottom
+                    buildBottom(context),
+                  ],
                 ),
               ),
             ),

@@ -100,6 +100,7 @@ class AuthenticationRepository {
     Uri url = Uri.parse("$baseUrl/getstudentprofilesnew");
     try {
       var kidsAppBox = await Hive.openBox("kidsApp");
+
       var response = await client.post(url,
           body: jsonEncode({"parent_id": "${kidsAppBox.get('parentId')}"}));
       if (response.statusCode == 200) {

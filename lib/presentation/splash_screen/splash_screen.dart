@@ -32,6 +32,8 @@ class SplashScreenState extends State<SplashScreen>
     _animationController.controller.addListener(() {
       setState(() {});
     });
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+
     super.initState();
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.landscapeLeft,

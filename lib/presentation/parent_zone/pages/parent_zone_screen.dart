@@ -29,8 +29,6 @@ class _ParentZoneScreenState extends State<ParentZoneScreen> {
         overlays: [SystemUiOverlay.top, SystemUiOverlay.bottom]);
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light
         .copyWith(systemNavigationBarColor: AppColors.accentColor));
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light
-        .copyWith(systemNavigationBarColor: AppColors.accentColor));
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
     ]);
@@ -42,50 +40,53 @@ class _ParentZoneScreenState extends State<ParentZoneScreen> {
       DeviceOrientation.landscapeLeft,
       DeviceOrientation.landscapeRight,
     ]);
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light
+        .copyWith(systemNavigationBarColor: AppColors.parentZoneScaffoldColor));
+
     super.dispose();
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
   }
 
   @override
   Widget build(BuildContext context) {
-    return PopScope(
-      canPop: false,
-      child: Scaffold(
-        backgroundColor: AppColors.parentZoneScaffoldColor,
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          backgroundColor: AppColors.accentColor,
-          title: BlocBuilder<AppNavigatorCubit, AppNavigatorState>(
-            builder: (context, state) {
-              return Row(
-                children: [
-                  if (context.watch<AppNavigatorCubit>().state.index == 0)
-                    GestureDetector(
-                      onTap: () => Navigator.pop(context),
-                      child: Container(
-                        margin: EdgeInsets.only(left: 2.wp, right: 3.wp),
-                        height: 36.h,
-                        width: 36.h,
-                        child: Image.asset(
-                          'assets/images/reusable_icons/back_button_primary.png',
-                        ),
+    return Scaffold(
+      backgroundColor: AppColors.parentZoneScaffoldColor,
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        backgroundColor: AppColors.accentColor,
+        title: BlocBuilder<AppNavigatorCubit, AppNavigatorState>(
+          builder: (context, state) {
+            return Row(
+              children: [
+                if (context.watch<AppNavigatorCubit>().state.index == 0)
+                  GestureDetector(
+                    onTap: () => Navigator.pop(context),
+                    child: Container(
+                      margin: EdgeInsets.only(left: 2.wp, right: 3.wp),
+                      height: 36.h,
+                      width: 36.h,
+                      child: Image.asset(
+                        'assets/images/reusable_icons/back_button_primary.png',
                       ),
                     ),
-                  if (context.watch<AppNavigatorCubit>().state.index != 0)
-                    SizedBox(width: 3.wp),
-                  Text(
-                    appBarTitle[state.index],
-                    style: DeviceType().isMobile
-                        ? AppTextStyles.uniformRounded136BoldAppBarStyle
-                        : AppTextStyles.uniformRounded136BoldAppBarStyle
-                            .copyWith(fontSize: 136.sp * 0.7),
                   ),
-                ],
-              );
-            },
-          ),
+                if (context.watch<AppNavigatorCubit>().state.index != 0)
+                  SizedBox(width: 3.wp),
+                Text(
+                  appBarTitle[state.index],
+                  style: DeviceType().isMobile
+                      ? AppTextStyles.uniformRounded136BoldAppBarStyle
+                      : AppTextStyles.uniformRounded136BoldAppBarStyle
+                          .copyWith(fontSize: 136.sp * 0.7),
+                ),
+              ],
+            );
+          },
         ),
-        body: SafeArea(
+      ),
+      body: PopScope(
+        canPop: false,
+        child: SafeArea(
           child: Stack(
             children: [
               BlocBuilder<AppNavigatorCubit, AppNavigatorState>(

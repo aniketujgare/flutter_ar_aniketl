@@ -7,6 +7,7 @@ import 'package:flutter_ar/data/models/teacher_model.dart';
 import 'package:flutter_ar/presentation/parent_zone/widgets/message_view.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:size_config/size_config.dart';
 
@@ -34,9 +35,15 @@ class _GroupsViewState extends State<GroupsView> {
       builder: (context, state) {
         switch (state.status) {
           case TeacherListStatus.loading:
-            return const Center(child: CircularProgressIndicator());
+            return const Center(
+                child: CircularProgressIndicator.adaptive(
+              strokeCap: StrokeCap.round,
+            ));
           case TeacherListStatus.initial:
-            return const Center(child: CircularProgressIndicator());
+            return const Center(
+                child: CircularProgressIndicator.adaptive(
+              strokeCap: StrokeCap.round,
+            ));
           case TeacherListStatus.error:
             return Center(child: Text(state.errorMessage));
           case TeacherListStatus.loaded:
@@ -47,8 +54,9 @@ class _GroupsViewState extends State<GroupsView> {
                 var teacher = state.teachersList[index];
                 return GestureDetector(
                   onTap: () async {
-                    Navigator.of(context).push(
-                        MaterialPageRoute(builder: (context) => MessageView()));
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) =>
+                            MessageView(teaherUserId: teacher.teacherUserId)));
                   },
                   child: GroupNotification(
                     subject: teacher.teacherName[0] +
@@ -173,7 +181,6 @@ class GroupNotification extends StatelessWidget {
                         ? AppTextStyles.nunito105w700Text
                         : AppTextStyles.nunito105w700Text.copyWith(
                             fontSize: 105.sp *
-                                1 /
                                 MediaQuery.of(context).size.aspectRatio),
                   ),
                 ),
@@ -188,7 +195,6 @@ class GroupNotification extends StatelessWidget {
                           ? AppTextStyles.nunito85w400Text
                           : AppTextStyles.nunito85w400Text.copyWith(
                               fontSize: 85.sp *
-                                  1 /
                                   MediaQuery.of(context).size.aspectRatio),
                     ),
                   ],
@@ -209,7 +215,6 @@ class GroupNotification extends StatelessWidget {
                         ? AppTextStyles.nunito75w400Text
                         : AppTextStyles.nunito75w400Text.copyWith(
                             fontSize: 75.sp *
-                                1 /
                                 MediaQuery.of(context).size.aspectRatio),
                   ),
                   5.verticalSpacer,
@@ -223,7 +228,6 @@ class GroupNotification extends StatelessWidget {
                           ? AppTextStyles.nunito75w700TextWhite
                           : AppTextStyles.nunito75w700TextWhite.copyWith(
                               fontSize: 75.sp *
-                                  1 /
                                   MediaQuery.of(context).size.aspectRatio),
                     ),
                   )
@@ -239,9 +243,8 @@ class GroupNotification extends StatelessWidget {
                 style: DeviceType().isMobile
                     ? AppTextStyles.nunito75w400Text
                     : AppTextStyles.nunito75w400Text.copyWith(
-                        fontSize: 75.sp *
-                            1 /
-                            MediaQuery.of(context).size.aspectRatio),
+                        fontSize:
+                            75.sp * MediaQuery.of(context).size.aspectRatio),
               ),
             ),
         ],

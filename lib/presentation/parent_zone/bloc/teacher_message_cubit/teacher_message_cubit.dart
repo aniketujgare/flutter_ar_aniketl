@@ -11,19 +11,21 @@ part 'teacher_message_cubit.freezed.dart';
 
 class TeacherMessageCubit extends Cubit<TeacherMessageState> {
   TeacherMessageCubit() : super(const TeacherMessageState());
-  void loadMessages() async {
+  void loadMessages(String teacherUserId) async {
     emit(state.copyWith(status: TeacherMessageStatus.loading));
-    List<TeacherMessageModel>? teacherMessahes = await _getTeachersMessages();
+    List<TeacherMessageModel>? teacherMessahes =
+        await _getTeachersMessages(teacherUserId);
     emit(state.copyWith(
         status: TeacherMessageStatus.loaded,
         teachersMessages: teacherMessahes ?? []));
   }
 
-  Future<List<TeacherMessageModel>?> _getTeachersMessages() async {
+  Future<List<TeacherMessageModel>?> _getTeachersMessages(
+      String teacherUserId) async {
     var response = await http.post(
       Uri.parse(
           'https://cnpewunqs5.execute-api.ap-south-1.amazonaws.com/dev/getmessagebyteacher'),
-      body: jsonEncode({"division_id": "0", "teacher_user_id": "1"}),
+      body: jsonEncode({"division_id": "0", "teacher_user_id": teacherUserId}),
     );
     if (response.statusCode == 200) {
       return teacherMessageModelFromJson(response.body);

@@ -116,11 +116,11 @@ class MyAppState extends State<MyApp> {
           child: MaterialApp.router(
             debugShowCheckedModeBanner: false,
             themeMode: ThemeMode.light,
-            theme: ThemeData(
-                appBarTheme: AppBarTheme(
-                    systemOverlayStyle: SystemUiOverlayStyle(
-                        statusBarBrightness: Brightness.light,
-                        statusBarColor: AppColors.accentColor))),
+            // theme: ThemeData(
+            //     appBarTheme: AppBarTheme(
+            //         systemOverlayStyle: SystemUiOverlayStyle(
+            //             statusBarBrightness: Brightness.light,
+            //             statusBarColor: AppColors.accentColor))),
             routerConfig: GoRouterProvider().goRouter(),
           ),
         );
