@@ -67,6 +67,7 @@ dependencies:
   firebase_core: ^2.24.2
   intl: ^0.19.0
   model_viewer_plus: ^1.7.0
+  shimmer: ^3.0.0
   # ar_flutter_plugin: ^0.7.3
   # webview_flutter: ^4.2.0
 

@@ -131,13 +131,12 @@ class BuildCategoryContainer extends StatelessWidget {
         child: ConstrainedBox(
           constraints: BoxConstraints(
             maxHeight: (MediaQuery.of(context).size.height - 80.h) *
-                (DeviceType().isMobile ? 0.5 : 0.5),
-            //Todo: Adjust card size for tablet
+                (DeviceType().isMobile ? 0.5 : 0.35),
           ),
           child: Container(
-            // height: 200,
-            // width: 350,
-            margin: EdgeInsets.symmetric(horizontal: 40.w, vertical: 40.w),
+            margin: EdgeInsets.symmetric(
+                horizontal: DeviceType().isMobile ? 40.w : 20.w,
+                vertical: DeviceType().isMobile ? 40.w : 20.w),
             decoration: BoxDecoration(
               boxShadow: [
                 BoxShadow(
@@ -152,8 +151,8 @@ class BuildCategoryContainer extends StatelessWidget {
                 colors: const [Colors.white, Color(0XFF4F3A9C)],
                 tileMode: TileMode.decal,
                 stops: [
-                  DeviceType().isMobile ? 0.75 : 0.75,
-                  DeviceType().isMobile ? 0.25 : 0.25
+                  DeviceType().isMobile ? 0.75 : 0.8,
+                  DeviceType().isMobile ? 0.25 : 0.2
                 ],
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
@@ -165,13 +164,12 @@ class BuildCategoryContainer extends StatelessWidget {
               ),
             ),
             child: LayoutBuilder(builder: (context, constraints) {
-              //Todo: check for tab category page
               return Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   SizedBox(
                     height: constraints.maxHeight *
-                        (DeviceType().isMobile ? 0.75 : 0.05),
+                        (DeviceType().isMobile ? 0.75 : 0.8),
                     child: Padding(
                       padding: EdgeInsets.symmetric(vertical: 10.h),
                       child: Image.asset(
@@ -183,12 +181,16 @@ class BuildCategoryContainer extends StatelessWidget {
                   ),
                   SizedBox(
                     height: constraints.maxHeight *
-                        (DeviceType().isMobile ? 0.25 : 0.05),
+                        (DeviceType().isMobile ? 0.25 : 0.2),
                     child: Center(
-                      //Todo: check font size for tab
                       child: Text(
                         name,
-                        style: AppTextStyles.nunito100w700white,
+                        style: DeviceType().isMobile
+                            ? AppTextStyles.nunito100w700white
+                            : AppTextStyles.nunito100w700white.copyWith(
+                                fontSize: 60.sp *
+                                    MediaQuery.of(context).size.aspectRatio,
+                              ),
                       ),
                     ),
                   ),

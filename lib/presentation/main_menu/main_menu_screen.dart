@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_ar/core/util/device_type.dart';
 import 'package:flutter_ar/core/util/styles.dart';
 import 'package:flutter_ar/presentation/category/pages/category_screen.dart';
+import 'package:flutter_ar/presentation/main_menu/worksheet.dart';
 import 'package:flutter_ar/presentation/parent_zone/pages/parent_zone_screen.dart';
 import 'package:flutter_ar/presentation/parent_zone/widgets/message_view.dart';
 import 'package:go_router/go_router.dart';
@@ -181,9 +182,17 @@ class buildBottom extends StatelessWidget {
                 ),
               ),
               8.horizontalSpacerPercent,
-              Image.asset(
-                'assets/images/PNG Icons/CustomButtonsMenu.png', // User Icon
-                fit: BoxFit.contain,
+              GestureDetector(
+                onTap: () {
+                  Navigator.of(context)
+                      .push(MaterialPageRoute(builder: (context) {
+                    return const WorksheetView();
+                  }));
+                },
+                child: Image.asset(
+                  'assets/images/PNG Icons/CustomButtonsMenu.png', // User Icon
+                  fit: BoxFit.contain,
+                ),
               ),
             ],
           ),

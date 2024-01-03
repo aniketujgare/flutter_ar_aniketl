@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_ar/demo/animation_playground.dart';
+import 'package:flutter_ar/presentation/category/widgets/category_list.dart';
 import 'package:flutter_ar/presentation/login/pages/login_screen.dart';
 import 'package:flutter_ar/presentation/main_menu/main_menu_screen.dart';
 import 'package:flutter_ar/presentation/parent_zone/pages/parent_zone_screen.dart';

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_ar/arkitdemo/custom_object_page.dart';
 import 'package:flutter_ar/core/util/device_type.dart';
@@ -81,29 +83,29 @@ class _ModelViewState extends State<ModelView> {
                       fit: BoxFit.cover,
                     )),
               ),
-              // if (!DeviceType().isMobile)
-              Align(
-                alignment: Alignment.bottomRight,
-                child: GestureDetector(
-                  //? IOS AR View
-                  // onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                  //     builder: (context) =>
-                  //         FlutterAR(modelUrl: widget.modelUrl))),
-                  child: SizedBox(
-                      height: 65.h,
-                      width: 65.h,
-                      child: CircleAvatar(
-                        radius: 30,
-                        backgroundColor: Colors.green,
-                        child: Padding(
-                          padding: EdgeInsets.all(13.h),
-                          child: Image.asset(
-                            'assets/images/PNG Icons/AR Icon.png',
+              if (Platform.isIOS || Platform.isMacOS)
+                Align(
+                  alignment: Alignment.bottomRight,
+                  child: GestureDetector(
+                    //? IOS AR View
+                    onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) =>
+                            ARViewIOS(modelUrl: widget.modelUrl))),
+                    child: SizedBox(
+                        height: 65.h,
+                        width: 65.h,
+                        child: CircleAvatar(
+                          radius: 30,
+                          backgroundColor: Colors.green,
+                          child: Padding(
+                            padding: EdgeInsets.all(13.h),
+                            child: Image.asset(
+                              'assets/images/PNG Icons/AR Icon.png',
+                            ),
                           ),
-                        ),
-                      )),
+                        )),
+                  ),
                 ),
-              ),
               Align(
                 alignment: Alignment.topLeft,
                 child: SizedBox(
