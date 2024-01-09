@@ -37,6 +37,7 @@ android {
     compileSdkVersion 33
     ndkVersion flutter.ndkVersion
 
+  
     compileOptions {
         sourceCompatibility 1.8
         targetCompatibility 1.8
@@ -44,6 +45,8 @@ android {
 
     kotlinOptions {
         jvmTarget = '1.8'
+        verbose = true
+        freeCompilerArgs = ["-X VERBOSE_LOGGING=true"] 
     }
 
     sourceSets {
@@ -87,10 +90,13 @@ flutter {
     source '../..'
 }
 
+
 dependencies {
-    implementation 'com.google.ar.sceneform.ux:sceneform-ux:1.8.0'
-    implementation 'com.google.ar.sceneform:core:1.8.0'
-    implementation 'com.google.ar.sceneform:assets:1.15.0'
+
+    // implementation project(':xrmanifest.androidlib')
+    // implementation 'com.google.ar.sceneform.ux:sceneform-ux:1.8.0'
+    // implementation 'com.google.ar.sceneform:core:1.8.0'
+    // implementation 'com.google.ar.sceneform:assets:1.15.0'
     // implementation 'com.google.ar:core:1.8.0'
      // Import the BoM for the Firebase platform
     implementation(platform("com.google.firebase:firebase-bom:32.7.0"))
@@ -98,5 +104,5 @@ dependencies {
     // Add the dependency for the Firebase Authentication library
     // When using the BoM, you don't specify versions in Firebase library dependencies
     implementation("com.google.firebase:firebase-auth")
-    implementation 'com.google.ar:core:1.33.0'
+    // implementation 'com.google.ar:core:1.33.0'
 }

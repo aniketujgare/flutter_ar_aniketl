@@ -1,11 +1,11 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_ar/arkitdemo/custom_object_page.dart';
 import 'package:flutter_ar/core/util/device_type.dart';
 import 'package:flutter_ar/core/util/styles.dart';
 import 'package:flutter_ar/presentation/ar_core/flutter_ar.dart';
 import 'package:flutter_ar/presentation/category/widgets/ar_view_ios.dart';
+import 'package:flutter_ar/temp_testing/unityScene.dart';
 import 'package:model_viewer_plus/model_viewer_plus.dart';
 import 'package:size_config/size_config.dart';
 
@@ -83,29 +83,36 @@ class _ModelViewState extends State<ModelView> {
                       fit: BoxFit.cover,
                     )),
               ),
-              if (Platform.isIOS || Platform.isMacOS)
-                Align(
-                  alignment: Alignment.bottomRight,
-                  child: GestureDetector(
-                    //? IOS AR View
-                    onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) =>
-                            ARViewIOS(modelUrl: widget.modelUrl))),
-                    child: SizedBox(
-                        height: 65.h,
-                        width: 65.h,
-                        child: CircleAvatar(
-                          radius: 30,
-                          backgroundColor: Colors.green,
-                          child: Padding(
-                            padding: EdgeInsets.all(13.h),
-                            child: Image.asset(
-                              'assets/images/PNG Icons/AR Icon.png',
-                            ),
+              // if (Platform.isIOS || Platform.isMacOS)
+              Align(
+                alignment: Alignment.bottomRight,
+                child: GestureDetector(
+                  //? IOS AR View
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) {
+                        return ARViewIOS(
+                          modelUrl: widget.modelUrl,
+                        );
+                        // return ARViewIOS(modelUrl: widget.modelUrl);
+                      }),
+                    );
+                  },
+                  child: SizedBox(
+                      height: 65.h,
+                      width: 65.h,
+                      child: CircleAvatar(
+                        radius: 30,
+                        backgroundColor: Colors.green,
+                        child: Padding(
+                          padding: EdgeInsets.all(13.h),
+                          child: Image.asset(
+                            'assets/images/PNG Icons/AR Icon.png',
                           ),
-                        )),
-                  ),
+                        ),
+                      )),
                 ),
+              ),
               Align(
                 alignment: Alignment.topLeft,
                 child: SizedBox(

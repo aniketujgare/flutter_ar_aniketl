@@ -10,16 +10,14 @@ import 'package:go_router/go_router.dart';
 import 'package:size_config/size_config.dart';
 import 'package:orientation_widget/orientation_widget.dart';
 
-import '../subject/pages/subject.dart';
-
-class MainMenuScreen extends StatefulWidget {
-  const MainMenuScreen({super.key});
+class SubjectScreen extends StatefulWidget {
+  const SubjectScreen({super.key});
 
   @override
-  State<MainMenuScreen> createState() => _MainMenuScreenState();
+  State<SubjectScreen> createState() => _SubjectScreenState();
 }
 
-class _MainMenuScreenState extends State<MainMenuScreen> {
+class _SubjectScreenState extends State<SubjectScreen> {
   @override
   void initState() {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
@@ -139,32 +137,24 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
   Expanded buildCenter(BuildContext context) {
     return Expanded(
       child: Padding(
-        padding:
-            EdgeInsets.symmetric(vertical: DeviceType().isMobile ? 5.h : 0),
-        child: Row(
-          children: [
-            Expanded(
-              child: GestureDetector(
-                onTap: () {
-                  // Navigator.of(context).push(MaterialPageRoute(
-                  //     builder: (context) => const SubjectScreen()));
-                },
-                child: Image.asset(
-                  'assets/images/PNG Icons/LessonsMenu.png',
+          padding:
+              EdgeInsets.symmetric(vertical: DeviceType().isMobile ? 5.h : 0),
+          child: Column(
+            children: [
+              Image.asset('assets/images/PNG Icons/evs.png'),
+              Text(
+                'E.V.S',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Color(0xFF4D4D4D),
+                  fontSize: 25,
+                  fontFamily: 'Uniform Rounded',
+                  fontWeight: FontWeight.w500,
+                  height: 0,
                 ),
               ),
-            ),
-            Expanded(
-                child: GestureDetector(
-              onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => const CategoryScreen())),
-              child: Image.asset(
-                'assets/images/PNG Icons/othermenu.png',
-              ),
-            )),
-          ],
-        ),
-      ),
+            ],
+          )),
     );
   }
 }

@@ -91,7 +91,10 @@ class _WorksheetViewState extends State<WorksheetView> {
                 scrollDirection: Axis.horizontal,
                 itemCount: 4,
                 padding: EdgeInsets.only(
-                    top: 18.wp, left: 4.wp, right: 4.wp, bottom: 18.wp),
+                    top: DeviceType().isMobile ? 4.wp : 18.wp,
+                    left: 4.wp,
+                    right: 4.wp,
+                    bottom: DeviceType().isMobile ? 4.wp : 18.wp),
                 itemBuilder: (BuildContext context, int i) {
                   return Lesson(
                     title: worksheet[i][0],
@@ -145,8 +148,8 @@ class Lesson extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(right: 10, left: 10),
-      width: 35.wp,
-      height: 10.wp,
+      width: DeviceType().isMobile ? 45.wp : 35.wp,
+      height: DeviceType().isMobile ? 2.wp : 10.wp,
       decoration: ShapeDecoration(
         color: Colors.white,
         shape: RoundedRectangleBorder(
@@ -156,7 +159,7 @@ class Lesson extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          35.verticalSpacer,
+          (DeviceType().isMobile ? 4 : 35).verticalSpacer,
           Container(
             margin: EdgeInsets.symmetric(horizontal: 10),
             height: 70,
@@ -165,14 +168,14 @@ class Lesson extends StatelessWidget {
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: Color(0xFF4F3A9C),
-                fontSize: 25,
+                fontSize: DeviceType().isMobile ? 18 : 25,
                 fontFamily: 'Nunito',
                 fontWeight: FontWeight.w700,
                 height: 0,
               ),
             ),
           ),
-          15.verticalSpacer,
+          (DeviceType().isMobile ? 0 : 15).verticalSpacer,
           //!EVS
           Container(
             width: double.maxFinite,
@@ -189,7 +192,7 @@ class Lesson extends StatelessWidget {
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: Color(0xFF074C2B),
-                fontSize: 20,
+                fontSize: DeviceType().isMobile ? 16 : 20,
                 fontFamily: 'Nunito',
                 fontWeight: FontWeight.w400,
                 height: 0,
@@ -212,7 +215,7 @@ class Lesson extends StatelessWidget {
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: Color(0xFFA94234),
-                fontSize: 20,
+                fontSize: DeviceType().isMobile ? 16 : 20,
                 fontFamily: 'Nunito',
                 fontWeight: FontWeight.w400,
                 height: 0,
@@ -235,7 +238,7 @@ class Lesson extends StatelessWidget {
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: Color(0xFF003A54),
-                fontSize: 20,
+                fontSize: DeviceType().isMobile ? 16 : 20,
                 fontFamily: 'Nunito',
                 fontWeight: FontWeight.w400,
                 height: 0,
@@ -259,7 +262,7 @@ class Lesson extends StatelessWidget {
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: Colors.white,
-                fontSize: 24,
+                fontSize: DeviceType().isMobile ? 18 : 24,
                 fontFamily: 'Nunito',
                 fontWeight: FontWeight.w700,
                 height: 0,

@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_ar/presentation/ar_core/arcore.dart';
 import 'package:flutter_ar/presentation/parent_zone/bloc/navbar_cubit/app_navigator_cubit.dart';
 import 'package:flutter_ar/presentation/parent_zone/bloc/teacher_message_cubit/teacher_message_cubit.dart';
+import 'package:flutter_ar/temp_testing/unityScene.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:size_config/size_config.dart';
@@ -32,13 +33,15 @@ final authenticationRepository = AuthenticationRepository();
 //   // print(await ArCoreController.checkArCoreAvailability());
 //   // print('\nAR SERVICES INSTALLED?');
 //   // print(await ArCoreController.checkIsArCoreInstalled());
-//   runApp(ArCoreEzxample());
+//   runApp(MaterialApp(
+//     home: const UnitySceneScreen(),
+//   ));
 // }
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  // await Firebase.initializeApp(
+  //   options: DefaultFirebaseOptions.currentPlatform,
+  // );
   await Hive.initFlutter();
   await Hive.openBox('kidsApp');
 
