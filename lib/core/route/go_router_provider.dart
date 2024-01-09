@@ -38,8 +38,7 @@ class GoRouterProvider {
             path: '/',
             name: 'splashRoute',
             pageBuilder: (context, state) {
-              return MaterialPage(
-                  child: AssetDownload(title: 'Asset Download'));
+              return MaterialPage(child: SplashScreen());
               // return MaterialPage(child: ModelsList3D());
             },
           ),

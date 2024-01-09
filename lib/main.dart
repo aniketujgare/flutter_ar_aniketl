@@ -19,6 +19,7 @@ import 'domain/repositories/authentication_repository.dart';
 import 'presentation/ar_core/ar_core.dart';
 import 'presentation/category/bloc/category_new_cubit/category_new_cubit.dart';
 import 'presentation/category/bloc/category_page_cubit/category_page_cubit.dart';
+import 'presentation/category/bloc/model_asset_handler_bloc/model_asset_handler_bloc.dart';
 import 'presentation/category/bloc/model_page_controler_cubit/models_page_controller_cubit.dart';
 import 'presentation/category/bloc/models_new_cubit/models_new_cubit.dart';
 import 'presentation/login/bloc/guest_validation_bloc/guest_validation_bloc.dart';
@@ -114,6 +115,9 @@ class MyAppState extends State<MyApp> {
             ),
             BlocProvider(
               create: (context) => TeacherMessageCubit(),
+            ),
+            BlocProvider(
+              create: (context) => ModelAssetHandlerBloc(),
             ),
           ],
           child: MaterialApp.router(

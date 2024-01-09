@@ -168,18 +168,13 @@ class LoginScreenState extends State<LoginScreen>
                             offset: -_animationController.animationPaws.value,
                             child: Opacity(
                               opacity: _animationController.opacityPaws.value,
-                              child: GestureDetector(
-                                onTap: () => Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                        builder: (context) => ModelsList3D())),
-                                child: Image.asset(
-                                  'assets/images/Dog/Paws_First-Login.png',
-                                  width: 420.h +
-                                      _animationController
-                                          .animationPawsStreatch.value,
-                                  height: 90.h,
-                                  fit: BoxFit.fill,
-                                ),
+                              child: Image.asset(
+                                'assets/images/Dog/Paws_First-Login.png',
+                                width: 420.h +
+                                    _animationController
+                                        .animationPawsStreatch.value,
+                                height: 90.h,
+                                fit: BoxFit.fill,
                               ),
                             ),
                           ),

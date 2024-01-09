@@ -18,129 +18,34 @@ class CategoryModelsPageView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: const Color(0XFFF4F2FE),
-        body: Padding(
-          padding: EdgeInsets.fromLTRB(116.w, 40.h, 116.w, 40.h),
-          child: Stack(
-            children: [
-              Padding(
-                padding: EdgeInsets.fromLTRB(
-                    (DeviceType().isMobile ? 450.w : 250.w),
-                    0.h,
-                    (DeviceType().isMobile ? 450.w : 250.w),
-                    0.h),
-                child: BlocBuilder<ModelsNewCubit, ModelsNewState>(
-                  builder: (context, state) {
-                    if (state.status == ModelsStatus.loaded) {
-                      context
-                          .read<ModelsPageControllerCubit>()
-                          .setmaxLength((state.arModels.length / 6).ceil());
-                      return BlocBuilder<ModelsPageControllerCubit, int>(
-                        builder: (context, index) {
-                          return PageView.builder(
-                            itemCount: (state.arModels.length / 6)
-                                .ceil(), // 6 containers per page (2 rows with 3 containers each)
-                            controller: context
-                                .read<ModelsPageControllerCubit>()
-                                .pageCont,
-                            onPageChanged: (value) {
-                              context
-                                  .read<ModelsPageControllerCubit>()
-                                  .setPage(value);
-                              debugPrint('page changed $value');
-                            },
-                            itemBuilder: (context, pageIndex) {
-                              return DeviceType().isMobile
-                                  ? buildPage(pageIndex, state.arModels)
-                                  : Center(
-                                      child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      children: [
-                                        buildPage(pageIndex, state.arModels),
-                                      ],
-                                    ));
-                            },
-                          );
-                        },
-                      );
-                    }
-                    return const Center(
-                        child: CircularProgressIndicator.adaptive(
-                      strokeCap: StrokeCap.round,
-                    ));
-                  },
-                ),
-              ),
-              Align(
-                alignment: Alignment.topLeft,
-                child: SizedBox(
-                  height: 85.h,
-                  width: 85.h,
-                  child: Image.asset(
-                    'assets/ui/image 40.png', // User Icon
-                    fit: BoxFit.contain,
-                  ),
-                ),
-              ),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Padding(
-                  padding: EdgeInsets.only(
-                      left: DeviceType().isMobile ? 130.w : 50.w),
-                  child: SizedBox(
-                    height: 45.h,
-                    width: 45.h,
-                    child: GestureDetector(
-                      onTap: () {
-                        context
-                            .read<ModelsPageControllerCubit>()
-                            .setPreviousPage();
-                      },
+    return PopScope(
+      canPop: false,
+      child: SafeArea(
+        child: Scaffold(
+          backgroundColor: AppColors.parentZoneScaffoldColor,
+          body: Padding(
+            padding: EdgeInsets.fromLTRB(8.wp, 4.wp, 8.wp, 4.wp),
+            child: Row(
+              children: [
+                //! left part
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    SizedBox(
+                      width: 75.h,
                       child: Image.asset(
-                        'assets/ui/Group.png', // left arrow
-                        fit: BoxFit.scaleDown,
-                        height: 45.h,
-                        width: 45.h,
+                        'assets/ui/image 40.png', // User Icon
+                        fit: BoxFit.contain,
                       ),
                     ),
-                  ),
-                ),
-              ),
-              Align(
-                alignment: Alignment.bottomRight,
-                child: SizedBox(
-                  height: 85.h,
-                  width: 85.h,
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: Image.asset(
-                      'assets/ui/Custom Buttons.002 1.png', // Home Icon
-                      fit: BoxFit.contain,
-                    ),
-                  ),
-                ),
-              ),
-              Align(
-                alignment: Alignment.centerRight,
-                child: Padding(
-                  padding: EdgeInsets.only(
-                      right: DeviceType().isMobile ? 130.w : 50.w),
-                  child: SizedBox(
-                    height: 45.h,
-                    width: 45.h,
-                    child: RotatedBox(
-                      quarterTurns: 2,
-                      child: GestureDetector(
-                        onTap: () {
-                          context
-                              .read<ModelsPageControllerCubit>()
-                              .setNextPage();
-                        },
+                    GestureDetector(
+                      onTap: () => context
+                          .read<ModelsPageControllerCubit>()
+                          .setPreviousPage(),
+                      child: SizedBox(
+                        height: 45.h,
+                        width: 45.h,
                         child: Image.asset(
                           'assets/ui/Group.png', // right arrow
                           fit: BoxFit.scaleDown,
@@ -149,10 +54,104 @@ class CategoryModelsPageView extends StatelessWidget {
                         ),
                       ),
                     ),
+                    SizedBox(
+                      width: 75.h,
+                      height: 75.h,
+                    ),
+                  ],
+                ),
+                //! center part
+                Expanded(
+                  child: BlocBuilder<ModelsNewCubit, ModelsNewState>(
+                    builder: (context, state) {
+                      if (state.status == ModelsStatus.loaded) {
+                        context
+                            .read<ModelsPageControllerCubit>()
+                            .setmaxLength((state.arModels.length / 6).ceil());
+                        return BlocBuilder<ModelsPageControllerCubit, int>(
+                          builder: (context, index) {
+                            return PageView.builder(
+                              itemCount: (state.arModels.length / 6)
+                                  .ceil(), // 6 containers per page (2 rows with 3 containers each)
+                              controller: context
+                                  .read<ModelsPageControllerCubit>()
+                                  .pageCont,
+                              onPageChanged: (value) {
+                                context
+                                    .read<ModelsPageControllerCubit>()
+                                    .setPage(value);
+                                debugPrint('page changed $value');
+                              },
+                              itemBuilder: (context, pageIndex) {
+                                return DeviceType().isMobile
+                                    ? buildPage(pageIndex, state.arModels)
+                                    : Center(
+                                        child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          buildPage(pageIndex, state.arModels),
+                                        ],
+                                      ));
+                              },
+                            );
+                          },
+                        );
+                      }
+                      return const Center(
+                          child: CircularProgressIndicator.adaptive(
+                        strokeCap: StrokeCap.round,
+                      ));
+                    },
                   ),
                 ),
-              ),
-            ],
+                //! right part
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    SizedBox(
+                      width: 75.h,
+                      height: 75.h,
+                    ),
+                    GestureDetector(
+                      onTap: () => context
+                          .read<ModelsPageControllerCubit>()
+                          .setNextPage(),
+                      child: RotatedBox(
+                        quarterTurns: 2,
+                        child: SizedBox(
+                          height: 45.h,
+                          width: 45.h,
+                          child: Image.asset(
+                            'assets/ui/Group.png', // right arrow
+                            fit: BoxFit.scaleDown,
+                            height: 45.h,
+                            width: 45.h,
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 75.h,
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: SizedBox(
+                          height: 75.h,
+                          width: 75.h,
+                          child: Image.asset(
+                            'assets/ui/Custom Buttons.002 1.png', // Home Icon
+                            fit: BoxFit.contain,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                )
+              ],
+            ),
           ),
         ),
       ),
@@ -183,6 +182,7 @@ class CategoryModelsPageView extends StatelessWidget {
               ? BuildModelContainer(
                   image:
                       'https://d3ag5oij4wsyi3.cloudfront.net/kidsappmodellist/images/${arModels[colorIndex].modelId}.png',
+                  imageFileName: '${arModels[colorIndex].modelId}',
                   name: arModels[colorIndex].modelName,
                   model:
                       'https://d3ag5oij4wsyi3.cloudfront.net/kidsappmodellist/models/${arModels[colorIndex].modelId}.glb',
@@ -191,23 +191,6 @@ class CategoryModelsPageView extends StatelessWidget {
                   child: EmptyBox(),
                 );
         },
-      ),
-    );
-  }
-
-  Widget buildContainer(Color color) {
-    return Expanded(
-      child: Container(
-        margin: const EdgeInsets.all(4),
-        // width: double.maxFinite,
-        // height: double.maxFinite,
-        color: color,
-        child: Center(
-          child: Text(
-            color.toString(),
-            style: const TextStyle(color: Colors.white),
-          ),
-        ),
       ),
     );
   }
@@ -252,11 +235,13 @@ class BuildModelContainer extends StatelessWidget {
   final String image;
   final String name;
   final String model;
+  final String imageFileName;
   const BuildModelContainer({
     super.key,
     required this.image,
     required this.name,
     required this.model,
+    required this.imageFileName,
   });
 
   @override
@@ -264,7 +249,11 @@ class BuildModelContainer extends StatelessWidget {
     return Expanded(
       child: GestureDetector(
         onTap: () => Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => ModelView(modelUrl: model, modelName: name),
+          builder: (context) => ModelView(
+            modelUrl: model,
+            modelName: name,
+            imageFileName: imageFileName,
+          ),
         )),
         child: ConstrainedBox(
           constraints: BoxConstraints(

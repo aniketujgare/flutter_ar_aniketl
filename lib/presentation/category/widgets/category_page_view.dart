@@ -47,7 +47,6 @@ class _CategoryPageViewState extends State<CategoryPageView> {
           itemCount: (widget.arCategoryies.length / 6)
               .ceil(), // 6 containers per page (2 rows with 3 containers each)
           itemBuilder: (context, a) {
-            debugPrint('itemBuilder $a');
             return DeviceType().isMobile
                 ? buildPage(a, context)
                 : Center(
