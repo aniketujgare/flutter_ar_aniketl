@@ -94,6 +94,7 @@ class _ModelViewState extends State<ModelView> {
                               MaterialPageRoute(builder: (context) {
                                 return ARViewIOS(
                                   modelUrl: widget.modelUrl,
+                                  imageFileName: widget.imageFileName,
                                 );
                                 // return ARViewIOS(modelUrl: widget.modelUrl);
                               }),

@@ -12,8 +12,10 @@ import 'package:path_provider/path_provider.dart';
 
 class ARViewIOS extends StatefulWidget {
   final String modelUrl;
+  final String imageFileName;
 
-  const ARViewIOS({super.key, required this.modelUrl});
+  const ARViewIOS(
+      {super.key, required this.modelUrl, required this.imageFileName});
 
   @override
   ARViewIOSState createState() => ARViewIOSState();
@@ -100,18 +102,19 @@ class ARViewIOSState extends State<ARViewIOS> {
     }
     print(widget.modelUrl);
     arkitController.getCameraEulerAngles().then((rotationVector) async {
-      // node = ARKitGltfNode(
-      //   assetType: AssetType.documents,
-      //   // Box model from
-      //   // https://github.com/KhronosGroup/glTF-Sample-Models/raw/master/2.0/Box/glTF-Binary/Box.glb
-      //   url: 'assets/lily.glb',
-      //   eulerAngles: vector.Vector3(rotationVector.y, 0,
-      //       0), //And here is the line of code you are looking for
+      node = ARKitGltfNode(
+        assetType: AssetType.documents,
+        // Box model from
+        // https://github.com/KhronosGroup/glTF-Sample-Models/raw/master/2.0/Box/glTF-Binary/Box.glb
+        url:
+            'file:///data/user/0/com.example.flutter_ar/app_flutter/assets/${widget.imageFileName}.glb',
+        eulerAngles: vector.Vector3(rotationVector.y, 0,
+            0), //And here is the line of code you are looking for
 
-      //   scale: vector.Vector3.all(1),
-      // );
+        scale: vector.Vector3.all(1),
+      );
       //!network asset
-      node = await _getNodeFromNetwork(widget.modelUrl);
+      // node = await _getNodeFromNetwork(widget.modelUrl);
       controller.add(node!, parentNodeName: anchor.nodeName);
     });
   }

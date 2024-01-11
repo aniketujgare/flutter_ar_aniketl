@@ -1,12 +1,10 @@
 import 'dart:io';
 
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_ar/presentation/ar_core/arcore.dart';
 import 'package:flutter_ar/presentation/parent_zone/bloc/navbar_cubit/app_navigator_cubit.dart';
 import 'package:flutter_ar/presentation/parent_zone/bloc/teacher_message_cubit/teacher_message_cubit.dart';
-import 'package:flutter_ar/temp_testing/unityScene.dart';
+import 'package:flutter_ar/presentation/worksheet/bloc/worksheet_cubit/worksheet_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:size_config/size_config.dart';
@@ -14,9 +12,7 @@ import 'package:size_config/size_config.dart';
 import 'core/route/go_router_provider.dart';
 import 'core/util/device_type.dart';
 import 'core/util/styles.dart';
-import 'demo/firebase_options.dart';
 import 'domain/repositories/authentication_repository.dart';
-import 'presentation/ar_core/ar_core.dart';
 import 'presentation/category/bloc/category_new_cubit/category_new_cubit.dart';
 import 'presentation/category/bloc/category_page_cubit/category_page_cubit.dart';
 import 'presentation/category/bloc/model_asset_handler_bloc/model_asset_handler_bloc.dart';
@@ -27,6 +23,8 @@ import 'presentation/login/bloc/login_bloc/login_bloc.dart';
 import 'presentation/login/bloc/login_validation_bloc/login_validation_bloc.dart';
 import 'presentation/parent_zone/bloc/teacher_list_bloc/teacher_list_bloc.dart';
 import 'presentation/splash_screen/bloc/splash_animation_bloc.dart';
+import 'presentation/worksheet/bloc/worksheet_ans_of_student_cubit/worksheet_ans_of_student_cubit.dart';
+import 'presentation/worksheet/bloc/worksheet_solver_cubit/worksheet_solver_cubit.dart';
 
 final authenticationRepository = AuthenticationRepository();
 // void main() async {
@@ -118,6 +116,15 @@ class MyAppState extends State<MyApp> {
             ),
             BlocProvider(
               create: (context) => ModelAssetHandlerBloc(),
+            ),
+            BlocProvider(
+              create: (context) => WorksheetCubit(),
+            ),
+            BlocProvider(
+              create: (context) => WorksheetSolverCubit(),
+            ),
+            BlocProvider(
+              create: (context) => WorksheetAnsOfStudentCubit(),
             ),
           ],
           child: MaterialApp.router(

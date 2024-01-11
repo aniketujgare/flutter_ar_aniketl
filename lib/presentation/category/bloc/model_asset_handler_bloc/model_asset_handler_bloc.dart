@@ -46,7 +46,7 @@ class ModelAssetHandlerBloc
         //   setState(() {});
         // },
         assetsUrls: [
-          'https://d3ag5oij4wsyi3.cloudfront.net/kidsappmodellist/images/$modelName.png',
+          // 'https://d3ag5oij4wsyi3.cloudfront.net/kidsappmodellist/images/$modelName.png',
           'https://d3ag5oij4wsyi3.cloudfront.net/kidsappmodellist/models/$modelName.glb',
           // widget.modelUrl,
           //  'https://d3ag5oij4wsyi3.cloudfront.net/kidsappmodellist/images/${widget.modelName}.glb'

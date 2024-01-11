@@ -3,13 +3,15 @@ import 'package:flutter/services.dart';
 import 'package:flutter_ar/core/util/reusable_widgets/reusable_button.dart';
 import 'package:flutter_ar/data/models/teacher_message.dart';
 import 'package:flutter_ar/presentation/parent_zone/bloc/teacher_message_cubit/teacher_message_cubit.dart';
+import 'package:flutter_ar/presentation/worksheet/bloc/worksheet_cubit/worksheet_cubit.dart';
+import 'package:flutter_ar/presentation/worksheet/pages/worksheet_solver.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:size_config/size_config.dart';
 
-import '../../../core/util/device_type.dart';
-import '../../../core/util/styles.dart';
+import '../../../../core/util/device_type.dart';
+import '../../../../core/util/styles.dart';
 
 class WorksheetView extends StatefulWidget {
   const WorksheetView({super.key});
@@ -37,6 +39,16 @@ class _WorksheetViewState extends State<WorksheetView> {
 
   @override
   Widget build(BuildContext context) {
+    //! Testing Worksheet API
+    var worksheetCubit = context.read<WorksheetCubit>();
+    // worksheetCubit.getPublishedWorksheet();
+    // worksheetCubit.getWorksheetDetails();
+    // worksheetCubit.getteachername();
+    // worksheetCubit.getsubjectname();
+    // worksheetCubit.getStudentWorksheet();
+    // worksheetCubit.getWorksheetsData();
+    // worksheetCubit.getStudentWorksheetData();
+    worksheetCubit.getWorksheets();
     return PopScope(
       canPop: false,
       child: Scaffold(
@@ -61,7 +73,7 @@ class _WorksheetViewState extends State<WorksheetView> {
               ),
 
               // 5.horizontalSpacer,
-              Spacer(),
+              const Spacer(),
               Text(
                 'Worksheets',
                 style: DeviceType().isMobile
@@ -69,7 +81,7 @@ class _WorksheetViewState extends State<WorksheetView> {
                     : AppTextStyles.uniformRounded136BoldAppBarStyle
                         .copyWith(fontSize: 136.sp * 0.7),
               ),
-              Spacer(),
+              const Spacer(),
               GestureDetector(
                 onTap: () {},
                 child: Container(
@@ -85,39 +97,41 @@ class _WorksheetViewState extends State<WorksheetView> {
           ),
         ),
         body: Padding(
-            padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-            child: SizedBox.expand(
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: 4,
-                padding: EdgeInsets.only(
-                    top: DeviceType().isMobile ? 4.wp : 18.wp,
-                    left: 4.wp,
-                    right: 4.wp,
-                    bottom: DeviceType().isMobile ? 4.wp : 18.wp),
-                itemBuilder: (BuildContext context, int i) {
-                  return Lesson(
-                    title: worksheet[i][0],
-                    greenTxt: worksheet[i][1],
-                    redTxt: worksheet[i][2],
-                    blueTxt: worksheet[i][3],
-                  );
-                },
-              ),
-
-              //  Row(
-              //   crossAxisAlignment: CrossAxisAlignment.center,
-              //   mainAxisAlignment: MainAxisAlignment.spaceAround,
-              //   children: [
-              //     for (int i = 0; i < 4; i++)
-              //       Lesson(
-              //         title: worksheet[i][0],
-              //         greenTxt: worksheet[i][1],
-              //         redTxt: worksheet[i][2],
-              //       )
-              //   ],
-              // ),
-            )),
+          padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+          child: SizedBox.expand(
+              child: BlocBuilder<WorksheetCubit, WorksheetState>(
+            builder: (context, state) {
+              if (state.status == WorksheetStatus.loaded) {
+                return ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: state.worksheets.length,
+                  padding: EdgeInsets.only(
+                      top: DeviceType().isMobile ? 4.wp : 18.wp,
+                      left: 4.wp,
+                      right: 4.wp,
+                      bottom: DeviceType().isMobile ? 4.wp : 18.wp),
+                  itemBuilder: (BuildContext context, int i) {
+                    var workSheet = state.worksheets[i];
+                    return GestureDetector(
+                      onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => const WorksheetSolverView())),
+                      child: Lesson(
+                        title: workSheet.worksheetName, //worksheet[i][0],
+                        greenTxt: workSheet.subject, // worksheet[i][1],
+                        redTxt: worksheet[i % worksheet.length][2],
+                        blueTxt: workSheet.teacher, // worksheet[i][3],
+                      ),
+                    );
+                  },
+                );
+              } else {
+                return const Center(
+                    child: CircularProgressIndicator.adaptive(
+                        strokeCap: StrokeCap.round));
+              }
+            },
+          )),
+        ),
       ),
     );
   }
@@ -147,7 +161,7 @@ class Lesson extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(right: 10, left: 10),
+      margin: const EdgeInsets.only(right: 10, left: 10),
       width: DeviceType().isMobile ? 45.wp : 35.wp,
       height: DeviceType().isMobile ? 2.wp : 10.wp,
       decoration: ShapeDecoration(
@@ -159,15 +173,15 @@ class Lesson extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          (DeviceType().isMobile ? 4 : 35).verticalSpacer,
+          (DeviceType().isMobile ? 20 : 35).verticalSpacer,
           Container(
-            margin: EdgeInsets.symmetric(horizontal: 10),
+            margin: const EdgeInsets.symmetric(horizontal: 10),
             height: 70,
             child: Text(
               title,
               textAlign: TextAlign.center,
               style: TextStyle(
-                color: Color(0xFF4F3A9C),
+                color: const Color(0xFF4F3A9C),
                 fontSize: DeviceType().isMobile ? 18 : 25,
                 fontFamily: 'Nunito',
                 fontWeight: FontWeight.w700,
@@ -183,7 +197,7 @@ class Lesson extends StatelessWidget {
             margin: EdgeInsets.symmetric(vertical: 1.wp, horizontal: 3.wp),
             padding: EdgeInsets.symmetric(vertical: 1.2.wp, horizontal: 1.wp),
             decoration: ShapeDecoration(
-              color: Color(0xFF9CDDB6),
+              color: const Color(0xFF9CDDB6),
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12)),
             ),
@@ -191,7 +205,7 @@ class Lesson extends StatelessWidget {
               greenTxt,
               textAlign: TextAlign.center,
               style: TextStyle(
-                color: Color(0xFF074C2B),
+                color: const Color(0xFF074C2B),
                 fontSize: DeviceType().isMobile ? 16 : 20,
                 fontFamily: 'Nunito',
                 fontWeight: FontWeight.w400,
@@ -206,7 +220,7 @@ class Lesson extends StatelessWidget {
             margin: EdgeInsets.symmetric(vertical: 1.wp, horizontal: 3.wp),
             padding: EdgeInsets.symmetric(vertical: 1.2.wp, horizontal: 2.wp),
             decoration: ShapeDecoration(
-              color: Color(0xFFFFC1B8),
+              color: const Color(0xFFFFC1B8),
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12)),
             ),
@@ -214,7 +228,7 @@ class Lesson extends StatelessWidget {
               redTxt,
               textAlign: TextAlign.center,
               style: TextStyle(
-                color: Color(0xFFA94234),
+                color: const Color(0xFFA94234),
                 fontSize: DeviceType().isMobile ? 16 : 20,
                 fontFamily: 'Nunito',
                 fontWeight: FontWeight.w400,
@@ -229,7 +243,7 @@ class Lesson extends StatelessWidget {
             margin: EdgeInsets.symmetric(vertical: 1.wp, horizontal: 3.wp),
             padding: EdgeInsets.symmetric(vertical: 1.2.wp, horizontal: 2.wp),
             decoration: ShapeDecoration(
-              color: Color(0xFFB3EAFC),
+              color: const Color(0xFFB3EAFC),
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12)),
             ),
@@ -237,7 +251,7 @@ class Lesson extends StatelessWidget {
               blueTxt,
               textAlign: TextAlign.center,
               style: TextStyle(
-                color: Color(0xFF003A54),
+                color: const Color(0xFF003A54),
                 fontSize: DeviceType().isMobile ? 16 : 20,
                 fontFamily: 'Nunito',
                 fontWeight: FontWeight.w400,
@@ -253,7 +267,7 @@ class Lesson extends StatelessWidget {
             margin: EdgeInsets.symmetric(vertical: 1.wp, horizontal: 3.wp),
             padding: EdgeInsets.symmetric(vertical: 3.wp, horizontal: 2.wp),
             decoration: ShapeDecoration(
-              color: Color(0xFF8C7DF0),
+              color: const Color(0xFF8C7DF0),
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(25)),
             ),
