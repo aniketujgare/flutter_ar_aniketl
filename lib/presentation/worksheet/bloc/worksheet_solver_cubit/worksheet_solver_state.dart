@@ -7,6 +7,6 @@ class WorksheetSolverState with _$WorksheetSolverState {
   const factory WorksheetSolverState.initial({
     @Default(WorkSheetSolverStatus.initial) WorkSheetSolverStatus status,
     @Default([]) List<Question> questions,
-    @Default([]) List<StudentAnswer> studentAnswersList,
+    @Default([]) List<StudentAnswer> answerSheet,
   }) = Initial;
 }

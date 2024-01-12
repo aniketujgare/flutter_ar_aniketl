@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_ar/core/util/reusable_widgets/reusable_textfield.dart';
@@ -26,23 +27,23 @@ class WorksheetSolverView extends StatefulWidget {
 class _WorksheetSolverViewState extends State<WorksheetSolverView> {
   @override
   void initState() {
-    context.read<WorksheetSolverCubit>().getWorksheetsData();
-    context.read<WorksheetSolverCubit>().getStudentWorksheetData();
+    context.read<WorksheetSolverCubit>().init();
+
     // context.read<WorksheetAnsOfStudentCubit>().getStudentWorksheetData();
     super.initState();
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-    ]);
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light
-        .copyWith(systemNavigationBarColor: AppColors.parentZoneScaffoldColor));
+    // SystemChrome.setPreferredOrientations([
+    //   DeviceOrientation.portraitUp,
+    // ]);
+    // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light
+    //     .copyWith(systemNavigationBarColor: AppColors.parentZoneScaffoldColor));
   }
 
   @override
   void dispose() {
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.landscapeLeft,
-      DeviceOrientation.landscapeRight,
-    ]);
+    // SystemChrome.setPreferredOrientations([
+    //   DeviceOrientation.landscapeLeft,
+    //   DeviceOrientation.landscapeRight,
+    // ]);
     super.dispose();
   }
 
@@ -53,446 +54,530 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView> {
       canPop: false,
       child: Scaffold(
         backgroundColor: AppColors.parentZoneScaffoldColor,
-        appBar: AppBar(
-          toolbarHeight: DeviceType().isMobile ? 56 : 80,
-          automaticallyImplyLeading: false,
-          backgroundColor: AppColors.accentColor,
-          leading: null,
-          title: Row(
-            children: [
-              GestureDetector(
-                onTap: () => Navigator.pop(context),
-                child: Container(
-                  margin: EdgeInsets.only(left: 2.wp, right: 3.wp),
-                  height: 36.h,
-                  width: 36.h,
-                  child: Image.asset(
-                    'assets/images/reusable_icons/back_button_primary.png',
+        appBar: _appBar(context),
+        body: Padding(
+            padding: EdgeInsets.fromLTRB(10.wp, 0, 10.wp, 0),
+            child: SizedBox.expand(
+                child: Column(
+              children: [
+                SizedBox(
+                  width: 300,
+                  height: 350,
+                  child: Stack(
+                    children: <Widget>[
+                      const Lines(),
+                      const IgnorePointer(
+                        child: Boxes(),
+                      ),
+                    ],
                   ),
                 ),
-              ),
-              const Spacer(),
-              Text(
-                'Worksheets Solver',
-                style: DeviceType().isMobile
-                    ? AppTextStyles.uniformRounded136BoldAppBarStyle
-                    : AppTextStyles.uniformRounded136BoldAppBarStyle
-                        .copyWith(fontSize: 136.sp * 0.7),
-              ),
-              const Spacer(),
-              GestureDetector(
-                onTap: () {},
-                child: Container(
-                  margin: EdgeInsets.only(left: 2.wp, right: 3.wp),
-                  height: 36.h,
-                  width: 36.h,
-                  child: Image.asset(
-                    'assets/images/PNG Icons/history.png',
-                  ),
+                BlocBuilder<WorksheetSolverCubit, WorksheetSolverState>(
+                  builder: (context, state) {
+                    if (state.status == WorkSheetSolverStatus.loaded) {
+                      return ListView.separated(
+                        scrollDirection: Axis.vertical,
+                        itemCount: state.questions.length,
+                        padding: EdgeInsets.only(
+                            top: DeviceType().isMobile ? 4.wp : 18.wp,
+                            left: 4.wp,
+                            right: 4.wp,
+                            bottom: DeviceType().isMobile ? 4.wp : 18.wp),
+                        itemBuilder: (BuildContext context, int i) {
+                          // var markedAnswer = (i >= state.answerSheet.length)
+                          //     ? null
+                          //     : state.answerSheet[i].question.answer.answer;
+
+                          dynamic markedAnswer = state.answerSheet
+                              .firstWhereOrNull(
+                                (element) => element.questionNo == i,
+                              )
+                              ?.question
+                              .answer
+                              .answer;
+
+                          if (markedAnswer == null) print('null at $i');
+                          switch (state.questions[i].questionType) {
+                            case QuestionType.mcqText:
+                              McqTextQuestion mcqTextQuestion =
+                                  state.questions[i] as McqTextQuestion;
+                              return _buildMcqTextQuestion(
+                                  i, mcqTextQuestion, markedAnswer);
+                            case QuestionType.mcqImage:
+                              McqImageQuestion mcqImageQuestion =
+                                  state.questions[i] as McqImageQuestion;
+                              return _buildMcqImageQuestion(
+                                  i, mcqImageQuestion, markedAnswer);
+                            case QuestionType.fillBlank:
+                              FillBlankQuestion fillBlankQuestion =
+                                  state.questions[i] as FillBlankQuestion;
+                              return _buildFillBlankQuestion(
+                                  i, fillBlankQuestion, markedAnswer);
+
+                            case QuestionType.multiplefillblank:
+                              MultipleFillBlankQuestion
+                                  multipleFillBlankQuestion = state.questions[i]
+                                      as MultipleFillBlankQuestion;
+                              return _buildMultipleFillBlankQuestion(
+                                  i, multipleFillBlankQuestion, markedAnswer);
+                            case QuestionType.trueFalse:
+                              TrueFalseQuestion trueFalseQuestion =
+                                  state.questions[i] as TrueFalseQuestion;
+
+                              bool? isTrueSelected = markedAnswer == 'True';
+                              bool? isFalseSelected = markedAnswer == 'False';
+                              return _buildTrueFalseQuestion(
+                                  i,
+                                  trueFalseQuestion,
+                                  isTrueSelected,
+                                  isFalseSelected);
+
+                            case QuestionType.matchTheFollowing:
+                              MatchTheFollowingQuestion
+                                  matchTheFollowingQuestion = state.questions[i]
+                                      as MatchTheFollowingQuestion;
+                              var shuffledOptions = matchTheFollowingQuestion
+                                  .options.entries
+                                  .toList()
+                                ..shuffle();
+                              return _buildMatchTheFollowingQuestion(i,
+                                  matchTheFollowingQuestion, shuffledOptions);
+                            case QuestionType.oneWord:
+                              OneWordQuestion oneWordQuestion =
+                                  state.questions[i] as OneWordQuestion;
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text('${i + 1}) ${oneWordQuestion.question}'),
+                                  TextFormField(
+                                    initialValue:
+                                        (markedAnswer as String?) ?? '',
+                                  )
+                                ],
+                              );
+                            case QuestionType.selectWord:
+                              SelectWordQuestion selectWordQuestion =
+                                  state.questions[i] as SelectWordQuestion;
+                              return Column(
+                                mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                      '${i + 1}) ${selectWordQuestion.question}'),
+                                  TextFormField(
+                                    initialValue:
+                                        (markedAnswer as String?) ?? '',
+                                  ),
+                                  const SizedBox(height: 10),
+                                ],
+                              );
+                            case QuestionType.oddOneOutText:
+                              OddOneOutTextQuestion oddOneOutTextQuestion =
+                                  state.questions[i] as OddOneOutTextQuestion;
+                              return _buildOddOneOutTextQuestion(
+                                  i, oddOneOutTextQuestion, markedAnswer);
+                            case QuestionType.oddOneOutimage:
+                              OddOneOutImageQuestion oddOneOutImageQuestion =
+                                  state.questions[i] as OddOneOutImageQuestion;
+                              return _buildOddOneOutImageQuestion(
+                                  i, oddOneOutImageQuestion, markedAnswer);
+                            case QuestionType.ascDescOrder:
+                              AscDescOrderQuestion ascDescOrderQuestion =
+                                  state.questions[i] as AscDescOrderQuestion;
+                              return Column(
+                                mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                      '${i + 1}) ${ascDescOrderQuestion.question}'),
+                                  Text(ascDescOrderQuestion.numbers.join(' ,')),
+                                  TextFormField(
+                                      initialValue:
+                                          (markedAnswer as List<String>?) ==
+                                                  null
+                                              ? ''
+                                              : (markedAnswer as List<String>)
+                                                  .join(' ,')),
+                                ],
+                              );
+                            case QuestionType.arithmetic:
+                              return Text(
+                                  state.questions[i].questionType.toString());
+                            case QuestionType.longAnswer:
+                              LongAnswerQuestion longAnswerQuestion =
+                                  state.questions[i] as LongAnswerQuestion;
+                              return Column(
+                                mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                      '${i + 1}) ${longAnswerQuestion.question}'),
+                                  Text(longAnswerQuestion.questionKeywords
+                                      .join(', ')),
+                                  TextFormField(
+                                      initialValue:
+                                          (markedAnswer as String?) ?? ''),
+                                ],
+                              );
+                            default:
+                              return Text(
+                                  state.questions[i].questionType.toString());
+                          }
+                        },
+                        separatorBuilder: (BuildContext context, int i) {
+                          return const SizedBox(height: 2);
+                        },
+                      );
+                    } else {
+                      return const Center(
+                          child: CircularProgressIndicator.adaptive(
+                              strokeCap: StrokeCap.round));
+                    }
+                  },
                 ),
-              ),
-            ],
+              ],
+            ))),
+      ),
+    );
+  }
+
+  Column _buildOddOneOutImageQuestion(int i,
+      OddOneOutImageQuestion oddOneOutImageQuestion, dynamic markedAnswer) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+            '${i + 1}) ${oddOneOutImageQuestion.question}'), // Display the question
+        Column(
+          children: List.generate(
+            (oddOneOutImageQuestion.options.length / 2).ceil(),
+            (rowIndex) {
+              int startIndex = rowIndex * 2;
+              int endIndex = startIndex + 2;
+              endIndex = endIndex > oddOneOutImageQuestion.options.length
+                  ? oddOneOutImageQuestion.options.length
+                  : endIndex;
+
+              return Row(
+                children: List.generate(
+                  endIndex - startIndex,
+                  (j) {
+                    int optionIndex = startIndex + j;
+                    return Expanded(
+                      child: ListTile(
+                        title: Image.network(
+                          oddOneOutImageQuestion.options[optionIndex],
+                          width: 50, // Adjust the width as needed
+                          height: 50, // Adjust the height as needed
+                        ),
+                        leading: Radio<bool>(
+                          value: markedAnswer ==
+                              oddOneOutImageQuestion.options[optionIndex],
+                          groupValue:
+                              true, // You need to set the group value accordingly
+                          onChanged: (bool? value) {
+                            // Handle radio button selection
+                          },
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              );
+            },
           ),
         ),
-        body: Padding(
-            padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-            child: SizedBox.expand(
-                child: BlocBuilder<WorksheetSolverCubit, WorksheetSolverState>(
-              builder: (context, state) {
-                if (state.status == WorkSheetSolverStatus.loaded) {
-                  List<StudentAnswer> studentAns = state.studentAnswersList;
+      ],
+    );
+  }
 
-                  return ListView.separated(
-                    scrollDirection: Axis.vertical,
-                    itemCount: state.questions.length,
-                    padding: EdgeInsets.only(
-                        top: DeviceType().isMobile ? 4.wp : 18.wp,
-                        left: 4.wp,
-                        right: 4.wp,
-                        bottom: DeviceType().isMobile ? 4.wp : 18.wp),
-                    itemBuilder: (BuildContext context, int i) {
-                      switch (state.questions[i].questionType) {
-                        case QuestionType.mcqText:
-                          McqTextQuestion mcqTextQuestion =
-                              state.questions[i] as McqTextQuestion;
-                          return Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text('${i + 1}) ${mcqTextQuestion.question}'),
-                              ListView.builder(
-                                shrinkWrap: true,
-                                physics: const NeverScrollableScrollPhysics(),
-                                itemCount:
-                                    (mcqTextQuestion.options.length / 2).ceil(),
-                                itemBuilder: (context, index) {
-                                  return Row(
-                                    children: [
-                                      for (int i = index * 2;
-                                          i < (index + 1) * 2;
-                                          i++)
-                                        if (i < mcqTextQuestion.options.length)
-                                          Expanded(
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.all(8.0),
-                                              child: Text(
-                                                  "${i + 1}. ${mcqTextQuestion.options[i]}"),
-                                            ),
-                                          ),
-                                    ],
-                                  );
-                                },
-                              ),
-                              // Text(mcqTextQuestion.answer),
-                            ],
-                          );
-                        case QuestionType.mcqImage:
-                          McqImageQuestion mcqImageQuestion =
-                              state.questions[i] as McqImageQuestion;
-                          return Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text('${i + 1}) ${mcqImageQuestion.question}'),
-                              ListView.builder(
-                                shrinkWrap: true,
-                                physics: const NeverScrollableScrollPhysics(),
-                                itemCount: (mcqImageQuestion.options.length / 2)
-                                    .ceil(),
-                                itemBuilder:
-                                    (BuildContext context, int rowIndex) {
-                                  int startIndex = rowIndex * 2;
-                                  int endIndex = (rowIndex + 1) * 2;
-                                  endIndex =
-                                      endIndex > mcqImageQuestion.options.length
-                                          ? mcqImageQuestion.options.length
-                                          : endIndex;
+  Column _buildOddOneOutTextQuestion(int i,
+      OddOneOutTextQuestion oddOneOutTextQuestion, dynamic markedAnswer) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+            '${i + 1}) ${oddOneOutTextQuestion.question}'), // Display the question
+        Column(
+          children: List.generate(
+            (oddOneOutTextQuestion.options.length / 2).ceil(),
+            (rowIndex) {
+              int startIndex = rowIndex * 2;
+              int endIndex = startIndex + 2;
+              endIndex = endIndex > oddOneOutTextQuestion.options.length
+                  ? oddOneOutTextQuestion.options.length
+                  : endIndex;
 
-                                  return Row(
-                                    children: List.generate(
-                                        endIndex - startIndex, (j) {
-                                      int optionIndex = startIndex + j;
-                                      return Expanded(
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Row(
-                                            children: [
-                                              Text('${optionIndex + 1}.'),
-                                              CachedNetworkImage(
-                                                imageUrl: mcqImageQuestion
-                                                    .options[optionIndex],
-                                                width:
-                                                    50, // Adjust the width as needed
-                                                height:
-                                                    50, // Adjust the height as needed
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      );
-                                    }),
-                                  );
-                                },
-                              ),
-                            ],
-                          );
-                        case QuestionType.fillBlank:
-                          FillBlankQuestion fillBlankQuestion =
-                              state.questions[i] as FillBlankQuestion;
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text('${i + 1}) ${fillBlankQuestion.question}'),
-                              const ReusableTextField(
-                                hintText: 'Type your answer here',
-                                countryCodeVisible: false,
-                              )
-                            ],
-                          );
+              return Row(
+                children: List.generate(
+                  endIndex - startIndex,
+                  (j) {
+                    int optionIndex = startIndex + j;
+                    return Expanded(
+                      child: ListTile(
+                        title: Text(oddOneOutTextQuestion.options[optionIndex]),
+                        leading: Radio<bool>(
+                          value: oddOneOutTextQuestion.options[optionIndex] ==
+                                  markedAnswer
+                              ? true
+                              : false,
+                          groupValue: true,
+                          onChanged: null, // Set to null to disable interaction
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
 
-                        case QuestionType.multiplefillblank:
-                          MultipleFillBlankQuestion multipleFillBlankQuestion =
-                              state.questions[i] as MultipleFillBlankQuestion;
-                          return Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                  '${i}) ${multipleFillBlankQuestion.question}'),
-                              Column(
-                                children: List.generate(
-                                  (multipleFillBlankQuestion.answer.length / 2)
-                                      .ceil(),
-                                  (rowIndex) {
-                                    int startIndex = rowIndex * 2;
-                                    int endIndex = (rowIndex + 1) * 2;
-                                    endIndex = endIndex >
-                                            multipleFillBlankQuestion
-                                                .answer.length
-                                        ? multipleFillBlankQuestion
-                                            .answer.length
-                                        : endIndex;
+  Column _buildMatchTheFollowingQuestion(
+      int i,
+      MatchTheFollowingQuestion matchTheFollowingQuestion,
+      List<MapEntry<String, String>> shuffledOptions) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('${i + 1}) ${matchTheFollowingQuestion.question}'),
+        Column(
+          mainAxisSize: MainAxisSize.min,
+          children: List.generate(
+            shuffledOptions.length,
+            (index) {
+              return Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      children: [
+                        Image.network(
+                          matchTheFollowingQuestion.options.entries
+                              .toList()[index]
+                              .key,
+                          width: 50, // Adjust the width as needed
+                          height: 50, // Adjust the height as needed
+                        ),
+                        const SizedBox(
+                            width:
+                                186.0), // Add some spacing between image and text
+                        Text(shuffledOptions[index].value),
+                      ],
+                    ),
+                  )
+                ],
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
 
-                                    return Row(
-                                      children: List.generate(
-                                          endIndex - startIndex, (j) {
-                                        int optionIndex = startIndex + j;
-
-                                        return Expanded(
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Text(
-                                              '${j + 1}. ${multipleFillBlankQuestion.answer[optionIndex]}',
-                                              style:
-                                                  const TextStyle(fontSize: 16),
-                                            ),
-                                          ),
-                                        );
-                                      }),
-                                    );
-                                  },
-                                ),
-                              ),
-                            ],
-                          );
-                        case QuestionType.trueFalse:
-                          TrueFalseQuestion trueFalseQuestion =
-                              state.questions[i] as TrueFalseQuestion;
-
-                          bool? isTrueSelected = i > studentAns.length
-                              ? null
-                              : studentAns[i].question.answer.answer == 'True';
-                          bool? isFalseSelected = i > studentAns.length
-                              ? null
-                              : studentAns[i].question.answer.answer == 'False';
-                          return Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text('${i + 1}) ${trueFalseQuestion.question}'),
-                              Row(
-                                children: [
-                                  Radio<bool?>(
-                                    value: true,
-                                    groupValue: isTrueSelected,
-                                    onChanged: (bool? value) {
-                                      // Handle the onChanged event here if needed
-                                      // For example, you can update the state or perform some action
-                                      // when the 'True' radio button is selected.
-                                    },
-                                  ),
-                                  const Text('True'),
-                                  Radio<bool?>(
-                                    value: true,
-                                    groupValue: isFalseSelected,
-                                    onChanged: (bool? value) {
-                                      // Handle the onChanged event here if needed
-                                      // For example, you can update the state or perform some action
-                                      // when the 'False' radio button is selected.
-                                    },
-                                  ),
-                                  const Text('False'),
-                                ],
-                              )
-                            ],
-                          );
-
-                        case QuestionType.matchTheFollowing:
-                          MatchTheFollowingQuestion matchTheFollowingQuestion =
-                              state.questions[i] as MatchTheFollowingQuestion;
-                          var shuffledOptions =
-                              matchTheFollowingQuestion.options.entries.toList()
-                                ..shuffle();
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                  '${i + 1}) ${matchTheFollowingQuestion.questionType}'),
-                              Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: List.generate(
-                                  shuffledOptions.length,
-                                  (index) {
-                                    return Row(
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Row(
-                                            children: [
-                                              Image.network(
-                                                matchTheFollowingQuestion
-                                                    .options.entries
-                                                    .toList()[index]
-                                                    .key,
-                                                width:
-                                                    50, // Adjust the width as needed
-                                                height:
-                                                    50, // Adjust the height as needed
-                                              ),
-                                              const SizedBox(
-                                                  width:
-                                                      186.0), // Add some spacing between image and text
-                                              Text(
-                                                  shuffledOptions[index].value),
-                                            ],
-                                          ),
-                                        )
-                                      ],
-                                    );
-                                  },
-                                ),
-                              ),
-                            ],
-                          );
-                        case QuestionType.oneWord:
-                          OneWordQuestion oneWordQuestion =
-                              state.questions[i] as OneWordQuestion;
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text('${i + 1}) ${oneWordQuestion.question}'),
-                              const ReusableTextField(
-                                hintText: 'Type your answer here',
-                                countryCodeVisible: false,
-                              )
-                            ],
-                          );
-                        case QuestionType.selectWord:
-                          SelectWordQuestion selectWordQuestion =
-                              state.questions[i] as SelectWordQuestion;
-                          return Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text('${i + 1}) ${selectWordQuestion.question}'),
-                              Text(selectWordQuestion.questionType.toString()),
-                              const SizedBox(height: 10),
-                            ],
-                          );
-                        case QuestionType.oddOneOutText:
-                          OddOneOutTextQuestion oddOneOutTextQuestion =
-                              state.questions[i] as OddOneOutTextQuestion;
-                          return Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                  '${i + 1}) ${oddOneOutTextQuestion.question}'), // Display the question
-                              Column(
-                                children: List.generate(
-                                  (oddOneOutTextQuestion.options.length / 2)
-                                      .ceil(),
-                                  (rowIndex) {
-                                    int startIndex = rowIndex * 2;
-                                    int endIndex = startIndex + 2;
-                                    endIndex = endIndex >
-                                            oddOneOutTextQuestion.options.length
-                                        ? oddOneOutTextQuestion.options.length
-                                        : endIndex;
-
-                                    return Row(
-                                      children: List.generate(
-                                        endIndex - startIndex,
-                                        (j) {
-                                          int optionIndex = startIndex + j;
-                                          return Expanded(
-                                            child: ListTile(
-                                              title: Text(oddOneOutTextQuestion
-                                                  .options[optionIndex]),
-                                              leading: Radio<bool>(
-                                                value: false,
-                                                groupValue: true,
-                                                onChanged:
-                                                    null, // Set to null to disable interaction
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                      ),
-                                    );
-                                  },
-                                ),
-                              ),
-                            ],
-                          );
-                        case QuestionType.oddOneOutimage:
-                          OddOneOutImageQuestion oddOneOutImageQuestion =
-                              state.questions[i] as OddOneOutImageQuestion;
-                          return Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                  '${i + 1}) ${oddOneOutImageQuestion.question}'), // Display the question
-                              Column(
-                                children: List.generate(
-                                  (oddOneOutImageQuestion.options.length / 2)
-                                      .ceil(),
-                                  (rowIndex) {
-                                    int startIndex = rowIndex * 2;
-                                    int endIndex = startIndex + 2;
-                                    endIndex = endIndex >
-                                            oddOneOutImageQuestion
-                                                .options.length
-                                        ? oddOneOutImageQuestion.options.length
-                                        : endIndex;
-
-                                    return Row(
-                                      children: List.generate(
-                                        endIndex - startIndex,
-                                        (j) {
-                                          int optionIndex = startIndex + j;
-                                          return Expanded(
-                                            child: ListTile(
-                                              title: Image.network(
-                                                oddOneOutImageQuestion
-                                                    .options[optionIndex],
-                                                width:
-                                                    50, // Adjust the width as needed
-                                                height:
-                                                    50, // Adjust the height as needed
-                                              ),
-                                              leading: Radio<String>(
-                                                value: '1',
-                                                groupValue:
-                                                    null, // You need to set the group value accordingly
-                                                onChanged: (String? value) {
-                                                  // Handle radio button selection
-                                                },
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                      ),
-                                    );
-                                  },
-                                ),
-                              ),
-                            ],
-                          );
-                        case QuestionType.ascDescOrder:
-                          return Text(
-                              state.questions[i].questionType.toString());
-                        case QuestionType.arithmetic:
-                          return Text(
-                              state.questions[i].questionType.toString());
-                        default:
-                          return Text(
-                              state.questions[i].questionType.toString());
-                      }
-                    },
-                    separatorBuilder: (BuildContext context, int i) {
-                      return const SizedBox(height: 2);
-                    },
-                  );
-                } else {
-                  return const Center(
-                      child: CircularProgressIndicator.adaptive(
-                          strokeCap: StrokeCap.round));
-                }
+  Column _buildTrueFalseQuestion(int i, TrueFalseQuestion trueFalseQuestion,
+      bool? isTrueSelected, bool? isFalseSelected) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('${i + 1}) ${trueFalseQuestion.question}'),
+        Row(
+          children: [
+            Radio<bool?>(
+              value: true,
+              groupValue: isTrueSelected,
+              onChanged: (bool? value) {
+                // Handle the onChanged event here if needed
+                // For example, you can update the state or perform some action
+                // when the 'True' radio button is selected.
               },
-            ))),
+            ),
+            const Text('True'),
+            Radio<bool?>(
+              value: true,
+              groupValue: isFalseSelected,
+              onChanged: (bool? value) {
+                // Handle the onChanged event here if needed
+                // For example, you can update the state or perform some action
+                // when the 'False' radio button is selected.
+              },
+            ),
+            const Text('False'),
+          ],
+        )
+      ],
+    );
+  }
+
+  Column _buildMultipleFillBlankQuestion(
+      int i,
+      MultipleFillBlankQuestion multipleFillBlankQuestion,
+      dynamic markedAnswer) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('${i + 1}) ${multipleFillBlankQuestion.question}'),
+        TextFormField(
+            initialValue: markedAnswer == null
+                ? ''
+                : (markedAnswer as List<String>).join(' ,')),
+      ],
+    );
+  }
+
+  Column _buildFillBlankQuestion(
+      int i, FillBlankQuestion fillBlankQuestion, dynamic markedAnswer) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text('${i + 1}) ${fillBlankQuestion.question}'),
+        TextFormField(
+          initialValue: (markedAnswer as String?) ?? '',
+        ),
+      ],
+    );
+  }
+
+  Column _buildMcqImageQuestion(
+      int i, McqImageQuestion mcqImageQuestion, dynamic markedAnswer) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('${i + 1}) ${mcqImageQuestion.question}'),
+        ListView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: (mcqImageQuestion.options.length / 2).ceil(),
+          itemBuilder: (BuildContext context, int rowIndex) {
+            int startIndex = rowIndex * 2;
+            int endIndex = (rowIndex + 1) * 2;
+            endIndex = endIndex > mcqImageQuestion.options.length
+                ? mcqImageQuestion.options.length
+                : endIndex;
+
+            return Row(
+              children: List.generate(endIndex - startIndex, (j) {
+                int optionIndex = startIndex + j;
+                return Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      children: [
+                        Text('${optionIndex + 1}.'),
+                        Container(
+                          padding: (markedAnswer as String?) ==
+                                  mcqImageQuestion.options[optionIndex]
+                              ? const EdgeInsets.all(5)
+                              : null,
+                          decoration: const BoxDecoration(
+                              shape: BoxShape.circle, color: Colors.amber),
+                          child: CachedNetworkImage(
+                            imageUrl: mcqImageQuestion.options[optionIndex],
+                            width: 50, // Adjust the width as needed
+                            height: 50, // Adjust the height as needed
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              }),
+            );
+          },
+        ),
+      ],
+    );
+  }
+
+  Column _buildMcqTextQuestion(
+      int i, McqTextQuestion mcqTextQuestion, dynamic markedAnswer) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('${i + 1}) ${mcqTextQuestion.question}'),
+        ListView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: (mcqTextQuestion.options.length / 2).ceil(),
+          itemBuilder: (context, index) {
+            return Row(
+              children: [
+                for (int i = index * 2; i < (index + 1) * 2; i++)
+                  if (i < mcqTextQuestion.options.length)
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          "${i + 1}. ${mcqTextQuestion.options[i]}",
+                          style: TextStyle(
+                            fontWeight: (markedAnswer as String?) ==
+                                    mcqTextQuestion.options[i]
+                                ? FontWeight.bold
+                                : FontWeight.normal,
+                          ),
+                        ),
+                      ),
+                    ),
+              ],
+            );
+          },
+        ),
+        // Text(mcqTextQuestion.answer),
+      ],
+    );
+  }
+
+  AppBar _appBar(BuildContext context) {
+    return AppBar(
+      toolbarHeight: DeviceType().isMobile ? 56 : 80,
+      automaticallyImplyLeading: false,
+      backgroundColor: AppColors.accentColor,
+      leading: null,
+      title: Row(
+        children: [
+          GestureDetector(
+            onTap: () => Navigator.pop(context),
+            child: Container(
+              margin: EdgeInsets.only(left: 2.wp, right: 3.wp),
+              height: 36.h,
+              width: 36.h,
+              child: Image.asset(
+                'assets/images/reusable_icons/back_button_primary.png',
+              ),
+            ),
+          ),
+          const Spacer(),
+          Text(
+            'Worksheets Solver',
+            style: DeviceType().isMobile
+                ? AppTextStyles.uniformRounded136BoldAppBarStyle
+                : AppTextStyles.uniformRounded136BoldAppBarStyle
+                    .copyWith(fontSize: 136.sp * 0.7),
+          ),
+          const Spacer(),
+          GestureDetector(
+            onTap: () {},
+            child: Container(
+              margin: EdgeInsets.only(left: 2.wp, right: 3.wp),
+              height: 36.h,
+              width: 36.h,
+              child: Image.asset(
+                'assets/images/PNG Icons/history.png',
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -673,4 +758,84 @@ DateTime convertToDate(String dateString) {
   List<int> dateParts =
       dateString.split('-').map((part) => int.parse(part)).toList();
   return DateTime(dateParts[0], dateParts[1], dateParts[2]);
+}
+
+class Boxes extends StatelessWidget {
+  const Boxes() : super();
+
+  @override
+  build(_) => GridView.count(
+        crossAxisCount: 2,
+        mainAxisSpacing: 25,
+        crossAxisSpacing: 25,
+        padding: const EdgeInsets.all(25),
+        children: <Widget>[
+          for (int i = 0; i < 6; i++)
+            Container(
+              color: const Color(0xffe4f2fd),
+              foregroundDecoration: BoxDecoration(
+                  border: Border.all(
+                color: const Color(0xffc2d2e1),
+                width: 2,
+              )),
+              child: const Center(
+                child: Text('MyBox'),
+              ),
+            )
+        ],
+      );
+}
+
+class Lines extends StatefulWidget {
+  const Lines() : super();
+
+  @override
+  createState() => _LinesState();
+}
+
+class _LinesState extends State<Lines> {
+  Offset start = Offset.zero;
+  Offset end = Offset.zero;
+
+  @override
+  build(_) => GestureDetector(
+        onTap: () => print('t'),
+        onPanStart: (details) {
+          print(details.localPosition);
+          setState(() {
+            start = details.localPosition;
+          });
+        },
+        onPanUpdate: (details) {
+          setState(() {
+            end = details.localPosition;
+          });
+        },
+        child: CustomPaint(
+          size: Size.infinite,
+          painter: LinesPainter(start, end),
+        ),
+      );
+}
+
+class LinesPainter extends CustomPainter {
+  final Offset start, end;
+
+  LinesPainter(this.start, this.end);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    if (start == null || end == null) return;
+    canvas.drawLine(
+        start,
+        end,
+        Paint()
+          ..strokeWidth = 4
+          ..color = Colors.redAccent);
+  }
+
+  @override
+  bool shouldRepaint(LinesPainter oldDelegate) {
+    return oldDelegate.start != start || oldDelegate.end != end;
+  }
 }

@@ -382,6 +382,39 @@ class ArithmeticQuestion extends Question {
       };
 }
 
+// Arithmetic Question
+class LongAnswerQuestion extends Question {
+  final String questionUrl;
+  final String questionRows;
+  final List<String> questionKeywords;
+
+  LongAnswerQuestion(
+      {required this.questionKeywords,
+      required this.questionUrl,
+      required this.questionRows,
+      required String question})
+      : super.withType(question, QuestionType.longAnswer);
+
+  factory LongAnswerQuestion.fromJson(Map<String, dynamic> json) {
+    return LongAnswerQuestion(
+      questionUrl: json['longanswer']['question_url'],
+      questionRows: json['longanswer']['question_rows'],
+      questionKeywords:
+          List<String>.from(json['longanswer']['question_keywords']),
+      question: json['longanswer']['question'],
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+        'longanswer': {
+          'question_url': questionUrl,
+          'question_rows': questionRows,
+          'question_keywords': questionKeywords,
+          'question': question,
+        },
+      };
+}
+
 List<Question> allWorsheetQuestins(String yourApiResponse) {
   // Example of parsing the provided JSON response
   final List<List<Map<String, dynamic>>> questionsList =
@@ -434,7 +467,9 @@ List<Question> allWorsheetQuestins(String yourApiResponse) {
         case 'arithematic':
           allQuestions.add(ArithmeticQuestion.fromJson(questionData));
           break;
-
+        case 'longanswer':
+          allQuestions.add(LongAnswerQuestion.fromJson(questionData));
+          break;
         // Add cases for other question types here
       }
     }

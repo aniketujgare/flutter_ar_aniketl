@@ -1,17 +1,3 @@
-// enum QuestionType {
-//   selectWord,
-//   oneWord,
-//   oddOneOutText,
-//   ascDescOrder,
-//   oddOneOutImg,
-//   matchTheFollowing,
-//   longAnswer,
-//   trueFalse,
-//   fillBlank,
-//   mcqText,
-//   mcqImage,
-// }
-
 import 'package:flutter_ar/data/models/questions.dart';
 
 class Answer {
