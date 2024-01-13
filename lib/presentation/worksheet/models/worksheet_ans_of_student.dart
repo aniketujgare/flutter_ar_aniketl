@@ -1,7 +1,7 @@
-import 'package:flutter_ar/data/models/questions.dart';
+import 'package:flutter_ar/presentation/worksheet/models/questions.dart';
 
 class Answer {
-  final dynamic answer;
+  dynamic answer;
 
   Answer({required this.answer});
 
@@ -16,13 +16,13 @@ class Answer {
 
 class AnswerQuestion {
   final QuestionType questionType;
-  final Answer answer;
+  Answer answer;
 
   AnswerQuestion({required this.questionType, required this.answer});
 
   factory AnswerQuestion.fromJson(Map<String, dynamic> json) {
     final String key = json.keys.first;
-    final dynamic value = json[key];
+    dynamic value = json[key];
 
     QuestionType questionType = _getQuestionType(key);
     Answer answer;

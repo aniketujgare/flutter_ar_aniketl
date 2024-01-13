@@ -1,15 +1,14 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
+import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart' show debugPrint;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:http/http.dart' as http;
 
-import '../../../../data/models/questions.dart';
-import '../../../../data/models/student_worksheet_data.dart';
-import '../../../../data/models/worksheet_ans_of_student.dart';
-import '../../../../data/models/worksheet_data.dart';
+import '../../models/questions.dart';
+import '../../models/worksheet_ans_of_student.dart';
 
 part 'worksheet_solver_cubit.freezed.dart';
 part 'worksheet_solver_state.dart';
@@ -38,6 +37,59 @@ class WorksheetSolverCubit extends Cubit<WorksheetSolverState> {
         status: WorkSheetSolverStatus.loaded,
         questions: questionsList,
         answerSheet: answerSheet));
+  }
+
+  void setAnswer(int questionIdx, dynamic newAnswer) {
+    emit(state.copyWith(status: WorkSheetSolverStatus.loading));
+    // Make a copy of the current state
+    List<StudentAnswer> updatedAnswerSheet = state.answerSheet;
+    StudentAnswer? answer = updatedAnswerSheet
+        .firstWhereOrNull((element) => element.questionNo == questionIdx);
+    if (answer != null) {
+      answer.question.answer.answer = newAnswer;
+    } else {
+      StudentAnswer newAns = StudentAnswer(
+          questionNo: questionIdx,
+          question: AnswerQuestion(
+              questionType: state.questions[questionIdx].questionType,
+              answer: Answer(answer: newAnswer)));
+      updatedAnswerSheet.add(newAns);
+    }
+    debugPrint(jsonEncode(updatedAnswerSheet));
+    emit(state.copyWith(
+      status: WorkSheetSolverStatus.loaded,
+      answerSheet: updatedAnswerSheet,
+    ));
+  }
+
+  void saveAnswerSheet() async {
+    emit(state.copyWith(status: WorkSheetSolverStatus.loading));
+    Map<String, dynamic> formattedAnswers = {};
+    List<StudentAnswer> answerSheet = state.answerSheet;
+    answerSheet.forEach((studentAnswer) {
+      formattedAnswers.addAll(studentAnswer.toJson());
+    });
+    debugPrint(jsonEncode(formattedAnswers));
+    // var headers = {'Content-Type': 'application/json'};
+    // //Todo: set the correct API url
+    // var request = http.Request(
+    //     'POST',
+    //     Uri.parse(
+    //         'https://cnpewunqs5.execute-api.ap-south-1.amazonaws.com/dev/getworksheetdatav2'));
+    // request.body = json.encode({"worksheet_id": 687});
+    // request.headers.addAll(headers);
+
+    // http.StreamedResponse response = await request.send();
+
+    // if (response.statusCode == 200) {
+    //   var responseString = await response.stream.bytesToString();
+
+    //   List<Question> allQuestion = allWorsheetQuestins(responseString);
+    // debugPrint('allQuestions: ${json.encode(allQuestion)}');
+    emit(state.copyWith(status: WorkSheetSolverStatus.loaded));
+    // } else {
+    //   debugPrint(response.reasonPhrase);
+    // }
   }
 
   void getWorksheetsData() async {

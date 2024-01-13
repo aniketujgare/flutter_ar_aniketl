@@ -1,14 +1,13 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart' show debugPrint;
-import 'package:flutter_ar/data/models/student_worksheet_data.dart';
-import 'package:flutter_ar/data/models/worksheet_data.dart';
-import 'package:flutter_ar/data/models/worksheet_details.dart';
-import 'package:flutter_ar/data/models/worksheet_details_model.dart';
-import '../../../../data/models/published_worksheets.dart';
+import '../../models/published_worksheets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:http/http.dart' as http;
+
+import '../../models/worksheet_details.dart';
+import '../../models/worksheet_details_model.dart';
 
 part 'worksheet_state.dart';
 part 'worksheet_cubit.freezed.dart';
