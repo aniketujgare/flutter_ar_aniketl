@@ -62,6 +62,19 @@ class WorksheetSolverCubit extends Cubit<WorksheetSolverState> {
     ));
   }
 
+  void answerSubmit() async {
+    Map<String, dynamic> formattedAnswers = {
+      "worksheet_id": 846,
+      "student_id": 9,
+      "data": [],
+    };
+    List<StudentAnswer> answerSheet = state.answerSheet;
+    answerSheet.forEach((studentAnswer) {
+      formattedAnswers['data'].add(studentAnswer.question.toJson());
+    });
+    debugPrint('answerSubmit: $formattedAnswers');
+  }
+
   void saveAnswerSheet() async {
     emit(state.copyWith(status: WorkSheetSolverStatus.loading));
     Map<String, dynamic> formattedAnswers = {};
@@ -70,6 +83,9 @@ class WorksheetSolverCubit extends Cubit<WorksheetSolverState> {
       formattedAnswers.addAll(studentAnswer.toJson());
     });
     debugPrint(jsonEncode(formattedAnswers));
+    // "worksheet_id": 846,
+    // "student_id": 9,
+    // "data":
     // var headers = {'Content-Type': 'application/json'};
     // //Todo: set the correct API url
     // var request = http.Request(

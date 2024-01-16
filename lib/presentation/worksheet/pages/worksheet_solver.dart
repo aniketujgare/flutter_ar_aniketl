@@ -534,7 +534,7 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView> {
           const Spacer(),
           GestureDetector(
             onTap: () {
-              context.read<WorksheetSolverCubit>().saveAnswerSheet();
+              context.read<WorksheetSolverCubit>().answerSubmit();
             },
             child: Container(
               margin: EdgeInsets.only(left: 2.wp, right: 3.wp),
