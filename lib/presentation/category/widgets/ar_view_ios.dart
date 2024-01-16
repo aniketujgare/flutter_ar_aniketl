@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:arkit_plugin/arkit_plugin.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:size_config/size_config.dart';
 import 'package:vector_math/vector_math.dart';
 import 'package:vector_math/vector_math_64.dart' as vector;
@@ -66,7 +67,7 @@ class ARViewIOSState extends State<ARViewIOS> {
                   height: 65.h,
                   width: 65.h,
                   child: GestureDetector(
-                    onTap: () => Navigator.of(context).pop(),
+                    onTap: () => context.pop(),
                     child: Image.asset(
                       'assets/ui/Group.png',
                       fit: BoxFit.scaleDown,

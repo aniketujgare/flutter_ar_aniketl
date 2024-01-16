@@ -24,14 +24,13 @@ class ParentZoneScreen extends StatefulWidget {
 class _ParentZoneScreenState extends State<ParentZoneScreen> {
   @override
   void initState() {
+    // context.read<WorksheetAnsOfStudentCubit>().getStudentWorksheetData();
     super.initState();
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
-        overlays: [SystemUiOverlay.top, SystemUiOverlay.bottom]);
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light
-        .copyWith(systemNavigationBarColor: AppColors.accentColor));
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
     ]);
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light
+        .copyWith(systemNavigationBarColor: AppColors.parentZoneScaffoldColor));
   }
 
   @override
@@ -40,11 +39,7 @@ class _ParentZoneScreenState extends State<ParentZoneScreen> {
       DeviceOrientation.landscapeLeft,
       DeviceOrientation.landscapeRight,
     ]);
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light
-        .copyWith(systemNavigationBarColor: AppColors.parentZoneScaffoldColor));
-
     super.dispose();
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
   }
 
   @override

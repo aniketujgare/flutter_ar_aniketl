@@ -1,6 +1,10 @@
 const String categoryRoute = 'category';
-const String categoryModelsRoute = 'category_models';
+const String categoryModelsRoute = 'categorymodels';
 const String loginRoute = 'login';
 const String otpRoute = 'otp';
 const String splashRoute = 'splash';
 const String mainMenuRoute = 'mainMenu';
+const String modelViewRoute = 'modelview';
+const String arViewIOSRoute = 'iosarview';
+const String parentZoneRoute = 'parentzone';
+const String worksheetRoute = 'worksheet';

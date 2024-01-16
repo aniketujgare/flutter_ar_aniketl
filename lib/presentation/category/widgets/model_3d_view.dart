@@ -1,5 +1,7 @@
 import 'dart:io';
+import 'package:flutter_ar/core/route/route_name.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:path/path.dart' as p;
 import 'package:download_assets/download_assets.dart';
 import 'package:flutter/material.dart';
@@ -90,15 +92,10 @@ class _ModelViewState extends State<ModelView> {
                         child: GestureDetector(
                           //? IOS AR View
                           onTap: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(builder: (context) {
-                                return ARViewIOS(
-                                  modelUrl: widget.modelUrl,
-                                  imageFileName: widget.imageFileName,
-                                );
-                                // return ARViewIOS(modelUrl: widget.modelUrl);
-                              }),
-                            );
+                            context.pushNamed(arViewIOSRoute, extra: {
+                              "modelUrl": widget.modelUrl,
+                              "imageFileName": widget.imageFileName
+                            });
                           },
                           child: SizedBox(
                               height: 65.h,
@@ -121,7 +118,7 @@ class _ModelViewState extends State<ModelView> {
                         height: 65.h,
                         width: 65.h,
                         child: GestureDetector(
-                          onTap: () => Navigator.of(context).pop(),
+                          onTap: () => context.pop(),
                           child: Image.asset(
                             'assets/ui/Group.png',
                             fit: BoxFit.scaleDown,

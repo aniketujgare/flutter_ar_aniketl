@@ -1,6 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_ar/core/route/route_name.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:size_config/size_config.dart';
@@ -136,7 +138,7 @@ class CategoryModelsPageView extends StatelessWidget {
                       width: 75.h,
                       child: GestureDetector(
                         onTap: () {
-                          Navigator.of(context).pop();
+                          context.pop();
                         },
                         child: SizedBox(
                           height: 75.h,
@@ -248,13 +250,11 @@ class BuildModelContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       child: GestureDetector(
-        onTap: () => Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => ModelView(
-            modelUrl: model,
-            modelName: name,
-            imageFileName: imageFileName,
-          ),
-        )),
+        onTap: () => context.pushNamed(modelViewRoute, extra: {
+          "modelUrl": model,
+          "modelName": name,
+          "imageFileName": imageFileName
+        }),
         child: ConstrainedBox(
           constraints: BoxConstraints(
             maxHeight: (MediaQuery.of(context).size.height - 80.h) *

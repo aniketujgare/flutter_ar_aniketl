@@ -47,7 +47,7 @@
 //       //   leading: Padding(
 //       //     padding: EdgeInsets.fromLTRB(116.w, 40.h, 116.w, 40.h),
 //       //     child: GestureDetector(
-//       //       onTap: () => Navigator.of(context).pop(),
+//       //       onTap: () => context.pop(),
 //       //       child: Image.asset(
 //       //         'assets/ui/Group.png',
 //       //         // height: 45,
@@ -87,7 +87,7 @@
 //               height: 65.h,
 //               width: 65.h,
 //               child: GestureDetector(
-//                 onTap: () => Navigator.of(context).pop(),
+//                 onTap: () => context.pop(),
 //                 child: Image.asset(
 //                   'assets/ui/Group.png',
 //                   fit: BoxFit.scaleDown,

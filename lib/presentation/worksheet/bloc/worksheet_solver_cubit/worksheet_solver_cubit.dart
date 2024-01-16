@@ -1,5 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart' show debugPrint;
@@ -64,15 +65,16 @@ class WorksheetSolverCubit extends Cubit<WorksheetSolverState> {
 
   void answerSubmit() async {
     Map<String, dynamic> formattedAnswers = {
-      "worksheet_id": 846,
-      "student_id": 9,
+      "worksheet_id": 687,
+      "student_id": 11,
       "data": [],
     };
     List<StudentAnswer> answerSheet = state.answerSheet;
     answerSheet.forEach((studentAnswer) {
       formattedAnswers['data'].add(studentAnswer.question.toJson());
     });
-    debugPrint('answerSubmit: $formattedAnswers');
+    // debugPrint('answerSubmit: $formattedAnswers');
+    log(jsonEncode(formattedAnswers));
   }
 
   void saveAnswerSheet() async {

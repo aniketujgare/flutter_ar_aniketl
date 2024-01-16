@@ -276,14 +276,14 @@
 //     Widget cancelButton = ElevatedButton(
 //       child: Text(cancelButtonText),
 //       onPressed: () {
-//         Navigator.of(context).pop();
+//         context.pop();
 //       },
 //     );
 //     Widget actionButton = ElevatedButton(
 //       child: Text(buttonText),
 //       onPressed: () {
 //         buttonFunction();
-//         Navigator.of(context).pop();
+//         context.pop();
 //       },
 //     );
 

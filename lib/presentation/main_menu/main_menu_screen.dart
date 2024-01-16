@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_ar/core/route/route_name.dart';
 import 'package:flutter_ar/core/util/device_type.dart';
 import 'package:flutter_ar/core/util/styles.dart';
 import 'package:flutter_ar/presentation/category/pages/category_screen.dart';
@@ -20,16 +21,23 @@ class MainMenuScreen extends StatefulWidget {
 }
 
 class _MainMenuScreenState extends State<MainMenuScreen> {
-  @override
-  void initState() {
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.landscapeLeft,
-      DeviceOrientation.landscapeRight,
-    ]);
-    super.initState();
-  }
-
+  // @override
+  // void initState() {
+  //   SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+  //   SystemChrome.setPreferredOrientations([
+  //     DeviceOrientation.landscapeLeft,
+  //     DeviceOrientation.landscapeRight,
+  //   ]);
+  //   super.initState();
+  // }
+// @override
+//   void dispose() {
+//     SystemChrome.setPreferredOrientations([
+//       DeviceOrientation.landscapeLeft,
+//       DeviceOrientation.landscapeRight,
+//     ]);
+//     super.dispose();
+//   }
   @override
   Widget build(BuildContext context) {
     return OrientationBuilder(
@@ -145,10 +153,7 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
           children: [
             Expanded(
               child: GestureDetector(
-                onTap: () {
-                  // Navigator.of(context).push(MaterialPageRoute(
-                  //     builder: (context) => const SubjectScreen()));
-                },
+                onTap: () {},
                 child: Image.asset(
                   'assets/images/PNG Icons/LessonsMenu.png',
                 ),
@@ -156,8 +161,7 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
             ),
             Expanded(
                 child: GestureDetector(
-              onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => const CategoryScreen())),
+              onTap: () => context.pushNamed(categoryRoute),
               child: Image.asset(
                 'assets/images/PNG Icons/othermenu.png',
               ),
@@ -182,8 +186,11 @@ class buildBottom extends StatelessWidget {
           Row(
             children: [
               GestureDetector(
-                onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => const ParentZoneScreen())),
+                onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const ParentZoneScreen())),
+                // context.pushNamed(parentZoneRoute),
                 child: Image.asset(
                   'assets/images/PNG Icons/CustomButtonsParents.png', // User Icon
                   fit: BoxFit.contain,
