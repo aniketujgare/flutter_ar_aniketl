@@ -63,16 +63,39 @@ class WorksheetSolverCubit extends Cubit<WorksheetSolverState> {
   }
 
   void answerSubmit() async {
+    emit(state.copyWith(status: WorkSheetSolverStatus.loading));
     Map<String, dynamic> formattedAnswers = {
       "worksheet_id": 846,
       "student_id": 9,
       "data": [],
     };
     List<StudentAnswer> answerSheet = state.answerSheet;
-    answerSheet.forEach((studentAnswer) {
+    for (var studentAnswer in answerSheet) {
       formattedAnswers['data'].add(studentAnswer.question.toJson());
-    });
-    debugPrint('answerSubmit: $formattedAnswers');
+    }
+
+    var headers = {'Content-Type': 'application/json'};
+    var request = http.Request(
+        'POST',
+        Uri.parse(
+            'https://cnpewunqs5.execute-api.ap-south-1.amazonaws.com/dev/addworksheetsolveddatav2'));
+    request.body = json.encode(formattedAnswers);
+    request.headers.addAll(headers);
+    try {
+      http.StreamedResponse response = await request.send();
+
+      if (response.statusCode == 200) {
+        emit(state.copyWith(status: WorkSheetSolverStatus.loaded));
+        debugPrint('answerSubmit: $formattedAnswers');
+      } else {
+        debugPrint('Request failed with status: ${response.statusCode}');
+        throw Exception('Failed to Save worksheet');
+      }
+    } catch (e) {
+      debugPrint('Error during request: $e');
+      emit(state.copyWith(status: WorkSheetSolverStatus.error));
+      throw Exception('Failed to save worksheet');
+    }
   }
 
   void saveAnswerSheet() async {
@@ -82,7 +105,7 @@ class WorksheetSolverCubit extends Cubit<WorksheetSolverState> {
     answerSheet.forEach((studentAnswer) {
       formattedAnswers.addAll(studentAnswer.toJson());
     });
-    debugPrint(jsonEncode(formattedAnswers));
+    debugPrint(formattedAnswers.toString());
     // "worksheet_id": 846,
     // "student_id": 9,
     // "data":
