@@ -85,9 +85,10 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         // add(LoginEvent.phoneNumberAuth(mobileNumber: event.mobileNumber));
         debugPrint('checking ${event.mobileNumber}');
         add(LoginEvent.phoneNumberAuth(mobileNumber: event.mobileNumber));
-        AuthenticationRepository().getParentId(event.mobileNumber);
-        AuthenticationRepository().getallstandardsofschool();
-        AuthenticationRepository().getstudentprofilesnew();
+
+        authenticationRepository.getParentId(event.mobileNumber);
+        authenticationRepository.getallstandardsofschool();
+        authenticationRepository.getstudentprofilesnew();
       } else {
         add(const LoginEvent.error(
             errorMessage: 'Your mobile is not registered!'));

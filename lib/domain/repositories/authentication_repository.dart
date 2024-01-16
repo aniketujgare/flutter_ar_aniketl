@@ -16,9 +16,12 @@ import '../../presentation/login/bloc/login_bloc/login_bloc.dart';
 
 class AuthenticationRepository {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-  var client = http.Client();
+  final http.Client client;
+  // final Client client;
   final String baseUrl =
       'https://cnpewunqs5.execute-api.ap-south-1.amazonaws.com/dev';
+
+  AuthenticationRepository(this.client);
   Future<Map<String, ApiEndpointModel>> getAllApis() async {
     Uri uri = Uri.parse(APIString.baseApi);
     try {

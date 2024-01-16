@@ -10,6 +10,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:size_config/size_config.dart';
 
 import 'core/route/go_router_provider.dart';
+import 'core/services/injection_container.dart';
 import 'core/util/device_type.dart';
 import 'core/util/styles.dart';
 import 'domain/repositories/authentication_repository.dart';
@@ -24,8 +25,9 @@ import 'presentation/login/bloc/login_validation_bloc/login_validation_bloc.dart
 import 'presentation/parent_zone/bloc/teacher_list_bloc/teacher_list_bloc.dart';
 import 'presentation/splash_screen/bloc/splash_animation_bloc.dart';
 import 'presentation/worksheet/bloc/worksheet_solver_cubit/worksheet_solver_cubit.dart';
+import './core/services/injection_container.dart' as di;
 
-final authenticationRepository = AuthenticationRepository();
+// final authenticationRepository = AuthenticationRepository();
 // void main() async {
 //   print('ARCORE IS AVAILABLE?');
 //   // print(await ArCoreController.checkArCoreAvailability());
@@ -37,6 +39,7 @@ final authenticationRepository = AuthenticationRepository();
 // }
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await di.init();
   // await Firebase.initializeApp(
   //   options: DefaultFirebaseOptions.currentPlatform,
   // );
@@ -81,46 +84,46 @@ class MyAppState extends State<MyApp> {
         return MultiBlocProvider(
           providers: [
             BlocProvider(
-              create: (context) => CategoryNewCubit()..loadCategory(),
+              create: (context) => sl<CategoryNewCubit>()..loadCategory(),
             ),
             BlocProvider(
-              create: (context) => CategoryPageCubit(),
+              create: (context) => sl<CategoryPageCubit>(),
             ),
             BlocProvider(
-              create: (context) => ModelsPageControllerCubit(),
+              create: (context) => sl<ModelsPageControllerCubit>(),
             ),
             BlocProvider(
-              create: (context) => ModelsNewCubit(),
+              create: (context) => sl<ModelsNewCubit>(),
             ),
             BlocProvider(
-              create: (context) => LoginBloc(authenticationRepository),
+              create: (context) => LoginBloc(sl<AuthenticationRepository>()),
             ),
             BlocProvider(
-              create: (context) => LoginValidationBloc(),
+              create: (context) => sl<LoginValidationBloc>(),
             ),
             BlocProvider(
-              create: (context) => GuestValidationBloc(),
+              create: (context) => sl<GuestValidationBloc>(),
             ),
             BlocProvider(
-              create: (context) => SplashAnimationBloc(),
+              create: (context) => sl<SplashAnimationBloc>(),
             ),
             BlocProvider(
-              create: (context) => AppNavigatorCubit(),
+              create: (context) => sl<AppNavigatorCubit>(),
             ),
             BlocProvider(
-              create: (context) => TeacherListBloc(),
+              create: (context) => sl<TeacherListBloc>(),
             ),
             BlocProvider(
-              create: (context) => TeacherMessageCubit(),
+              create: (context) => sl<TeacherMessageCubit>(),
             ),
             BlocProvider(
-              create: (context) => ModelAssetHandlerBloc(),
+              create: (context) => sl<ModelAssetHandlerBloc>(),
             ),
             BlocProvider(
-              create: (context) => WorksheetCubit(),
+              create: (context) => sl<WorksheetCubit>(),
             ),
             BlocProvider(
-              create: (context) => WorksheetSolverCubit(),
+              create: (context) => sl<WorksheetSolverCubit>(),
             ),
           ],
           child: MaterialApp.router(

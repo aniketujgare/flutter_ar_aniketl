@@ -72,6 +72,7 @@ dependencies:
   arkit_plugin: ^1.0.7
   download_assets: ^3.1.1
   collection: ^1.18.0
+  get_it: ^7.6.6
   # pointer_interceptor: ^0.10.1
   # webview_flutter: ^4.2.2
   # ar_flutter_plugin: ^0.7.3
