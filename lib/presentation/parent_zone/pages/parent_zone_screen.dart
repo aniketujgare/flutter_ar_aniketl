@@ -25,8 +25,8 @@ class _ParentZoneScreenState extends State<ParentZoneScreen> {
   @override
   void initState() {
     super.initState();
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
-        overlays: [SystemUiOverlay.top, SystemUiOverlay.bottom]);
+    // SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+    //     overlays: [SystemUiOverlay.top, SystemUiOverlay.bottom]);
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light
         .copyWith(systemNavigationBarColor: AppColors.accentColor));
     SystemChrome.setPreferredOrientations([
@@ -43,8 +43,8 @@ class _ParentZoneScreenState extends State<ParentZoneScreen> {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light
         .copyWith(systemNavigationBarColor: AppColors.parentZoneScaffoldColor));
 
+    // SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
     super.dispose();
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
   }
 
   @override
@@ -86,21 +86,19 @@ class _ParentZoneScreenState extends State<ParentZoneScreen> {
       ),
       body: PopScope(
         canPop: false,
-        child: SafeArea(
-          child: Stack(
-            children: [
-              BlocBuilder<AppNavigatorCubit, AppNavigatorState>(
-                builder: (context, state) {
-                  return IndexedStack(
-                    index: state.index,
-                    children: screenList,
-                  );
-                },
-              ),
-              const Align(
-                  alignment: Alignment.bottomCenter, child: AppBottomNavBar()),
-            ],
-          ),
+        child: Stack(
+          children: [
+            BlocBuilder<AppNavigatorCubit, AppNavigatorState>(
+              builder: (context, state) {
+                return IndexedStack(
+                  index: state.index,
+                  children: screenList,
+                );
+              },
+            ),
+            const Align(
+                alignment: Alignment.bottomCenter, child: AppBottomNavBar()),
+          ],
         ),
       ),
     );

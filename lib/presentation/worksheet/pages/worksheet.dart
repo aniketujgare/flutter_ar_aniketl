@@ -21,16 +21,17 @@ class WorksheetView extends StatefulWidget {
 }
 
 class _WorksheetViewState extends State<WorksheetView> {
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   SystemChrome.setPreferredOrientations([
-  //     DeviceOrientation.portraitUp,
-  //   ]);
-  //   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light
-  //       .copyWith(systemNavigationBarColor: AppColors.parentZoneScaffoldColor));
-  //   context.read<TeacherMessageCubit>().loadMessages('${widget.teaherUserId}');
-  // }
+  @override
+  void initState() {
+    context.read<WorksheetCubit>().getWorksheets();
+    super.initState();
+    // SystemChrome.setPreferredOrientations([
+    //   DeviceOrientation.portraitUp,
+    // ]);
+    // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light
+    //     .copyWith(systemNavigationBarColor: AppColors.parentZoneScaffoldColor));
+    // context.read<TeacherMessageCubit>().loadMessages('${widget.teaherUserId}');
+  }
 
   // @override
   // void dispose() {
@@ -40,15 +41,9 @@ class _WorksheetViewState extends State<WorksheetView> {
   @override
   Widget build(BuildContext context) {
     //! Testing Worksheet API
-    var worksheetCubit = context.read<WorksheetCubit>();
-    // worksheetCubit.getPublishedWorksheet();
-    // worksheetCubit.getWorksheetDetails();
-    // worksheetCubit.getteachername();
-    // worksheetCubit.getsubjectname();
-    // worksheetCubit.getStudentWorksheet();
-    // worksheetCubit.getWorksheetsData();
-    // worksheetCubit.getStudentWorksheetData();
-    worksheetCubit.getWorksheets();
+    // var worksheetCubit = context.read<WorksheetCubit>();
+
+    // worksheetCubit.getWorksheets();
     return PopScope(
       canPop: false,
       child: Scaffold(
@@ -114,7 +109,10 @@ class _WorksheetViewState extends State<WorksheetView> {
                     var workSheet = state.worksheets[i];
                     return GestureDetector(
                       onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => const WorksheetSolverView())),
+                          builder: (context) => WorksheetSolverView(
+                                workSheetId: workSheet.id,
+                                studentId: 11,
+                              ))),
                       child: Lesson(
                         title: workSheet.worksheetName, //worksheet[i][0],
                         greenTxt: workSheet.subject, // worksheet[i][1],

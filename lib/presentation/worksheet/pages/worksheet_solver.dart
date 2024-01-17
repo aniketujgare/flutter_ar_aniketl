@@ -11,7 +11,10 @@ import '../models/questions.dart';
 import '../bloc/worksheet_solver_cubit/worksheet_solver_cubit.dart';
 
 class WorksheetSolverView extends StatefulWidget {
-  const WorksheetSolverView({super.key});
+  final int workSheetId;
+  final int studentId;
+  const WorksheetSolverView(
+      {super.key, required this.workSheetId, required this.studentId});
 
   @override
   State<WorksheetSolverView> createState() => _WorksheetSolverViewState();
@@ -20,7 +23,9 @@ class WorksheetSolverView extends StatefulWidget {
 class _WorksheetSolverViewState extends State<WorksheetSolverView> {
   @override
   void initState() {
-    context.read<WorksheetSolverCubit>().init();
+    context
+        .read<WorksheetSolverCubit>()
+        .init(widget.workSheetId, widget.studentId);
 
     // context.read<WorksheetAnsOfStudentCubit>().getStudentWorksheetData();
     super.initState();
@@ -318,13 +323,24 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView> {
                     padding: const EdgeInsets.all(8.0),
                     child: Row(
                       children: [
-                        Image.network(
-                          matchTheFollowingQuestion.options.entries
+                        if ((matchTheFollowingQuestion.options.entries
+                                .toList()[index]
+                                .key)
+                            .contains('http'))
+                          Image.network(
+                            matchTheFollowingQuestion.options.entries
+                                .toList()[index]
+                                .key,
+                            width: 50, // Adjust the width as needed
+                            height: 50, // Adjust the height as needed
+                          ),
+                        if (!(matchTheFollowingQuestion.options.entries
+                                .toList()[index]
+                                .key)
+                            .contains('http'))
+                          Text(matchTheFollowingQuestion.options.entries
                               .toList()[index]
-                              .key,
-                          width: 50, // Adjust the width as needed
-                          height: 50, // Adjust the height as needed
-                        ),
+                              .key),
                         const SizedBox(
                             width:
                                 186.0), // Add some spacing between image and text
@@ -407,6 +423,7 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView> {
             newAns = value;
           },
           onEditingComplete: () {
+            print('compelte');
             context.read<WorksheetSolverCubit>().setAnswer(i, newAns);
           },
         ),
@@ -532,18 +549,40 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView> {
                     .copyWith(fontSize: 136.sp * 0.7),
           ),
           const Spacer(),
-          GestureDetector(
-            onTap: () {
-              context.read<WorksheetSolverCubit>().answerSubmit();
-            },
-            child: Container(
-              margin: EdgeInsets.only(left: 2.wp, right: 3.wp),
-              height: 36.h,
-              width: 36.h,
-              child: Image.asset(
-                'assets/images/PNG Icons/history.png',
+          Row(
+            children: [
+              GestureDetector(
+                onTap: () {
+                  context.read<WorksheetSolverCubit>().answerSubmit();
+                },
+                child: Container(
+                  margin: EdgeInsets.only(left: 2.wp, right: 3.wp),
+                  height: 36.h,
+                  width: 36.h,
+                  child: Image.asset(
+                    'assets/images/PNG Icons/history.png',
+                  ),
+                ),
               ),
-            ),
+              GestureDetector(
+                onTap: () {
+                  // context.read<WorksheetSolverCubit>().answerSubmit();
+                  print(context
+                      .read<WorksheetSolverCubit>()
+                      .state
+                      .answerSheet
+                      .toString());
+                },
+                child: Container(
+                  margin: EdgeInsets.only(left: 2.wp, right: 3.wp),
+                  height: 36.h,
+                  width: 36.h,
+                  child: Image.asset(
+                    'assets/images/PNG Icons/history.png',
+                  ),
+                ),
+              ),
+            ],
           ),
         ],
       ),
