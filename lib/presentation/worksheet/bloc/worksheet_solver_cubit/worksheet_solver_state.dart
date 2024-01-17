@@ -8,6 +8,6 @@ class WorksheetSolverState with _$WorksheetSolverState {
     @Default(WorkSheetSolverStatus.initial) WorkSheetSolverStatus status,
     @Default([]) List<Question> questions,
     @Default([]) List<StudentAnswer> answerSheet,
-    // @Default(0) int currentQuestion,
+    @Default(0) int currentQuestion,
   }) = Initial;
 }

@@ -4,7 +4,6 @@ import 'package:flutter_ar/core/util/reusable_widgets/reusable_button.dart';
 import 'package:flutter_ar/data/models/teacher_message.dart';
 import 'package:flutter_ar/presentation/parent_zone/bloc/teacher_message_cubit/teacher_message_cubit.dart';
 import 'package:flutter_ar/presentation/worksheet/bloc/worksheet_cubit/worksheet_cubit.dart';
-import 'package:flutter_ar/presentation/worksheet/pages/worksheet_history.dart';
 import 'package:flutter_ar/presentation/worksheet/pages/worksheet_solver.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -14,37 +13,22 @@ import 'package:size_config/size_config.dart';
 import '../../../../core/util/device_type.dart';
 import '../../../../core/util/styles.dart';
 
-class WorksheetView extends StatefulWidget {
-  const WorksheetView({super.key});
+class WorksheetHistoryView extends StatefulWidget {
+  const WorksheetHistoryView({super.key});
 
   @override
-  State<WorksheetView> createState() => _WorksheetViewState();
+  State<WorksheetHistoryView> createState() => _WorksheetHistoryViewState();
 }
 
-class _WorksheetViewState extends State<WorksheetView> {
+class _WorksheetHistoryViewState extends State<WorksheetHistoryView> {
   @override
   void initState() {
-    context.read<WorksheetCubit>().getWorksheets();
     super.initState();
-    // SystemChrome.setPreferredOrientations([
-    //   DeviceOrientation.portraitUp,
-    // ]);
-    // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light
-    //     .copyWith(systemNavigationBarColor: AppColors.parentZoneScaffoldColor));
-    // context.read<TeacherMessageCubit>().loadMessages('${widget.teaherUserId}');
+    context.read<WorksheetCubit>().getWorksheetsHistory(11.toString());
   }
-
-  // @override
-  // void dispose() {
-  //   super.dispose();
-  // }
 
   @override
   Widget build(BuildContext context) {
-    //! Testing Worksheet API
-    // var worksheetCubit = context.read<WorksheetCubit>();
-
-    // worksheetCubit.getWorksheets();
     return PopScope(
       canPop: false,
       child: Scaffold(
@@ -71,24 +55,21 @@ class _WorksheetViewState extends State<WorksheetView> {
               // 5.horizontalSpacer,
               const Spacer(),
               Text(
-                'Worksheets',
+                'Worksheets History',
                 style: DeviceType().isMobile
                     ? AppTextStyles.uniformRounded136BoldAppBarStyle
                     : AppTextStyles.uniformRounded136BoldAppBarStyle
                         .copyWith(fontSize: 136.sp * 0.7),
               ),
               const Spacer(),
-              GestureDetector(
-                onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => const WorksheetHistoryView()));
-                },
-                child: Container(
-                  margin: EdgeInsets.only(left: 2.wp, right: 3.wp),
-                  height: 36.h,
-                  width: 36.h,
-                  child: Image.asset(
-                    'assets/images/PNG Icons/history.png',
+              Opacity(
+                opacity: 0,
+                child: GestureDetector(
+                  onTap: () {},
+                  child: Container(
+                    margin: EdgeInsets.only(left: 2.wp, right: 3.wp),
+                    height: 36.h,
+                    width: 36.h,
                   ),
                 ),
               ),
@@ -101,29 +82,23 @@ class _WorksheetViewState extends State<WorksheetView> {
               child: BlocBuilder<WorksheetCubit, WorksheetState>(
             builder: (context, state) {
               if (state.status == WorksheetStatus.loaded) {
+                print(
+                    'history worksheet length: ${state.historyWorksheets.length}');
                 return ListView.builder(
                   scrollDirection: Axis.horizontal,
-                  itemCount: state.worksheets.length,
+                  itemCount: state.historyWorksheets.length,
                   padding: EdgeInsets.only(
                       top: DeviceType().isMobile ? 4.wp : 18.wp,
                       left: 4.wp,
                       right: 4.wp,
                       bottom: DeviceType().isMobile ? 4.wp : 18.wp),
                   itemBuilder: (BuildContext context, int i) {
-                    var workSheet = state.worksheets[i];
-                    return GestureDetector(
-                      onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => WorksheetSolverView(
-                                workSheetId: workSheet.id,
-                                studentId: 11,
-                              ))),
-                      child: Lesson(
-                        title: workSheet.worksheetName, //worksheet[i][0],
-                        greenTxt: workSheet.subject, // worksheet[i][1],
-                        redTxt: worksheet[i % worksheet.length][2],
-                        blueTxt: workSheet.teacher, // worksheet[i][3],
-                      ),
-                    );
+                    var workSheet = state.historyWorksheets[i];
+                    return Container(
+                        padding: EdgeInsets.all(8),
+                        margin: EdgeInsets.all(8),
+                        color: AppColors.accentColor,
+                        child: Text(workSheet.worksheetName));
                   },
                 );
               } else {

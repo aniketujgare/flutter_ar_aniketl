@@ -7,5 +7,6 @@ class WorksheetState with _$WorksheetState {
   const factory WorksheetState.initial({
     @Default(WorksheetStatus.initial) WorksheetStatus status,
     @Default([]) List<WorksheetDetailsModel> worksheets,
+    @Default([]) List<WorksheetDetailsModel> historyWorksheets,
   }) = Initial;
 }

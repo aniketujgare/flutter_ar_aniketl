@@ -1,7 +1,11 @@
+import 'dart:convert';
+import 'dart:math';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_ar/temp_testing/draw_test.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:size_config/size_config.dart';
 
@@ -23,186 +27,189 @@ class WorksheetSolverView extends StatefulWidget {
 class _WorksheetSolverViewState extends State<WorksheetSolverView> {
   @override
   void initState() {
+    context.read<WorksheetSolverCubit>().setCurrentQuestionZero();
     context
         .read<WorksheetSolverCubit>()
         .init(widget.workSheetId, widget.studentId);
 
     // context.read<WorksheetAnsOfStudentCubit>().getStudentWorksheetData();
-    super.initState();
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-    ]);
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light
-        .copyWith(systemNavigationBarColor: AppColors.parentZoneScaffoldColor));
+    // super.initState();
+    // SystemChrome.setPreferredOrientations([
+    //   DeviceOrientation.portraitUp,
+    // ]);
+    // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light
+    //     .copyWith(systemNavigationBarColor: AppColors.parentZoneScaffoldColor));
   }
 
-  @override
-  void dispose() {
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.landscapeLeft,
-      DeviceOrientation.landscapeRight,
-    ]);
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   SystemChrome.setPreferredOrientations([
+  //     DeviceOrientation.landscapeLeft,
+  //     DeviceOrientation.landscapeRight,
+  //   ]);
+  //   super.dispose();
+  // }
 
   List<Map<String, dynamic>> answers = [];
+
+  Widget getQuestion(WorksheetSolverState state, int i) {
+    dynamic markedAnswer = state.answerSheet
+        .firstWhereOrNull(
+          (element) => element.questionNo == i,
+        )
+        ?.question
+        .answer
+        .answer;
+    switch (state.questions[i].questionType) {
+      case QuestionType.mcqText:
+        McqTextQuestion mcqTextQuestion = state.questions[i] as McqTextQuestion;
+        return _buildMcqTextQuestion(i, mcqTextQuestion, markedAnswer);
+      case QuestionType.mcqImage:
+        McqImageQuestion mcqImageQuestion =
+            state.questions[i] as McqImageQuestion;
+        return _buildMcqImageQuestion(i, mcqImageQuestion, markedAnswer);
+      case QuestionType.fillBlank:
+        FillBlankQuestion fillBlankQuestion =
+            state.questions[i] as FillBlankQuestion;
+        return _buildFillBlankQuestion(i, fillBlankQuestion, markedAnswer);
+
+      case QuestionType.multiplefillblank:
+        MultipleFillBlankQuestion multipleFillBlankQuestion =
+            state.questions[i] as MultipleFillBlankQuestion;
+        return _buildMultipleFillBlankQuestion(
+            i, multipleFillBlankQuestion, markedAnswer);
+      case QuestionType.trueFalse:
+        TrueFalseQuestion trueFalseQuestion =
+            state.questions[i] as TrueFalseQuestion;
+
+        bool? isTrueSelected = markedAnswer == 'True';
+        bool? isFalseSelected = markedAnswer == 'False';
+        return _buildTrueFalseQuestion(
+            i, trueFalseQuestion, isTrueSelected, isFalseSelected);
+
+      case QuestionType.matchTheFollowing:
+        MatchTheFollowingQuestion matchTheFollowingQuestion =
+            state.questions[i] as MatchTheFollowingQuestion;
+        var shuffledOptions = matchTheFollowingQuestion.options.entries.toList()
+          ..shuffle();
+        return _buildMatchTheFollowingQuestion(
+            i, matchTheFollowingQuestion, shuffledOptions);
+      case QuestionType.oneWord:
+        OneWordQuestion oneWordQuestion = state.questions[i] as OneWordQuestion;
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text('${i + 1}) ${oneWordQuestion.question}'),
+            TextFormField(
+              initialValue: (markedAnswer as String?) ?? '',
+            )
+          ],
+        );
+      case QuestionType.selectWord:
+        SelectWordQuestion selectWordQuestion =
+            state.questions[i] as SelectWordQuestion;
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('${i + 1}) ${selectWordQuestion.question}'),
+            TextFormField(
+              initialValue: (markedAnswer as String?) ?? '',
+            ),
+            const SizedBox(height: 10),
+          ],
+        );
+      case QuestionType.oddOneOutText:
+        OddOneOutTextQuestion oddOneOutTextQuestion =
+            state.questions[i] as OddOneOutTextQuestion;
+        return _buildOddOneOutTextQuestion(
+            i, oddOneOutTextQuestion, markedAnswer);
+      case QuestionType.oddOneOutimage:
+        OddOneOutImageQuestion oddOneOutImageQuestion =
+            state.questions[i] as OddOneOutImageQuestion;
+        return _buildOddOneOutImageQuestion(
+            i, oddOneOutImageQuestion, markedAnswer);
+      case QuestionType.ascDescOrder:
+        AscDescOrderQuestion ascDescOrderQuestion =
+            state.questions[i] as AscDescOrderQuestion;
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('${i + 1}) ${ascDescOrderQuestion.question}'),
+            Text(ascDescOrderQuestion.numbers.join(' ,')),
+            TextFormField(
+                initialValue: (markedAnswer as List<String>?) == null
+                    ? ''
+                    : (markedAnswer as List<String>).join(' ,')),
+          ],
+        );
+      case QuestionType.arithmetic:
+        return Text(state.questions[i].questionType.toString());
+      case QuestionType.longAnswer:
+        LongAnswerQuestion longAnswerQuestion =
+            state.questions[i] as LongAnswerQuestion;
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('${i + 1}) ${longAnswerQuestion.question}'),
+            Text(longAnswerQuestion.questionKeywords.join(', ')),
+            TextFormField(initialValue: (markedAnswer as String?) ?? ''),
+          ],
+        );
+      default:
+        return const Center(
+            child: CircularProgressIndicator.adaptive(
+          strokeCap: StrokeCap.round,
+        ));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
-      child: Scaffold(
-        backgroundColor: AppColors.parentZoneScaffoldColor,
-        appBar: _appBar(context),
-        body: Padding(
-            padding: EdgeInsets.fromLTRB(5.wp, 0, 5.wp, 0),
-            child: SizedBox.expand(
-                child: BlocBuilder<WorksheetSolverCubit, WorksheetSolverState>(
-              builder: (context, state) {
-                if (state.status == WorkSheetSolverStatus.loaded) {
-                  return ListView.separated(
-                    scrollDirection: Axis.vertical,
-                    itemCount: state.questions.length,
-                    padding: EdgeInsets.only(
-                        top: DeviceType().isMobile ? 4.wp : 18.wp,
-                        left: 4.wp,
-                        right: 4.wp,
-                        bottom: DeviceType().isMobile ? 4.wp : 18.wp),
-                    itemBuilder: (BuildContext context, int i) {
-                      dynamic markedAnswer = state.answerSheet
-                          .firstWhereOrNull(
-                            (element) => element.questionNo == i,
-                          )
-                          ?.question
-                          .answer
-                          .answer;
-                      switch (state.questions[i].questionType) {
-                        case QuestionType.mcqText:
-                          McqTextQuestion mcqTextQuestion =
-                              state.questions[i] as McqTextQuestion;
-                          return _buildMcqTextQuestion(
-                              i, mcqTextQuestion, markedAnswer);
-                        case QuestionType.mcqImage:
-                          McqImageQuestion mcqImageQuestion =
-                              state.questions[i] as McqImageQuestion;
-                          return _buildMcqImageQuestion(
-                              i, mcqImageQuestion, markedAnswer);
-                        case QuestionType.fillBlank:
-                          FillBlankQuestion fillBlankQuestion =
-                              state.questions[i] as FillBlankQuestion;
-                          return _buildFillBlankQuestion(
-                              i, fillBlankQuestion, markedAnswer);
-
-                        case QuestionType.multiplefillblank:
-                          MultipleFillBlankQuestion multipleFillBlankQuestion =
-                              state.questions[i] as MultipleFillBlankQuestion;
-                          return _buildMultipleFillBlankQuestion(
-                              i, multipleFillBlankQuestion, markedAnswer);
-                        case QuestionType.trueFalse:
-                          TrueFalseQuestion trueFalseQuestion =
-                              state.questions[i] as TrueFalseQuestion;
-
-                          bool? isTrueSelected = markedAnswer == 'True';
-                          bool? isFalseSelected = markedAnswer == 'False';
-                          return _buildTrueFalseQuestion(i, trueFalseQuestion,
-                              isTrueSelected, isFalseSelected);
-
-                        case QuestionType.matchTheFollowing:
-                          MatchTheFollowingQuestion matchTheFollowingQuestion =
-                              state.questions[i] as MatchTheFollowingQuestion;
-                          var shuffledOptions =
-                              matchTheFollowingQuestion.options.entries.toList()
-                                ..shuffle();
-                          return _buildMatchTheFollowingQuestion(
-                              i, matchTheFollowingQuestion, shuffledOptions);
-                        case QuestionType.oneWord:
-                          OneWordQuestion oneWordQuestion =
-                              state.questions[i] as OneWordQuestion;
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text('${i + 1}) ${oneWordQuestion.question}'),
-                              TextFormField(
-                                initialValue: (markedAnswer as String?) ?? '',
-                              )
-                            ],
-                          );
-                        case QuestionType.selectWord:
-                          SelectWordQuestion selectWordQuestion =
-                              state.questions[i] as SelectWordQuestion;
-                          return Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text('${i + 1}) ${selectWordQuestion.question}'),
-                              TextFormField(
-                                initialValue: (markedAnswer as String?) ?? '',
-                              ),
-                              const SizedBox(height: 10),
-                            ],
-                          );
-                        case QuestionType.oddOneOutText:
-                          OddOneOutTextQuestion oddOneOutTextQuestion =
-                              state.questions[i] as OddOneOutTextQuestion;
-                          return _buildOddOneOutTextQuestion(
-                              i, oddOneOutTextQuestion, markedAnswer);
-                        case QuestionType.oddOneOutimage:
-                          OddOneOutImageQuestion oddOneOutImageQuestion =
-                              state.questions[i] as OddOneOutImageQuestion;
-                          return _buildOddOneOutImageQuestion(
-                              i, oddOneOutImageQuestion, markedAnswer);
-                        case QuestionType.ascDescOrder:
-                          AscDescOrderQuestion ascDescOrderQuestion =
-                              state.questions[i] as AscDescOrderQuestion;
-                          return Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                  '${i + 1}) ${ascDescOrderQuestion.question}'),
-                              Text(ascDescOrderQuestion.numbers.join(' ,')),
-                              TextFormField(
-                                  initialValue:
-                                      (markedAnswer as List<String>?) == null
-                                          ? ''
-                                          : (markedAnswer as List<String>)
-                                              .join(' ,')),
-                            ],
-                          );
-                        case QuestionType.arithmetic:
-                          return Text(
-                              state.questions[i].questionType.toString());
-                        case QuestionType.longAnswer:
-                          LongAnswerQuestion longAnswerQuestion =
-                              state.questions[i] as LongAnswerQuestion;
-                          return Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text('${i + 1}) ${longAnswerQuestion.question}'),
-                              Text(longAnswerQuestion.questionKeywords
-                                  .join(', ')),
-                              TextFormField(
-                                  initialValue:
-                                      (markedAnswer as String?) ?? ''),
-                            ],
-                          );
-                        default:
-                          return Text(
-                              state.questions[i].questionType.toString());
-                      }
-                    },
-                    separatorBuilder: (BuildContext context, int i) {
-                      return const SizedBox(height: 2);
-                    },
-                  );
-                } else {
-                  return const Center(
-                      child: CircularProgressIndicator.adaptive(
-                          strokeCap: StrokeCap.round));
-                }
-              },
-            ))),
+      child: SafeArea(
+        child: Scaffold(
+          backgroundColor: AppColors.parentZoneScaffoldColor,
+          appBar: _appBar(context),
+          body: Padding(
+              padding: EdgeInsets.fromLTRB(5.wp, 0, 5.wp, 0),
+              child: SizedBox.expand(child:
+                  BlocBuilder<WorksheetSolverCubit, WorksheetSolverState>(
+                builder: (context, state) {
+                  if (state.status == WorkSheetSolverStatus.loaded) {
+                    // print(jsonEncode(state.questions));
+                    print(state.currentQuestion);
+                    return Stack(
+                      children: [
+                        getQuestion(state, state.currentQuestion),
+                        Transform.translate(
+                          offset: const Offset(-20, -20),
+                          child: Align(
+                            alignment: Alignment.bottomRight,
+                            child: IconButton(
+                                onPressed: () => context
+                                    .read<WorksheetSolverCubit>()
+                                    .loadNextQuestion(),
+                                icon: const Icon(
+                                  Icons.arrow_circle_right_rounded,
+                                  size: 75,
+                                )),
+                          ),
+                        ),
+                      ],
+                    );
+                  } else {
+                    return const Center(
+                        child: CircularProgressIndicator.adaptive(
+                            strokeCap: StrokeCap.round));
+                  }
+                },
+              ))),
+        ),
       ),
     );
   }
@@ -304,56 +311,13 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView> {
     );
   }
 
-  Column _buildMatchTheFollowingQuestion(
+  Widget _buildMatchTheFollowingQuestion(
       int i,
       MatchTheFollowingQuestion matchTheFollowingQuestion,
       List<MapEntry<String, String>> shuffledOptions) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text('${i + 1}) ${matchTheFollowingQuestion.question}'),
-        Column(
-          mainAxisSize: MainAxisSize.min,
-          children: List.generate(
-            shuffledOptions.length,
-            (index) {
-              return Row(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      children: [
-                        if ((matchTheFollowingQuestion.options.entries
-                                .toList()[index]
-                                .key)
-                            .contains('http'))
-                          Image.network(
-                            matchTheFollowingQuestion.options.entries
-                                .toList()[index]
-                                .key,
-                            width: 50, // Adjust the width as needed
-                            height: 50, // Adjust the height as needed
-                          ),
-                        if (!(matchTheFollowingQuestion.options.entries
-                                .toList()[index]
-                                .key)
-                            .contains('http'))
-                          Text(matchTheFollowingQuestion.options.entries
-                              .toList()[index]
-                              .key),
-                        const SizedBox(
-                            width:
-                                186.0), // Add some spacing between image and text
-                        Text(shuffledOptions[index].value),
-                      ],
-                    ),
-                  )
-                ],
-              );
-            },
-          ),
-        ),
-      ],
+    return MatchTheFollowingTest(
+      matchTheFollowingQuestion: matchTheFollowingQuestion,
+      shuffledOptions: shuffledOptions,
     );
   }
 
@@ -559,8 +523,9 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView> {
                   margin: EdgeInsets.only(left: 2.wp, right: 3.wp),
                   height: 36.h,
                   width: 36.h,
-                  child: Image.asset(
-                    'assets/images/PNG Icons/history.png',
+                  child: Icon(
+                    Icons.swap_vert_circle,
+                    size: 36,
                   ),
                 ),
               ),
@@ -577,8 +542,9 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView> {
                   margin: EdgeInsets.only(left: 2.wp, right: 3.wp),
                   height: 36.h,
                   width: 36.h,
-                  child: Image.asset(
-                    'assets/images/PNG Icons/history.png',
+                  child: Icon(
+                    Icons.bookmark_outline_sharp,
+                    size: 36,
                   ),
                 ),
               ),

@@ -8,6 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:http/http.dart' as http;
 
+import '../../models/published_worksheets.dart';
 import '../../models/questions.dart';
 import '../../models/worksheet_ans_of_student.dart';
 
@@ -15,8 +16,12 @@ part 'worksheet_solver_cubit.freezed.dart';
 part 'worksheet_solver_state.dart';
 
 class WorksheetSolverCubit extends Cubit<WorksheetSolverState> {
+  int _workSheetId = 0;
+  int _studentId = 0;
   WorksheetSolverCubit() : super(const WorksheetSolverState.initial());
   void init(int workSheetId, int studentId) async {
+    _workSheetId = workSheetId;
+    _studentId = studentId;
     emit(state.copyWith(status: WorkSheetSolverStatus.loading));
     //Load questions list
     List<Question> questionsList = await getQuestionsList(workSheetId);
@@ -75,8 +80,8 @@ class WorksheetSolverCubit extends Cubit<WorksheetSolverState> {
     List<StudentAnswer> answerSheet = state.answerSheet;
 
     Map<String, dynamic> formattedAnswers = {
-      "worksheet_id": 8888,
-      "student_id": 95,
+      "worksheet_id": _workSheetId,
+      "student_id": _studentId,
       "data": [],
     };
     for (var studentAnswer in answerSheet) {
@@ -282,5 +287,18 @@ class WorksheetSolverCubit extends Cubit<WorksheetSolverState> {
       debugPrint('Error during request: $e');
       throw Exception('Failed to student answers');
     }
+  }
+
+  void loadNextQuestion() {
+    if (state.currentQuestion + 1 < state.questions.length) {
+      emit(state.copyWith(status: WorkSheetSolverStatus.loading));
+      emit(state.copyWith(
+          status: WorkSheetSolverStatus.loaded,
+          currentQuestion: state.currentQuestion + 1));
+    }
+  }
+
+  void setCurrentQuestionZero() {
+    emit(state.copyWith(currentQuestion: 0));
   }
 }

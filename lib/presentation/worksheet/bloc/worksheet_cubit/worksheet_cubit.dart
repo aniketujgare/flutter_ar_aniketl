@@ -50,23 +50,58 @@ class WorksheetCubit extends Cubit<WorksheetState> {
         status: WorksheetStatus.loaded, worksheets: allWorksheetDetails));
   }
 
-  void getStudentWorksheet() async {
+  Future<String> getStudentWorksheet(
+      String worksheetId, String studentId) async {
     var headers = {'Content-Type': 'application/json'};
     var request = http.Request(
         'POST',
         Uri.parse(
             'https://cnpewunqs5.execute-api.ap-south-1.amazonaws.com/dev/getstudentworksheets'));
-    request.body = json.encode({"worksheet_id": "787", "student_id": "1"});
+    request.body =
+        json.encode({"worksheet_id": worksheetId, "student_id": studentId});
     request.headers.addAll(headers);
 
-    http.StreamedResponse response = await request.send();
+    try {
+      http.StreamedResponse response = await request.send();
 
-    if (response.statusCode == 200) {
-      var responseString = await response.stream.bytesToString();
-      // debugPrint('StudentWorksheet: ${json.decode(responseString)}');
-    } else {
-      debugPrint(response.reasonPhrase);
+      if (response.statusCode == 200) {
+        var responseString = await response.stream.bytesToString();
+        return responseString;
+      } else {
+        debugPrint('Request failed with status: ${response.statusCode}');
+        throw Exception('Failed to load worksheet history');
+      }
+    } catch (e) {
+      debugPrint('Error during request: $e');
+      throw Exception('Failed to load worksheet history');
     }
+  }
+
+  void getWorksheetsHistory(String studentId) async {
+    emit(state.copyWith(status: WorksheetStatus.loading));
+    List<WorksheetDetailsModel> worksheetList =
+        List.from(state.worksheets); // Convert to modifiable list
+    List<WorksheetDetailsModel> worksheetsToRemove = [];
+
+    for (var worksheet in worksheetList) {
+      String response =
+          await getStudentWorksheet(worksheet.id.toString(), studentId);
+
+      if (response == '0') {
+        worksheetsToRemove.add(worksheet);
+      }
+    }
+
+    // Remove worksheets after the loop
+    print('here 1');
+    worksheetList
+        .removeWhere((worksheet) => worksheetsToRemove.contains(worksheet));
+
+    print('hereß 1');
+    emit(state.copyWith(
+      status: WorksheetStatus.loaded,
+      historyWorksheets: worksheetList,
+    ));
   }
 
 //? All APIs Available for Worksheets
