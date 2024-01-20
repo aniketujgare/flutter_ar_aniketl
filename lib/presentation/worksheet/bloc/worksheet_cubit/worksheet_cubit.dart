@@ -88,16 +88,18 @@ class WorksheetCubit extends Cubit<WorksheetState> {
           await getStudentWorksheet(worksheet.id.toString(), studentId);
 
       if (response == '0') {
+        print('here 1');
         worksheetsToRemove.add(worksheet);
+      } else {
+        print('here2');
       }
     }
 
     // Remove worksheets after the loop
-    print('here 1');
+
     worksheetList
         .removeWhere((worksheet) => worksheetsToRemove.contains(worksheet));
 
-    print('hereß 1');
     emit(state.copyWith(
       status: WorksheetStatus.loaded,
       historyWorksheets: worksheetList,

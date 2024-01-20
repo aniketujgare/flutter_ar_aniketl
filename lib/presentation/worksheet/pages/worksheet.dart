@@ -38,6 +38,14 @@ class _WorksheetViewState extends State<WorksheetView> {
   // void dispose() {
   //   super.dispose();
   // }
+  Future<void> isLogedIn() async {
+    var kidsAppBox = await Hive.openBox("kidsApp");
+    var studentProfiles = kidsAppBox.get('studentProfiles');
+    var firstProfile =
+        studentProfiles[0][0]; // Accessing the first map in the first list
+    int studentId = firstProfile['student_id'];
+    print('studentId: $studentId');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -79,7 +87,8 @@ class _WorksheetViewState extends State<WorksheetView> {
               ),
               const Spacer(),
               GestureDetector(
-                onTap: () {
+                onTap: () async {
+                  // await isLogedIn();
                   Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => const WorksheetHistoryView()));
                 },

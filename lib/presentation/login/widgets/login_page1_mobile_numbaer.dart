@@ -93,9 +93,9 @@ class _LoginPage1MobileNumberState extends State<LoginPage1MobileNumber> {
                   .add(const PhoneNumberSubmitted());
               final isValid = context.read<LoginValidationBloc>().state.isValid;
               if (isValid) {
-                // AuthenticationRepository().getParentId(mobNo);
-                // AuthenticationRepository().getallstandardsofschool();
-                // AuthenticationRepository().getstudentprofilesnew();
+                await AuthenticationRepository().getParentId(mobNo);
+                await AuthenticationRepository().getallstandardsofschool();
+                await AuthenticationRepository().getstudentprofilesnew();
 
                 context
                     .read<LoginBloc>()
@@ -126,8 +126,8 @@ class _LoginPage1MobileNumberState extends State<LoginPage1MobileNumber> {
               var isLoggedIn = kidsAppBox.get('isLoggedIn');
               print('isLoggedIn, $isLoggedIn');
 
-              // context.read<LoginBloc>().add(
-              //     const LoginEvent.updateStatus(status: LoginStatus.guest));
+              context.read<LoginBloc>().add(
+                  const LoginEvent.updateStatus(status: LoginStatus.guest));
             },
           ),
         ],

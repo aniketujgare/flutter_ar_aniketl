@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_ar/presentation/parent_zone/bloc/navbar_cubit/app_navigator_cubit.dart';
@@ -12,6 +13,7 @@ import 'package:size_config/size_config.dart';
 import 'core/route/go_router_provider.dart';
 import 'core/util/device_type.dart';
 import 'core/util/styles.dart';
+import 'demo/firebase_options.dart';
 import 'domain/repositories/authentication_repository.dart';
 import 'presentation/category/bloc/category_new_cubit/category_new_cubit.dart';
 import 'presentation/category/bloc/category_page_cubit/category_page_cubit.dart';
@@ -37,12 +39,12 @@ final authenticationRepository = AuthenticationRepository();
 // }
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // await Firebase.initializeApp(
-  //   options: DefaultFirebaseOptions.currentPlatform,
-  // );
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   await Hive.initFlutter();
   await Hive.openBox('kidsApp');
-
   if (Platform.isAndroid) {
     // Include Android-specific AR code
     print('Platform.isAndroid');

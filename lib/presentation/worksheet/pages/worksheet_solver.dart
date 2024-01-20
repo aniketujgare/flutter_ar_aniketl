@@ -1,10 +1,8 @@
 import 'dart:convert';
-import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_ar/temp_testing/draw_test.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:size_config/size_config.dart';
@@ -13,6 +11,7 @@ import '../../../../core/util/device_type.dart';
 import '../../../../core/util/styles.dart';
 import '../models/questions.dart';
 import '../bloc/worksheet_solver_cubit/worksheet_solver_cubit.dart';
+import '../models/worksheet_ans_of_student.dart';
 
 class WorksheetSolverView extends StatefulWidget {
   final int workSheetId;
@@ -27,11 +26,12 @@ class WorksheetSolverView extends StatefulWidget {
 class _WorksheetSolverViewState extends State<WorksheetSolverView> {
   @override
   void initState() {
+    super.initState();
     context.read<WorksheetSolverCubit>().setCurrentQuestionZero();
     context
         .read<WorksheetSolverCubit>()
         .init(widget.workSheetId, widget.studentId);
-
+    print('workshetid: ${widget.workSheetId}, studentid: ${widget.studentId}');
     // context.read<WorksheetAnsOfStudentCubit>().getStudentWorksheetData();
     // super.initState();
     // SystemChrome.setPreferredOrientations([
@@ -60,6 +60,9 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView> {
         ?.question
         .answer
         .answer;
+    if (markedAnswer != null) {
+      print('markedAnswer: $i$markedAnswer');
+    }
     switch (state.questions[i].questionType) {
       case QuestionType.mcqText:
         McqTextQuestion mcqTextQuestion = state.questions[i] as McqTextQuestion;
@@ -93,7 +96,7 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView> {
         var shuffledOptions = matchTheFollowingQuestion.options.entries.toList()
           ..shuffle();
         return _buildMatchTheFollowingQuestion(
-            i, matchTheFollowingQuestion, shuffledOptions);
+            i, matchTheFollowingQuestion, shuffledOptions, markedAnswer);
       case QuestionType.oneWord:
         OneWordQuestion oneWordQuestion = state.questions[i] as OneWordQuestion;
         return Column(
@@ -196,6 +199,20 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView> {
                                     .loadNextQuestion(),
                                 icon: const Icon(
                                   Icons.arrow_circle_right_rounded,
+                                  size: 75,
+                                )),
+                          ),
+                        ),
+                        Transform.translate(
+                          offset: const Offset(20, -20),
+                          child: Align(
+                            alignment: Alignment.bottomLeft,
+                            child: IconButton(
+                                onPressed: () => context
+                                    .read<WorksheetSolverCubit>()
+                                    .loadPreviousQuestion(),
+                                icon: const Icon(
+                                  Icons.arrow_circle_left_rounded,
                                   size: 75,
                                 )),
                           ),
@@ -314,15 +331,18 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView> {
   Widget _buildMatchTheFollowingQuestion(
       int i,
       MatchTheFollowingQuestion matchTheFollowingQuestion,
-      List<MapEntry<String, String>> shuffledOptions) {
+      List<MapEntry<String, String>> shuffledOptions,
+      dynamic markedAnswer) {
     return MatchTheFollowingTest(
       matchTheFollowingQuestion: matchTheFollowingQuestion,
       shuffledOptions: shuffledOptions,
+      markedAnswer: markedAnswer,
     );
   }
 
   Column _buildTrueFalseQuestion(int i, TrueFalseQuestion trueFalseQuestion,
       bool? isTrueSelected, bool? isFalseSelected) {
+    String newAns = '';
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -351,38 +371,9 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView> {
             ),
             const Text('False'),
           ],
-        )
-      ],
-    );
-  }
-
-  Column _buildMultipleFillBlankQuestion(
-      int i,
-      MultipleFillBlankQuestion multipleFillBlankQuestion,
-      dynamic markedAnswer) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text('${i + 1}) ${multipleFillBlankQuestion.question}'),
+        ),
         TextFormField(
-            initialValue: markedAnswer == null
-                ? ''
-                : (markedAnswer as List<String>).join(' ,')),
-      ],
-    );
-  }
-
-  Column _buildFillBlankQuestion(
-      int i, FillBlankQuestion fillBlankQuestion, dynamic markedAnswer) {
-    String newAns = (markedAnswer as String?) ?? '';
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Text('${i + 1}) ${fillBlankQuestion.question}'),
-        TextFormField(
-          initialValue: (markedAnswer as String?) ?? '',
+          initialValue: newAns,
           onChanged: (value) {
             newAns = value;
           },
@@ -395,8 +386,93 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView> {
     );
   }
 
+  Column _buildMultipleFillBlankQuestion(
+      int i,
+      MultipleFillBlankQuestion multipleFillBlankQuestion,
+      dynamic markedAnswer) {
+    String ansVal1 = '';
+    String ansVal2 = '';
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('${i + 1}) ${multipleFillBlankQuestion.question}'),
+        // TextFormField(
+        //     initialValue: markedAnswer == null
+        //         ? ''
+        //         : (markedAnswer as List<String>).join(' ,')),
+        TextFormField(
+          // initialValue: newAns,
+          onChanged: (value) {
+            ansVal1 = value;
+          },
+          onEditingComplete: () {},
+        ),
+        TextFormField(
+            initialValue: markedAnswer == null
+                ? ''
+                : (markedAnswer as List<String>).join(' ,')),
+        TextFormField(
+          // initialValue: newAns,
+          onChanged: (value) {
+            ansVal2 = value;
+          },
+          onEditingComplete: () {
+            print('compelte');
+            var ansf = [ansVal1, ansVal2];
+            context.read<WorksheetSolverCubit>().setAnswer(i, ansf);
+          },
+        ),
+      ],
+    );
+  }
+
+  Column _buildFillBlankQuestion(
+      int i, FillBlankQuestion fillBlankQuestion, dynamic markedAnswer) {
+    List<String> markedAnswers = [];
+    print('markedAnswer type: ${markedAnswer.runtimeType}');
+    if (markedAnswer is List<dynamic>) {
+      markedAnswers.addAll(markedAnswer.map((element) => element.toString()));
+      print('listString');
+    } else if (markedAnswer is String) {
+      markedAnswers.add(markedAnswer);
+      print('String');
+    }
+
+    print('markedAnswers: $i $markedAnswers');
+    int noOfTextFileds = 1;
+    if (fillBlankQuestion.answer is List<dynamic>) {
+      noOfTextFileds = (fillBlankQuestion.answer as List<dynamic>).length;
+    }
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text('${i + 1}) ${fillBlankQuestion.question}'),
+        ...List.generate(
+          noOfTextFileds,
+          (j) => TextFormField(
+            initialValue: markedAnswers.length > j ? markedAnswers[j] : '',
+            onChanged: (value) {
+              if (markedAnswers.length > j) {
+                markedAnswers[j] = value;
+              } else {
+                markedAnswers.add(value);
+              }
+            },
+            onEditingComplete: () {
+              print('complete');
+              context.read<WorksheetSolverCubit>().setAnswer(i, markedAnswers);
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
   Column _buildMcqImageQuestion(
       int i, McqImageQuestion mcqImageQuestion, dynamic markedAnswer) {
+    String newVal = '';
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -443,12 +519,23 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView> {
             );
           },
         ),
+        TextFormField(
+          initialValue: markedAnswer,
+          onChanged: (value) {
+            newVal = value;
+          },
+          onEditingComplete: () {
+            print('compelte');
+            context.read<WorksheetSolverCubit>().setAnswer(i, newVal);
+          },
+        ),
       ],
     );
   }
 
   Column _buildMcqTextQuestion(
       int i, McqTextQuestion mcqTextQuestion, dynamic markedAnswer) {
+    String newval = '';
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -479,6 +566,16 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView> {
                     ),
               ],
             );
+          },
+        ),
+        TextFormField(
+          initialValue: markedAnswer,
+          onChanged: (value) {
+            newval = value;
+          },
+          onEditingComplete: () {
+            print('compelte');
+            context.read<WorksheetSolverCubit>().setAnswer(i, newval);
           },
         ),
       ],
@@ -531,12 +628,13 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView> {
               ),
               GestureDetector(
                 onTap: () {
-                  // context.read<WorksheetSolverCubit>().answerSubmit();
-                  print(context
-                      .read<WorksheetSolverCubit>()
-                      .state
-                      .answerSheet
-                      .toString());
+                  List<StudentAnswer> finalAnsSheet = List.from(
+                      context.read<WorksheetSolverCubit>().state.answerSheet);
+                  //sort the finalAnsSheet
+
+                  finalAnsSheet
+                      .sort((a, b) => a.questionNo.compareTo(b.questionNo));
+                  print(jsonEncode(finalAnsSheet));
                 },
                 child: Container(
                   margin: EdgeInsets.only(left: 2.wp, right: 3.wp),

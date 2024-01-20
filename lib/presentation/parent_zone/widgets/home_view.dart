@@ -11,27 +11,35 @@ class HomeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.fromLTRB(4.wp, 20.h, 4.wp, 0),
-      child: Column(
-        children: [
-          studentProfile(),
-          22.verticalSpacer,
-          const ParentProfileCard(
-            profileTitle: 'Fater',
-            name: 'Shardul Gangal',
-            mobile: '0123456789',
-            email: 'shardulgangal@yahoo.com',
-          ),
-          22.verticalSpacer,
-          const ParentProfileCard(
-            profileTitle: 'Mother',
-            name: 'Sneha Gangal',
-            mobile: '0123456789',
-            email: 'snehagangal@yahoo.com',
-          ),
-        ],
-      ),
+    return OrientationBuilder(
+      builder: (BuildContext context, Orientation orientation) {
+        if (orientation == Orientation.landscape)
+          return Container();
+        else {
+          return Padding(
+            padding: EdgeInsets.fromLTRB(4.wp, 20.h, 4.wp, 0),
+            child: Column(
+              children: [
+                studentProfile(),
+                22.verticalSpacer,
+                const ParentProfileCard(
+                  profileTitle: 'Fater',
+                  name: 'Shardul Gangal',
+                  mobile: '0123456789',
+                  email: 'shardulgangal@yahoo.com',
+                ),
+                22.verticalSpacer,
+                const ParentProfileCard(
+                  profileTitle: 'Mother',
+                  name: 'Sneha Gangal',
+                  mobile: '0123456789',
+                  email: 'snehagangal@yahoo.com',
+                ),
+              ],
+            ),
+          );
+        }
+      },
     );
   }
 

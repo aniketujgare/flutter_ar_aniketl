@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter_ar/presentation/worksheet/models/questions.dart';
 
 class Answer {
@@ -5,22 +7,53 @@ class Answer {
 
   Answer({required this.answer});
 
-  factory Answer.fromJson(Map<String, dynamic> json) {
-    return Answer(answer: json['answer']);
+  factory Answer.fromJson(dynamic json) {
+    if (json['answer'] is List) {
+      print("josnList" + json['answer'].toString());
+
+      return Answer(answer: json['answer']);
+    } else {
+      print("josnsingleans" + json['answer'].toString());
+      return Answer(answer: json['answer']);
+    }
   }
 
   Map<String, dynamic> toJson() {
+    print('inside toJson answer');
+    if (answer is List<String>) {
+      if (answer.length == 1) {
+        return {'answer': answer[0]};
+      }
+    }
+    print('josnsingleans ${answer.runtimeType.toString()}');
     return {'answer': answer};
   }
 }
 
 class AnswerQuestion {
   final QuestionType questionType;
-  Answer answer;
+  final Answer answer;
 
-  AnswerQuestion({required this.questionType, required this.answer});
+  AnswerQuestion({
+    required this.questionType,
+    required this.answer,
+  });
+
+  AnswerQuestion copyWith({
+    QuestionType? questionType,
+    Answer? answer,
+  }) {
+    return AnswerQuestion(
+      questionType: questionType ?? this.questionType,
+      answer: answer ?? this.answer,
+    );
+  }
 
   factory AnswerQuestion.fromJson(Map<String, dynamic> json) {
+    print('keys: ' +
+        json.keys.first.toString() +
+        'vale: ' +
+        json.values.first.toString());
     final String key = json.keys.first;
     dynamic value = json[key];
 
@@ -28,24 +61,24 @@ class AnswerQuestion {
     Answer answer;
 
     if (questionType == QuestionType.ascDescOrder) {
-      // For 'ascdec' order question type, the answer is a list
-      answer = Answer.fromJson({'answer': List<String>.from(value['answer'])});
+      answer = Answer.fromJson({'answer': value});
     } else {
-      answer = Answer.fromJson(value);
+      answer = Answer.fromJson({'answer': value['answer']});
     }
 
-    return AnswerQuestion(questionType: questionType, answer: answer);
+    return AnswerQuestion(
+      questionType: questionType,
+      answer: answer,
+    );
   }
 
   Map<String, dynamic> toJson() {
     String key = _getKeyFromQuestionType(questionType);
     Map<String, dynamic> answerJson = answer.toJson();
 
-    // Adjust the 'ascdec' order question type in the JSON output
-    if (questionType == QuestionType.ascDescOrder) {
-      return {
-        key: {'answer': answerJson['answer']}
-      };
+    if (questionType == QuestionType.ascDescOrder ||
+        questionType == QuestionType.multiplefillblank) {
+      return {key: answerJson['answer']};
     }
 
     return {key: answerJson};
@@ -71,6 +104,8 @@ class AnswerQuestion {
         return QuestionType.trueFalse;
       case 'fillblank':
         return QuestionType.fillBlank;
+      case 'multiplefillblank':
+        return QuestionType.multiplefillblank;
       case 'mcqtext':
         return QuestionType.mcqText;
       case 'mcqimg':
@@ -100,6 +135,8 @@ class AnswerQuestion {
         return 'truefalse';
       case QuestionType.fillBlank:
         return 'fillblank';
+      case QuestionType.multiplefillblank:
+        return 'multiplefillblank';
       case QuestionType.mcqText:
         return 'mcqtext';
       case QuestionType.mcqImage:
@@ -117,6 +154,7 @@ class StudentAnswer {
   StudentAnswer({required this.questionNo, required this.question});
 
   factory StudentAnswer.fromJson(String questionNo, Map<String, dynamic> json) {
+    print('answerJson' + json.toString());
     return StudentAnswer(
       questionNo: int.parse(questionNo),
       question: AnswerQuestion.fromJson(json),
@@ -126,4 +164,6 @@ class StudentAnswer {
   Map<String, dynamic> toJson() {
     return {questionNo.toString(): question.toJson()};
   }
+
+  copyWith({required AnswerQuestion question}) {}
 }

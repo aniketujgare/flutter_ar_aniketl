@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart' show debugPrint;
+import 'package:flutter/widgets.dart';
 import 'package:flutter_ar/domain/repositories/authentication_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -53,6 +54,11 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
           //Save to hivebox
 
           var kidsAppBox = await Hive.openBox("kidsApp");
+
+          await AuthenticationRepository().getParentId(state.mobileNumber);
+          await AuthenticationRepository().getallstandardsofschool();
+          await AuthenticationRepository().getstudentprofilesnew();
+
           var isLoggedIn = kidsAppBox.put('isLoggedIn', true);
           await authenticationRepository.sendGuestDataToServer(
               guestName: state.parentName, guestPhone: state.mobileNumber);
@@ -61,7 +67,9 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         } else {
           var kidsAppBox = await Hive.openBox("kidsApp");
           var isLoggedIn = kidsAppBox.put('isLoggedIn', true);
-
+          await AuthenticationRepository().getParentId(state.mobileNumber);
+          await AuthenticationRepository().getallstandardsofschool();
+          await AuthenticationRepository().getstudentprofilesnew();
           emit(state.copyWith(status: LoginStatus.parents3));
         }
       }

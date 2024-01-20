@@ -21,10 +21,25 @@ class WorksheetHistoryView extends StatefulWidget {
 }
 
 class _WorksheetHistoryViewState extends State<WorksheetHistoryView> {
+  Future<int> getStudentId() async {
+    var kidsAppBox = await Hive.openBox("kidsApp");
+    var studentProfiles = kidsAppBox.get('studentProfiles');
+    print('StudentProfile: ' + studentProfiles.toString());
+    var firstProfile =
+        studentProfiles[0][0]; // Accessing the first map in the first list
+    int studentId = firstProfile['student_id'];
+    print('studentId: $studentId');
+    return studentId;
+  }
+
   @override
   void initState() {
     super.initState();
-    context.read<WorksheetCubit>().getWorksheetsHistory(11.toString());
+
+    // Use then to execute the asynchronous operation after initState completes
+    getStudentId().then((studentId) {
+      context.read<WorksheetCubit>().getWorksheetsHistory(studentId.toString());
+    });
   }
 
   @override
@@ -94,11 +109,22 @@ class _WorksheetHistoryViewState extends State<WorksheetHistoryView> {
                       bottom: DeviceType().isMobile ? 4.wp : 18.wp),
                   itemBuilder: (BuildContext context, int i) {
                     var workSheet = state.historyWorksheets[i];
-                    return Container(
-                        padding: EdgeInsets.all(8),
-                        margin: EdgeInsets.all(8),
-                        color: AppColors.accentColor,
-                        child: Text(workSheet.worksheetName));
+                    return GestureDetector(
+                      onTap: () {
+                        getStudentId().then((studentId) {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => WorksheetSolverView(
+                                    workSheetId: workSheet.id,
+                                    studentId: studentId,
+                                  )));
+                        });
+                      },
+                      child: Container(
+                          padding: EdgeInsets.all(8),
+                          margin: EdgeInsets.all(8),
+                          color: AppColors.accentColor,
+                          child: Text(workSheet.worksheetName)),
+                    );
                   },
                 );
               } else {

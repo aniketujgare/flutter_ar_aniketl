@@ -91,17 +91,24 @@ class McqImageQuestion extends Question {
 
 // Fill in the Blank Question
 class FillBlankQuestion extends Question {
-  final String answer;
-  final String index;
+  final dynamic answer; // Updated the type to dynamic
+  // final String index;
 
-  FillBlankQuestion(
-      {required this.answer, required this.index, required String question})
+  FillBlankQuestion({required this.answer, required String question})
       : super.withType(question, QuestionType.fillBlank);
 
   factory FillBlankQuestion.fromJson(Map<String, dynamic> json) {
+    var answer = json['fillblank']['answer'];
+    if (answer is List) {
+      // If answer is a List, keep it as is
+    } else if (answer is String) {
+      // If answer is a String, convert it to a List with a single element
+      answer = [answer];
+    }
+
     return FillBlankQuestion(
-      answer: json['fillblank']['answer'],
-      index: json['fillblank']['index'],
+      answer: answer,
+      // index: json['fillblank']['index'],
       question: json['fillblank']['question'],
     );
   }
@@ -109,7 +116,7 @@ class FillBlankQuestion extends Question {
   Map<String, dynamic> toJson() => {
         'fillblank': {
           'answer': answer,
-          'index': index,
+          // 'index': index,
           'question': question,
         },
       };

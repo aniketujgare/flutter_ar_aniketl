@@ -1,4 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 import 'dart:developer';
 
@@ -7,8 +6,8 @@ import 'package:flutter/foundation.dart' show debugPrint;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 
-import '../../models/published_worksheets.dart';
 import '../../models/questions.dart';
 import '../../models/worksheet_ans_of_student.dart';
 
@@ -28,8 +27,10 @@ class WorksheetSolverCubit extends Cubit<WorksheetSolverState> {
     //Load student answer list
     List<StudentAnswer> studentAnswerList =
         await getStudentAnswerList(workSheetId, studentId);
+    print('final ans sheet1: ${jsonEncode(studentAnswerList)}');
     //Generate final state answerlist
     List<StudentAnswer> answerSheet = [];
+    log(jsonEncode(studentAnswerList));
     // map final answer sheet with studentsAnsweList
     if (studentAnswerList.isNotEmpty) {
       answerSheet.addAll(studentAnswerList);
@@ -47,18 +48,26 @@ class WorksheetSolverCubit extends Cubit<WorksheetSolverState> {
   }
 
   void setAnswer(int questionIdx, dynamic newAnswer) {
-    print('setAnswer');
+    print('setAnswer $newAnswer');
     emit(state.copyWith(status: WorkSheetSolverStatus.loading));
     // Make a copy of the current state
-    List<StudentAnswer> updatedAnswerSheet = state.answerSheet;
+    List<StudentAnswer> updatedAnswerSheet = List.from(state.answerSheet);
     StudentAnswer? answer = updatedAnswerSheet
         .firstWhereOrNull((element) => element.questionNo == questionIdx);
     if (answer != null) {
+      answer.question.answer.answer = '';
       answer.question.answer.answer = newAnswer;
+      updatedAnswerSheet
+          .removeWhere((element) => element.questionNo == answer.questionNo);
+      StudentAnswer newAns = StudentAnswer(
+          questionNo: questionIdx,
+          question: AnswerQuestion(
+              questionType: state.questions[questionIdx].questionType,
+              answer: Answer(answer: newAnswer)));
+      updatedAnswerSheet.add(newAns);
+
+      print('dfgv:  ' + '${newAnswer.toString()}');
     } else {
-      if (updatedAnswerSheet.isEmpty) {
-        updatedAnswerSheet = [];
-      }
       StudentAnswer newAns = StudentAnswer(
           questionNo: questionIdx,
           question: AnswerQuestion(
@@ -77,8 +86,10 @@ class WorksheetSolverCubit extends Cubit<WorksheetSolverState> {
     emit(state.copyWith(status: WorkSheetSolverStatus.loading));
 
     // Assuming state.answerSheet contains your data
-    List<StudentAnswer> answerSheet = state.answerSheet;
-
+    List<StudentAnswer> answerSheet = List.from(state.answerSheet);
+    print(jsonEncode(answerSheet));
+    //sort the finalAnsSheet
+    answerSheet.sort((a, b) => a.questionNo.compareTo(b.questionNo));
     Map<String, dynamic> formattedAnswers = {
       "worksheet_id": _workSheetId,
       "student_id": _studentId,
@@ -90,8 +101,8 @@ class WorksheetSolverCubit extends Cubit<WorksheetSolverState> {
     var dataString = jsonEncode(formattedAnswers["data"]);
 
     var finalString = {
-      "worksheet_id": 8080,
-      "student_id": 95,
+      "worksheet_id": _workSheetId,
+      "student_id": _studentId,
       "data": dataString,
     };
     print(finalString);
@@ -114,6 +125,7 @@ class WorksheetSolverCubit extends Cubit<WorksheetSolverState> {
         // log(jsonString);
         print('Response status code: ${response.statusCode}');
         print(json.encode(finalString));
+        await setStudentWorksheetStatus();
       } else {
         debugPrint('Request failed with status: ${response.statusCode}');
         throw Exception('Failed to Save worksheet');
@@ -125,62 +137,35 @@ class WorksheetSolverCubit extends Cubit<WorksheetSolverState> {
     }
   }
 
-  // void saveAnswerSheet() async {
-  //   emit(state.copyWith(status: WorkSheetSolverStatus.loading));
-  //   Map<String, dynamic> formattedAnswers = {};
-  //   List<StudentAnswer> answerSheet = state.answerSheet;
-  //   answerSheet.forEach((studentAnswer) {
-  //     formattedAnswers.addAll(studentAnswer.toJson());
-  //   });
-  //   debugPrint(formattedAnswers.toString());
-  //   // "worksheet_id": 846,
-  //   // "student_id": 9,
-  //   // "data":
-  //   // var headers = {'Content-Type': 'application/json'};
-  //   // //Todo: set the correct API url
-  //   // var request = http.Request(
-  //   //     'POST',
-  //   //     Uri.parse(
-  //   //         'https://cnpewunqs5.execute-api.ap-south-1.amazonaws.com/dev/getworksheetdatav2'));
-  //   // request.body = json.encode({"worksheet_id": 687});
-  //   // request.headers.addAll(headers);
+  Future<void> setStudentWorksheetStatus() async {
+    try {
+      var headers = {'Content-Type': 'application/json'};
+      // Get current date in the format 'yyyy-MM-dd'
+      String currentDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
+      var request = http.Request(
+          'POST',
+          Uri.parse(
+              'https://cnpewunqs5.execute-api.ap-south-1.amazonaws.com/dev/setstudentworksheetstatus'));
+      request.body = json.encode({
+        "worksheet_id": _workSheetId,
+        "student_id": _studentId,
+        "status": "submitte",
+        "submitdate": currentDate
+      });
+      request.headers.addAll(headers);
 
-  //   // http.StreamedResponse response = await request.send();
+      http.StreamedResponse response = await request.send();
 
-  //   // if (response.statusCode == 200) {
-  //   //   var responseString = await response.stream.bytesToString();
-
-  //   //   List<Question> allQuestion = allWorsheetQuestins(responseString);
-  //   // debugPrint('allQuestions: ${json.encode(allQuestion)}');
-  //   emit(state.copyWith(status: WorkSheetSolverStatus.loaded));
-  //   // } else {
-  //   //   debugPrint(response.reasonPhrase);
-  //   // }
-  // }
-
-  // void getWorksheetsData(int worksheetId) async {
-  //   emit(state.copyWith(status: WorkSheetSolverStatus.loading));
-  //   var headers = {'Content-Type': 'application/json'};
-  //   var request = http.Request(
-  //       'POST',
-  //       Uri.parse(
-  //           'https://cnpewunqs5.execute-api.ap-south-1.amazonaws.com/dev/getworksheetdatav2'));
-  //   request.body = json.encode({"worksheet_id": worksheetId});
-  //   request.headers.addAll(headers);
-
-  //   http.StreamedResponse response = await request.send();
-
-  //   if (response.statusCode == 200) {
-  //     var responseString = await response.stream.bytesToString();
-
-  //     List<Question> allQuestion = allWorsheetQuestins(responseString);
-  //     // debugPrint('allQuestions: ${json.encode(allQuestion)}');
-  //     emit(state.copyWith(
-  //         status: WorkSheetSolverStatus.loaded, questions: allQuestion));
-  //   } else {
-  //     debugPrint(response.reasonPhrase);
-  //   }
-  // }
+      if (response.statusCode == 200) {
+        print(await response.stream.bytesToString());
+      } else {
+        print(response.reasonPhrase);
+      }
+    } catch (e) {
+      // Handle exceptions here
+      print('Error: $e');
+    }
+  }
 
   Future<List<Question>> getQuestionsList(int worksheetId) async {
     emit(state.copyWith(status: WorkSheetSolverStatus.loading));
@@ -197,6 +182,7 @@ class WorksheetSolverCubit extends Cubit<WorksheetSolverState> {
 
       if (response.statusCode == 200) {
         var responseString = await response.stream.bytesToString();
+        print(responseString);
         if (responseString == 'null') {
           return [];
         }
@@ -219,7 +205,8 @@ class WorksheetSolverCubit extends Cubit<WorksheetSolverState> {
         'POST',
         Uri.parse(
             'https://cnpewunqs5.execute-api.ap-south-1.amazonaws.com/dev/getstudentworksheetdatav2'));
-    request.body = json.encode({"worksheet_id": 846, "student_id": 9});
+    request.body =
+        json.encode({"worksheet_id": _workSheetId, "student_id": _studentId});
     request.headers.addAll(headers);
 
     http.StreamedResponse response = await request.send();
@@ -249,11 +236,12 @@ class WorksheetSolverCubit extends Cubit<WorksheetSolverState> {
     emit(state.copyWith(status: WorkSheetSolverStatus.loading));
     var headers = {'Content-Type': 'application/json'};
     var request = http.Request(
-        'POST',
-        Uri.parse(
-            'https://cnpewunqs5.execute-api.ap-south-1.amazonaws.com/dev/getstudentworksheetdatav2'));
+      'POST',
+      Uri.parse(
+          'https://cnpewunqs5.execute-api.ap-south-1.amazonaws.com/dev/getstudentworksheetdatav2'),
+    );
     request.body =
-        json.encode({"worksheet_id": worksheetId, "student_id": worksheetId});
+        json.encode({"worksheet_id": worksheetId, "student_id": studentId});
     request.headers.addAll(headers);
 
     try {
@@ -261,24 +249,26 @@ class WorksheetSolverCubit extends Cubit<WorksheetSolverState> {
 
       if (response.statusCode == 200) {
         var responseString = await response.stream.bytesToString();
-        dynamic jsonMap = jsonDecode(responseString);
-        // List<StudentAnswer> studentAnswersList = [];
-        // jsonMap.forEach((element) {
-        //   St
-        //   studentAnswersList.add(element);
-        // });
-        List<StudentAnswer> studentAnswersList = [];
-        if (jsonMap != 0) {
-          studentAnswersList = jsonMap.entries
-              .map(
-                (entry) => StudentAnswer.fromJson(entry.key, entry.value),
-              )
-              .toList();
+
+        if (responseString != '0') {
+          List<Map<String, dynamic>> jsonList =
+              List<Map<String, dynamic>>.from(jsonDecode(responseString));
+
+          List<StudentAnswer> studentAnswersList =
+              jsonList.asMap().entries.map((entry) {
+            log('entry: ${entry.value}');
+
+            return StudentAnswer.fromJson(entry.key.toString(), entry.value);
+          }).toList();
+          print('studentAnsSheet: ${jsonEncode(studentAnswersList)}');
+
           // Sorting the list based on questionNo
           studentAnswersList
               .sort((a, b) => a.questionNo.compareTo(b.questionNo));
+          return studentAnswersList;
+        } else {
+          return [];
         }
-        return studentAnswersList;
       } else {
         debugPrint('Request failed with status: ${response.statusCode}');
         throw Exception('Failed to load student answers');
@@ -289,12 +279,24 @@ class WorksheetSolverCubit extends Cubit<WorksheetSolverState> {
     }
   }
 
-  void loadNextQuestion() {
+  Future<void> loadNextQuestion() async {
     if (state.currentQuestion + 1 < state.questions.length) {
       emit(state.copyWith(status: WorkSheetSolverStatus.loading));
+      await Future.delayed(const Duration(milliseconds: 100));
       emit(state.copyWith(
           status: WorkSheetSolverStatus.loaded,
           currentQuestion: state.currentQuestion + 1));
+    }
+  }
+
+  Future<void> loadPreviousQuestion() async {
+    if (state.currentQuestion - 1 >= 0) {
+      emit(state.copyWith(status: WorkSheetSolverStatus.loading));
+      await Future.delayed(const Duration(milliseconds: 100));
+
+      emit(state.copyWith(
+          status: WorkSheetSolverStatus.loaded,
+          currentQuestion: state.currentQuestion - 1));
     }
   }
 
