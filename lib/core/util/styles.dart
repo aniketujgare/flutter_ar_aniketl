@@ -17,6 +17,7 @@ class AppColors {
   static var parentZoneScaffoldColor = _createColor(0xFFF4F2FE);
   static var redMessageSharedFileContainerColor = _createColor(0xFFFF8371);
   static var messageContainerColor = _createColor(0xFFE9E9E9);
+  static var subjectNameColor = _createColor(0xFF4D4D4D);
 }
 
 class AppTextStyles {
@@ -119,7 +120,11 @@ class AppTextStyles {
       color: AppColors.textFieldTextColor);
 
   /// Uniform Rounded
-
+  static var unitedRounded95w700 = _createTextStyle(
+      fontFamily: 'Uniform Rounded',
+      fontSize: 95.sp,
+      fontWeight: FontWeight.w700,
+      color: AppColors.subjectNameColor);
   static var unitedRounded270w700 = _createTextStyle(
       fontFamily: 'Uniform Rounded',
       fontSize: 270.sp,

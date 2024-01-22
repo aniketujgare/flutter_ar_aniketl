@@ -146,8 +146,8 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
             Expanded(
               child: GestureDetector(
                 onTap: () {
-                  // Navigator.of(context).push(MaterialPageRoute(
-                  //     builder: (context) => const SubjectScreen()));
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const SubjectScreen()));
                 },
                 child: Image.asset(
                   'assets/images/PNG Icons/LessonsMenu.png',

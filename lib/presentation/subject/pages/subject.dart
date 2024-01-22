@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_ar/core/util/device_type.dart';
-import 'package:flutter_ar/core/util/styles.dart';
-import 'package:flutter_ar/presentation/category/pages/category_screen.dart';
-import 'package:flutter_ar/presentation/worksheet/pages/worksheet.dart';
-import 'package:flutter_ar/presentation/parent_zone/pages/parent_zone_screen.dart';
-import 'package:flutter_ar/presentation/parent_zone/widgets/message_view.dart';
-import 'package:go_router/go_router.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:size_config/size_config.dart';
-import 'package:orientation_widget/orientation_widget.dart';
+
+import '../../../core/util/device_type.dart';
+import '../../../core/util/styles.dart';
+import '../../parent_zone/pages/parent_zone_screen.dart';
+import '../../worksheet/pages/worksheet.dart';
+import '../bloc/subject_page_cubit.dart';
 
 class SubjectScreen extends StatefulWidget {
   const SubjectScreen({super.key});
@@ -25,40 +24,90 @@ class _SubjectScreenState extends State<SubjectScreen> {
       DeviceOrientation.landscapeLeft,
       DeviceOrientation.landscapeRight,
     ]);
+    context.read<SubjectPageCubit>().setPage(0);
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return OrientationBuilder(
-      builder: (BuildContext context, Orientation orientation) {
-        if (orientation == Orientation.portrait)
-          return Container(
-            height: double.maxFinite,
-            width: double.maxFinite,
-            color: AppColors.parentZoneScaffoldColor,
-          );
-        else {
-          return PopScope(
-            canPop: false,
-            child: Scaffold(
-              backgroundColor: AppColors.parentZoneScaffoldColor,
-              body: Padding(
-                padding: EdgeInsets.fromLTRB(8.wp, 4.wp, 8.wp, 4.wp),
-                child: Column(
-                  children: [
-                    //! Top
-                    buildTop(context),
-                    //! Center
-                    buildCenter(context),
-                    //! Bottom
-                    buildBottom(context),
-                  ],
-                ),
+    return PopScope(
+      canPop: false,
+      child: Scaffold(
+        backgroundColor: AppColors.parentZoneScaffoldColor,
+        body: Stack(
+          alignment: Alignment.center,
+          children: [
+            //! Center Image and Subject Name
+            _buildSubjectImage(context),
+            _buildSubjectName(),
+            Padding(
+              padding: EdgeInsets.fromLTRB(8.wp, 4.wp, 8.wp, 4.wp),
+              child: Column(
+                children: [
+                  //! Top
+                  buildTop(context),
+                  //! Center page previous and next buttons
+                  Expanded(
+                      child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      GestureDetector(
+                        onTap: () =>
+                            context.read<SubjectPageCubit>().setPreviousPage(),
+                        child: SizedBox(
+                          height: 45.h,
+                          width: 45.h,
+                          child: Image.asset(
+                            'assets/ui/Group.png', // right arrow
+                            fit: BoxFit.scaleDown,
+                            height: 45.h,
+                            width: 45.h,
+                          ),
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () =>
+                            context.read<SubjectPageCubit>().setNextPage(),
+                        child: RotatedBox(
+                          quarterTurns: 2,
+                          child: SizedBox(
+                            height: 45.h,
+                            width: 45.h,
+                            child: Image.asset(
+                              'assets/ui/Group.png', // right arrow
+                              fit: BoxFit.scaleDown,
+                              height: 45.h,
+                              width: 45.h,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  )),
+                  //! Bottom
+                  buildBottom(context),
+                ],
               ),
             ),
-          );
-        }
+          ],
+        ),
+      ),
+    );
+  }
+
+  BlocBuilder<SubjectPageCubit, int> _buildSubjectName() {
+    List<String> subNames = ['E.V.S', 'English', 'Maths'];
+    return BlocBuilder<SubjectPageCubit, int>(
+      builder: (context, state) {
+        return Positioned(
+          bottom: 35.h,
+          child: Text(
+            subNames[state],
+            textAlign: TextAlign.center,
+            style: AppTextStyles.unitedRounded95w700,
+          ),
+        );
       },
     );
   }
@@ -69,9 +118,13 @@ class _SubjectScreenState extends State<SubjectScreen> {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Image.asset(
-            'assets/ui/image 40.png', // User Icon
-            fit: BoxFit.contain,
+          GestureDetector(
+            onTap: () => Navigator.of(context).pop(),
+            child: Image.asset(
+              'assets/images/reusable_icons/back_button_primary.png',
+              height: 50.h, // User Icon
+              fit: BoxFit.contain,
+            ),
           ),
           const Spacer(),
           Row(
@@ -134,27 +187,29 @@ class _SubjectScreenState extends State<SubjectScreen> {
     );
   }
 
-  Expanded buildCenter(BuildContext context) {
-    return Expanded(
-      child: Padding(
-          padding:
-              EdgeInsets.symmetric(vertical: DeviceType().isMobile ? 5.h : 0),
-          child: Column(
-            children: [
-              Image.asset('assets/images/PNG Icons/evs.png'),
-              Text(
-                'E.V.S',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Color(0xFF4D4D4D),
-                  fontSize: 25,
-                  fontFamily: 'Uniform Rounded',
-                  fontWeight: FontWeight.w500,
-                  height: 0,
-                ),
-              ),
-            ],
-          )),
+  BlocBuilder _buildSubjectImage(BuildContext context) {
+    List<String> subImages = ['evs', 'english', 'math'];
+
+    return BlocBuilder<SubjectPageCubit, int>(
+      builder: (context, index) {
+        return PageView.builder(
+          controller: context.read<SubjectPageCubit>().pageCont,
+          scrollDirection: Axis.horizontal,
+          onPageChanged: (value) {
+            context.read<SubjectPageCubit>().setPage(value);
+          },
+          itemCount: 3, // 6 containers per page (2 rows with 3 containers each)
+          itemBuilder: (context, a) {
+            return Container(
+                height: double.maxFinite,
+                padding: EdgeInsets.fromLTRB(0, 8.wp, 0, 12.wp),
+                child: Image.asset(
+                  'assets/images/PNG Icons/${subImages[a]}.png',
+                  fit: BoxFit.contain,
+                ));
+          },
+        );
+      },
     );
   }
 }

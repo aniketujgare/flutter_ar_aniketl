@@ -1,69 +1,74 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:size_config/size_config.dart';
 
-import '../../../core/util/device_type.dart';
-import '../bloc/navbar_cubit/app_navigator_cubit.dart';
-import '../pages/parent_zone_screen.dart';
+import '../bloc/reports_pagecontroller_cubit/reports_pagecontroller_cubit.dart';
+import 'reports_pages/cognition.dart';
+import 'reports_pages/comprehension.dart';
+import 'reports_pages/everyday_skills.dart';
 
-class ReportsView extends StatelessWidget {
+class ReportsView extends StatefulWidget {
   const ReportsView({super.key});
+  static const List<Widget> _pages = [
+    CognitionPage(),
+    ComprehensionPage(),
+    EverydaySkillsPage(),
+  ];
+
+  @override
+  State<ReportsView> createState() => _ReportsViewState();
+}
+
+class _ReportsViewState extends State<ReportsView> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<ReportsPagecontrollerCubit>().setPage(0);
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      // height: double.maxFinite,
-      clipBehavior: Clip.antiAlias,
-      decoration: ShapeDecoration(
-        color: Colors.white,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(25.h),
+    return Stack(
+      children: [
+        BlocBuilder<ReportsPagecontrollerCubit, int>(
+          builder: (context, state) {
+            return PageView.builder(
+                controller:
+                    context.read<ReportsPagecontrollerCubit>().pageController,
+                onPageChanged: (int page) =>
+                    context.read<ReportsPagecontrollerCubit>().setPage(page),
+                itemCount: ReportsView._pages.length,
+                itemBuilder: (context, pageIndex) {
+                  return ReportsView
+                      ._pages[pageIndex % ReportsView._pages.length];
+                });
+          },
         ),
-      ),
-      padding: DeviceType().isMobile
-          ? EdgeInsets.fromLTRB(0, 40.h, 0, 40.h)
-          : EdgeInsets.fromLTRB(0, 20.h, 0, 20.h),
-      margin: DeviceType().isMobile
-          ? EdgeInsets.fromLTRB(3.wp, 30.h, 3.wp, 0.h)
-          : EdgeInsets.fromLTRB(116.w, 40.h, 116.w, 30.h),
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 5.wp, vertical: 3.hp),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            // 40.verticalSpacer,
-            SizedBox(
-              width: double.infinity,
-              child: Text(
-                'COMING SOON!',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Color(0xFF4F3A9C),
-                  fontSize: 170.sp,
-                  fontFamily: 'Uniform Rounded',
-                  fontWeight: FontWeight.w700,
-                  height: 0,
-                ),
+        BlocBuilder<ReportsPagecontrollerCubit, int>(
+          builder: (context, state) {
+            return Positioned(
+              bottom: 0,
+              left: 0,
+              right: 0,
+              height: 90,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: List<Widget>.generate(
+                    ReportsView._pages.length,
+                    (index) => Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8),
+                          child: CircleAvatar(
+                            radius: 5,
+                            backgroundColor: state == index
+                                ? const Color(0Xff4D4D4D)
+                                : const Color(0XffD9D9D9),
+                          ),
+                        )),
               ),
-            ),
-            30.verticalSpacer,
-            Image.asset('assets/images/reusable_icons/dounut_circles.png'),
-            30.verticalSpacer,
-            Text(
-              'The reports feature is highly anticipated by parents. Our reports are being built to go beyond academics. They will cover 3 areas broadly - Everyday Skills, Comprehension and Cognition. These will be further divided into detailed parameters that will give you real time information about your child’s progress.',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Color(0xFF212121),
-                fontSize: 120.sp,
-                fontFamily: 'Nunito',
-                fontWeight: FontWeight.w400,
-                height: 0,
-              ),
-            ),
-          ],
+            );
+          },
         ),
-      ),
+      ],
     );
   }
 }
