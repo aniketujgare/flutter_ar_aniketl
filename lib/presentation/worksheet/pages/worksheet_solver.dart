@@ -95,18 +95,267 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView> {
             state.questions[i] as MatchTheFollowingQuestion;
         var shuffledOptions = matchTheFollowingQuestion.options.entries.toList()
           ..shuffle();
+        //!select the odd own out q ui
+        // List<String> otions1 = [
+        //   'The',
+        //   'question',
+        //   'will',
+        //   'be',
+        //   'in',
+        //   'options'
+        // ];
+        // return Column(
+        //   mainAxisSize: MainAxisSize.min,
+        //   crossAxisAlignment: CrossAxisAlignment.center,
+        //   children: [
+        //     80.verticalSpacer,
+        //     Text(
+        //       'The, question, will, be, in, options',
+        //       textAlign: TextAlign.center,
+        //       style: const TextStyle(
+        //         color: Color(0xFF212121),
+        //         fontSize: 32,
+        //         fontFamily: 'Nunito',
+        //         fontWeight: FontWeight.w500,
+        //         height: 0,
+        //       ),
+        //     ),
+        //     80.verticalSpacer,
+        //     // Text('${i + 1}) ${mcqTextQuestion.question}'),
+        //     Row(
+        //       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        //       children: [
+        //         ...List.generate(
+        //             6,
+        //             (index) => Container(
+        //                   width: 30.wp,
+        //                   padding: EdgeInsets.symmetric(vertical: 2.wp),
+        //                   decoration: ShapeDecoration(
+        //                     color: const Color(0xFFF4F2FE),
+        //                     shape: RoundedRectangleBorder(
+        //                       borderRadius: BorderRadius.circular(17),
+        //                     ),
+        //                   ),
+        //                   child: Text(
+        //                     otions1[index],
+        //                     textAlign: TextAlign.center,
+        //                     style: const TextStyle(
+        //                       color: Color(0xFF4F3A9C),
+        //                       fontSize: 20,
+        //                       fontFamily: 'Nunito',
+        //                       fontWeight: FontWeight.w700,
+        //                       height: 0,
+        //                     ),
+        //                   ),
+        //                 ))
+        //       ],
+        //     ),
+        //   ],
+        // );
+        // //!select the correct word  q ui
+        // List<String> otions = [
+        //   'This',
+        //   'is',
+        //   'the',
+        //   'test',
+        //   'question',
+        //   'sentence'
+        // ];
+        // return Column(
+        //   mainAxisSize: MainAxisSize.min,
+        //   crossAxisAlignment: CrossAxisAlignment.center,
+        //   children: [
+        //     80.verticalSpacer,
+        //     Text(
+        //       'This is the test question sentence.',
+        //       textAlign: TextAlign.center,
+        //       style: const TextStyle(
+        //         color: Color(0xFF212121),
+        //         fontSize: 32,
+        //         fontFamily: 'Nunito',
+        //         fontWeight: FontWeight.w500,
+        //         height: 0,
+        //       ),
+        //     ),
+        //     80.verticalSpacer,
+        //     // Text('${i + 1}) ${mcqTextQuestion.question}'),
+        //     Row(
+        //       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        //       children: [
+        //         ...List.generate(
+        //             6,
+        //             (index) => Container(
+        //                   width: 30.wp,
+        //                   padding: EdgeInsets.symmetric(vertical: 2.wp),
+        //                   decoration: ShapeDecoration(
+        //                     color: const Color(0xFFF4F2FE),
+        //                     shape: RoundedRectangleBorder(
+        //                       borderRadius: BorderRadius.circular(17),
+        //                     ),
+        //                   ),
+        //                   child: Text(
+        //                     otions[index],
+        //                     textAlign: TextAlign.center,
+        //                     style: const TextStyle(
+        //                       color: Color(0xFF4F3A9C),
+        //                       fontSize: 20,
+        //                       fontFamily: 'Nunito',
+        //                       fontWeight: FontWeight.w700,
+        //                       height: 0,
+        //                     ),
+        //                   ),
+        //                 ))
+        //       ],
+        //     ),
+        //   ],
+        // );
+        // //! ascending descending q ui
+        // return Column(
+        //   mainAxisSize: MainAxisSize.min,
+        //   crossAxisAlignment: CrossAxisAlignment.center,
+        //   children: [
+        //     60.verticalSpacer,
+        //     Text(
+        //       'Arrange the test options in order',
+        //       textAlign: TextAlign.center,
+        //       style: const TextStyle(
+        //         color: Color(0xFF212121),
+        //         fontSize: 32,
+        //         fontFamily: 'Nunito',
+        //         fontWeight: FontWeight.w500,
+        //         height: 0,
+        //       ),
+        //     ),
+        //     50.verticalSpacer,
+        //     // Text('${i + 1}) ${mcqTextQuestion.question}'),
+        //     Row(
+        //       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        //       children: [
+        //         ...List.generate(
+        //             6,
+        //             (index) => Container(
+        //                   width: 30.wp,
+        //                   padding: EdgeInsets.symmetric(vertical: 2.wp),
+        //                   decoration: ShapeDecoration(
+        //                     color: const Color(0xFFF4F2FE),
+        //                     shape: RoundedRectangleBorder(
+        //                       borderRadius: BorderRadius.circular(17),
+        //                     ),
+        //                   ),
+        //                   child: Text(
+        //                     'Option ${index + 1}',
+        //                     textAlign: TextAlign.center,
+        //                     style: const TextStyle(
+        //                       color: Color(0xFF4F3A9C),
+        //                       fontSize: 20,
+        //                       fontFamily: 'Nunito',
+        //                       fontWeight: FontWeight.w700,
+        //                       height: 0,
+        //                     ),
+        //                   ),
+        //                 ))
+        //       ],
+        //     ),
+        //     50.verticalSpacer,
+        //     Row(
+        //       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        //       children: [
+        //         ...List.generate(
+        //             6,
+        //             (index) => Container(
+        //                   width: 30.wp,
+        //                   padding: EdgeInsets.symmetric(vertical: 2.wp),
+        //                   decoration: ShapeDecoration(
+        //                     color: const Color(0xFFF4F2FE),
+        //                     shape: RoundedRectangleBorder(
+        //                       borderRadius: BorderRadius.circular(17),
+        //                     ),
+        //                   ),
+        //                   child: Text(
+        //                     'Option ${index + 1}',
+        //                     textAlign: TextAlign.center,
+        //                     style: const TextStyle(
+        //                       color: const Color(0xFFF4F2FE),
+        //                       fontSize: 22,
+        //                       fontFamily: 'Nunito',
+        //                       fontWeight: FontWeight.w700,
+        //                       height: 0,
+        //                     ),
+        //                   ),
+        //                 ))
+        //       ],
+        //     ),
+        //   ],
+        // );
+
         return _buildMatchTheFollowingQuestion(
             i, matchTheFollowingQuestion, shuffledOptions, markedAnswer);
       case QuestionType.oneWord:
         OneWordQuestion oneWordQuestion = state.questions[i] as OneWordQuestion;
+        String? ans = markedAnswer;
         return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text('${i + 1}) ${oneWordQuestion.question}'),
-            TextFormField(
-              initialValue: (markedAnswer as String?) ?? '',
-            )
+            50.verticalSpacer,
+            Text(
+              oneWordQuestion.question,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                color: Color(0xFF212121),
+                fontSize: 32,
+                fontFamily: 'Nunito',
+                fontWeight: FontWeight.w500,
+                height: 0,
+              ),
+            ),
+            45.verticalSpacer,
+            Row(
+              // mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Stack(
+                  children: [
+                    Container(
+                      width: 70.wp,
+                      height: 50,
+                      child: Image.asset(
+                        'assets/images/PNG Icons/Vector.png',
+                        fit: BoxFit.fill,
+                      ),
+                    ),
+                    Container(
+                      width: 70.wp,
+                      padding: const EdgeInsets.symmetric(horizontal: 15),
+                      child: TextFormField(
+                        decoration: const InputDecoration(
+                          // labelText: 'Type your answer',
+                          border: InputBorder.none,
+                        ),
+                        initialValue: ans,
+                        onChanged: (value) {
+                          // if (markedAnswers.length > j) {
+                          //   markedAnswers[j] = value;
+                          // } else {
+                          //   markedAnswers.add(value);
+                          // }
+                        },
+                        onEditingComplete: () {
+                          print('complete');
+                          context
+                              .read<WorksheetSolverCubit>()
+                              .setAnswer(i, ans);
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+                5.horizontalSpacerPercent,
+                Container(
+                    width: 50,
+                    child: Image.asset('assets/images/PNG Icons/Cam 1.png'))
+              ],
+            ),
           ],
         );
       case QuestionType.selectWord:
@@ -176,7 +425,7 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView> {
       canPop: false,
       child: SafeArea(
         child: Scaffold(
-          backgroundColor: AppColors.parentZoneScaffoldColor,
+          backgroundColor: const Color(0XFFD1CBF9),
           appBar: _appBar(context),
           body: Padding(
               padding: EdgeInsets.fromLTRB(5.wp, 0, 5.wp, 0),
@@ -190,30 +439,48 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView> {
                       children: [
                         getQuestion(state, state.currentQuestion),
                         Transform.translate(
-                          offset: const Offset(-20, -20),
+                          offset: const Offset(-20, -10),
                           child: Align(
                             alignment: Alignment.bottomRight,
                             child: IconButton(
                                 onPressed: () => context
                                     .read<WorksheetSolverCubit>()
                                     .loadNextQuestion(),
-                                icon: const Icon(
-                                  Icons.arrow_circle_right_rounded,
-                                  size: 75,
+                                icon: RotatedBox(
+                                  quarterTurns: 2,
+                                  child: Image.asset(
+                                    'assets/ui/Group.png',
+                                    height: 40,
+                                  ),
                                 )),
                           ),
                         ),
                         Transform.translate(
-                          offset: const Offset(20, -20),
+                          offset: const Offset(0, -20),
+                          child: const Align(
+                              alignment: Alignment.bottomCenter,
+                              child: Text(
+                                'Question - 1/21',
+                                style: TextStyle(
+                                  color: Color(0xFF212121),
+                                  fontSize: 12,
+                                  fontFamily: 'Nunito',
+                                  fontWeight: FontWeight.w600,
+                                  height: 0,
+                                ),
+                              )),
+                        ),
+                        Transform.translate(
+                          offset: const Offset(20, -10),
                           child: Align(
                             alignment: Alignment.bottomLeft,
                             child: IconButton(
                                 onPressed: () => context
                                     .read<WorksheetSolverCubit>()
                                     .loadPreviousQuestion(),
-                                icon: const Icon(
-                                  Icons.arrow_circle_left_rounded,
-                                  size: 75,
+                                icon: Image.asset(
+                                  'assets/ui/Group.png',
+                                  height: 40,
                                 )),
                           ),
                         ),
@@ -345,42 +612,68 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView> {
     String newAns = '';
     return Column(
       mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Text('${i + 1}) ${trueFalseQuestion.question}'),
-        Row(
-          children: [
-            Radio<bool?>(
-              value: true,
-              groupValue: isTrueSelected,
-              onChanged: (bool? value) {
-                // Handle the onChanged event here if needed
-                // For example, you can update the state or perform some action
-                // when the 'True' radio button is selected.
-              },
-            ),
-            const Text('True'),
-            Radio<bool?>(
-              value: true,
-              groupValue: isFalseSelected,
-              onChanged: (bool? value) {
-                // Handle the onChanged event here if needed
-                // For example, you can update the state or perform some action
-                // when the 'False' radio button is selected.
-              },
-            ),
-            const Text('False'),
-          ],
+        80.verticalSpacer,
+        Text(
+          trueFalseQuestion.question,
+          textAlign: TextAlign.center,
+          style: const TextStyle(
+            color: Color(0xFF212121),
+            fontSize: 32,
+            fontFamily: 'Nunito',
+            fontWeight: FontWeight.w500,
+            height: 0,
+          ),
         ),
-        TextFormField(
-          initialValue: newAns,
-          onChanged: (value) {
-            newAns = value;
-          },
-          onEditingComplete: () {
-            print('compelte');
-            context.read<WorksheetSolverCubit>().setAnswer(i, newAns);
-          },
+        80.verticalSpacer,
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              width: 60.wp,
+              padding: EdgeInsets.symmetric(vertical: 2.wp),
+              decoration: ShapeDecoration(
+                color: const Color(0xFFF4F2FE),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(17),
+                ),
+              ),
+              child: const Text(
+                'True',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Color(0xFF4F3A9C),
+                  fontSize: 22,
+                  fontFamily: 'Nunito',
+                  fontWeight: FontWeight.w700,
+                  height: 0,
+                ),
+              ),
+            ),
+            10.horizontalSpacerPercent,
+            Container(
+              width: 60.wp,
+              padding: EdgeInsets.symmetric(vertical: 2.wp),
+              decoration: ShapeDecoration(
+                color: const Color(0xFFF4F2FE),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(17),
+                ),
+              ),
+              child: const Text(
+                "False",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Color(0xFF4F3A9C),
+                  fontSize: 22,
+                  fontFamily: 'Nunito',
+                  fontWeight: FontWeight.w700,
+                  height: 0,
+                ),
+              ),
+            )
+          ],
         ),
       ],
     );
@@ -445,25 +738,85 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView> {
       noOfTextFileds = (fillBlankQuestion.answer as List<dynamic>).length;
     }
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text('${i + 1}) ${fillBlankQuestion.question}'),
+        50.verticalSpacer,
+        Text(
+          fillBlankQuestion.question,
+          textAlign: TextAlign.center,
+          style: const TextStyle(
+            color: Color(0xFF212121),
+            fontSize: 32,
+            fontFamily: 'Nunito',
+            fontWeight: FontWeight.w500,
+            height: 0,
+          ),
+        ),
+        45.verticalSpacer,
         ...List.generate(
           noOfTextFileds,
-          (j) => TextFormField(
-            initialValue: markedAnswers.length > j ? markedAnswers[j] : '',
-            onChanged: (value) {
-              if (markedAnswers.length > j) {
-                markedAnswers[j] = value;
-              } else {
-                markedAnswers.add(value);
-              }
-            },
-            onEditingComplete: () {
-              print('complete');
-              context.read<WorksheetSolverCubit>().setAnswer(i, markedAnswers);
-            },
+          (j) => Padding(
+            padding: const EdgeInsets.only(bottom: 10),
+            child: Row(
+              // mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  '${j + 1}.',
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    color: Color(0xFF4D4D4D),
+                    fontSize: 24,
+                    fontFamily: 'Nunito',
+                    fontWeight: FontWeight.w400,
+                    height: 0,
+                  ),
+                ),
+                5.horizontalSpacerPercent,
+                Stack(
+                  children: [
+                    Container(
+                      width: 70.wp,
+                      height: 50,
+                      child: Image.asset(
+                        'assets/images/PNG Icons/Vector.png',
+                        fit: BoxFit.fill,
+                      ),
+                    ),
+                    Container(
+                      width: 70.wp,
+                      padding: const EdgeInsets.symmetric(horizontal: 15),
+                      child: TextFormField(
+                        decoration: const InputDecoration(
+                          // labelText: 'Type your answer',
+                          border: InputBorder.none,
+                        ),
+                        initialValue:
+                            markedAnswers.length > j ? markedAnswers[j] : '',
+                        onChanged: (value) {
+                          if (markedAnswers.length > j) {
+                            markedAnswers[j] = value;
+                          } else {
+                            markedAnswers.add(value);
+                          }
+                        },
+                        onEditingComplete: () {
+                          print('complete');
+                          context
+                              .read<WorksheetSolverCubit>()
+                              .setAnswer(i, markedAnswers);
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+                5.horizontalSpacerPercent,
+                Container(
+                    width: 50,
+                    child: Image.asset('assets/images/PNG Icons/Cam 1.png'))
+              ],
+            ),
           ),
         ),
       ],
@@ -538,45 +891,49 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView> {
     String newval = '';
     return Column(
       mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Text('${i + 1}) ${mcqTextQuestion.question}'),
-        ListView.builder(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemCount: (mcqTextQuestion.options.length / 2).ceil(),
-          itemBuilder: (context, index) {
-            return Row(
-              children: [
-                for (int i = index * 2; i < (index + 1) * 2; i++)
-                  if (i < mcqTextQuestion.options.length)
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          "${i + 1}. ${mcqTextQuestion.options[i]}",
-                          style: TextStyle(
-                            fontWeight: (markedAnswer as String?) ==
-                                    mcqTextQuestion.options[i]
-                                ? FontWeight.bold
-                                : FontWeight.normal,
-                          ),
+        80.verticalSpacer,
+        Text(
+          mcqTextQuestion.question,
+          textAlign: TextAlign.center,
+          style: const TextStyle(
+            color: Color(0xFF212121),
+            fontSize: 32,
+            fontFamily: 'Nunito',
+            fontWeight: FontWeight.w500,
+            height: 0,
+          ),
+        ),
+        80.verticalSpacer,
+        // Text('${i + 1}) ${mcqTextQuestion.question}'),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            ...List.generate(
+                mcqTextQuestion.options.length,
+                (index) => Container(
+                      width: 40.wp,
+                      padding: EdgeInsets.symmetric(vertical: 2.wp),
+                      decoration: ShapeDecoration(
+                        color: const Color(0xFFF4F2FE),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(17),
                         ),
                       ),
-                    ),
-              ],
-            );
-          },
-        ),
-        TextFormField(
-          initialValue: markedAnswer,
-          onChanged: (value) {
-            newval = value;
-          },
-          onEditingComplete: () {
-            print('compelte');
-            context.read<WorksheetSolverCubit>().setAnswer(i, newval);
-          },
+                      child: Text(
+                        mcqTextQuestion.options[index],
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          color: Color(0xFF4F3A9C),
+                          fontSize: 22,
+                          fontFamily: 'Nunito',
+                          fontWeight: FontWeight.w700,
+                          height: 0,
+                        ),
+                      ),
+                    ))
+          ],
         ),
       ],
     );
@@ -586,7 +943,7 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView> {
     return AppBar(
       toolbarHeight: DeviceType().isMobile ? 56 : 80,
       automaticallyImplyLeading: false,
-      backgroundColor: AppColors.accentColor,
+      backgroundColor: const Color(0XFF4F3A9C),
       leading: null,
       title: Row(
         children: [
@@ -598,56 +955,86 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView> {
               width: 36.h,
               child: Image.asset(
                 'assets/images/reusable_icons/back_button_primary.png',
+                color: Colors.white,
               ),
             ),
           ),
           const Spacer(),
           Text(
-            'Worksheets Solver',
-            style: DeviceType().isMobile
-                ? AppTextStyles.uniformRounded136BoldAppBarStyle
-                : AppTextStyles.uniformRounded136BoldAppBarStyle
-                    .copyWith(fontSize: 136.sp * 0.7),
+            // 'Q1. Fill in the Blanks',
+            'Q.${context.watch<WorksheetSolverCubit>().state.currentQuestion + 1} ${context.watch<WorksheetSolverCubit>().state.questions[context.watch<WorksheetSolverCubit>().state.currentQuestion].questionType}',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 136.sp,
+              fontFamily: 'Uniform Rounded',
+              fontWeight: FontWeight.w700,
+              height: 0,
+            ),
           ),
           const Spacer(),
-          Row(
-            children: [
-              GestureDetector(
-                onTap: () {
-                  context.read<WorksheetSolverCubit>().answerSubmit();
-                },
-                child: Container(
-                  margin: EdgeInsets.only(left: 2.wp, right: 3.wp),
-                  height: 36.h,
-                  width: 36.h,
-                  child: Icon(
-                    Icons.swap_vert_circle,
-                    size: 36,
-                  ),
+          Container(
+            width: 70,
+            height: 40,
+            // padding: const EdgeInsets.symmetric(horizontal: 56, vertical: 28),
+            decoration: ShapeDecoration(
+              color: const Color(0xFF45C375),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(13),
+              ),
+            ),
+            child: const Center(
+              child: Text(
+                'Submit',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 15,
+                  fontFamily: 'Nunito',
+                  fontWeight: FontWeight.w700,
+                  height: 0,
                 ),
               ),
-              GestureDetector(
-                onTap: () {
-                  List<StudentAnswer> finalAnsSheet = List.from(
-                      context.read<WorksheetSolverCubit>().state.answerSheet);
-                  //sort the finalAnsSheet
+            ),
+          )
+          // Row(
+          //   children: [
+          //     GestureDetector(
+          //       onTap: () {
+          //         context.read<WorksheetSolverCubit>().answerSubmit();
+          //       },
+          //       child: Container(
+          //         margin: EdgeInsets.only(left: 2.wp, right: 3.wp),
+          //         height: 36.h,
+          //         width: 36.h,
+          //         child: Icon(
+          //           Icons.swap_vert_circle,
+          //           size: 36,
+          //         ),
+          //       ),
+          //     ),
+          //     GestureDetector(
+          //       onTap: () {
+          //         List<StudentAnswer> finalAnsSheet = List.from(
+          //             context.read<WorksheetSolverCubit>().state.answerSheet);
+          //         //sort the finalAnsSheet
 
-                  finalAnsSheet
-                      .sort((a, b) => a.questionNo.compareTo(b.questionNo));
-                  print(jsonEncode(finalAnsSheet));
-                },
-                child: Container(
-                  margin: EdgeInsets.only(left: 2.wp, right: 3.wp),
-                  height: 36.h,
-                  width: 36.h,
-                  child: Icon(
-                    Icons.bookmark_outline_sharp,
-                    size: 36,
-                  ),
-                ),
-              ),
-            ],
-          ),
+          //         finalAnsSheet
+          //             .sort((a, b) => a.questionNo.compareTo(b.questionNo));
+          //         print(jsonEncode(finalAnsSheet));
+          //       },
+          //       child: Container(
+          //         margin: EdgeInsets.only(left: 2.wp, right: 3.wp),
+          //         height: 36.h,
+          //         width: 36.h,
+          //         child: Icon(
+          //           Icons.bookmark_outline_sharp,
+          //           size: 36,
+          //         ),
+          //       ),
+          //     ),
+          //   ],
+          // ),
         ],
       ),
     );

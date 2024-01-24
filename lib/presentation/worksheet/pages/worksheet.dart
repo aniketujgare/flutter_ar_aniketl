@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_ar/core/util/reusable_widgets/reusable_button.dart';
 import 'package:flutter_ar/data/models/teacher_message.dart';
 import 'package:flutter_ar/presentation/parent_zone/bloc/teacher_message_cubit/teacher_message_cubit.dart';
@@ -13,6 +12,7 @@ import 'package:size_config/size_config.dart';
 
 import '../../../../core/util/device_type.dart';
 import '../../../../core/util/styles.dart';
+import '../bloc/worksheet_page_cubit/worksheet_page_cubit.dart';
 
 class WorksheetView extends StatefulWidget {
   const WorksheetView({super.key});
@@ -56,103 +56,226 @@ class _WorksheetViewState extends State<WorksheetView> {
     return PopScope(
       canPop: false,
       child: Scaffold(
-        backgroundColor: AppColors.parentZoneScaffoldColor,
-        appBar: AppBar(
-          toolbarHeight: DeviceType().isMobile ? 56 : 80,
-          automaticallyImplyLeading: false,
-          backgroundColor: AppColors.accentColor,
-          leading: null,
-          title: Row(
-            children: [
-              GestureDetector(
-                onTap: () => Navigator.pop(context),
-                child: Container(
-                  margin: EdgeInsets.only(left: 2.wp, right: 3.wp),
-                  height: 36.h,
-                  width: 36.h,
-                  child: Image.asset(
-                    'assets/images/reusable_icons/back_button_primary.png',
+          backgroundColor: AppColors.parentZoneScaffoldColor,
+          appBar: AppBar(
+            toolbarHeight: DeviceType().isMobile ? 56 : 80,
+            automaticallyImplyLeading: false,
+            backgroundColor: AppColors.accentColor,
+            leading: null,
+            title: Row(
+              children: [
+                GestureDetector(
+                  onTap: () => Navigator.pop(context),
+                  child: Container(
+                    margin: EdgeInsets.only(left: 2.wp, right: 3.wp),
+                    height: 36.h,
+                    width: 36.h,
+                    child: Image.asset(
+                      'assets/images/reusable_icons/back_button_primary.png',
+                    ),
                   ),
                 ),
-              ),
 
-              // 5.horizontalSpacer,
-              const Spacer(),
-              Text(
-                'Worksheets',
-                style: DeviceType().isMobile
-                    ? AppTextStyles.uniformRounded136BoldAppBarStyle
-                    : AppTextStyles.uniformRounded136BoldAppBarStyle
-                        .copyWith(fontSize: 136.sp * 0.7),
-              ),
-              const Spacer(),
-              GestureDetector(
-                onTap: () async {
-                  // await isLogedIn();
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => const WorksheetHistoryView()));
-                },
-                child: Container(
-                  margin: EdgeInsets.only(left: 2.wp, right: 3.wp),
-                  height: 36.h,
-                  width: 36.h,
-                  child: Image.asset(
-                    'assets/images/PNG Icons/history.png',
+                // 5.horizontalSpacer,
+                const Spacer(),
+                Text(
+                  'Worksheets',
+                  style: DeviceType().isMobile
+                      ? AppTextStyles.uniformRounded136BoldAppBarStyle
+                      : AppTextStyles.uniformRounded136BoldAppBarStyle
+                          .copyWith(fontSize: 136.sp * 0.7),
+                ),
+                const Spacer(),
+                GestureDetector(
+                  onTap: () async {
+                    // await isLogedIn();
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => const WorksheetHistoryView()));
+                  },
+                  child: Container(
+                    margin: EdgeInsets.only(left: 2.wp, right: 3.wp),
+                    height: 36.h,
+                    width: 36.h,
+                    child: Image.asset(
+                      'assets/images/PNG Icons/history.png',
+                    ),
                   ),
+                ),
+              ],
+            ),
+          ),
+          body: Stack(
+            children: [
+              BlocBuilder<WorksheetPageCubit, int>(
+                builder: (context, index) {
+                  return Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 18.wp),
+                    child: PageView.builder(
+                      controller: context.read<WorksheetPageCubit>().pageCont,
+                      scrollDirection: Axis.horizontal,
+                      onPageChanged: (value) {
+                        context.read<WorksheetPageCubit>().setPage(value);
+                      },
+                      itemCount: 3, // Number of pages
+                      itemBuilder: (context, page) {
+                        // Calculate the starting index for this page
+                        int startIndex = page * 4;
+                        // Calculate the ending index for this page
+                        int endIndex = (page + 1) * 4;
+
+                        // Ensure endIndex does not exceed the total number of elements
+                        endIndex = endIndex >
+                                context
+                                    .read<WorksheetCubit>()
+                                    .state
+                                    .worksheets
+                                    .length
+                            ? context
+                                .read<WorksheetCubit>()
+                                .state
+                                .worksheets
+                                .length
+                            : endIndex;
+
+                        // Create a list of widgets for this page
+                        List<Widget> pageWidgets = [];
+
+                        for (int i = startIndex; i < endIndex; i++) {
+                          var workSheet = context
+                              .read<WorksheetCubit>()
+                              .state
+                              .worksheets[i];
+                          pageWidgets.add(
+                            GestureDetector(
+                              onTap: () => Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => WorksheetSolverView(
+                                    workSheetId: workSheet.id,
+                                    studentId: 11,
+                                  ),
+                                ),
+                              ),
+                              child: Lesson(
+                                title: workSheet.worksheetName,
+                                greenTxt: workSheet.subject,
+                                redTxt: worksheet[i % worksheet.length][2],
+                                blueTxt: workSheet.teacher,
+                              ),
+                            ),
+                          );
+                        }
+
+                        return SizedBox.expand(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: pageWidgets,
+                          ),
+                        );
+                      },
+                    ),
+                  );
+                },
+              ),
+              Padding(
+                padding: EdgeInsets.fromLTRB(8.wp, 4.wp, 8.wp, 4.wp),
+                child: Column(
+                  children: [
+                    //! Center page previous and next buttons
+                    Expanded(
+                        child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        GestureDetector(
+                          onTap: () => context
+                              .read<WorksheetPageCubit>()
+                              .setPreviousPage(),
+                          child: SizedBox(
+                            height: 45.h,
+                            width: 45.h,
+                            child: Image.asset(
+                              'assets/ui/Group.png', // right arrow
+                              fit: BoxFit.scaleDown,
+                              height: 45.h,
+                              width: 45.h,
+                            ),
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () =>
+                              context.read<WorksheetPageCubit>().setNextPage(),
+                          child: RotatedBox(
+                            quarterTurns: 2,
+                            child: SizedBox(
+                              height: 45.h,
+                              width: 45.h,
+                              child: Image.asset(
+                                'assets/ui/Group.png', // right arrow
+                                fit: BoxFit.scaleDown,
+                                height: 45.h,
+                                width: 45.h,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    )),
+                  ],
                 ),
               ),
             ],
+          )
+
+          // Padding(
+          //   padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+          //   child: SizedBox.expand(
+          //       child: BlocBuilder<WorksheetCubit, WorksheetState>(
+          //     builder: (context, state) {
+          //       if (state.status == WorksheetStatus.loaded) {
+          //         return ListView.builder(
+          //           scrollDirection: Axis.horizontal,
+          //           itemCount: state.worksheets.length,
+          //           padding: EdgeInsets.only(
+          //               top: DeviceType().isMobile ? 4.wp : 18.wp,
+          //               left: 4.wp,
+          //               right: 4.wp,
+          //               bottom: DeviceType().isMobile ? 4.wp : 18.wp),
+          //           itemBuilder: (BuildContext context, int i) {
+          //             var workSheet = state.worksheets[i];
+          //             return GestureDetector(
+          //               onTap: () => Navigator.of(context).push(MaterialPageRoute(
+          //                   builder: (context) => WorksheetSolverView(
+          //                         workSheetId: workSheet.id,
+          //                         studentId: 11,
+          //                       ))),
+          //               child: Lesson(
+          //                 title: workSheet.worksheetName, //worksheet[i][0],
+          //                 greenTxt: workSheet.subject, // worksheet[i][1],
+          //                 redTxt: worksheet[i % worksheet.length][2],
+          //                 blueTxt: workSheet.teacher, // worksheet[i][3],
+          //               ),
+          //             );
+          //           },
+          //         );
+          //       } else {
+          //         return const Center(
+          //             child: CircularProgressIndicator.adaptive(
+          //                 strokeCap: StrokeCap.round));
+          //       }
+          //     },
+          //   )),
+
+          // ),
+
           ),
-        ),
-        body: Padding(
-          padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-          child: SizedBox.expand(
-              child: BlocBuilder<WorksheetCubit, WorksheetState>(
-            builder: (context, state) {
-              if (state.status == WorksheetStatus.loaded) {
-                return ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: state.worksheets.length,
-                  padding: EdgeInsets.only(
-                      top: DeviceType().isMobile ? 4.wp : 18.wp,
-                      left: 4.wp,
-                      right: 4.wp,
-                      bottom: DeviceType().isMobile ? 4.wp : 18.wp),
-                  itemBuilder: (BuildContext context, int i) {
-                    var workSheet = state.worksheets[i];
-                    return GestureDetector(
-                      onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => WorksheetSolverView(
-                                workSheetId: workSheet.id,
-                                studentId: 11,
-                              ))),
-                      child: Lesson(
-                        title: workSheet.worksheetName, //worksheet[i][0],
-                        greenTxt: workSheet.subject, // worksheet[i][1],
-                        redTxt: worksheet[i % worksheet.length][2],
-                        blueTxt: workSheet.teacher, // worksheet[i][3],
-                      ),
-                    );
-                  },
-                );
-              } else {
-                return const Center(
-                    child: CircularProgressIndicator.adaptive(
-                        strokeCap: StrokeCap.round));
-              }
-            },
-          )),
-        ),
-      ),
     );
   }
 }
 
 var worksheet = [
-  ['Living and non-living things', 'EVS', 'Overdue', 'Teacher\'s Name'],
-  ['Vowels and Noun', 'English', '3rd January', 'D. C. Pandey'],
-  ['Fraction and Division', 'Maths', '19th January', 'H. C. Verma'],
-  ['Name of worksheet', 'EVS', '22nd January', 'H. K. Das'],
+  ['Living and non-living things', 'EVS', '26 Jan 24', 'Teacher\'s Name'],
+  ['Vowels and Noun', 'English', '28 Jan 24', 'D. C. Pandey'],
+  ['Fraction and Division', 'Maths', '29 Jan 24', 'H. C. Verma'],
+  ['Name of worksheet', 'EVS', '30 Feb 24', 'H. K. Das'],
 ];
 
 class Lesson extends StatelessWidget {
@@ -172,9 +295,9 @@ class Lesson extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(right: 10, left: 10),
-      width: DeviceType().isMobile ? 45.wp : 35.wp,
-      height: DeviceType().isMobile ? 2.wp : 10.wp,
+      // margin: EdgeInsets.only(right: 0.8.wp, left: 0.81.wp),
+      width: DeviceType().isMobile ? 43.wp : 35.wp,
+      // height: DeviceType().isMobile ? 2.wp : 10.wp,
       decoration: ShapeDecoration(
         color: Colors.white,
         shape: RoundedRectangleBorder(
@@ -208,20 +331,37 @@ class Lesson extends StatelessWidget {
             margin: EdgeInsets.symmetric(vertical: 1.wp, horizontal: 3.wp),
             padding: EdgeInsets.symmetric(vertical: 1.2.wp, horizontal: 1.wp),
             decoration: ShapeDecoration(
-              color: const Color(0xFF9CDDB6),
+              color: const Color(0xFFB3EAFC),
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12)),
+                  borderRadius: BorderRadius.circular(17)),
             ),
-            child: Text(
-              greenTxt,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: const Color(0xFF074C2B),
-                fontSize: DeviceType().isMobile ? 16 : 20,
-                fontFamily: 'Nunito',
-                fontWeight: FontWeight.w400,
-                height: 0,
-              ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  greenTxt,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: const Color(0xff212121),
+                    fontSize: DeviceType().isMobile ? 16 : 20,
+                    fontFamily: 'Nunito',
+                    fontWeight: FontWeight.w400,
+                    height: 0,
+                  ),
+                ),
+                SizedBox(height: 5.h),
+                Text(
+                  blueTxt,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: const Color(0xff212121),
+                    fontSize: DeviceType().isMobile ? 16 : 20,
+                    fontFamily: 'Nunito',
+                    fontWeight: FontWeight.w400,
+                    height: 0,
+                  ),
+                ),
+              ],
             ),
           ),
           //!Overdue
@@ -229,56 +369,45 @@ class Lesson extends StatelessWidget {
             width: double.maxFinite,
             // height: 70,
             margin: EdgeInsets.symmetric(vertical: 1.wp, horizontal: 3.wp),
-            padding: EdgeInsets.symmetric(vertical: 1.2.wp, horizontal: 2.wp),
+            padding: EdgeInsets.symmetric(vertical: 1.3.wp, horizontal: 2.wp),
             decoration: ShapeDecoration(
               color: const Color(0xFFFFC1B8),
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12)),
+                  borderRadius: BorderRadius.circular(15)),
             ),
             child: Text(
               redTxt,
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: const Color(0xFFA94234),
-                fontSize: DeviceType().isMobile ? 16 : 20,
+                fontSize: DeviceType().isMobile ? 20 : 20,
                 fontFamily: 'Nunito',
-                fontWeight: FontWeight.w400,
+                fontWeight: FontWeight.w700,
                 height: 0,
               ),
             ),
           ),
-          //!Teachers name
-          Container(
-            width: double.maxFinite,
-            // height: 70,
-            margin: EdgeInsets.symmetric(vertical: 1.wp, horizontal: 3.wp),
-            padding: EdgeInsets.symmetric(vertical: 1.2.wp, horizontal: 2.wp),
-            decoration: ShapeDecoration(
-              color: const Color(0xFFB3EAFC),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12)),
+          20.verticalSpacer,
+          //!Remaining questions
+          const Text(
+            "0/30",
+            style: TextStyle(
+              fontFamily: "Nunito",
+              fontSize: 12,
+              fontWeight: FontWeight.w400,
+              color: Color(0xff212121),
+              height: 40 / 32,
             ),
-            child: Text(
-              blueTxt,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: const Color(0xFF003A54),
-                fontSize: DeviceType().isMobile ? 16 : 20,
-                fontFamily: 'Nunito',
-                fontWeight: FontWeight.w400,
-                height: 0,
-              ),
-            ),
+            textAlign: TextAlign.center,
           ),
-          10.verticalSpacer,
+          5.verticalSpacer,
           //!Solve
           Container(
             width: double.maxFinite,
-            // height: 70,
-            margin: EdgeInsets.symmetric(vertical: 1.wp, horizontal: 3.wp),
+            margin: EdgeInsets.fromLTRB(3.wp, 1.wp, 3.wp, 3.wp),
             padding: EdgeInsets.symmetric(vertical: 3.wp, horizontal: 2.wp),
             decoration: ShapeDecoration(
-              color: const Color(0xFF8C7DF0),
+              color: const Color(0xFF45C375),
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(25)),
             ),

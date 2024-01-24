@@ -27,6 +27,7 @@ import 'presentation/parent_zone/bloc/reports_pagecontroller_cubit/reports_pagec
 import 'presentation/parent_zone/bloc/teacher_list_bloc/teacher_list_bloc.dart';
 import 'presentation/splash_screen/bloc/splash_animation_bloc.dart';
 import 'presentation/subject/bloc/subject_page_cubit.dart';
+import 'presentation/worksheet/bloc/worksheet_page_cubit/worksheet_page_cubit.dart';
 import 'presentation/worksheet/bloc/worksheet_solver_cubit/worksheet_solver_cubit.dart';
 
 final authenticationRepository = AuthenticationRepository();
@@ -131,6 +132,9 @@ class MyAppState extends State<MyApp> {
             ),
             BlocProvider(
               create: (context) => SubjectPageCubit(),
+            ),
+            BlocProvider(
+              create: (context) => WorksheetPageCubit(),
             ),
           ],
           child: MaterialApp.router(

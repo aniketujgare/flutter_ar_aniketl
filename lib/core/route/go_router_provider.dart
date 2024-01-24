@@ -8,12 +8,12 @@ import 'package:flutter_ar/presentation/parent_zone/widgets/message_view.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hive/hive.dart';
 
-import '../../temp_testing/asset_download.dart';
+// import '../../temp_testing/asset_download.dart';
 import '../../demo/constants.dart';
 import '../../presentation/category/widgets/model_3d_view.dart';
 import '../../presentation/category/pages/category_screen.dart';
 import '../../presentation/splash_screen/splash_screen.dart';
-import '../../temp_testing/draw_test.dart';
+// import '../../temp_testing/draw_test.dart';
 import 'route_name.dart';
 
 final GlobalKey<NavigatorState> _rootNavigatorKey =
