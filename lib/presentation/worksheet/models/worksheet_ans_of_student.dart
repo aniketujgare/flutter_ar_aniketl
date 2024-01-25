@@ -9,23 +9,18 @@ class Answer {
 
   factory Answer.fromJson(dynamic json) {
     if (json['answer'] is List) {
-      print("josnList" + json['answer'].toString());
-
       return Answer(answer: json['answer']);
     } else {
-      print("josnsingleans" + json['answer'].toString());
       return Answer(answer: json['answer']);
     }
   }
 
   Map<String, dynamic> toJson() {
-    print('inside toJson answer');
     if (answer is List<String>) {
       if (answer.length == 1) {
         return {'answer': answer[0]};
       }
     }
-    print('josnsingleans ${answer.runtimeType.toString()}');
     return {'answer': answer};
   }
 }

@@ -24,6 +24,39 @@ abstract class Question {
   Question();
 
   Question.withType(this.question, this.questionType);
+
+  String getQuestionTypeString() {
+    switch (questionType) {
+      case QuestionType.mcqText:
+        return "Multiple Choice Questions";
+      case QuestionType.mcqImage:
+        return "Multiple Choice Questions";
+      case QuestionType.fillBlank:
+        return "Fill in the Blanks";
+      case QuestionType.multiplefillblank:
+        return "Multiple Fill in the Blanks";
+      case QuestionType.trueFalse:
+        return "True or False";
+      case QuestionType.matchTheFollowing:
+        return "Match the Following";
+      case QuestionType.oneWord:
+        return "One Word Answer";
+      case QuestionType.matchTheFollowingWithOptions:
+        return "Match the Following with Options";
+      case QuestionType.selectWord:
+        return "Select the Correct Word";
+      case QuestionType.oddOneOutText:
+        return "Pick the Odd One Out";
+      case QuestionType.oddOneOutimage:
+        return "Odd One Out (Image)";
+      case QuestionType.ascDescOrder:
+        return "Ascending and Descending Order";
+      case QuestionType.arithmetic:
+        return "Arithmetic";
+      case QuestionType.longAnswer:
+        return "Long Answer";
+    }
+  }
 }
 
 class McqTextQuestion extends Question {
@@ -483,6 +516,5 @@ List<Question> allWorsheetQuestins(String yourApiResponse) {
   }
 
   // Now, allQuestions list contains instances of different question types
-  print(allQuestions);
   return allQuestions;
 }
