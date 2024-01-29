@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_ar/core/util/styles.dart';
 import 'package:flutter_ar/temp_testing/draw_test.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:size_config/size_config.dart';
@@ -300,7 +301,7 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView> {
               mainAxisSize: MainAxisSize.max,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                120.verticalSpacer,
+                DeviceType().isMobile ? 120.verticalSpacer : 160.verticalSpacer,
                 Text(
                   oneWordQuestion.question,
                   textAlign: TextAlign.center,
@@ -312,51 +313,56 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView> {
                     height: 0,
                   ),
                 ),
-                55.verticalSpacer,
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Stack(
-                      children: [
-                        SizedBox(
-                          width: 70.wp,
-                          height: 60,
-                          child: Image.asset(
-                            'assets/images/PNG Icons/Vector.png',
-                            fit: BoxFit.fill,
-                          ),
-                        ),
-                        Transform.translate(
-                          offset: Offset(0, 5.h),
-                          child: Container(
+                DeviceType().isMobile ? 55.verticalSpacer : 85.verticalSpacer,
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 7.wp),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Stack(
+                        children: [
+                          SizedBox(
                             width: 70.wp,
-                            padding: const EdgeInsets.symmetric(horizontal: 15),
-                            child: TextFormField(
-                              decoration: const InputDecoration(
-                                // labelText: 'Type your answer',
-                                border: InputBorder.none,
-                              ),
-                              initialValue: ans,
-                              onChanged: (value) {
-                                context
-                                    .read<WorksheetSolverCubit>()
-                                    .setAnswer(i, value);
-                              },
-                              onEditingComplete: () {
-                                print('complete');
-                                FocusScope.of(context)
-                                    .requestFocus(FocusNode());
-                              },
+                            height: 60,
+                            child: Image.asset(
+                              'assets/images/PNG Icons/Vector.png',
+                              fit: BoxFit.fill,
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                    5.horizontalSpacerPercent,
-                    SizedBox(
-                        width: 55,
-                        child: Image.asset('assets/images/PNG Icons/Cam 1.png'))
-                  ],
+                          Transform.translate(
+                            offset: Offset(0, 5.h),
+                            child: Container(
+                              width: 70.wp,
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 15),
+                              child: TextFormField(
+                                decoration: const InputDecoration(
+                                  // labelText: 'Type your answer',
+                                  border: InputBorder.none,
+                                ),
+                                initialValue: ans,
+                                onChanged: (value) {
+                                  context
+                                      .read<WorksheetSolverCubit>()
+                                      .setAnswer(i, value);
+                                },
+                                onEditingComplete: () {
+                                  print('complete');
+                                  FocusScope.of(context)
+                                      .requestFocus(FocusNode());
+                                },
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      5.horizontalSpacerPercent,
+                      SizedBox(
+                          width: 55,
+                          child:
+                              Image.asset('assets/images/PNG Icons/Cam 1.png'))
+                    ],
+                  ),
                 ),
               ],
             ),
@@ -438,8 +444,6 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView> {
                   BlocBuilder<WorksheetSolverCubit, WorksheetSolverState>(
                 builder: (context, state) {
                   if (state.status == WorkSheetSolverStatus.loaded) {
-                    // print(jsonEncode(state.questions));
-                    print(state.currentQuestion);
                     return Stack(
                       children: [
                         getQuestion(state, state.currentQuestion),
@@ -472,7 +476,7 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView> {
                                     return Text(
                                       'Question - ${state.currentQuestion + 1}/${state.questions.length}',
                                       style: TextStyle(
-                                        color: Color(0xFF212121),
+                                        color: AppColors.textFieldTextColor,
                                         fontSize: 12,
                                         fontFamily: 'Nunito',
                                         fontWeight: FontWeight.w600,
@@ -686,7 +690,13 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView> {
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            noOfTextFileds == 1 ? 120.verticalSpacer : 80.verticalSpacer,
+            noOfTextFileds == 1
+                ? (DeviceType().isMobile
+                    ? 120.verticalSpacer
+                    : 160.verticalSpacer)
+                : (DeviceType().isMobile
+                    ? 80.verticalSpacer
+                    : 160.verticalSpacer),
             Text(
               fillBlankQuestion.question,
               textAlign: TextAlign.center,
@@ -698,7 +708,7 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView> {
                 height: 0,
               ),
             ),
-            55.verticalSpacer,
+            DeviceType().isMobile ? 55.verticalSpacer : 85.verticalSpacer,
             ...List.generate(
               noOfTextFileds,
               (j) => Padding(
@@ -734,10 +744,9 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView> {
                           offset: Offset(0, -3.h),
                           child: Container(
                             width: 70.wp,
-                            padding: const EdgeInsets.symmetric(horizontal: 15),
+                            padding: EdgeInsets.symmetric(horizontal: 75.sp),
                             child: TextFormField(
                               decoration: const InputDecoration(
-                                // labelText: 'Type your answer',
                                 border: InputBorder.none,
                               ),
                               initialValue: markedAnswers.length > j
@@ -758,9 +767,6 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView> {
                               },
                               onEditingComplete: () {
                                 print('complete');
-                                // context
-                                //     .read<WorksheetSolverCubit>()
-                                //     .setAnswer(i, markedAnswers);
                                 FocusScope.of(context)
                                     .requestFocus(FocusNode());
                               },

@@ -28,6 +28,11 @@ class _WorksheetViewState extends State<WorksheetView> {
   @override
   void initState() {
     context.read<WorksheetCubit>().getWorksheets();
+    context.read<WorksheetPageCubit>().setmaxLength(
+        (BlocProvider.of<WorksheetCubit>(context).state.worksheets.length /
+                (DeviceType().isMobile ? 4 : 3))
+            .ceil());
+    context.read<WorksheetPageCubit>().setPage(0);
     super.initState();
   }
 
@@ -42,7 +47,7 @@ class _WorksheetViewState extends State<WorksheetView> {
 
   @override
   Widget build(BuildContext context) {
-    getStudentId().then((value) => widget.studentId = value);
+    // getStudentId().then((value) => widget.studentId = value);
     return PopScope(
       canPop: false,
       child: Scaffold(
@@ -65,8 +70,6 @@ class _WorksheetViewState extends State<WorksheetView> {
                   ),
                 ),
               ),
-
-              // 5.horizontalSpacer,
               const Spacer(),
               Text(
                 'Worksheets',
@@ -99,7 +102,6 @@ class _WorksheetViewState extends State<WorksheetView> {
             BlocBuilder<WorksheetCubit, WorksheetState>(
               builder: (context, state) {
                 if (state.status == WorksheetStatus.loaded) {
-                  // log(jsonEncode(state.worksheets));
                   return BlocBuilder<WorksheetPageCubit, int>(
                     builder: (context, index) {
                       return PageView.builder(
@@ -108,12 +110,14 @@ class _WorksheetViewState extends State<WorksheetView> {
                         onPageChanged: (value) {
                           context.read<WorksheetPageCubit>().setPage(value);
                         },
-                        itemCount: 3, // Number of pages
+                        itemCount: context
+                            .read<WorksheetPageCubit>()
+                            .maxLen, // Number of pages
                         itemBuilder: (context, page) {
-                          // Calculate the starting index for this page
-                          int startIndex = page * 4;
-                          // Calculate the ending index for this page
-                          int endIndex = (page + 1) * 4;
+                          int startIndex =
+                              page * (DeviceType().isMobile ? 4 : 3);
+                          int endIndex =
+                              (page + 1) * (DeviceType().isMobile ? 4 : 3);
 
                           // Ensure endIndex does not exceed the total number of elements
                           endIndex = endIndex > state.worksheets.length
@@ -147,6 +151,22 @@ class _WorksheetViewState extends State<WorksheetView> {
                                 ),
                               ),
                             );
+                          }
+                          int noOfPages =
+                              context.read<WorksheetPageCubit>().maxLen;
+                          int noOfCards =
+                              noOfPages * (DeviceType().isMobile ? 4 : 3);
+                          print('no of cards: $noOfCards');
+                          print('rem box: ${pageWidgets.length}');
+                          if (pageWidgets.length <
+                              (DeviceType().isMobile ? 4 : 3)) {
+                            for (int i = pageWidgets.length;
+                                i < (DeviceType().isMobile ? 4 : 3);
+                                i++) {
+                              pageWidgets.add(const Expanded(
+                                child: SizedBox(),
+                              ));
+                            }
                           }
 
                           return Padding(
@@ -246,7 +266,8 @@ class Lesson extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 5.wp),
+      padding:
+          EdgeInsets.symmetric(vertical: DeviceType().isMobile ? 5.wp : 15.wp),
       child: Container(
         margin: EdgeInsets.symmetric(horizontal: 0.8.wp),
         decoration: ShapeDecoration(

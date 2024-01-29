@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ar/core/util/device_type.dart';
+import 'package:flutter_ar/presentation/worksheet/bloc/worksheet_cubit/worksheet_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class WorksheetPageCubit extends Cubit<int> {
@@ -11,9 +13,10 @@ class WorksheetPageCubit extends Cubit<int> {
       duration: const Duration(milliseconds: 300),
       curve: Curves.easeInOut,
     );
+    emit(curridx);
   }
 
-  int maxLen = 3;
+  late int maxLen;
   WorksheetPageCubit() : super(0);
   int curridx = 0;
   void setPage(int pageIndex) {
@@ -36,8 +39,8 @@ class WorksheetPageCubit extends Cubit<int> {
     }
   }
 
-  // void setmaxLength(int len) {
-  //   maxLen = len - 1;
-  //   print('maxLen $maxLen');
-  // }
+  void setmaxLength(int len) {
+    maxLen = len;
+    print('maxLen $maxLen');
+  }
 }

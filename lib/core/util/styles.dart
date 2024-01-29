@@ -18,6 +18,8 @@ class AppColors {
   static var redMessageSharedFileContainerColor = _createColor(0xFFFF8371);
   static var messageContainerColor = _createColor(0xFFE9E9E9);
   static var subjectNameColor = _createColor(0xFF4D4D4D);
+  static var boxSelectedColor = _createColor(0xFFB3EAFC);
+  static var boxUnselectedolor = _createColor(0xFFF4F2FE);
 }
 
 class AppTextStyles {
@@ -37,6 +39,11 @@ class AppTextStyles {
   }
 
   /// Nunito
+  static var nunito160w500textCol = _createTextStyle(
+      fontFamily: "Nunito",
+      fontSize: 160.sp,
+      fontWeight: FontWeight.w500,
+      color: AppColors.textFieldTextColor);
   static var nunito95w400white = _createTextStyle(
       fontFamily: "Nunito",
       fontSize: 100.sp,
@@ -60,6 +67,11 @@ class AppTextStyles {
     fontFamily: 'Nunito',
     fontWeight: FontWeight.w400,
   );
+  static var nunito95w700white = _createTextStyle(
+      fontFamily: "Nunito",
+      fontSize: 95.sp,
+      fontWeight: FontWeight.w700,
+      color: Colors.white);
   static var nunito100w700white = _createTextStyle(
       fontFamily: "Nunito",
       fontSize: 100.sp,

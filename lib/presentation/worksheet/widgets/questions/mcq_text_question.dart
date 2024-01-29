@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ar/core/util/device_type.dart';
+import 'package:flutter_ar/core/util/styles.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:size_config/size_config.dart';
 
 import '../../bloc/worksheet_solver_cubit/worksheet_solver_cubit.dart';
 import '../../models/questions.dart';
+import '../question_text.dart';
 
 class MCQTextQuestion extends StatelessWidget {
   final int questionIndex;
@@ -21,57 +24,56 @@ class MCQTextQuestion extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        120.verticalSpacer,
-        Text(
-          question.question,
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            color: const Color(0xFF212121),
-            fontSize: 160.sp,
-            fontFamily: 'Nunito',
-            fontWeight: FontWeight.w500,
-            height: 0,
-          ),
-        ),
-        55.verticalSpacer,
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            ...List.generate(
+        DeviceType().isMobile ? 120.verticalSpacer : 160.verticalSpacer,
+        QuestionText(question: question.question),
+        DeviceType().isMobile ? 55.verticalSpacer : 85.verticalSpacer,
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 7.wp),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: List.generate(
               question.options.length,
-              (index) => GestureDetector(
-                onTap: () {
-                  context
-                      .read<WorksheetSolverCubit>()
-                      .setAnswer(questionIndex, question.options[index]);
-                },
-                child: Container(
-                  width: 40.wp,
-                  padding: EdgeInsets.symmetric(vertical: 3.wp),
-                  decoration: ShapeDecoration(
-                    color: question.options[index] == markedAnswer
-                        ? const Color(0xFFB3EAFC)
-                        : const Color(0xFFF4F2FE),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(17),
+              (index) => Expanded(
+                child: GestureDetector(
+                  onTap: () {
+                    context
+                        .read<WorksheetSolverCubit>()
+                        .setAnswer(questionIndex, question.options[index]);
+                  },
+                  child: Container(
+                    height: 90.h,
+                    margin: EdgeInsets.symmetric(horizontal: 2.wp),
+                    decoration: ShapeDecoration(
+                      color: question.options[index] == markedAnswer
+                          ? AppColors.boxSelectedColor
+                          : AppColors.boxUnselectedolor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(17),
+                      ),
                     ),
-                  ),
-                  child: Text(
-                    question.options[index],
-                    overflow: TextOverflow.ellipsis,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: const Color(0xFF4F3A9C),
-                      fontSize: 120.sp,
-                      fontFamily: 'Nunito',
-                      fontWeight: FontWeight.w700,
-                      height: 0,
+                    child: Container(
+                      margin: EdgeInsets.symmetric(horizontal: 2.wp),
+                      padding: EdgeInsets.symmetric(horizontal: 1.wp),
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          question.options[index],
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: const Color(0xFF4F3A9C),
+                            fontSize: 120.sp,
+                            fontFamily: 'Nunito',
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ),
                     ),
                   ),
                 ),
               ),
-            )
-          ],
+            ),
+          ),
         ),
       ],
     );
