@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_ar/core/util/device_type.dart';
-import 'package:flutter_ar/core/util/styles.dart';
-import 'package:flutter_ar/presentation/category/pages/category_screen.dart';
-import 'package:flutter_ar/presentation/worksheet/pages/worksheet.dart';
-import 'package:flutter_ar/presentation/parent_zone/pages/parent_zone_screen.dart';
-import 'package:flutter_ar/presentation/parent_zone/widgets/message_view.dart';
-import 'package:go_router/go_router.dart';
 import 'package:size_config/size_config.dart';
-import 'package:orientation_widget/orientation_widget.dart';
 
+import '../../core/util/device_type.dart';
+import '../../core/util/styles.dart';
+import '../category/pages/category_screen.dart';
+import '../parent_zone/pages/parent_zone_screen.dart';
 import '../subject/pages/subject.dart';
+import '../worksheet/pages/worksheet.dart';
 
 class MainMenuScreen extends StatefulWidget {
   const MainMenuScreen({super.key});

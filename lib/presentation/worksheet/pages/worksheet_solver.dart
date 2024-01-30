@@ -1,16 +1,13 @@
-import 'dart:convert';
-
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_ar/core/util/styles.dart';
-import 'package:flutter_ar/temp_testing/draw_test.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:size_config/size_config.dart';
 
 import '../../../../core/util/device_type.dart';
-import '../models/questions.dart';
+import '../../../core/util/styles.dart';
+import '../../../temp_testing/draw_test.dart';
 import '../bloc/worksheet_solver_cubit/worksheet_solver_cubit.dart';
+import '../models/questions.dart';
 import '../widgets/appbar_worksheet_solver.dart';
 import '../widgets/questions/fill_in_blank_question.dart';
 import '../widgets/questions/mcq_image_question.dart';
@@ -65,14 +62,11 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView> {
           markedAnswer: markedAnswer,
         );
       case QuestionType.fillBlank:
-        FillBlankQuestion fillBlankQuestion =
-            state.questions[i] as FillBlankQuestion;
-        // return FillInTheBlankQuestion(
-        //   questionIndex: i,
-        //   question: state.questions[i] as FillBlankQuestion,
-        //   markedAnswer: markedAnswer,
-        // );
-        return _buildFillBlankQuestion(i, fillBlankQuestion, markedAnswer);
+        return FillInTheBlankQuestion(
+          fillBlankQuestion: state.questions[i] as FillBlankQuestion,
+          markedAnswer: markedAnswer,
+          questionIndex: i,
+        );
 
       case QuestionType.multiplefillblank:
         MultipleFillBlankQuestion multipleFillBlankQuestion =
@@ -659,133 +653,6 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView> {
           },
         ),
       ],
-    );
-  }
-
-  GestureDetector _buildFillBlankQuestion(
-      int i, FillBlankQuestion fillBlankQuestion, dynamic markedAnswer) {
-    List<String> markedAnswers = [];
-    print('markedAnswer type: ${markedAnswer.runtimeType}');
-    if (markedAnswer is List<dynamic>) {
-      markedAnswers.addAll(markedAnswer.map((element) => element.toString()));
-      print('listString');
-    } else if (markedAnswer is String) {
-      markedAnswers.add(markedAnswer);
-      print('String');
-    }
-
-    print('markedAnswers: $i $markedAnswers');
-    int noOfTextFileds = 1;
-    if (fillBlankQuestion.answer is List<dynamic>) {
-      noOfTextFileds = (fillBlankQuestion.answer as List<dynamic>).length;
-    }
-    return GestureDetector(
-      onTap: () {
-        // Dismiss the keyboard when tapped outside the TextField
-        // print('tapped outside textfield');
-        FocusScope.of(context).requestFocus(FocusNode());
-      },
-      child: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            noOfTextFileds == 1
-                ? (DeviceType().isMobile
-                    ? 120.verticalSpacer
-                    : 160.verticalSpacer)
-                : (DeviceType().isMobile
-                    ? 80.verticalSpacer
-                    : 160.verticalSpacer),
-            Text(
-              fillBlankQuestion.question,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: const Color(0xFF212121),
-                fontSize: 160.sp,
-                fontFamily: 'Nunito',
-                fontWeight: FontWeight.w500,
-                height: 0,
-              ),
-            ),
-            DeviceType().isMobile ? 55.verticalSpacer : 85.verticalSpacer,
-            ...List.generate(
-              noOfTextFileds,
-              (j) => Padding(
-                padding: const EdgeInsets.only(bottom: 10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    if (noOfTextFileds != 1)
-                      Text(
-                        '${j + 1}.',
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          color: Color(0xFF4D4D4D),
-                          fontSize: 24,
-                          fontFamily: 'Nunito',
-                          fontWeight: FontWeight.w400,
-                          height: 0,
-                        ),
-                      ),
-                    5.horizontalSpacerPercent,
-                    Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        SizedBox(
-                          width: 70.wp,
-                          height: 60,
-                          child: Image.asset(
-                            'assets/images/PNG Icons/Vector.png',
-                            fit: BoxFit.fill,
-                          ),
-                        ),
-                        Transform.translate(
-                          offset: Offset(0, -3.h),
-                          child: Container(
-                            width: 70.wp,
-                            padding: EdgeInsets.symmetric(horizontal: 75.sp),
-                            child: TextFormField(
-                              decoration: const InputDecoration(
-                                border: InputBorder.none,
-                              ),
-                              initialValue: markedAnswers.length > j
-                                  ? markedAnswers[j]
-                                  : '',
-                              onChanged: (value) {
-                                if (markedAnswers.length > j) {
-                                  markedAnswers[j] = value;
-                                  context
-                                      .read<WorksheetSolverCubit>()
-                                      .setAnswer(i, markedAnswers);
-                                } else {
-                                  markedAnswers.add(value);
-                                  context
-                                      .read<WorksheetSolverCubit>()
-                                      .setAnswer(i, markedAnswers);
-                                }
-                              },
-                              onEditingComplete: () {
-                                print('complete');
-                                FocusScope.of(context)
-                                    .requestFocus(FocusNode());
-                              },
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    5.horizontalSpacerPercent,
-                    SizedBox(
-                        height: 55,
-                        child: Image.asset('assets/images/PNG Icons/Cam 1.png'))
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }

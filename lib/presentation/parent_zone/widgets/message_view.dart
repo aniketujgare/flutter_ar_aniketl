@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_ar/core/util/reusable_widgets/reusable_button.dart';
-import 'package:flutter_ar/data/models/teacher_message.dart';
-import 'package:flutter_ar/presentation/parent_zone/bloc/teacher_message_cubit/teacher_message_cubit.dart';
+import '../../../core/util/reusable_widgets/reusable_button.dart';
+import '../../../data/models/teacher_message.dart';
+import '../bloc/teacher_message_cubit/teacher_message_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';

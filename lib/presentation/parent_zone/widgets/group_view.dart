@@ -1,10 +1,10 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_ar/core/util/device_type.dart';
-import 'package:flutter_ar/core/util/styles.dart';
-import 'package:flutter_ar/data/models/teacher_model.dart';
-import 'package:flutter_ar/presentation/parent_zone/widgets/message_view.dart';
+import '../../../core/util/device_type.dart';
+import '../../../core/util/styles.dart';
+import '../../../data/models/teacher_model.dart';
+import 'message_view.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hive_flutter/hive_flutter.dart';

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ar/core/util/styles.dart';
+import '../../../core/util/styles.dart';
 
 class QuestionText extends StatelessWidget {
   const QuestionText({

@@ -6,9 +6,9 @@ import 'package:http/http.dart' as http;
 
 import '../../../../data/models/teacher_model.dart';
 
+part 'teacher_list_bloc.freezed.dart';
 part 'teacher_list_event.dart';
 part 'teacher_list_state.dart';
-part 'teacher_list_bloc.freezed.dart';
 
 class TeacherListBloc extends Bloc<TeacherListEvent, TeacherListState> {
   TeacherListBloc() : super(const Initial()) {

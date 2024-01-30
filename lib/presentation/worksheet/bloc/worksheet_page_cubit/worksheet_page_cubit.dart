@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ar/core/util/device_type.dart';
-import 'package:flutter_ar/presentation/worksheet/bloc/worksheet_cubit/worksheet_cubit.dart';
+import '../../../../core/util/device_type.dart';
+import '../worksheet_cubit/worksheet_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class WorksheetPageCubit extends Cubit<int> {

@@ -2,12 +2,12 @@ import 'dart:convert';
 
 import 'package:bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-
-import '../../../../data/models/teacher_message.dart';
 import 'package:http/http.dart' as http;
 
-part 'teacher_message_state.dart';
+import '../../../../data/models/teacher_message.dart';
+
 part 'teacher_message_cubit.freezed.dart';
+part 'teacher_message_state.dart';
 
 class TeacherMessageCubit extends Cubit<TeacherMessageState> {
   TeacherMessageCubit() : super(const TeacherMessageState());

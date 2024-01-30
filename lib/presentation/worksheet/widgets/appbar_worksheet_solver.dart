@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ar/core/util/styles.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:size_config/size_config.dart';
 
 import '../../../core/util/device_type.dart';
+import '../../../core/util/styles.dart';
 import '../bloc/worksheet_solver_cubit/worksheet_solver_cubit.dart';
 
 AppBar appBarWorksheetSolver(BuildContext context) {

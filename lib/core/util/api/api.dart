@@ -1,10 +1,10 @@
 import 'dart:convert';
 
-import 'package:flutter_ar/data/models/ar_category.dart';
-import 'package:flutter_ar/data/models/ar_model.dart';
+import '../../../data/models/ar_category.dart';
+import '../../../data/models/ar_model.dart';
 import 'package:http/http.dart' as http;
 
-import 'package:flutter_ar/core/util/api/api_string.dart';
+import 'api_string.dart';
 
 class API {
   var client = http.Client();

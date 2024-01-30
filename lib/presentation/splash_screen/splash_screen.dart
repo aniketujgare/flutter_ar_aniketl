@@ -3,10 +3,10 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_ar/core/route/route_name.dart';
-import 'package:flutter_ar/core/util/device_type.dart';
-import 'package:flutter_ar/presentation/login/pages/login_screen.dart';
-import 'package:flutter_ar/presentation/main_menu/main_menu_screen.dart';
+import '../../core/route/route_name.dart';
+import '../../core/util/device_type.dart';
+import '../login/pages/login_screen.dart';
+import '../main_menu/main_menu_screen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:size_config/size_config.dart';

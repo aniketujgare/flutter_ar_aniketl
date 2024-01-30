@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ar/core/util/device_type.dart';
+import '../device_type.dart';
 import 'package:size_config/size_config.dart';
 
 import '../styles.dart';

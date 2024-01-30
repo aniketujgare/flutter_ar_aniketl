@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_ar/core/util/styles.dart';
-import 'package:flutter_ar/presentation/parent_zone/bloc/navbar_cubit/app_navigator_cubit.dart';
-import 'package:flutter_ar/presentation/parent_zone/widgets/app_bottom_nav_bar.dart';
-import 'package:flutter_ar/presentation/parent_zone/widgets/message_view.dart';
+import '../../../core/util/styles.dart';
+import '../bloc/navbar_cubit/app_navigator_cubit.dart';
+import '../widgets/app_bottom_nav_bar.dart';
+import '../widgets/message_view.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:size_config/size_config.dart';
 import 'package:auto_orientation/auto_orientation.dart';

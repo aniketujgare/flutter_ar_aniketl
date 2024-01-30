@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ar/data/models/guest_name.dart';
-import 'package:flutter_ar/data/models/phone_number.dart';
-import 'package:flutter_ar/presentation/login/bloc/login_bloc/login_bloc.dart';
+import '../../../data/models/guest_name.dart';
+import '../../../data/models/phone_number.dart';
+import '../bloc/login_bloc/login_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
 import 'package:size_config/size_config.dart';
