@@ -20,8 +20,8 @@ AppBar appBarWorksheetSolver(BuildContext context) {
             onTap: () => Navigator.pop(context),
             child: Container(
               margin: EdgeInsets.only(left: 0.wp, right: 6.wp),
-              height: 36.h,
-              width: 36.h,
+              height: 8.wp,
+              // width: 36.h,
               child: Image.asset(
                 'assets/images/reusable_icons/back_button_primary.png',
                 color: Colors.white,
@@ -56,21 +56,16 @@ AppBar appBarWorksheetSolver(BuildContext context) {
               Navigator.of(context).pop();
             },
             child: Container(
-              height: DeviceType().isMobile ? 9.5.wp : 6.5.wp,
-              margin: EdgeInsets.only(
-                  right: 4.wp, left: DeviceType().isMobile ? 4.wp : 2.wp),
+              height: DeviceType().isMobile ? 8.wp : 6.5.wp,
+              // margin: EdgeInsets.only(
+              //     right: 4.wp, left: DeviceType().isMobile ? 4.wp : 2.wp),
               decoration: ShapeDecoration(
-                color: AppColors.submitGreenColor,
+                // color: AppColors.submitGreenColor,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(13),
                 ),
               ),
-              child: Center(
-                child: Text('Submit',
-                    textAlign: TextAlign.center,
-                    style: AppTextStyles.nunito95w700white.copyWith(
-                        fontSize: 95.sp * (DeviceType().isMobile ? 1.0 : 0.7))),
-              ),
+              child: Image.asset('assets/images/PNG Icons/info.png'),
             ),
           ),
         )

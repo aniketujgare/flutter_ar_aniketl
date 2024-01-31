@@ -2,6 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:size_config/size_config.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../../../../core/util/device_type.dart';
 import '../../../core/util/styles.dart';
@@ -24,10 +25,26 @@ class WorksheetSolverView extends StatefulWidget {
   State<WorksheetSolverView> createState() => _WorksheetSolverViewState();
 }
 
-class _WorksheetSolverViewState extends State<WorksheetSolverView> {
+class _WorksheetSolverViewState extends State<WorksheetSolverView>
+    with TickerProviderStateMixin {
+  final controller = PageController(viewportFraction: 0.8, keepPage: true);
+  late AnimationController _controller;
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    controller.dispose();
+    super.dispose();
+  }
+
   @override
   void initState() {
     super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 300), // Adjust the duration as needed
+    );
+
     context.read<WorksheetSolverCubit>().setCurrentQuestionZero();
     context
         .read<WorksheetSolverCubit>()
@@ -69,10 +86,7 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView> {
         );
 
       case QuestionType.multiplefillblank:
-        MultipleFillBlankQuestion multipleFillBlankQuestion =
-            state.questions[i] as MultipleFillBlankQuestion;
-        return _buildMultipleFillBlankQuestion(
-            i, multipleFillBlankQuestion, markedAnswer);
+        return Text('Multiple FillBlank not available');
       case QuestionType.trueFalse:
         return TrueOrFalseQuestion(
           questionIndex: i,
@@ -85,199 +99,6 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView> {
             state.questions[i] as MatchTheFollowingQuestion;
         var shuffledOptions = matchTheFollowingQuestion.options.entries.toList()
           ..shuffle();
-        //!select the odd own out q ui
-        // List<String> otions1 = [
-        //   'The',
-        //   'question',
-        //   'will',
-        //   'be',
-        //   'in',
-        //   'options'
-        // ];
-        // return Column(
-        //   mainAxisSize: MainAxisSize.min,
-        //   crossAxisAlignment: CrossAxisAlignment.center,
-        //   children: [
-        //     80.verticalSpacer,
-        //     Text(
-        //       'The, question, will, be, in, options',
-        //       textAlign: TextAlign.center,
-        //       style: const TextStyle(
-        //         color: Color(0xFF212121),
-        //         fontSize: 32,
-        //         fontFamily: 'Nunito',
-        //         fontWeight: FontWeight.w500,
-        //         height: 0,
-        //       ),
-        //     ),
-        //     80.verticalSpacer,
-        //     // Text('${i + 1}) ${mcqTextQuestion.question}'),
-        //     Row(
-        //       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        //       children: [
-        //         ...List.generate(
-        //             6,
-        //             (index) => Container(
-        //                   width: 30.wp,
-        //                   padding: EdgeInsets.symmetric(vertical: 2.wp),
-        //                   decoration: ShapeDecoration(
-        //                     color: const Color(0xFFF4F2FE),
-        //                     shape: RoundedRectangleBorder(
-        //                       borderRadius: BorderRadius.circular(17),
-        //                     ),
-        //                   ),
-        //                   child: Text(
-        //                     otions1[index],
-        //                     textAlign: TextAlign.center,
-        //                     style: const TextStyle(
-        //                       color: Color(0xFF4F3A9C),
-        //                       fontSize: 20,
-        //                       fontFamily: 'Nunito',
-        //                       fontWeight: FontWeight.w700,
-        //                       height: 0,
-        //                     ),
-        //                   ),
-        //                 ))
-        //       ],
-        //     ),
-        //   ],
-        // );
-        // //!select the correct word  q ui
-        // List<String> otions = [
-        //   'This',
-        //   'is',
-        //   'the',
-        //   'test',
-        //   'question',
-        //   'sentence'
-        // ];
-        // return Column(
-        //   mainAxisSize: MainAxisSize.min,
-        //   crossAxisAlignment: CrossAxisAlignment.center,
-        //   children: [
-        //     80.verticalSpacer,
-        //     Text(
-        //       'This is the test question sentence.',
-        //       textAlign: TextAlign.center,
-        //       style: const TextStyle(
-        //         color: Color(0xFF212121),
-        //         fontSize: 32,
-        //         fontFamily: 'Nunito',
-        //         fontWeight: FontWeight.w500,
-        //         height: 0,
-        //       ),
-        //     ),
-        //     80.verticalSpacer,
-        //     // Text('${i + 1}) ${mcqTextQuestion.question}'),
-        //     Row(
-        //       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        //       children: [
-        //         ...List.generate(
-        //             6,
-        //             (index) => Container(
-        //                   width: 30.wp,
-        //                   padding: EdgeInsets.symmetric(vertical: 2.wp),
-        //                   decoration: ShapeDecoration(
-        //                     color: const Color(0xFFF4F2FE),
-        //                     shape: RoundedRectangleBorder(
-        //                       borderRadius: BorderRadius.circular(17),
-        //                     ),
-        //                   ),
-        //                   child: Text(
-        //                     otions[index],
-        //                     textAlign: TextAlign.center,
-        //                     style: const TextStyle(
-        //                       color: Color(0xFF4F3A9C),
-        //                       fontSize: 20,
-        //                       fontFamily: 'Nunito',
-        //                       fontWeight: FontWeight.w700,
-        //                       height: 0,
-        //                     ),
-        //                   ),
-        //                 ))
-        //       ],
-        //     ),
-        //   ],
-        // );
-        // //! ascending descending q ui
-        // return Column(
-        //   mainAxisSize: MainAxisSize.min,
-        //   crossAxisAlignment: CrossAxisAlignment.center,
-        //   children: [
-        //     60.verticalSpacer,
-        //     Text(
-        //       'Arrange the test options in order',
-        //       textAlign: TextAlign.center,
-        //       style: const TextStyle(
-        //         color: Color(0xFF212121),
-        //         fontSize: 32,
-        //         fontFamily: 'Nunito',
-        //         fontWeight: FontWeight.w500,
-        //         height: 0,
-        //       ),
-        //     ),
-        //     50.verticalSpacer,
-        //     // Text('${i + 1}) ${mcqTextQuestion.question}'),
-        //     Row(
-        //       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        //       children: [
-        //         ...List.generate(
-        //             6,
-        //             (index) => Container(
-        //                   width: 30.wp,
-        //                   padding: EdgeInsets.symmetric(vertical: 2.wp),
-        //                   decoration: ShapeDecoration(
-        //                     color: const Color(0xFFF4F2FE),
-        //                     shape: RoundedRectangleBorder(
-        //                       borderRadius: BorderRadius.circular(17),
-        //                     ),
-        //                   ),
-        //                   child: Text(
-        //                     'Option ${index + 1}',
-        //                     textAlign: TextAlign.center,
-        //                     style: const TextStyle(
-        //                       color: Color(0xFF4F3A9C),
-        //                       fontSize: 20,
-        //                       fontFamily: 'Nunito',
-        //                       fontWeight: FontWeight.w700,
-        //                       height: 0,
-        //                     ),
-        //                   ),
-        //                 ))
-        //       ],
-        //     ),
-        //     50.verticalSpacer,
-        //     Row(
-        //       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        //       children: [
-        //         ...List.generate(
-        //             6,
-        //             (index) => Container(
-        //                   width: 30.wp,
-        //                   padding: EdgeInsets.symmetric(vertical: 2.wp),
-        //                   decoration: ShapeDecoration(
-        //                     color: const Color(0xFFF4F2FE),
-        //                     shape: RoundedRectangleBorder(
-        //                       borderRadius: BorderRadius.circular(17),
-        //                     ),
-        //                   ),
-        //                   child: Text(
-        //                     'Option ${index + 1}',
-        //                     textAlign: TextAlign.center,
-        //                     style: const TextStyle(
-        //                       color: const Color(0xFFF4F2FE),
-        //                       fontSize: 22,
-        //                       fontFamily: 'Nunito',
-        //                       fontWeight: FontWeight.w700,
-        //                       height: 0,
-        //                     ),
-        //                   ),
-        //                 ))
-        //       ],
-        //     ),
-        //   ],
-        // );
-
         return _buildMatchTheFollowingQuestion(
             i, matchTheFollowingQuestion, shuffledOptions, markedAnswer);
       case QuestionType.oneWord:
@@ -432,80 +253,175 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView> {
           extendBody: true,
           backgroundColor: const Color(0XFFD1CBF9),
           appBar: appBarWorksheetSolver(context),
-          body: Padding(
-              padding: EdgeInsets.fromLTRB(5.wp, 0, 5.wp, 0),
-              child: SizedBox.expand(child:
-                  BlocBuilder<WorksheetSolverCubit, WorksheetSolverState>(
+          body: SizedBox.expand(
+              child: Stack(
+            children: [
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Container(
+                  height: 56,
+                  width: double.infinity,
+                  color: AppColors.primaryColor,
+                ),
+              ),
+              BlocBuilder<WorksheetSolverCubit, WorksheetSolverState>(
                 builder: (context, state) {
                   if (state.status == WorkSheetSolverStatus.loaded) {
-                    return Stack(
-                      children: [
-                        getQuestion(state, state.currentQuestion),
-                        Transform.translate(
-                          offset: const Offset(-20, -10),
-                          child: Align(
-                            alignment: Alignment.bottomRight,
-                            child: IconButton(
-                                onPressed: () => context
-                                    .read<WorksheetSolverCubit>()
-                                    .loadNextQuestion(),
-                                icon: RotatedBox(
-                                  quarterTurns: 2,
-                                  child: Image.asset(
-                                    'assets/ui/Group.png',
-                                    height: 40,
-                                  ),
-                                )),
-                          ),
-                        ),
-                        Transform.translate(
-                          offset: const Offset(0, -20),
-                          child: Align(
-                              alignment: Alignment.bottomCenter,
-                              child: BlocBuilder<WorksheetSolverCubit,
-                                  WorksheetSolverState>(
-                                builder: (context, state) {
-                                  if (state.status ==
-                                      WorkSheetSolverStatus.loaded) {
-                                    return Text(
-                                      'Question - ${state.currentQuestion + 1}/${state.questions.length}',
-                                      style: TextStyle(
-                                        color: AppColors.textFieldTextColor,
-                                        fontSize: 12,
-                                        fontFamily: 'Nunito',
-                                        fontWeight: FontWeight.w600,
-                                        height: 0,
-                                      ),
-                                    );
-                                  } else {
-                                    return Container();
-                                  }
-                                },
-                              )),
-                        ),
-                        Transform.translate(
-                          offset: const Offset(20, -10),
-                          child: Align(
-                            alignment: Alignment.bottomLeft,
-                            child: IconButton(
-                                onPressed: () => context
-                                    .read<WorksheetSolverCubit>()
-                                    .loadPreviousQuestion(),
-                                icon: Image.asset(
-                                  'assets/ui/Group.png',
-                                  height: 40,
-                                )),
-                          ),
-                        ),
-                      ],
-                    );
+                    return getQuestion(state, state.currentQuestion);
                   } else {
                     return const Center(
                         child: CircularProgressIndicator.adaptive(
                             strokeCap: StrokeCap.round));
                   }
                 },
-              ))),
+              ),
+              Transform.translate(
+                offset: const Offset(-20, 0),
+                child: Align(
+                  alignment: Alignment.bottomRight,
+                  child: IconButton(
+                    onPressed: () {
+                      // controller.nextPage(
+                      //     duration: const Duration(milliseconds: 300),
+                      //     curve: Curves.linear);
+                      context.read<WorksheetSolverCubit>().loadNextQuestion();
+                    },
+                    icon: RotatedBox(
+                      quarterTurns: 2,
+                      child: Image.asset(
+                        'assets/ui/Group.png',
+                        height: 40,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Container(
+                  height: 56,
+                  child:
+                      BlocBuilder<WorksheetSolverCubit, WorksheetSolverState>(
+                    builder: (context, state) {
+                      double size = 18.0;
+                      return ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        shrinkWrap: true,
+                        itemCount: state.questions.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          if (index == state.currentQuestion) {
+                            size = 18;
+                            if (index != 0 && (index + 1) % 5 == 0) {
+                              return Padding(
+                                padding: const EdgeInsets.fromLTRB(5, 0, 5, 10),
+                                child: CircleAvatar(
+                                  radius: size / 2,
+                                  child: Image.asset(
+                                    'assets/images/PNG Icons/coin.png',
+                                  ),
+                                ),
+                              );
+                            }
+
+                            return Padding(
+                              padding: const EdgeInsets.fromLTRB(5, 0, 5, 10),
+                              child: Container(
+                                width: size,
+                                height: size,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: AppColors.submitGreenColor,
+                                ),
+                              ),
+                            );
+                          }
+                          if (index == state.currentQuestion - 1 ||
+                              index == state.currentQuestion + 1) {
+                            size = 15;
+                            if (index != 0 && (index + 1) % 5 == 0) {
+                              return Padding(
+                                padding: const EdgeInsets.fromLTRB(5, 0, 5, 5),
+                                child: Container(
+                                  width: size,
+                                  height: size,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: AppColors.submitGreenColor,
+                                  ),
+                                  child: Image.asset(
+                                    'assets/images/PNG Icons/coin.png',
+                                  ),
+                                ),
+                              );
+                            }
+                            return Padding(
+                              padding: const EdgeInsets.fromLTRB(5, 0, 5, 5),
+                              child: Container(
+                                width: size,
+                                height: size,
+                                decoration: const BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Color(0XFFE9E9E9),
+                                ),
+                              ),
+                            );
+                          }
+                          if (index != 0 && (index + 1) % 5 == 0) {
+                            size = 14;
+                            return Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 5),
+                              child: Container(
+                                width: size,
+                                height: size,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: AppColors.submitGreenColor,
+                                ),
+                                child: Image.asset(
+                                    'assets/images/PNG Icons/coin.png'),
+                              ),
+                            );
+                          } else {
+                            size = 9;
+                            return Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 5),
+                              child: Container(
+                                width: size,
+                                height: size,
+                                decoration: const BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Color(0XFFE9E9E9),
+                                ),
+                              ),
+                            );
+                          }
+                        },
+                      );
+                    },
+                  ),
+                ),
+              ),
+              Transform.translate(
+                offset: const Offset(20, 0),
+                child: Align(
+                  alignment: Alignment.bottomLeft,
+                  child: IconButton(
+                    onPressed: () {
+                      context
+                          .read<WorksheetSolverCubit>()
+                          .loadPreviousQuestion();
+                    },
+                    icon: Image.asset(
+                      'assets/ui/Group.png',
+                      height: 40,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          )),
         ),
       ),
     );
@@ -617,42 +533,6 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView> {
       matchTheFollowingQuestion: matchTheFollowingQuestion,
       shuffledOptions: shuffledOptions,
       markedAnswer: markedAnswer,
-    );
-  }
-
-  Column _buildMultipleFillBlankQuestion(
-      int i,
-      MultipleFillBlankQuestion multipleFillBlankQuestion,
-      dynamic markedAnswer) {
-    String ansVal1 = '';
-    String ansVal2 = '';
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text('${i + 1}) ${multipleFillBlankQuestion.question}'),
-        TextFormField(
-          // initialValue: newAns,
-          onChanged: (value) {
-            ansVal1 = value;
-          },
-          onEditingComplete: () {},
-        ),
-        TextFormField(
-            initialValue: markedAnswer == null
-                ? ''
-                : (markedAnswer as List<String>).join(' ,')),
-        TextFormField(
-          onChanged: (value) {
-            ansVal2 = value;
-          },
-          onEditingComplete: () {
-            print('compelte');
-            var ansf = [ansVal1, ansVal2];
-            context.read<WorksheetSolverCubit>().setAnswer(i, ansf);
-          },
-        ),
-      ],
     );
   }
 }
