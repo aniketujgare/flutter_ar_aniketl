@@ -67,9 +67,10 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         } else {
           var kidsAppBox = await Hive.openBox("kidsApp");
           var isLoggedIn = kidsAppBox.put('isLoggedIn', true);
-          await AuthenticationRepository().getParentId(state.mobileNumber);
-          await AuthenticationRepository().getallstandardsofschool();
-          await AuthenticationRepository().getstudentprofilesnew();
+          // await AuthenticationRepository().getParentId(state.mobileNumber);
+          // await AuthenticationRepository().getallstandardsofschool();
+          // await AuthenticationRepository().getstudentprofilesnew();
+          await authenticationRepository.saveDataToHive();
           emit(state.copyWith(status: LoginStatus.parents3));
         }
       }
@@ -93,9 +94,10 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         // add(LoginEvent.phoneNumberAuth(mobileNumber: event.mobileNumber));
         debugPrint('checking ${event.mobileNumber}');
         add(LoginEvent.phoneNumberAuth(mobileNumber: event.mobileNumber));
-        AuthenticationRepository().getParentId(event.mobileNumber);
-        AuthenticationRepository().getallstandardsofschool();
-        AuthenticationRepository().getstudentprofilesnew();
+        // AuthenticationRepository().getParentId(event.mobileNumber);
+        // AuthenticationRepository().getstudentprofilesnew();
+        // AuthenticationRepository().getallstandardsofschool();
+        await authenticationRepository.saveDataToHive();
       } else {
         add(const LoginEvent.error(
             errorMessage: 'Your mobile is not registered!'));

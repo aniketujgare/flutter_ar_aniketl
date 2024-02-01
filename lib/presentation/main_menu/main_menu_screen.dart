@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_ar/temp_testing/hive_test.dart';
 import 'package:size_config/size_config.dart';
 
 import '../../core/util/device_type.dart';
@@ -46,6 +47,18 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
                 padding: EdgeInsets.fromLTRB(8.wp, 4.wp, 8.wp, 4.wp),
                 child: Column(
                   children: [
+                    // IconButton(
+                    //     onPressed: () async {
+                    //       print('tapped');
+                    //       await HiveTesting().saveDataToHive();
+                    //     },
+                    //     icon: Icon(Icons.bug_report)),
+                    // IconButton(
+                    //     onPressed: () async {
+                    //       print('tapped');
+                    //       HiveTesting().getStudentProfile();
+                    //     },
+                    //     icon: Icon(Icons.print)),
                     //! Top
                     buildTop(context),
                     //! Center

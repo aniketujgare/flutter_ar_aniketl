@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_ar/data/models/student_profile_model.dart';
+import 'package:flutter_ar/domain/repositories/authentication_repository.dart';
 import '../../../core/util/reusable_widgets/reusable_button.dart';
 import '../../../data/models/teacher_message.dart';
 import '../../parent_zone/bloc/teacher_message_cubit/teacher_message_cubit.dart';
@@ -25,6 +27,7 @@ class WorksheetView extends StatefulWidget {
 }
 
 class _WorksheetViewState extends State<WorksheetView> {
+  late StudentProfileModel studentProfileModel;
   @override
   void initState() {
     context.read<WorksheetCubit>().getWorksheets();
@@ -33,17 +36,18 @@ class _WorksheetViewState extends State<WorksheetView> {
                 (DeviceType().isMobile ? 4 : 3))
             .ceil());
     context.read<WorksheetPageCubit>().setPage(0);
+
     super.initState();
   }
 
-  Future<int> getStudentId() async {
-    var kidsAppBox = await Hive.openBox("kidsApp");
-    var studentProfiles = kidsAppBox.get('studentProfiles');
-    var firstProfile =
-        studentProfiles[0][0]; // Accessing the first map in the first list
-    print('student id:' + firstProfile['student_id']);
-    return firstProfile['student_id'];
-  }
+  // Future<int> getStudentId() async {
+  //   var kidsAppBox = await Hive.openBox("kidsApp");
+  //   var studentProfiles = kidsAppBox.get('studentProfiles');
+  //   var firstProfile =
+  //       studentProfiles[0][0]; // Accessing the first map in the first list
+  //   print('student id:' + firstProfile['student_id']);
+  //   return firstProfile['student_id'];
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -137,8 +141,8 @@ class _WorksheetViewState extends State<WorksheetView> {
                                       MaterialPageRoute(
                                         builder: (context) =>
                                             WorksheetSolverView(
-                                                workSheetId: 847,
-                                                studentId: 11),
+                                                workSheetId: workSheet.id,
+                                                studentId: widget.studentId),
                                       ),
                                     );
                                   },

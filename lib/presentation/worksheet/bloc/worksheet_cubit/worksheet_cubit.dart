@@ -1,6 +1,9 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart' show debugPrint;
+import 'package:flutter_ar/main.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import '../../../../data/models/student_profile_model.dart';
 import '../../models/published_worksheets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -114,7 +117,13 @@ class WorksheetCubit extends Cubit<WorksheetState> {
       Uri.parse(
           'https://cnpewunqs5.execute-api.ap-south-1.amazonaws.com/dev/getpublishedworksheets'),
     );
-    request.body = json.encode({"standard_id": "3", "division_id": "0"});
+    StudentProfileModel? studentProfile =
+        await authenticationRepository.getStudentProfile();
+
+    request.body = json.encode({
+      "standard_id": "${studentProfile!.standardId}",
+      "division_id": "${studentProfile!.divisionId}"
+    });
     request.headers.addAll(headers);
 
     try {

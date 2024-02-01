@@ -6,7 +6,7 @@
 **/android/unityLibrary
 
 # Temp testing
-**/lib/temp_testing
+# **/lib/temp_testing
 
 #Freezed Files
 *.freezed.dart

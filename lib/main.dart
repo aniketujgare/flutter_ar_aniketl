@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'data/models/student_profile_model.dart';
 import 'presentation/parent_zone/bloc/navbar_cubit/app_navigator_cubit.dart';
 import 'presentation/parent_zone/bloc/teacher_message_cubit/teacher_message_cubit.dart';
 import 'presentation/worksheet/bloc/worksheet_cubit/worksheet_cubit.dart';
@@ -47,7 +48,11 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   await Hive.initFlutter();
-  await Hive.openBox('kidsApp');
+  // Registering the adapter
+  Hive.registerAdapter(StudentProfileModelAdapter());
+
+  // Opening the box
+  await Hive.openBox<StudentProfileModel>('student_profile');
   if (Platform.isAndroid) {
     // Include Android-specific AR code
     print('Platform.isAndroid');
