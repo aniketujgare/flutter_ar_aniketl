@@ -423,20 +423,20 @@ class ArithmeticQuestion extends Question {
 }
 
 // Arithmetic Question
-class LongAnswerQuestion extends Question {
+class LongAnswerQuestionType extends Question {
   final String questionUrl;
   final String questionRows;
   final List<String> questionKeywords;
 
-  LongAnswerQuestion(
+  LongAnswerQuestionType(
       {required this.questionKeywords,
       required this.questionUrl,
       required this.questionRows,
       required String question})
       : super.withType(question, QuestionType.longAnswer);
 
-  factory LongAnswerQuestion.fromJson(Map<String, dynamic> json) {
-    return LongAnswerQuestion(
+  factory LongAnswerQuestionType.fromJson(Map<String, dynamic> json) {
+    return LongAnswerQuestionType(
       questionUrl: json['longanswer']['question_url'],
       questionRows: json['longanswer']['question_rows'],
       questionKeywords:
@@ -508,7 +508,7 @@ List<Question> allWorsheetQuestins(String yourApiResponse) {
           allQuestions.add(ArithmeticQuestion.fromJson(questionData));
           break;
         case 'longanswer':
-          allQuestions.add(LongAnswerQuestion.fromJson(questionData));
+          allQuestions.add(LongAnswerQuestionType.fromJson(questionData));
           break;
         // Add cases for other question types here
       }

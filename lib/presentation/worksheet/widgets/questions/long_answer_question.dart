@@ -1,8 +1,6 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_ar/presentation/worksheet/widgets/question_text.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
@@ -15,30 +13,29 @@ import '../../models/recognition_response.dart';
 import '../../recognizer/interface/text_recognizer.dart';
 import '../../recognizer/mlkit_text_recognizer.dart';
 
-class FillInTheBlankQuestion extends StatefulWidget {
-  const FillInTheBlankQuestion({
+class LongAnswerQuestion extends StatefulWidget {
+  const LongAnswerQuestion({
     super.key,
     required this.questionIndex,
     required this.question,
     required this.markedAnswer,
   });
   final int questionIndex;
-  final FillBlankQuestion question;
+  final LongAnswerQuestionType question;
   final dynamic markedAnswer;
 
   @override
-  State<FillInTheBlankQuestion> createState() => _FillInTheBlankQuestionState();
+  State<LongAnswerQuestion> createState() => _LongAnswerQuestionState();
 }
 
-class _FillInTheBlankQuestionState extends State<FillInTheBlankQuestion> {
+class _LongAnswerQuestionState extends State<LongAnswerQuestion> {
   late ImagePicker _picker;
   late ITextRecognizer _recognizer;
 
   RecognitionResponse? _response;
 
-  List<String> markedAnswers = [];
   int noOfTextFileds = 1;
-  List<TextEditingController> textControllers = [];
+  final TextEditingController textController = TextEditingController();
 
   @override
   void initState() {
@@ -49,27 +46,8 @@ class _FillInTheBlankQuestionState extends State<FillInTheBlankQuestion> {
     _recognizer = MLKitTextRecognizer();
     // _recognizer = TesseractTextRecognizer();
     // Initialize controllers based on the number of text fields
-    if (widget.markedAnswer is List<dynamic>) {
-      markedAnswers.addAll(
-        (widget.markedAnswer is List<dynamic>)
-            ? widget.markedAnswer
-                .map((element) => element.toString())
-                .cast<String>()
-            : [widget.markedAnswer.toString()],
-      );
-    } else if (widget.markedAnswer is String) {
-      markedAnswers.add(widget.markedAnswer);
-    }
 
-    if (widget.question.answer is List<dynamic>) {
-      noOfTextFileds = (widget.question.answer as List<dynamic>).length;
-    }
-    textControllers =
-        List.generate(noOfTextFileds, (index) => TextEditingController());
-    for (int i = 0; i < textControllers.length; i++) {
-      textControllers[i].text =
-          markedAnswers.length > i ? markedAnswers[i] : '';
-    }
+    textController.text = widget.markedAnswer ?? '';
   }
 
   @override
@@ -79,9 +57,7 @@ class _FillInTheBlankQuestionState extends State<FillInTheBlankQuestion> {
       (_recognizer as MLKitTextRecognizer).dispose();
     }
     // Dispose the text controllers
-    for (var controller in textControllers) {
-      controller.dispose();
-    }
+    textController.dispose();
   }
 
   void processImage(String imgPath, int textFiledIndex) async {
@@ -100,7 +76,7 @@ class _FillInTheBlankQuestionState extends State<FillInTheBlankQuestion> {
       multiLineText = multiLineText.substring(1, multiLineText.length - 1);
 
       print('multiline text: ' + multiLineText);
-      textControllers[textFiledIndex].text = multiLineText;
+      textController.text = multiLineText;
       context
           .read<WorksheetSolverCubit>()
           .setAnswer(widget.questionIndex, multiLineText);
@@ -123,15 +99,8 @@ class _FillInTheBlankQuestionState extends State<FillInTheBlankQuestion> {
         child: Column(
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            noOfTextFileds == 1
-                ? (DeviceType().isMobile
-                    ? 105.verticalSpacer
-                    : 160.verticalSpacer)
-                : (DeviceType().isMobile
-                    ? 80.verticalSpacer
-                    : 160.verticalSpacer),
+            DeviceType().isMobile ? 105.verticalSpacer : 160.verticalSpacer,
             QuestionText(question: widget.question.question),
             DeviceType().isMobile ? 55.verticalSpacer : 85.verticalSpacer,
             ...List.generate(
@@ -172,7 +141,7 @@ class _FillInTheBlankQuestionState extends State<FillInTheBlankQuestion> {
                             padding: EdgeInsets.symmetric(horizontal: 75.sp),
                             child: TextFormField(
                               // maxLines: null,
-                              controller: textControllers[j],
+                              controller: textController,
                               decoration: const InputDecoration(
                                 border: InputBorder.none,
                               ),
@@ -180,19 +149,9 @@ class _FillInTheBlankQuestionState extends State<FillInTheBlankQuestion> {
                               //     ? markedAnswers[j]
                               //     : '',
                               onChanged: (value) {
-                                if (markedAnswers.length > j) {
-                                  markedAnswers[j] = value;
-                                  context
-                                      .read<WorksheetSolverCubit>()
-                                      .setAnswer(
-                                          widget.questionIndex, markedAnswers);
-                                } else {
-                                  markedAnswers.add(value);
-                                  context
-                                      .read<WorksheetSolverCubit>()
-                                      .setAnswer(
-                                          widget.questionIndex, markedAnswers);
-                                }
+                                context
+                                    .read<WorksheetSolverCubit>()
+                                    .setAnswer(widget.questionIndex, value);
                               },
                               onEditingComplete: () {
                                 print('complete');

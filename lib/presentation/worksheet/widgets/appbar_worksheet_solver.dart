@@ -30,7 +30,7 @@ AppBar appBarWorksheetSolver(BuildContext context) {
           ),
         ),
         Expanded(
-          flex: 10,
+          flex: 13,
           child: BlocBuilder<WorksheetSolverCubit, WorksheetSolverState>(
             builder: (context, state) {
               if (state.status == WorkSheetSolverStatus.loaded) {
@@ -40,7 +40,7 @@ AppBar appBarWorksheetSolver(BuildContext context) {
                     style: AppTextStyles.uniformRounded136BoldAppBarStyle
                         .copyWith(
                             fontSize:
-                                DeviceType().isMobile ? 136.sp : 136.sp * 0.7,
+                                DeviceType().isMobile ? 126.sp : 136.sp * 0.7,
                             color: Colors.white));
               } else {
                 return const SizedBox();

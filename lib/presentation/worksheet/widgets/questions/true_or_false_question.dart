@@ -20,14 +20,14 @@ class TrueOrFalseQuestion extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      mainAxisSize: MainAxisSize.min,
+      mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        DeviceType().isMobile ? 120.verticalSpacer : 160.verticalSpacer,
         QuestionText(question: question.question),
         DeviceType().isMobile ? 55.verticalSpacer : 85.verticalSpacer,
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: 12.wp),
+          padding: EdgeInsets.symmetric(horizontal: 40.wp),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -39,7 +39,7 @@ class TrueOrFalseQuestion extends StatelessWidget {
                         .setAnswer(questionIndex, 'True');
                   },
                   child: Container(
-                    height: 90.h,
+                    height: 80.h,
                     decoration: ShapeDecoration(
                       color: markedAnswer == 'True'
                           ? const Color(0XFFB3EAFC)
@@ -64,7 +64,7 @@ class TrueOrFalseQuestion extends StatelessWidget {
                   ),
                 ),
               ),
-              5.horizontalSpacerPercent,
+              8.horizontalSpacerPercent,
               Expanded(
                 child: GestureDetector(
                   onTap: () {
@@ -73,7 +73,7 @@ class TrueOrFalseQuestion extends StatelessWidget {
                         .setAnswer(questionIndex, 'False');
                   },
                   child: Container(
-                    height: 90.h,
+                    height: 80.h,
                     decoration: ShapeDecoration(
                       color: markedAnswer == 'False'
                           ? const Color(0XFFB3EAFC)

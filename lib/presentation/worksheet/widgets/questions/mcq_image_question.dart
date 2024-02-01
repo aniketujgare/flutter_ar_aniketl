@@ -3,8 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:size_config/size_config.dart';
 
+import '../../../../core/util/device_type.dart';
+import '../../../../core/util/styles.dart';
 import '../../bloc/worksheet_solver_cubit/worksheet_solver_cubit.dart';
 import '../../models/questions.dart';
+import '../question_text.dart';
 
 class MCQImageQuestion extends StatelessWidget {
   final int questionIndex;
@@ -19,71 +22,60 @@ class MCQImageQuestion extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Text(
-          '${questionIndex + 1}) ${question.question}',
-          style: TextStyle(
-            color: const Color(0xFF212121),
-            fontSize: 160.sp,
-            fontFamily: 'Nunito',
-            fontWeight: FontWeight.w500,
-            height: 0,
-          ),
-        ),
-        ListView.builder(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemCount: (question.options.length / 2).ceil(),
-          itemBuilder: (BuildContext context, int rowIndex) {
-            int startIndex = rowIndex * 2;
-            int endIndex = (rowIndex + 1) * 2;
-            endIndex = endIndex > question.options.length
-                ? question.options.length
-                : endIndex;
-
-            return Row(
-              children: List.generate(endIndex - startIndex, (j) {
-                int optionIndex = startIndex + j;
-                return Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      children: [
-                        Text('${optionIndex + 1}.'),
-                        Container(
-                          padding: (markedAnswer as String?) ==
-                                  question.options[optionIndex]
-                              ? const EdgeInsets.all(5)
-                              : null,
-                          decoration: const BoxDecoration(
-                              shape: BoxShape.circle, color: Colors.amber),
-                          child: CachedNetworkImage(
-                            imageUrl: question.options[optionIndex],
-                            width: 50, // Adjust the width as needed
-                            height: 50, // Adjust the height as needed
-                          ),
-                        ),
-                      ],
+        QuestionText(question: question.question),
+        DeviceType().isMobile ? 55.verticalSpacer : 85.verticalSpacer,
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20.wp),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: List.generate(
+              question.options.length,
+              (index) => GestureDetector(
+                onTap: () {
+                  context
+                      .read<WorksheetSolverCubit>()
+                      .setAnswer(questionIndex, question.options[index]);
+                },
+                child: Container(
+                  height: 180.h,
+                  width: 180.h,
+                  decoration: ShapeDecoration(
+                    color: question.options[index] == markedAnswer
+                        ? AppColors.boxSelectedColor
+                        : AppColors.boxUnselectedolor,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(17),
                     ),
                   ),
-                );
-              }),
-            );
-          },
-        ),
-        TextFormField(
-          initialValue: markedAnswer,
-          onChanged: (value) {
-            // newVal = value;
-          },
-          onEditingComplete: () {
-            print('compelte');
-            context
-                .read<WorksheetSolverCubit>()
-                .setAnswer(questionIndex, 'newVal');
-          },
+                  child: CachedNetworkImage(
+                    imageUrl: question.options[index],
+                    fit: BoxFit.scaleDown,
+                    imageBuilder: (context, imageProvider) => Container(
+                      width: 180.h,
+                      height: 180.h,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(14),
+                        image: DecorationImage(
+                          image: imageProvider,
+                          fit: BoxFit.scaleDown,
+                        ),
+                      ),
+                    ),
+                    placeholder: (context, url) => const Center(
+                      child: CircularProgressIndicator.adaptive(
+                          strokeCap: StrokeCap.round),
+                    ),
+                    errorWidget: (context, url, error) =>
+                        const Icon(Icons.error),
+                  ),
+                ),
+              ),
+            ),
+          ),
         ),
       ],
     );

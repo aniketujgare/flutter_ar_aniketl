@@ -1,16 +1,18 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:size_config/size_config.dart';
-import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../../../../core/util/device_type.dart';
 import '../../../core/util/styles.dart';
-import '../../../temp_testing/draw_test.dart';
 import '../bloc/worksheet_solver_cubit/worksheet_solver_cubit.dart';
 import '../models/questions.dart';
 import '../widgets/appbar_worksheet_solver.dart';
+import '../widgets/bottom_indicator_bar_questions.dart';
 import '../widgets/questions/fill_in_blank_question.dart';
+import '../widgets/questions/long_answer_question.dart';
+import '../widgets/questions/match_the_following_question.dart';
 import '../widgets/questions/mcq_image_question.dart';
 import '../widgets/questions/mcq_text_question.dart';
 import '../widgets/questions/true_or_false_question.dart';
@@ -39,10 +41,16 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView>
 
   @override
   void initState() {
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.landscapeRight,
+    ]);
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 300), // Adjust the duration as needed
+      duration:
+          const Duration(milliseconds: 300), // Adjust the duration as needed
     );
 
     context.read<WorksheetSolverCubit>().setCurrentQuestionZero();
@@ -80,13 +88,13 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView>
         );
       case QuestionType.fillBlank:
         return FillInTheBlankQuestion(
-          fillBlankQuestion: state.questions[i] as FillBlankQuestion,
+          question: state.questions[i] as FillBlankQuestion,
           markedAnswer: markedAnswer,
           questionIndex: i,
         );
 
       case QuestionType.multiplefillblank:
-        return Text('Multiple FillBlank not available');
+        return const Text('Multiple FillBlank not available');
       case QuestionType.trueFalse:
         return TrueOrFalseQuestion(
           questionIndex: i,
@@ -95,12 +103,11 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView>
         );
 
       case QuestionType.matchTheFollowing:
-        MatchTheFollowingQuestion matchTheFollowingQuestion =
-            state.questions[i] as MatchTheFollowingQuestion;
-        var shuffledOptions = matchTheFollowingQuestion.options.entries.toList()
-          ..shuffle();
-        return _buildMatchTheFollowingQuestion(
-            i, matchTheFollowingQuestion, shuffledOptions, markedAnswer);
+        return MatchFollowingQuestion(
+          matchTheFollowingQuestion:
+              state.questions[i] as MatchTheFollowingQuestion,
+          markedAnswer: markedAnswer,
+        );
       case QuestionType.oneWord:
         OneWordQuestion oneWordQuestion = state.questions[i] as OneWordQuestion;
         String? ans = markedAnswer;
@@ -225,16 +232,10 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView>
       case QuestionType.arithmetic:
         return Text(state.questions[i].questionType.toString());
       case QuestionType.longAnswer:
-        LongAnswerQuestion longAnswerQuestion =
-            state.questions[i] as LongAnswerQuestion;
-        return Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('${i + 1}) ${longAnswerQuestion.question}'),
-            Text(longAnswerQuestion.questionKeywords.join(', ')),
-            TextFormField(initialValue: (markedAnswer as String?) ?? ''),
-          ],
+        return LongAnswerQuestion(
+          questionIndex: i,
+          question: state.questions[i] as LongAnswerQuestionType,
+          markedAnswer: markedAnswer,
         );
       default:
         return const Center(
@@ -248,172 +249,36 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView>
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
-      child: SafeArea(
-        child: Scaffold(
-          extendBody: true,
-          backgroundColor: const Color(0XFFD1CBF9),
-          appBar: appBarWorksheetSolver(context),
-          body: SizedBox.expand(
-              child: Stack(
+      child: Scaffold(
+        bottomNavigationBar: Container(
+          height: 56,
+          width: double.infinity,
+          color: AppColors.primaryColor,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: Container(
-                  height: 56,
-                  width: double.infinity,
-                  color: AppColors.primaryColor,
-                ),
-              ),
-              BlocBuilder<WorksheetSolverCubit, WorksheetSolverState>(
-                builder: (context, state) {
-                  if (state.status == WorkSheetSolverStatus.loaded) {
-                    return getQuestion(state, state.currentQuestion);
-                  } else {
-                    return const Center(
-                        child: CircularProgressIndicator.adaptive(
-                            strokeCap: StrokeCap.round));
-                  }
-                },
-              ),
-              Transform.translate(
-                offset: const Offset(-20, 0),
-                child: Align(
-                  alignment: Alignment.bottomRight,
-                  child: IconButton(
-                    onPressed: () {
-                      // controller.nextPage(
-                      //     duration: const Duration(milliseconds: 300),
-                      //     curve: Curves.linear);
-                      context.read<WorksheetSolverCubit>().loadNextQuestion();
-                    },
-                    icon: RotatedBox(
-                      quarterTurns: 2,
-                      child: Image.asset(
-                        'assets/ui/Group.png',
-                        height: 40,
-                      ),
-                    ),
+              Padding(
+                padding: EdgeInsets.only(left: 8.wp),
+                child: IconButton(
+                  onPressed: () {
+                    context.read<WorksheetSolverCubit>().loadPreviousQuestion();
+                  },
+                  icon: Image.asset(
+                    'assets/ui/Group.png',
+                    height: 40,
                   ),
                 ),
               ),
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: Container(
-                  height: 56,
-                  child:
-                      BlocBuilder<WorksheetSolverCubit, WorksheetSolverState>(
-                    builder: (context, state) {
-                      double size = 18.0;
-                      return ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        shrinkWrap: true,
-                        itemCount: state.questions.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          if (index == state.currentQuestion) {
-                            size = 18;
-                            if (index != 0 && (index + 1) % 5 == 0) {
-                              return Padding(
-                                padding: const EdgeInsets.fromLTRB(5, 0, 5, 10),
-                                child: CircleAvatar(
-                                  radius: size / 2,
-                                  child: Image.asset(
-                                    'assets/images/PNG Icons/coin.png',
-                                  ),
-                                ),
-                              );
-                            }
-
-                            return Padding(
-                              padding: const EdgeInsets.fromLTRB(5, 0, 5, 10),
-                              child: Container(
-                                width: size,
-                                height: size,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: AppColors.submitGreenColor,
-                                ),
-                              ),
-                            );
-                          }
-                          if (index == state.currentQuestion - 1 ||
-                              index == state.currentQuestion + 1) {
-                            size = 15;
-                            if (index != 0 && (index + 1) % 5 == 0) {
-                              return Padding(
-                                padding: const EdgeInsets.fromLTRB(5, 0, 5, 5),
-                                child: Container(
-                                  width: size,
-                                  height: size,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: AppColors.submitGreenColor,
-                                  ),
-                                  child: Image.asset(
-                                    'assets/images/PNG Icons/coin.png',
-                                  ),
-                                ),
-                              );
-                            }
-                            return Padding(
-                              padding: const EdgeInsets.fromLTRB(5, 0, 5, 5),
-                              child: Container(
-                                width: size,
-                                height: size,
-                                decoration: const BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: Color(0XFFE9E9E9),
-                                ),
-                              ),
-                            );
-                          }
-                          if (index != 0 && (index + 1) % 5 == 0) {
-                            size = 14;
-                            return Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 5),
-                              child: Container(
-                                width: size,
-                                height: size,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: AppColors.submitGreenColor,
-                                ),
-                                child: Image.asset(
-                                    'assets/images/PNG Icons/coin.png'),
-                              ),
-                            );
-                          } else {
-                            size = 9;
-                            return Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 5),
-                              child: Container(
-                                width: size,
-                                height: size,
-                                decoration: const BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: Color(0XFFE9E9E9),
-                                ),
-                              ),
-                            );
-                          }
-                        },
-                      );
-                    },
-                  ),
-                ),
-              ),
-              Transform.translate(
-                offset: const Offset(20, 0),
-                child: Align(
-                  alignment: Alignment.bottomLeft,
-                  child: IconButton(
-                    onPressed: () {
-                      context
-                          .read<WorksheetSolverCubit>()
-                          .loadPreviousQuestion();
-                    },
-                    icon: Image.asset(
+              const BottomIndicatorQuestions(),
+              Padding(
+                padding: EdgeInsets.only(right: 8.wp),
+                child: IconButton(
+                  onPressed: () {
+                    context.read<WorksheetSolverCubit>().loadNextQuestion();
+                  },
+                  icon: RotatedBox(
+                    quarterTurns: 2,
+                    child: Image.asset(
                       'assets/ui/Group.png',
                       height: 40,
                     ),
@@ -421,7 +286,22 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView>
                 ),
               ),
             ],
-          )),
+          ),
+        ),
+        backgroundColor: const Color(0XFFD1CBF9),
+        appBar: appBarWorksheetSolver(context),
+        body: BlocBuilder<WorksheetSolverCubit, WorksheetSolverState>(
+          builder: (context, state) {
+            if (state.status == WorkSheetSolverStatus.loaded) {
+              return getQuestion(state, state.currentQuestion);
+            } else {
+              return const Center(
+                child: CircularProgressIndicator.adaptive(
+                  strokeCap: StrokeCap.round,
+                ),
+              );
+            }
+          },
         ),
       ),
     );
@@ -521,18 +401,6 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView>
           ),
         ),
       ],
-    );
-  }
-
-  Widget _buildMatchTheFollowingQuestion(
-      int i,
-      MatchTheFollowingQuestion matchTheFollowingQuestion,
-      List<MapEntry<String, String>> shuffledOptions,
-      dynamic markedAnswer) {
-    return MatchTheFollowingTest(
-      matchTheFollowingQuestion: matchTheFollowingQuestion,
-      shuffledOptions: shuffledOptions,
-      markedAnswer: markedAnswer,
     );
   }
 }
