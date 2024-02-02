@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_ar/presentation/main_menu/main_menu_screen.dart';
+import 'package:flutter_ar/presentation/splash_screen/splash_screen.dart';
 import '../../../demo/model_list.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:size_config/size_config.dart';
@@ -201,8 +202,7 @@ class LoginScreenState extends State<LoginScreen>
                             if (state.status == LoginStatus.success) {
                               print('success state');
                               Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) =>
-                                      const MainMenuScreen()));
+                                  builder: (context) => const SplashScreen()));
                             }
                           },
                           builder: (context, state) {

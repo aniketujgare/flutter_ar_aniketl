@@ -32,7 +32,9 @@ class LoginValidationBloc
   }
 
   _phoneNumberSubmitted(
-      PhoneNumberSubmitted event, Emitter<LoginValidationState> emit) async {
+    PhoneNumberSubmitted event,
+    Emitter<LoginValidationState> emit,
+  ) async {
     final phoneNumber = PhoneNumber.dirty(state.phoneNumber.value);
     emit(
       state.copyWith(
@@ -41,9 +43,10 @@ class LoginValidationBloc
         status: FormzSubmissionStatus.initial,
       ),
     );
+
     if (state.isValid) {
       emit(state.copyWith(status: FormzSubmissionStatus.inProgress));
-      await Future<void>.delayed(const Duration(seconds: 1));
+      // await Future<void>.delayed(const Duration(seconds: 1));
       emit(state.copyWith(status: FormzSubmissionStatus.success));
     } else {
       emit(state.copyWith(status: FormzSubmissionStatus.failure));

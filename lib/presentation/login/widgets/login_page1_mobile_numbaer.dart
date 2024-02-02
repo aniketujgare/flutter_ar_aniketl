@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ar/main.dart';
 import '../../../domain/repositories/authentication_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
@@ -93,9 +94,10 @@ class _LoginPage1MobileNumberState extends State<LoginPage1MobileNumber> {
                   .add(const PhoneNumberSubmitted());
               final isValid = context.read<LoginValidationBloc>().state.isValid;
               if (isValid) {
-                await AuthenticationRepository().getParentId(mobNo);
-                await AuthenticationRepository().getallstandardsofschool();
-                await AuthenticationRepository().getstudentprofilesnew();
+                // await authenticationRepository.saveDataToHive(mobNo);
+                // await AuthenticationRepository().getParentId(mobNo);
+                // await AuthenticationRepository().getallstandardsofschool();
+                // await AuthenticationRepository().getstudentprofilesnew();
 
                 context
                     .read<LoginBloc>()

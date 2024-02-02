@@ -63,8 +63,9 @@ class AuthenticationRepository {
   }
 
   //!
-  Future<void> saveDataToHive() async {
-    int parentId = await getParentId('8698671748');
+  Future<void> saveDataToHive(String mobileNo) async {
+    print(mobileNo);
+    int parentId = await getParentId(mobileNo);
     await getStudentProfiles(parentId);
   }
 
@@ -82,6 +83,7 @@ class AuthenticationRepository {
         if (allProfiles.isNotEmpty && allProfiles[0].isNotEmpty) {
           studentProfileBox.clear();
           studentProfileBox.add(allProfiles[0][0]);
+          log(jsonEncode(allProfiles[0][0]));
           print('Data saved successfully.');
         } else {
           throw Exception('Empty profiles received');
@@ -101,8 +103,8 @@ class AuthenticationRepository {
       var response =
           await client.post(url, body: jsonEncode({"mobno": "91$mobileNo"}));
       if (response.statusCode == 200) {
-        int parentId = jsonDecode(response.body);
-
+        var parentId = jsonDecode(response.body);
+        print(parentId);
         return parentId;
       } else {
         // If the server did not return a 200 OK response,
@@ -137,44 +139,44 @@ class AuthenticationRepository {
   }
 
   //!
-  Future<void> getallstandardsofschool() async {
-    Uri url = Uri.parse("$baseUrl/getallstandardsofschool");
-    try {
-      var response =
-          await client.post(url, body: jsonEncode({"school_id": "0"}));
-      if (response.statusCode == 200) {
-        var decodedBody = jsonDecode(response.body);
-        var kidsAppBox = await Hive.openBox("kidsApp");
-        kidsAppBox.put('allStandardsOfSchool', decodedBody);
-        print(kidsAppBox.get('allStandardsOfSchool'));
-      } else {
-        // If the server did not return a 200 OK response,
-        // then throw an exception.
-        throw Exception('Failed to load album');
-      }
-    } catch (e) {}
-  }
+  // Future<void> getallstandardsofschool() async {
+  //   Uri url = Uri.parse("$baseUrl/getallstandardsofschool");
+  //   try {
+  //     var response =
+  //         await client.post(url, body: jsonEncode({"school_id": "0"}));
+  //     if (response.statusCode == 200) {
+  //       var decodedBody = jsonDecode(response.body);
+  //       var kidsAppBox = await Hive.openBox("kidsApp");
+  //       kidsAppBox.put('allStandardsOfSchool', decodedBody);
+  //       print(kidsAppBox.get('allStandardsOfSchool'));
+  //     } else {
+  //       // If the server did not return a 200 OK response,
+  //       // then throw an exception.
+  //       throw Exception('Failed to load album');
+  //     }
+  //   } catch (e) {}
+  // }
 
-  Future<void> getstudentprofilesnew() async {
-    Uri url = Uri.parse("$baseUrl/getstudentprofilesnew");
-    try {
-      var kidsAppBox = await Hive.openBox("kidsApp");
-      var studentProfileBox =
-          await Hive.openBox<StudentProfileModel>('student_profile');
-      var response = await client.post(url,
-          body: jsonEncode({"parent_id": "${kidsAppBox.get('parentId')}"}));
-      if (response.statusCode == 200) {
-        var decodedBody = jsonDecode(response.body);
+  // Future<void> getstudentprofilesnew() async {
+  //   Uri url = Uri.parse("$baseUrl/getstudentprofilesnew");
+  //   try {
+  //     var kidsAppBox = await Hive.openBox("kidsApp");
+  //     var studentProfileBox =
+  //         await Hive.openBox<StudentProfileModel>('student_profile');
+  //     var response = await client.post(url,
+  //         body: jsonEncode({"parent_id": "${kidsAppBox.get('parentId')}"}));
+  //     if (response.statusCode == 200) {
+  //       var decodedBody = jsonDecode(response.body);
 
-        // studentProfileBox.add(studentProfileModelFromJson(response.body));
-        print(kidsAppBox.get('studentProfiles'));
-      } else {
-        // If the server did not return a 200 OK response,
-        // then throw an exception.
-        throw Exception('Failed to load album');
-      }
-    } catch (e) {}
-  }
+  //       // studentProfileBox.add(studentProfileModelFromJson(response.body));
+  //       print(kidsAppBox.get('studentProfiles'));
+  //     } else {
+  //       // If the server did not return a 200 OK response,
+  //       // then throw an exception.
+  //       throw Exception('Failed to load album');
+  //     }
+  //   } catch (e) {}
+  // }
 
   Future<void> sendGuestDataToServer(
       {required String guestName, required String guestPhone}) async {

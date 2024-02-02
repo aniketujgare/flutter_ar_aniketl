@@ -3,8 +3,10 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_ar/domain/repositories/authentication_repository.dart';
 import '../../core/route/route_name.dart';
 import '../../core/util/device_type.dart';
+import '../../data/models/student_profile_model.dart';
 import '../login/pages/login_screen.dart';
 import '../main_menu/main_menu_screen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -242,32 +244,59 @@ class SplashScreenState extends State<SplashScreen>
           Padding(
             padding: EdgeInsets.symmetric(
                 horizontal: MediaQuery.of(context).size.width * 0.12),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Transform(
-                  alignment: Alignment.center,
-                  transform: Matrix4.rotationY(2 * pi -
-                      (pi / 3 -
-                          _animationController.animationFlipProfile1.value)),
-                  child: profileIcon(context, 'Shardul'),
-                ),
-                Transform(
-                  alignment: Alignment.center,
-                  transform: Matrix4.rotationY(2 * pi -
-                      (pi / 3 -
-                          _animationController.animationFlipProfile2.value)),
-                  child: profileIcon(context, 'Sneha'),
-                ),
-                Transform(
-                  alignment: Alignment.center,
-                  transform: Matrix4.rotationY(2 * pi -
-                      (pi / 3 -
-                          _animationController.animationFlipProfile3.value)),
-                  child: profileIcon(context, 'Person 1'),
-                ),
-              ],
+            child: FutureBuilder(
+              future: AuthenticationRepository().getStudentProfile(),
+              builder: (BuildContext context,
+                  AsyncSnapshot<StudentProfileModel?> snapshot) {
+                if (snapshot.hasData && snapshot.data != null) {
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      ...List.generate(
+                        1,
+                        (index) => Transform(
+                          alignment: Alignment.center,
+                          transform: Matrix4.rotationY(2 * pi -
+                              (pi / 3 -
+                                  _animationController
+                                      .animationFlipProfile1.value)),
+                          child: profileIcon(
+                              context, snapshot.data?.studentName ?? 'User'),
+                        ),
+                      )
+                    ],
+                  );
+                }
+                return SizedBox();
+              },
             ),
+
+            //  Row(
+            //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            //   children: [
+            //     Transform(
+            //       alignment: Alignment.center,
+            //       transform: Matrix4.rotationY(2 * pi -
+            //           (pi / 3 -
+            //               _animationController.animationFlipProfile1.value)),
+            //       child: profileIcon(context, 'Shardul'),
+            //     ),
+            //     Transform(
+            //       alignment: Alignment.center,
+            //       transform: Matrix4.rotationY(2 * pi -
+            //           (pi / 3 -
+            //               _animationController.animationFlipProfile2.value)),
+            //       child: profileIcon(context, 'Sneha'),
+            //     ),
+            //     Transform(
+            //       alignment: Alignment.center,
+            //       transform: Matrix4.rotationY(2 * pi -
+            //           (pi / 3 -
+            //               _animationController.animationFlipProfile3.value)),
+            //       child: profileIcon(context, 'Person 1'),
+            //     ),
+            //   ],
+            // ),
           ),
           SizedBox(
               height: MediaQuery.of(context).size.height *

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter/foundation.dart' show debugPrint;
 import 'package:flutter_ar/main.dart';
@@ -119,7 +120,7 @@ class WorksheetCubit extends Cubit<WorksheetState> {
     );
     StudentProfileModel? studentProfile =
         await authenticationRepository.getStudentProfile();
-
+    log(jsonEncode(studentProfile));
     request.body = json.encode({
       "standard_id": "${studentProfile!.standardId}",
       "division_id": "${studentProfile!.divisionId}"

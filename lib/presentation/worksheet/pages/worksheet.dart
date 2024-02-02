@@ -74,9 +74,11 @@ class _WorksheetViewState extends State<WorksheetView> {
               const Spacer(),
               GestureDetector(
                 onTap: () async {
-                  // await isLogedIn();
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => const WorksheetHistoryView()));
+                  StudentProfileModel? v =
+                      await AuthenticationRepository().getStudentProfile();
+                  log(jsonEncode(v));
+                  // Navigator.of(context).push(MaterialPageRoute(
+                  //     builder: (context) => const WorksheetHistoryView()));
                 },
                 child: Container(
                   margin: EdgeInsets.only(left: 2.wp, right: 3.wp),

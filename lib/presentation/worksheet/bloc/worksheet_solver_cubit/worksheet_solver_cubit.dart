@@ -153,7 +153,7 @@ class WorksheetSolverCubit extends Cubit<WorksheetSolverState> {
       request.body = json.encode({
         "worksheet_id": _workSheetId,
         "student_id": _studentId,
-        "status": "submitte",
+        "status": "submitted",
         "submitdate": currentDate
       });
       request.headers.addAll(headers);

@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_ar/presentation/login/pages/login_screen.dart';
+import 'package:flutter_ar/presentation/splash_screen/splash_screen.dart';
 import 'data/models/student_profile_model.dart';
 import 'presentation/parent_zone/bloc/navbar_cubit/app_navigator_cubit.dart';
 import 'presentation/parent_zone/bloc/teacher_message_cubit/teacher_message_cubit.dart';
@@ -52,7 +54,8 @@ void main() async {
   Hive.registerAdapter(StudentProfileModelAdapter());
 
   // Opening the box
-  await Hive.openBox<StudentProfileModel>('student_profile');
+  StudentProfileModel? studentProfile =
+      await AuthenticationRepository().getStudentProfile();
   if (Platform.isAndroid) {
     // Include Android-specific AR code
     print('Platform.isAndroid');
@@ -66,13 +69,16 @@ void main() async {
   SystemChrome.setPreferredOrientations(
           [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight])
       .then((_) {
-    return runApp(const MyApp());
+    return runApp(MyApp(
+      studentProfile: studentProfile,
+    ));
   });
   // runApp(const MyApp());
 }
 
 class MyApp extends StatefulWidget {
-  const MyApp({super.key});
+  final StudentProfileModel? studentProfile;
+  const MyApp({super.key, this.studentProfile});
 
   @override
   MyAppState createState() => MyAppState();
@@ -142,15 +148,17 @@ class MyAppState extends State<MyApp> {
               create: (context) => WorksheetPageCubit(),
             ),
           ],
-          child: MaterialApp.router(
+          child: MaterialApp(
             debugShowCheckedModeBanner: false,
             themeMode: ThemeMode.light,
+            home:
+                widget.studentProfile == null ? LoginScreen() : SplashScreen(),
             // theme: ThemeData(
             //     appBarTheme: AppBarTheme(
             //         systemOverlayStyle: SystemUiOverlayStyle(
             //             statusBarBrightness: Brightness.light,
             //             statusBarColor: AppColors.accentColor))),
-            routerConfig: GoRouterProvider().goRouter(),
+            // routerConfig: GoRouterProvider().goRouter(),
           ),
         );
       },

@@ -16,25 +16,25 @@ class WorksheetHistoryView extends StatefulWidget {
 }
 
 class _WorksheetHistoryViewState extends State<WorksheetHistoryView> {
-  Future<int> getStudentId() async {
-    var kidsAppBox = await Hive.openBox("kidsApp");
-    var studentProfiles = kidsAppBox.get('studentProfiles');
-    print('StudentProfile: ' + studentProfiles.toString());
-    var firstProfile =
-        studentProfiles[0][0]; // Accessing the first map in the first list
-    int studentId = firstProfile['student_id'];
-    print('studentId: $studentId');
-    return studentId;
-  }
+  // Future<int> getStudentId() async {
+  //   var kidsAppBox = await Hive.openBox("kidsApp");
+  //   var studentProfiles = kidsAppBox.get('studentProfiles');
+  //   print('StudentProfile: ' + studentProfiles.toString());
+  //   var firstProfile =
+  //       studentProfiles[0][0]; // Accessing the first map in the first list
+  //   int studentId = firstProfile['student_id'];
+  //   print('studentId: $studentId');
+  //   return studentId;
+  // }
 
   @override
   void initState() {
     super.initState();
 
     // Use then to execute the asynchronous operation after initState completes
-    getStudentId().then((studentId) {
-      context.read<WorksheetCubit>().getWorksheetsHistory(studentId.toString());
-    });
+    // getStudentId().then((studentId) {
+    //   context.read<WorksheetCubit>().getWorksheetsHistory(studentId.toString());
+    // });
   }
 
   @override
@@ -106,11 +106,11 @@ class _WorksheetHistoryViewState extends State<WorksheetHistoryView> {
                     var workSheet = state.historyWorksheets[i];
                     return GestureDetector(
                       onTap: () {
-                        getStudentId().then((studentId) {
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => WorksheetSolverView(
-                                  workSheetId: workSheet.id)));
-                        });
+                        // getStudentId().then((studentId) {
+                        //   Navigator.of(context).push(MaterialPageRoute(
+                        //       builder: (context) => WorksheetSolverView(
+                        //           workSheetId: workSheet.id)));
+                        // });
                       },
                       child: Container(
                           padding: const EdgeInsets.all(8),

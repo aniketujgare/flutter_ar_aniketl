@@ -49,7 +49,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       // Sign the user in (or link) with the credential
       var resu = await _firebaseAuth.signInWithCredential(credential);
       if (resu.user != null) {
-        await authenticationRepository.saveDataToHive();
+        await authenticationRepository.saveDataToHive(state.mobileNumber);
         //Save to hivebox
         if (state.isGuest) {
           //Todo:Implement Succes state UI
@@ -85,7 +85,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         // AuthenticationRepository().getParentId(event.mobileNumber);
         // AuthenticationRepository().getstudentprofilesnew();
         // AuthenticationRepository().getallstandardsofschool();
-        await authenticationRepository.saveDataToHive();
+        // await authenticationRepository.saveDataToHive(event.mobileNumber);
       } else {
         add(const LoginEvent.error(
             errorMessage: 'Your mobile is not registered!'));
