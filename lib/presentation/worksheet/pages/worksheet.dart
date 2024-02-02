@@ -20,7 +20,6 @@ import '../../../../core/util/styles.dart';
 import '../bloc/worksheet_page_cubit/worksheet_page_cubit.dart';
 
 class WorksheetView extends StatefulWidget {
-  late int studentId;
   WorksheetView({super.key});
   @override
   State<WorksheetView> createState() => _WorksheetViewState();
@@ -40,18 +39,8 @@ class _WorksheetViewState extends State<WorksheetView> {
     super.initState();
   }
 
-  // Future<int> getStudentId() async {
-  //   var kidsAppBox = await Hive.openBox("kidsApp");
-  //   var studentProfiles = kidsAppBox.get('studentProfiles');
-  //   var firstProfile =
-  //       studentProfiles[0][0]; // Accessing the first map in the first list
-  //   print('student id:' + firstProfile['student_id']);
-  //   return firstProfile['student_id'];
-  // }
-
   @override
   Widget build(BuildContext context) {
-    // getStudentId().then((value) => widget.studentId = value);
     return PopScope(
       canPop: false,
       child: Scaffold(
@@ -141,7 +130,7 @@ class _WorksheetViewState extends State<WorksheetView> {
                                       MaterialPageRoute(
                                         builder: (context) =>
                                             WorksheetSolverView(
-                                                workSheetId: 847, studentId: 9),
+                                                workSheetId: workSheet.id),
                                       ),
                                     );
                                   },

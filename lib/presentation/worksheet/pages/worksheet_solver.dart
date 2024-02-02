@@ -19,45 +19,19 @@ import '../widgets/questions/true_or_false_question.dart';
 
 class WorksheetSolverView extends StatefulWidget {
   final int workSheetId;
-  final int studentId;
-  const WorksheetSolverView(
-      {super.key, required this.workSheetId, required this.studentId});
+  const WorksheetSolverView({super.key, required this.workSheetId});
 
   @override
   State<WorksheetSolverView> createState() => _WorksheetSolverViewState();
 }
 
-class _WorksheetSolverViewState extends State<WorksheetSolverView>
-    with TickerProviderStateMixin {
-  final controller = PageController(viewportFraction: 0.8, keepPage: true);
-  late AnimationController _controller;
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    controller.dispose();
-    super.dispose();
-  }
-
+class _WorksheetSolverViewState extends State<WorksheetSolverView> {
   @override
   void initState() {
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.landscapeLeft,
-      DeviceOrientation.landscapeRight,
-    ]);
     super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration:
-          const Duration(milliseconds: 300), // Adjust the duration as needed
-    );
 
     context.read<WorksheetSolverCubit>().setCurrentQuestionZero();
-    context
-        .read<WorksheetSolverCubit>()
-        .init(widget.workSheetId, widget.studentId);
-    print('workshetid: ${widget.workSheetId}, studentid: ${widget.studentId}');
+    context.read<WorksheetSolverCubit>().init(widget.workSheetId);
   }
 
   List<Map<String, dynamic>> answers = [];

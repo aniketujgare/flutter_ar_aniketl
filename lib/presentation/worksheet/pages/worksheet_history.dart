@@ -1,17 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import '../../../core/util/reusable_widgets/reusable_button.dart';
-import '../../../data/models/teacher_message.dart';
-import '../../parent_zone/bloc/teacher_message_cubit/teacher_message_cubit.dart';
-import '../bloc/worksheet_cubit/worksheet_cubit.dart';
-import 'worksheet_solver.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:intl/intl.dart';
 import 'package:size_config/size_config.dart';
 
 import '../../../../core/util/device_type.dart';
 import '../../../../core/util/styles.dart';
+import '../bloc/worksheet_cubit/worksheet_cubit.dart';
+import 'worksheet_solver.dart';
 
 class WorksheetHistoryView extends StatefulWidget {
   const WorksheetHistoryView({super.key});
@@ -114,14 +109,12 @@ class _WorksheetHistoryViewState extends State<WorksheetHistoryView> {
                         getStudentId().then((studentId) {
                           Navigator.of(context).push(MaterialPageRoute(
                               builder: (context) => WorksheetSolverView(
-                                    workSheetId: workSheet.id,
-                                    studentId: studentId,
-                                  )));
+                                  workSheetId: workSheet.id)));
                         });
                       },
                       child: Container(
-                          padding: EdgeInsets.all(8),
-                          margin: EdgeInsets.all(8),
+                          padding: const EdgeInsets.all(8),
+                          margin: const EdgeInsets.all(8),
                           color: AppColors.accentColor,
                           child: Text(workSheet.worksheetName)),
                     );

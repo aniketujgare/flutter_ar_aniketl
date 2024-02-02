@@ -49,29 +49,17 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       // Sign the user in (or link) with the credential
       var resu = await _firebaseAuth.signInWithCredential(credential);
       if (resu.user != null) {
+        await authenticationRepository.saveDataToHive();
+        //Save to hivebox
         if (state.isGuest) {
           //Todo:Implement Succes state UI
-          //Save to hivebox
 
-          var kidsAppBox = await Hive.openBox("kidsApp");
-
-          await AuthenticationRepository().getParentId(state.mobileNumber);
-          await AuthenticationRepository().getallstandardsofschool();
-          await AuthenticationRepository().getstudentprofilesnew();
-
-          var isLoggedIn = kidsAppBox.put('isLoggedIn', true);
           await authenticationRepository.sendGuestDataToServer(
               guestName: state.parentName, guestPhone: state.mobileNumber);
 
           emit(state.copyWith(status: LoginStatus.phoneNo1));
         } else {
-          var kidsAppBox = await Hive.openBox("kidsApp");
-          var isLoggedIn = kidsAppBox.put('isLoggedIn', true);
-          // await AuthenticationRepository().getParentId(state.mobileNumber);
-          // await AuthenticationRepository().getallstandardsofschool();
-          // await AuthenticationRepository().getstudentprofilesnew();
-          await authenticationRepository.saveDataToHive();
-          emit(state.copyWith(status: LoginStatus.parents3));
+          emit(state.copyWith(status: LoginStatus.success));
         }
       }
     } catch (e) {

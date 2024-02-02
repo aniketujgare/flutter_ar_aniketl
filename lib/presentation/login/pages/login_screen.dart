@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_ar/presentation/main_menu/main_menu_screen.dart';
 import '../../../demo/model_list.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:size_config/size_config.dart';
@@ -197,6 +198,12 @@ class LoginScreenState extends State<LoginScreen>
                                   const SnackBar(
                                       content: Text("Wrong OTP entered")));
                             }
+                            if (state.status == LoginStatus.success) {
+                              print('success state');
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) =>
+                                      const MainMenuScreen()));
+                            }
                           },
                           builder: (context, state) {
                             switch (state.status) {
@@ -218,6 +225,11 @@ class LoginScreenState extends State<LoginScreen>
                               case LoginStatus.error:
                                 return const Center(
                                     child: Text("Error on login"));
+                              case LoginStatus.success:
+                                return const Center(
+                                    child: CircularProgressIndicator.adaptive(
+                                  strokeCap: StrokeCap.round,
+                                ));
                             }
                           },
                         )),

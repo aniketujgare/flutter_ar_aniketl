@@ -3,11 +3,13 @@ import 'dart:developer';
 
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart' show debugPrint;
+import 'package:flutter_ar/domain/repositories/authentication_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 
+import '../../../../data/models/student_profile_model.dart';
 import '../../models/questions.dart';
 import '../../models/worksheet_ans_of_student.dart';
 
@@ -18,15 +20,17 @@ class WorksheetSolverCubit extends Cubit<WorksheetSolverState> {
   int _workSheetId = 0;
   int _studentId = 0;
   WorksheetSolverCubit() : super(const WorksheetSolverState.initial());
-  void init(int workSheetId, int studentId) async {
+  void init(int workSheetId) async {
     _workSheetId = workSheetId;
-    _studentId = studentId;
+    StudentProfileModel? studentProfile =
+        await AuthenticationRepository().getStudentProfile();
+    _studentId = studentProfile?.studentId ?? 0;
     emit(state.copyWith(status: WorkSheetSolverStatus.loading));
     //Load questions list
     List<Question> questionsList = await getQuestionsList(workSheetId);
     //Load student answer list
     List<StudentAnswer> studentAnswerList =
-        await getStudentAnswerList(workSheetId, studentId);
+        await getStudentAnswerList(workSheetId, _studentId);
     print('final ans sheet1: ${jsonEncode(studentAnswerList)}');
     //Generate final state answerlist
     List<StudentAnswer> answerSheet = [];
