@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ar/domain/repositories/authentication_repository.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../data/models/student_profile_model.dart';
 import '../../presentation/category/pages/category_screen.dart';
 import '../../presentation/login/pages/login_screen.dart';
 import '../../presentation/main_menu/main_menu_screen.dart';
@@ -18,10 +20,10 @@ class GoRouterProvider {
         navigatorKey: _rootNavigatorKey,
         initialLocation: '/',
         // redirect: (context, state) async {
-        //   var kidsAppBox = await Hive.openBox("kidsApp");
-        //   var v = kidsAppBox.get('isLoggedIn');
-        //   if (kidsAppBox.get('isLoggedIn') == null ||
-        //       kidsAppBox.get('isLoggedIn') == false) {
+        //   StudentProfileModel? studentProfile =
+        //       await AuthenticationRepository().getStudentProfile();
+
+        //   if (studentProfile == null) {
         //     return '/login';
         //   } else {
         //     return '/';
