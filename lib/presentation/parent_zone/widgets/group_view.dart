@@ -51,21 +51,26 @@ class _GroupsViewState extends State<GroupsView> {
               itemCount: state.teachersList.length,
               itemBuilder: (BuildContext context, int index) {
                 // var notification = dummyNotification[index];
-                var teacher = state.teachersList[index];
+                TeacherModel teacher = state.teachersList[index];
                 return GestureDetector(
                   onTap: () async {
                     Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) =>
-                            MessageView(teaherUserId: teacher.teacherUserId)));
+                        builder: (context) => MessageView(
+                              teaherUserId: teacher.teacherUserId,
+                              subject: state.teacherMessage?.subject ?? '',
+                              teacher:
+                                  teacher.teacherName.replaceAll('Mr.', ''),
+                            )));
                   },
                   child: GroupNotification(
-                    subject: teacher.teacherName[0] +
-                        teacher.teacherName.split(' ').last[0],
-                    title: teacher.teacherName,
-                    subtitle: teacher.teacherName,
+                    subject: state.teacherMessage?.subject ?? '',
+                    title: teacher.teacherName.replaceAll('Mr.', ''),
+                    subtitle: state.teacherMessage?.content ?? '',
                     isNow: false,
-                    trailing:
-                        DateFormat('d/M').format(teacher.teacherCreatedDate),
+                    trailing: state.teacherMessage?.date == null
+                        ? ''
+                        : DateFormat('d/M').format(DateTime.parse(
+                            parseDate(state.teacherMessage!.date))),
                     // teacher.teacherCreatedDate.toString().split(' ').first,
                   ),
                 );
@@ -91,6 +96,20 @@ class _GroupsViewState extends State<GroupsView> {
         }
       },
     );
+  }
+
+  String parseDate(String dateString) {
+    List<String> dateParts = dateString.split('-');
+    if (dateParts.length == 3) {
+      int year = int.parse(dateParts[0]);
+      int month = int.parse(dateParts[1]);
+      int day = int.parse(dateParts[2]);
+      String formattedDate =
+          '$year-${month.toString().padLeft(2, '0')}-${day.toString().padLeft(2, '0')}';
+      return formattedDate;
+    } else {
+      throw FormatException('Invalid date format: $dateString');
+    }
   }
 }
 

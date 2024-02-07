@@ -13,7 +13,13 @@ import '../../../core/util/styles.dart';
 
 class MessageView extends StatefulWidget {
   final int teaherUserId;
-  const MessageView({super.key, required this.teaherUserId});
+  final String subject;
+  final String teacher;
+  const MessageView(
+      {super.key,
+      required this.teaherUserId,
+      required this.subject,
+      required this.teacher});
 
   @override
   State<MessageView> createState() => _MessageViewState();
@@ -68,7 +74,7 @@ class _MessageViewState extends State<MessageView> {
                   shape: BoxShape.circle,
                 ),
                 child: Center(
-                  child: Text('EVS',
+                  child: Text(widget.subject,
                       style: DeviceType().isMobile
                           ? AppTextStyles.nunito85w700white
                           : AppTextStyles.nunito85w700white
@@ -77,7 +83,7 @@ class _MessageViewState extends State<MessageView> {
               ),
               // 5.horizontalSpacer,
               Text(
-                'Teacher Name',
+                widget.teacher,
                 style: DeviceType().isMobile
                     ? AppTextStyles.uniformRounded136BoldAppBarStyle
                     : AppTextStyles.uniformRounded136BoldAppBarStyle

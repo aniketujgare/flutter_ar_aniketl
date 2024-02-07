@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ar/core/student_profile_cubit/student_profile_cubit.dart';
+import 'package:flutter_ar/presentation/parent_zone/bloc/parent_details_cubit/parent_details_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:size_config/size_config.dart';
 
@@ -22,19 +24,53 @@ class HomeView extends StatelessWidget {
               children: [
                 studentProfile(),
                 22.verticalSpacer,
-                const ParentProfileCard(
-                  profileTitle: 'Fater',
-                  name: 'Shardul Gangal',
-                  mobile: '0123456789',
-                  email: 'shardulgangal@yahoo.com',
+                BlocBuilder<ParentDetailsCubit, ParentDetailsState>(
+                  builder: (context, state) {
+                    if (state.status == ParentDetailsStatus.loaded) {
+                      return Column(
+                        children: [
+                          ...List.generate(
+                              state.parentDetails.length,
+                              (index) => Column(
+                                    children: [
+                                      ParentProfileCard(
+                                        profileTitle: state.parentDetails[index]
+                                            .parentRelation,
+                                        name: state
+                                            .parentDetails[index].parentName,
+                                        mobile: state.parentDetails[index]
+                                            .parentMobileNumber
+                                            .toString()
+                                            .substring(2)
+                                            .split('.')
+                                            .first,
+                                        email: state
+                                            .parentDetails[index].parentEmail,
+                                      ),
+                                      22.verticalSpacer
+                                    ],
+                                  ))
+                        ],
+                      );
+                    }
+                    return const Center(
+                        child: const CircularProgressIndicator.adaptive(
+                            strokeCap: StrokeCap.round));
+                  },
                 ),
-                22.verticalSpacer,
-                const ParentProfileCard(
-                  profileTitle: 'Mother',
-                  name: 'Sneha Gangal',
-                  mobile: '0123456789',
-                  email: 'snehagangal@yahoo.com',
-                ),
+                // const ParentProfileCard(
+                //   profileTitle: 'Fater',
+                //   name: 'Shardul Gangal',
+                //   mobile: '0123456789',
+                //   email: 'shardulgangal@yahoo.com',
+                // ),
+                // 22.verticalSpacer,
+                // const ParentProfileCard(
+                //   profileTitle: 'Mother',
+                //   name: 'Sneha Gangal',
+                //   mobile: '0123456789',
+                //   email: 'snehagangal@yahoo.com',
+                // ),
               ],
             ),
           );
@@ -85,15 +121,19 @@ class HomeView extends StatelessWidget {
                 12.verticalSpacer,
                 SizedBox(
                   width: double.infinity,
-                  child: Text(
-                    'Shardul Gangal',
-                    style: TextStyle(
-                      color: const Color(0xFF212121),
-                      fontSize: 128.sp,
-                      fontFamily: 'Nunito',
-                      fontWeight: FontWeight.w400,
-                      height: 0,
-                    ),
+                  child: BlocBuilder<StudentProfileCubit, StudentProfileState>(
+                    builder: (context, state) {
+                      return Text(
+                        state.studentProfileModel?.studentName ?? '',
+                        style: TextStyle(
+                          color: const Color(0xFF212121),
+                          fontSize: 128.sp,
+                          fontFamily: 'Nunito',
+                          fontWeight: FontWeight.w400,
+                          height: 0,
+                        ),
+                      );
+                    },
                   ),
                 ),
                 8.verticalSpacer,
@@ -102,28 +142,38 @@ class HomeView extends StatelessWidget {
                   children: [
                     Expanded(
                       child: SizedBox(
-                        child: Text(
-                          'Grade: 1',
-                          style: TextStyle(
-                            color: const Color(0xFF212121),
-                            fontSize: 95.sp,
-                            fontFamily: 'Nunito',
-                            fontWeight: FontWeight.w400,
-                            height: 0,
-                          ),
+                        child: BlocBuilder<StudentProfileCubit,
+                            StudentProfileState>(
+                          builder: (context, state) {
+                            return Text(
+                              'Grade: ${state.studentProfileModel?.standardId}',
+                              style: TextStyle(
+                                color: const Color(0xFF212121),
+                                fontSize: 95.sp,
+                                fontFamily: 'Nunito',
+                                fontWeight: FontWeight.w400,
+                                height: 0,
+                              ),
+                            );
+                          },
                         ),
                       ),
                     ),
                     Expanded(
-                      child: Text(
-                        'Division: A',
-                        style: TextStyle(
-                          color: const Color(0xFF212121),
-                          fontSize: 95.sp,
-                          fontFamily: 'Nunito',
-                          fontWeight: FontWeight.w400,
-                          height: 0,
-                        ),
+                      child:
+                          BlocBuilder<StudentProfileCubit, StudentProfileState>(
+                        builder: (context, state) {
+                          return Text(
+                            'Division: ${state.studentProfileModel?.divisionId}',
+                            style: TextStyle(
+                              color: const Color(0xFF212121),
+                              fontSize: 95.sp,
+                              fontFamily: 'Nunito',
+                              fontWeight: FontWeight.w400,
+                              height: 0,
+                            ),
+                          );
+                        },
                       ),
                     ),
                   ],

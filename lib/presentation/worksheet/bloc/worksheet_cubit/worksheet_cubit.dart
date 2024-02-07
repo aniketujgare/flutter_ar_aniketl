@@ -131,10 +131,13 @@ class WorksheetCubit extends Cubit<WorksheetState> {
       http.StreamedResponse response = await request.send();
 
       if (response.statusCode == 200) {
-        final String responseString = await response.stream.bytesToString();
+        final dynamic responseString = await response.stream.bytesToString();
+        if (responseString is int || responseString == "0") {
+          print('no list in the db');
+          return [];
+        }
         List<PublishedWorksheets> publishedworksheets =
             publishedworksheetsFromJson(responseString);
-        // debugPrint('publishedworksheets: ${json.encode(publishedworksheets)}');
         return publishedworksheets;
       } else {
         debugPrint('Request failed with status: ${response.statusCode}');
@@ -153,7 +156,7 @@ class WorksheetCubit extends Cubit<WorksheetState> {
       Uri.parse(
           'https://cnpewunqs5.execute-api.ap-south-1.amazonaws.com/dev/getworksheetdetails'),
     );
-    request.body = json.encode({"worksheet_id": "$worksheetId"});
+    request.body = json.encode({"worksheet_id": worksheetId});
     request.headers.addAll(headers);
 
     try {

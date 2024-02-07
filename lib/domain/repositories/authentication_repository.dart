@@ -64,12 +64,11 @@ class AuthenticationRepository {
 
   //!
   Future<void> saveDataToHive(String mobileNo) async {
-    print(mobileNo);
     int parentId = await getParentId(mobileNo);
-    await getStudentProfiles(parentId);
+    await saveStudentProfiles(parentId);
   }
 
-  Future<void> getStudentProfiles(int parentId) async {
+  Future<void> saveStudentProfiles(int parentId) async {
     try {
       var studentProfileBox =
           await Hive.openBox<StudentProfileModel>('student_profile');

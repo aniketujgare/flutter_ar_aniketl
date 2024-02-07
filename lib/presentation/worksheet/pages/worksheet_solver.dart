@@ -209,10 +209,8 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView> {
           markedAnswer: markedAnswer,
         );
       default:
-        return const Center(
-            child: CircularProgressIndicator.adaptive(
-          strokeCap: StrokeCap.round,
-        ));
+        return Text(
+            'UI for ${state.questions[i].questionType.toString()} doesn\'t exists');
     }
   }
 
@@ -264,6 +262,14 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView> {
         body: BlocBuilder<WorksheetSolverCubit, WorksheetSolverState>(
           builder: (context, state) {
             if (state.status == WorkSheetSolverStatus.loaded) {
+              if (state.questions.isEmpty) {
+                return Center(
+                  child: Text(
+                    'No questions are available in the worksheet at the moment.',
+                    style: AppTextStyles.nunito105w700Text,
+                  ),
+                );
+              }
               return getQuestion(state, state.currentQuestion);
             } else {
               return const Center(

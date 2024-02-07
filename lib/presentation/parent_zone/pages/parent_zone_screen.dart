@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_ar/presentation/parent_zone/bloc/parent_details_cubit/parent_details_cubit.dart';
 import '../../../core/util/styles.dart';
 import '../bloc/navbar_cubit/app_navigator_cubit.dart';
 import '../widgets/app_bottom_nav_bar.dart';
@@ -32,6 +33,7 @@ class _ParentZoneScreenState extends State<ParentZoneScreen> {
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
     ]);
+    context.read<ParentDetailsCubit>().getParentDetails();
   }
 
   @override

@@ -318,10 +318,14 @@ class SplashScreenState extends State<SplashScreen>
             alignment: Alignment.center,
             transform: Matrix4.rotationY(2 * pi -
                 (pi / 3 - _animationController.animationFlipProfileForm.value)),
-            child: Text(
-              'SmartXR School',
-              style: AppTextStyles.unitedRounded140w700
-                  .copyWith(fontSize: 120.sp, color: AppColors.accentColor),
+            child: BlocBuilder<StudentProfileCubit, StudentProfileState>(
+              builder: (context, state) {
+                return Text(
+                  'SmartXR School',
+                  style: AppTextStyles.unitedRounded140w700
+                      .copyWith(fontSize: 120.sp, color: AppColors.accentColor),
+                );
+              },
             ),
           ),
         ],

@@ -7,6 +7,7 @@ class TeacherListState with _$TeacherListState {
   const factory TeacherListState({
     @Default(TeacherListStatus.initial) TeacherListStatus status,
     @Default([]) final List<TeacherModel> teachersList,
+    @Default(null) final TeacherMessageModel? teacherMessage,
     @Default('Failed to load teachers list') String errorMessage,
   }) = Initial;
 }

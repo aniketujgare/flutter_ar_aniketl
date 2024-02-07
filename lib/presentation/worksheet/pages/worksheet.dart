@@ -29,10 +29,10 @@ class _WorksheetViewState extends State<WorksheetView> {
   late StudentProfileModel studentProfileModel;
   @override
   void initState() {
-    context.read<WorksheetPageCubit>().setmaxLength(
-        (BlocProvider.of<WorksheetCubit>(context).state.worksheets.length /
-                (DeviceType().isMobile ? 4 : 3))
-            .ceil());
+    // context.read<WorksheetPageCubit>().setmaxLength(
+    //     (BlocProvider.of<WorksheetCubit>(context).state.worksheets.length /
+    //             (DeviceType().isMobile ? 4 : 3))
+    //         .ceil());
     context.read<WorksheetPageCubit>().setPage(0);
 
     super.initState();
@@ -96,8 +96,23 @@ class _WorksheetViewState extends State<WorksheetView> {
             BlocBuilder<WorksheetCubit, WorksheetState>(
               builder: (context, state) {
                 if (state.status == WorksheetStatus.loaded) {
+                  context.read<WorksheetPageCubit>().setmaxLength(
+                      (BlocProvider.of<WorksheetCubit>(context)
+                                  .state
+                                  .worksheets
+                                  .length /
+                              (DeviceType().isMobile ? 4 : 3))
+                          .ceil());
                   return BlocBuilder<WorksheetPageCubit, int>(
                     builder: (context, index) {
+                      if (state.worksheets.isEmpty) {
+                        return Center(
+                          child: Text(
+                            'No Worksheets Available at the Moment',
+                            style: AppTextStyles.nunito105w700Text,
+                          ),
+                        );
+                      }
                       return PageView.builder(
                         controller: context.read<WorksheetPageCubit>().pageCont,
                         scrollDirection: Axis.horizontal,
@@ -181,52 +196,60 @@ class _WorksheetViewState extends State<WorksheetView> {
                 }
               },
             ),
-            Padding(
-              padding: EdgeInsets.fromLTRB(8.wp, 4.wp, 8.wp, 4.wp),
-              child: Column(
-                children: [
-                  //! Center page previous and next buttons
-                  Expanded(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            BlocBuilder<WorksheetCubit, WorksheetState>(
+              builder: (context, state) {
+                if (state.worksheets.isNotEmpty) {
+                  return Padding(
+                    padding: EdgeInsets.fromLTRB(8.wp, 4.wp, 8.wp, 4.wp),
+                    child: Column(
                       children: [
-                        GestureDetector(
-                          onTap: () => context
-                              .read<WorksheetPageCubit>()
-                              .setPreviousPage(),
-                          child: SizedBox(
-                            height: 45.h,
-                            width: 45.h,
-                            child: Image.asset(
-                              'assets/ui/Group.png', // right arrow
-                              fit: BoxFit.scaleDown,
-                              height: 45.h,
-                              width: 45.h,
-                            ),
-                          ),
-                        ),
-                        GestureDetector(
-                          onTap: () =>
-                              context.read<WorksheetPageCubit>().setNextPage(),
-                          child: RotatedBox(
-                            quarterTurns: 2,
-                            child: SizedBox(
-                              height: 45.h,
-                              width: 45.h,
-                              child: Image.asset(
-                                'assets/ui/Group.png', // right arrow
-                                fit: BoxFit.scaleDown,
-                                height: 45.h,
-                                width: 45.h,
+                        //! Center page previous and next buttons
+                        Expanded(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              GestureDetector(
+                                onTap: () => context
+                                    .read<WorksheetPageCubit>()
+                                    .setPreviousPage(),
+                                child: SizedBox(
+                                  height: 45.h,
+                                  width: 45.h,
+                                  child: Image.asset(
+                                    'assets/ui/Group.png', // right arrow
+                                    fit: BoxFit.scaleDown,
+                                    height: 45.h,
+                                    width: 45.h,
+                                  ),
+                                ),
                               ),
-                            ),
+                              GestureDetector(
+                                onTap: () => context
+                                    .read<WorksheetPageCubit>()
+                                    .setNextPage(),
+                                child: RotatedBox(
+                                  quarterTurns: 2,
+                                  child: SizedBox(
+                                    height: 45.h,
+                                    width: 45.h,
+                                    child: Image.asset(
+                                      'assets/ui/Group.png', // right arrow
+                                      fit: BoxFit.scaleDown,
+                                      height: 45.h,
+                                      width: 45.h,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ],
                     ),
-                  ),
-                ],
-              ),
+                  );
+                }
+                return SizedBox();
+              },
             ),
           ],
         ),

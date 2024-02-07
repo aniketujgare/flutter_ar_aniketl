@@ -10,6 +10,7 @@ import 'package:lottie/lottie.dart';
 import 'core/student_profile_cubit/student_profile_cubit.dart';
 import 'data/models/student_profile_model.dart';
 import 'presentation/parent_zone/bloc/navbar_cubit/app_navigator_cubit.dart';
+import 'presentation/parent_zone/bloc/parent_details_cubit/parent_details_cubit.dart';
 import 'presentation/parent_zone/bloc/teacher_message_cubit/teacher_message_cubit.dart';
 import 'presentation/worksheet/bloc/worksheet_cubit/worksheet_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -162,6 +163,9 @@ class MyAppState extends State<MyApp> {
               ),
               BlocProvider(
                 create: (context) => StudentProfileCubit(),
+              ),
+              BlocProvider(
+                create: (context) => ParentDetailsCubit(),
               ),
             ],
             child: MaterialApp(

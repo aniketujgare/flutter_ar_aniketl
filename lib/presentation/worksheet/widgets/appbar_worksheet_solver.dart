@@ -34,6 +34,9 @@ AppBar appBarWorksheetSolver(BuildContext context) {
           child: BlocBuilder<WorksheetSolverCubit, WorksheetSolverState>(
             builder: (context, state) {
               if (state.status == WorkSheetSolverStatus.loaded) {
+                if (state.questions.isEmpty) {
+                  return const SizedBox();
+                }
                 return Text(
                     'Q.${state.currentQuestion + 1} ${state.questions[state.currentQuestion].getQuestionTypeString()}',
                     textAlign: TextAlign.center,
