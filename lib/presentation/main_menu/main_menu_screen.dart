@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_ar/temp_testing/hive_test.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:size_config/size_config.dart';
 
 import '../../core/util/device_type.dart';
@@ -8,6 +9,7 @@ import '../../core/util/styles.dart';
 import '../category/pages/category_screen.dart';
 import '../parent_zone/pages/parent_zone_screen.dart';
 import '../subject/pages/subject.dart';
+import '../worksheet/bloc/worksheet_cubit/worksheet_cubit.dart';
 import '../worksheet/pages/worksheet.dart';
 
 class MainMenuScreen extends StatefulWidget {
@@ -25,6 +27,7 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
       DeviceOrientation.landscapeLeft,
       DeviceOrientation.landscapeRight,
     ]);
+    context.read<WorksheetCubit>().getWorksheets();
     super.initState();
   }
 

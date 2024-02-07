@@ -1,6 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_ar/presentation/worksheet/widgets/questions/odd_one_out_question.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:size_config/size_config.dart';
 
@@ -15,6 +16,7 @@ import '../widgets/questions/long_answer_question.dart';
 import '../widgets/questions/match_the_following_question.dart';
 import '../widgets/questions/mcq_image_question.dart';
 import '../widgets/questions/mcq_text_question.dart';
+import '../widgets/questions/select_correct_word_question.dart';
 import '../widgets/questions/true_or_false_question.dart';
 
 class WorksheetSolverView extends StatefulWidget {
@@ -78,8 +80,7 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView> {
 
       case QuestionType.matchTheFollowing:
         return MatchFollowingQuestion(
-          matchTheFollowingQuestion:
-              state.questions[i] as MatchTheFollowingQuestion,
+          question: state.questions[i] as MatchTheFollowingQuestion,
           markedAnswer: markedAnswer,
         );
       case QuestionType.oneWord:
@@ -167,22 +168,18 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView> {
       case QuestionType.selectWord:
         SelectWordQuestion selectWordQuestion =
             state.questions[i] as SelectWordQuestion;
-        return Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('${i + 1}) ${selectWordQuestion.question}'),
-            TextFormField(
-              initialValue: (markedAnswer as String?) ?? '',
-            ),
-            const SizedBox(height: 10),
-          ],
+        return SelectCorrectWordQuestion(
+          questionIndex: i,
+          question: state.questions[i] as SelectWordQuestion,
+          markedAnswer: markedAnswer,
         );
       case QuestionType.oddOneOutText:
-        OddOneOutTextQuestion oddOneOutTextQuestion =
-            state.questions[i] as OddOneOutTextQuestion;
-        return _buildOddOneOutTextQuestion(
-            i, oddOneOutTextQuestion, markedAnswer);
+        return OddOneOutQuestion(
+          questionIndex: i,
+          question: state.questions[i] as OddOneOutTextQuestion,
+          markedAnswer: markedAnswer,
+        );
+
       case QuestionType.oddOneOutimage:
         OddOneOutImageQuestion oddOneOutImageQuestion =
             state.questions[i] as OddOneOutImageQuestion;

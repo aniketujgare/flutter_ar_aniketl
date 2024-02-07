@@ -39,20 +39,27 @@ class CategoryModelsPageView extends StatelessWidget {
                         fit: BoxFit.contain,
                       ),
                     ),
-                    GestureDetector(
-                      onTap: () => context
-                          .read<ModelsPageControllerCubit>()
-                          .setPreviousPage(),
-                      child: SizedBox(
-                        height: 45.h,
-                        width: 45.h,
-                        child: Image.asset(
-                          'assets/ui/Group.png', // right arrow
-                          fit: BoxFit.scaleDown,
-                          height: 45.h,
-                          width: 45.h,
-                        ),
-                      ),
+                    BlocBuilder<ModelsNewCubit, ModelsNewState>(
+                      builder: (context, state) {
+                        if (state.arModels.length > 6) {
+                          return GestureDetector(
+                            onTap: () => context
+                                .read<ModelsPageControllerCubit>()
+                                .setPreviousPage(),
+                            child: SizedBox(
+                              height: 45.h,
+                              width: 45.h,
+                              child: Image.asset(
+                                'assets/ui/Group.png', // right arrow
+                                fit: BoxFit.scaleDown,
+                                height: 45.h,
+                                width: 45.h,
+                              ),
+                            ),
+                          );
+                        }
+                        return SizedBox();
+                      },
                     ),
                     SizedBox(
                       width: 75.h,
@@ -114,23 +121,30 @@ class CategoryModelsPageView extends StatelessWidget {
                       width: 75.h,
                       height: 75.h,
                     ),
-                    GestureDetector(
-                      onTap: () => context
-                          .read<ModelsPageControllerCubit>()
-                          .setNextPage(),
-                      child: RotatedBox(
-                        quarterTurns: 2,
-                        child: SizedBox(
-                          height: 45.h,
-                          width: 45.h,
-                          child: Image.asset(
-                            'assets/ui/Group.png', // right arrow
-                            fit: BoxFit.scaleDown,
-                            height: 45.h,
-                            width: 45.h,
-                          ),
-                        ),
-                      ),
+                    BlocBuilder<ModelsNewCubit, ModelsNewState>(
+                      builder: (context, state) {
+                        if (state.arModels.length > 6) {
+                          return GestureDetector(
+                            onTap: () => context
+                                .read<ModelsPageControllerCubit>()
+                                .setNextPage(),
+                            child: RotatedBox(
+                              quarterTurns: 2,
+                              child: SizedBox(
+                                height: 45.h,
+                                width: 45.h,
+                                child: Image.asset(
+                                  'assets/ui/Group.png', // right arrow
+                                  fit: BoxFit.scaleDown,
+                                  height: 45.h,
+                                  width: 45.h,
+                                ),
+                              ),
+                            ),
+                          );
+                        }
+                        return SizedBox();
+                      },
                     ),
                     SizedBox(
                       width: 75.h,

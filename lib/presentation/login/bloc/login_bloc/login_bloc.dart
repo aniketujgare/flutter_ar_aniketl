@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart' show debugPrint;
 import 'package:flutter/widgets.dart';
+import '../../../../core/student_profile_cubit/student_profile_cubit.dart';
 import '../../../../domain/repositories/authentication_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -50,6 +51,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       var resu = await _firebaseAuth.signInWithCredential(credential);
       if (resu.user != null) {
         await authenticationRepository.saveDataToHive(state.mobileNumber);
+
         //Save to hivebox
         if (state.isGuest) {
           //Todo:Implement Succes state UI

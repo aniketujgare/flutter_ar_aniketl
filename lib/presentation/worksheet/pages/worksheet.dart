@@ -20,7 +20,7 @@ import '../../../../core/util/styles.dart';
 import '../bloc/worksheet_page_cubit/worksheet_page_cubit.dart';
 
 class WorksheetView extends StatefulWidget {
-  WorksheetView({super.key});
+  const WorksheetView({super.key});
   @override
   State<WorksheetView> createState() => _WorksheetViewState();
 }
@@ -29,7 +29,6 @@ class _WorksheetViewState extends State<WorksheetView> {
   late StudentProfileModel studentProfileModel;
   @override
   void initState() {
-    context.read<WorksheetCubit>().getWorksheets();
     context.read<WorksheetPageCubit>().setmaxLength(
         (BlocProvider.of<WorksheetCubit>(context).state.worksheets.length /
                 (DeviceType().isMobile ? 4 : 3))
@@ -77,8 +76,8 @@ class _WorksheetViewState extends State<WorksheetView> {
                   StudentProfileModel? v =
                       await AuthenticationRepository().getStudentProfile();
                   log(jsonEncode(v));
-                  // Navigator.of(context).push(MaterialPageRoute(
-                  //     builder: (context) => const WorksheetHistoryView()));
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const WorksheetHistoryView()));
                 },
                 child: Container(
                   margin: EdgeInsets.only(left: 2.wp, right: 3.wp),

@@ -21,10 +21,10 @@ class OddOneOutQuestion extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      mainAxisSize: MainAxisSize.min,
+      mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        DeviceType().isMobile ? 120.verticalSpacer : 160.verticalSpacer,
         QuestionText(question: question.question),
         DeviceType().isMobile ? 55.verticalSpacer : 85.verticalSpacer,
         Padding(
@@ -41,7 +41,7 @@ class OddOneOutQuestion extends StatelessWidget {
                         .setAnswer(questionIndex, question.options[index]);
                   },
                   child: Container(
-                    height: 90.h,
+                    height: 80.h,
                     margin: EdgeInsets.symmetric(horizontal: 2.wp),
                     decoration: ShapeDecoration(
                       color: question.options[index] == markedAnswer

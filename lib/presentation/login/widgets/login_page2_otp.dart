@@ -18,40 +18,22 @@ class LoginPage2Otp extends StatefulWidget {
 }
 
 class _LoginPage2OtpState extends State<LoginPage2Otp> {
-  late FocusNode otp1Node;
-  late FocusNode otp2Node;
-  late FocusNode otp3Node;
-  late FocusNode otp4Node;
-  late FocusNode otp5Node;
-  late FocusNode otp6Node;
-
-  String otp1String = '';
-  String otp2String = '';
-  String otp3String = '';
-  String otp4String = '';
-  String otp5String = '';
-  String otp6String = '';
+  late List<FocusNode> otpNodes;
+  late List<String> otpStrings;
   @override
   void initState() {
     super.initState();
 
-    otp1Node = FocusNode();
-    otp2Node = FocusNode();
-    otp3Node = FocusNode();
-    otp4Node = FocusNode();
-    otp5Node = FocusNode();
-    otp6Node = FocusNode();
+    otpNodes = List.generate(6, (index) => FocusNode());
+    otpStrings = List.filled(6, '');
   }
 
   @override
   void dispose() {
-    // Clean up the focus node when the Form is disposed.
-    otp1Node.dispose();
-    otp2Node.dispose();
-    otp3Node.dispose();
-    otp4Node.dispose();
-    otp5Node.dispose();
-    otp6Node.dispose();
+    // Clean up the focus nodes when the widget is disposed.
+    for (var node in otpNodes) {
+      node.dispose();
+    }
     super.dispose();
   }
 
@@ -82,14 +64,9 @@ class _LoginPage2OtpState extends State<LoginPage2Otp> {
           padding: EdgeInsets.symmetric(horizontal: 45.h),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              generateOtpBox(otp1Node, 1),
-              generateOtpBox(otp2Node, 2),
-              generateOtpBox(otp3Node, 3),
-              generateOtpBox(otp4Node, 4),
-              generateOtpBox(otp5Node, 5),
-              generateOtpBox(otp6Node, 6),
-            ],
+            children: List.generate(6, (index) {
+              return generateOtpBox(otpNodes[index], index);
+            }),
           ),
         ),
         SizedBox(
@@ -102,21 +79,14 @@ class _LoginPage2OtpState extends State<LoginPage2Otp> {
             textColor: Colors.white,
             onPressed: () {
               FocusScope.of(context).unfocus();
-
-              debugPrint(otp1String +
-                  otp2String +
-                  otp3String +
-                  otp4String +
-                  otp5String +
-                  otp6String);
-              context.read<LoginBloc>().add(LoginEvent.verifyOtp(
-                  verificationId: '',
-                  smsCode: otp1String +
-                      otp2String +
-                      otp3String +
-                      otp4String +
-                      otp5String +
-                      otp6String));
+              String otp = '';
+              for (var digit in otpStrings) {
+                otp += digit;
+              }
+              debugPrint(otp);
+              context
+                  .read<LoginBloc>()
+                  .add(LoginEvent.verifyOtp(verificationId: '', smsCode: otp));
             },
           ),
         if (context.read<LoginBloc>().state.status == LoginStatus.wrongOtp)
@@ -151,21 +121,13 @@ class _LoginPage2OtpState extends State<LoginPage2Otp> {
                     textColor: Colors.white,
                     onPressed: () {
                       FocusScope.of(context).unfocus();
-
-                      debugPrint(otp1String +
-                          otp2String +
-                          otp3String +
-                          otp4String +
-                          otp5String +
-                          otp6String);
+                      String otp = '';
+                      for (var digit in otpStrings) {
+                        otp += digit;
+                      }
+                      debugPrint(otp);
                       context.read<LoginBloc>().add(LoginEvent.verifyOtp(
-                          verificationId: '',
-                          smsCode: otp1String +
-                              otp2String +
-                              otp3String +
-                              otp4String +
-                              otp5String +
-                              otp6String));
+                          verificationId: '', smsCode: otp));
                     },
                   ),
                 )
@@ -199,49 +161,34 @@ class _LoginPage2OtpState extends State<LoginPage2Otp> {
           TextField(
             textAlign: TextAlign.center,
             textAlignVertical: TextAlignVertical.center,
-            // autofocus: true,
             inputFormatters: [
               LengthLimitingTextInputFormatter(1),
             ],
             keyboardType: TextInputType.number,
-
             onChanged: (value) {
-              switch (nodeIdx) {
-                case 1:
-                  otp1String = value;
-                  break;
-
-                case 2:
-                  otp2String = value;
-                  break;
-                case 3:
-                  otp3String = value;
-                  break;
-                case 4:
-                  otp4String = value;
-                  break;
-                case 5:
-                  otp5String = value;
-                  break;
-                case 6:
-                  otp6String = value;
-                  break;
-              }
-              if (value.length == 1 && nodeIdx == 6) {
+              otpStrings[nodeIdx] = value;
+              if (nodeIdx == 5 && value.isNotEmpty) {
                 FocusScope.of(context).unfocus();
-              }
-              if (value.length == 1 && nodeIdx != 6) {
+              } else if (value.isEmpty && nodeIdx > 0) {
+                // If backspace is pressed and the box is not the first one,
+                // clear the content of the current box and move to the previous box.
+                otpStrings[nodeIdx] = '';
+                FocusScope.of(context).previousFocus();
+              } else if (value.isNotEmpty && nodeIdx < 5) {
+                // If a digit is entered and the box is not the last one,
+                // move the focus to the next box.
                 FocusScope.of(context).nextFocus();
               }
-              if (value.length == 0 && nodeIdx != 1) {
-                FocusScope.of(context).previousFocus();
-              }
             },
-
+            onTap: () {
+              // Set the focus to the current box when tapped.
+              FocusScope.of(context).requestFocus(focusNode);
+            },
             focusNode: focusNode,
             decoration: const InputDecoration(
-                contentPadding: EdgeInsets.all(0),
-                border: OutlineInputBorder(borderSide: BorderSide.none)),
+              contentPadding: EdgeInsets.all(0),
+              border: OutlineInputBorder(borderSide: BorderSide.none),
+            ),
             style: AppTextStyles.nunito100w700black.copyWith(fontSize: 155.sp),
           ),
         ],

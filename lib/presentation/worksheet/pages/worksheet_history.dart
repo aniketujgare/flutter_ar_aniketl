@@ -35,6 +35,7 @@ class _WorksheetHistoryViewState extends State<WorksheetHistoryView> {
     // getStudentId().then((studentId) {
     //   context.read<WorksheetCubit>().getWorksheetsHistory(studentId.toString());
     // });
+    context.read<WorksheetCubit>().getWorksheetsHistory();
   }
 
   @override

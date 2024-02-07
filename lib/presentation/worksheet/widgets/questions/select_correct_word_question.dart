@@ -10,7 +10,7 @@ import '../question_text.dart';
 
 class SelectCorrectWordQuestion extends StatelessWidget {
   final int questionIndex;
-  final McqTextQuestion question;
+  final SelectWordQuestion question;
   final dynamic markedAnswer;
   const SelectCorrectWordQuestion(
       {super.key,
@@ -21,48 +21,54 @@ class SelectCorrectWordQuestion extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // //!select the correct word  q ui
-    List<String> otions = ['This', 'is', 'the', 'test', 'question', 'sentence'];
     return Column(
-      mainAxisSize: MainAxisSize.min,
+      mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        80.verticalSpacer,
-        Text(
-          'This is the test question sentence.',
-          textAlign: TextAlign.center,
-          style: const TextStyle(
-            color: Color(0xFF212121),
-            fontSize: 32,
-            fontFamily: 'Nunito',
-            fontWeight: FontWeight.w500,
-            height: 0,
-          ),
-        ),
-        80.verticalSpacer,
-        // Text('${i + 1}) ${mcqTextQuestion.question}'),
+        QuestionText(question: question.question),
+        DeviceType().isMobile ? 55.verticalSpacer : 85.verticalSpacer,
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             ...List.generate(
-                6,
-                (index) => Container(
-                      width: 30.wp,
-                      padding: EdgeInsets.symmetric(vertical: 2.wp),
-                      decoration: ShapeDecoration(
-                        color: const Color(0xFFF4F2FE),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(17),
-                        ),
-                      ),
-                      child: Text(
-                        otions[index],
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          color: Color(0xFF4F3A9C),
-                          fontSize: 20,
-                          fontFamily: 'Nunito',
-                          fontWeight: FontWeight.w700,
-                          height: 0,
+                question.answer.length,
+                (index) => Expanded(
+                      child: GestureDetector(
+                        onTap: () {
+                          context
+                              .read<WorksheetSolverCubit>()
+                              .setAnswer(questionIndex, question.answer[index]);
+                        },
+                        child: Container(
+                          height: 80.h,
+                          margin: EdgeInsets.symmetric(horizontal: 2.wp),
+                          decoration: ShapeDecoration(
+                            color: question.answer[index] == markedAnswer
+                                ? AppColors.boxSelectedColor
+                                : AppColors.boxUnselectedolor,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(17),
+                            ),
+                          ),
+                          child: Container(
+                            margin: EdgeInsets.symmetric(horizontal: 2.wp),
+                            padding: EdgeInsets.symmetric(horizontal: 1.wp),
+                            child: FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Text(
+                                question.answer[index],
+                                overflow: TextOverflow.ellipsis,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: const Color(0xFF4F3A9C),
+                                  fontSize: 120.sp,
+                                  fontFamily: 'Nunito',
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ),
+                          ),
                         ),
                       ),
                     ))

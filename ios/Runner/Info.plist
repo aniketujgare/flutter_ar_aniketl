@@ -29,6 +29,8 @@
 			<string></string>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			 <string>com.example.flutterAr</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>app-1-159319816092-ios-2a47ad6a8fac132327ba59</string>

@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_ar/core/student_profile_cubit/student_profile_cubit.dart';
 import 'package:flutter_ar/domain/repositories/authentication_repository.dart';
 import '../../core/route/route_name.dart';
 import '../../core/util/device_type.dart';
@@ -34,6 +35,7 @@ class SplashScreenState extends State<SplashScreen>
     _animationController.controller.addListener(() {
       setState(() {});
     });
+
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
 
     super.initState();
@@ -41,6 +43,8 @@ class SplashScreenState extends State<SplashScreen>
       DeviceOrientation.landscapeLeft,
       DeviceOrientation.landscapeRight,
     ]);
+    // AuthenticationRepository().getStudentProfile().then(
+    //     (value) => context.read<StudentProfileCubit>().initProfile(value));
   }
 
   @override
@@ -244,11 +248,19 @@ class SplashScreenState extends State<SplashScreen>
           Padding(
             padding: EdgeInsets.symmetric(
                 horizontal: MediaQuery.of(context).size.width * 0.12),
-            child: FutureBuilder(
-              future: AuthenticationRepository().getStudentProfile(),
-              builder: (BuildContext context,
-                  AsyncSnapshot<StudentProfileModel?> snapshot) {
-                if (snapshot.hasData && snapshot.data != null) {
+            child: BlocConsumer<StudentProfileCubit, StudentProfileState>(
+              listener: (context, state) async {
+                if (state.status != StudentProfileStauts.loaded) {
+                  var profile =
+                      await AuthenticationRepository().getStudentProfile();
+                  context.read<StudentProfileCubit>().initProfile(profile);
+                }
+              },
+              builder: (context, state) {
+                AuthenticationRepository().getStudentProfile().then((profile) =>
+                    context.read<StudentProfileCubit>().initProfile(profile));
+
+                if (state.status == StudentProfileStauts.loaded) {
                   return Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
@@ -260,14 +272,15 @@ class SplashScreenState extends State<SplashScreen>
                               (pi / 3 -
                                   _animationController
                                       .animationFlipProfile1.value)),
-                          child: profileIcon(
-                              context, snapshot.data?.studentName ?? 'User'),
+                          child: profileIcon(context,
+                              state.studentProfileModel?.studentName ?? 'User'),
                         ),
                       )
                     ],
                   );
+                } else {
+                  return CircularProgressIndicator();
                 }
-                return SizedBox();
               },
             ),
 

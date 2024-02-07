@@ -29,6 +29,7 @@ class WorksheetCubit extends Cubit<WorksheetState> {
         (PublishedWorksheets sheet) async {
       List<WorksheetDetails> worksheetDetails =
           await getWorksheetDetails('${sheet.worksheetId}');
+      worksheetDetails.removeWhere((element) => element.status != "active");
 
       // Perform your operation on worksheetDetails here, if needed
       await Future.forEach(worksheetDetails,
@@ -81,22 +82,21 @@ class WorksheetCubit extends Cubit<WorksheetState> {
     }
   }
 
-  void getWorksheetsHistory(String studentId) async {
+  void getWorksheetsHistory() async {
     emit(state.copyWith(status: WorksheetStatus.loading));
+    StudentProfileModel? studentProfile =
+        await authenticationRepository.getStudentProfile();
     List<WorksheetDetailsModel> worksheetList =
         List.from(state.worksheets); // Convert to modifiable list
     List<WorksheetDetailsModel> worksheetsToRemove = [];
 
     for (var worksheet in worksheetList) {
-      String response =
-          await getStudentWorksheet(worksheet.id.toString(), studentId);
+      String response = await getStudentWorksheet(
+          worksheet.id.toString(), '${studentProfile?.studentId}');
 
       if (response == '0') {
-        print('here 1');
         worksheetsToRemove.add(worksheet);
-      } else {
-        print('here2');
-      }
+      } else {}
     }
 
     // Remove worksheets after the loop

@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_ar/domain/repositories/authentication_repository.dart';
+import 'package:flutter_ar/main.dart';
 import 'package:flutter_ar/presentation/main_menu/main_menu_screen.dart';
 import 'package:flutter_ar/presentation/splash_screen/splash_screen.dart';
-import '../../../demo/model_list.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:restart_app/restart_app.dart';
 import 'package:size_config/size_config.dart';
 
+import '../../../core/student_profile_cubit/student_profile_cubit.dart';
 import '../../../core/util/animations/login_screen_animation_controller.dart';
 import '../../../core/util/device_type.dart';
 import '../../../core/util/styles.dart';
@@ -186,7 +189,7 @@ class LoginScreenState extends State<LoginScreen>
                     Opacity(
                         opacity: _animationController.opacityLoginForm.value,
                         child: BlocConsumer<LoginBloc, LoginState>(
-                          listener: (context, state) {
+                          listener: (context, state) async {
                             if (state.status == LoginStatus.error) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(content: Text(state.errorMessage)));
@@ -201,8 +204,18 @@ class LoginScreenState extends State<LoginScreen>
                             }
                             if (state.status == LoginStatus.success) {
                               print('success state');
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => const SplashScreen()));
+                              Restart.restartApp();
+                              // AuthenticationRepository()
+                              //     .getStudentProfile()
+                              //     .then((profile) {
+                              //   context
+                              //       .read<StudentProfileCubit>()
+                              //       .initProfile(profile);
+                              // });
+                              // Navigator.of(context).pushReplacement(
+                              //     MaterialPageRoute(
+                              //         builder: (context) =>
+                              //             const SplashScreen()));
                             }
                           },
                           builder: (context, state) {

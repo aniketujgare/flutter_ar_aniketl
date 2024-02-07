@@ -1,10 +1,13 @@
 import 'dart:io';
 
+import 'package:connection_notifier/connection_notifier.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_ar/presentation/login/pages/login_screen.dart';
 import 'package:flutter_ar/presentation/splash_screen/splash_screen.dart';
+import 'package:lottie/lottie.dart';
+import 'core/student_profile_cubit/student_profile_cubit.dart';
 import 'data/models/student_profile_model.dart';
 import 'presentation/parent_zone/bloc/navbar_cubit/app_navigator_cubit.dart';
 import 'presentation/parent_zone/bloc/teacher_message_cubit/teacher_message_cubit.dart';
@@ -45,7 +48,7 @@ final authenticationRepository = AuthenticationRepository();
 // }
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
+  await ConnectionNotifierTools.initialize();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -66,13 +69,16 @@ void main() async {
     // Handle other platforms or provide a message
     print('AR functionality not supported on this platform.');
   }
-  SystemChrome.setPreferredOrientations(
-          [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight])
-      .then((_) {
-    return runApp(MyApp(
-      studentProfile: studentProfile,
-    ));
-  });
+  runApp(MyApp(
+    studentProfile: studentProfile,
+  ));
+  // SystemChrome.setPreferredOrientations(
+  //         [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight])
+  //     .then((_) {
+  //   return runApp(MyApp(
+  //     studentProfile: studentProfile,
+  //   ));
+  // });
   // runApp(const MyApp());
 }
 
@@ -94,77 +100,115 @@ class MyAppState extends State<MyApp> {
       referenceHeight: 1179,
       referenceWidth: 2556,
       builder: (BuildContext context, Orientation orientation) {
-        return MultiBlocProvider(
-          providers: [
-            BlocProvider(
-              create: (context) => CategoryNewCubit()..loadCategory(),
+        return ConnectionNotifier(
+            child: ConnectionNotifierToggler(
+          // onConnectionStatusChanged: (connected) {
+          //   /// that means it is still in the initialization phase.
+          //   if (connected == null) return;
+          //   debugPrint(connected.toString());
+          // },
+          connected: MultiBlocProvider(
+            providers: [
+              BlocProvider(
+                create: (context) => CategoryNewCubit()..loadCategory(),
+              ),
+              BlocProvider(
+                create: (context) => CategoryPageCubit(),
+              ),
+              BlocProvider(
+                create: (context) => ModelsPageControllerCubit(),
+              ),
+              BlocProvider(
+                create: (context) => ModelsNewCubit(),
+              ),
+              BlocProvider(
+                create: (context) => LoginBloc(authenticationRepository),
+              ),
+              BlocProvider(
+                create: (context) => LoginValidationBloc(),
+              ),
+              BlocProvider(
+                create: (context) => GuestValidationBloc(),
+              ),
+              BlocProvider(
+                create: (context) => SplashAnimationBloc(),
+              ),
+              BlocProvider(
+                create: (context) => AppNavigatorCubit(),
+              ),
+              BlocProvider(
+                create: (context) => TeacherListBloc(),
+              ),
+              BlocProvider(
+                create: (context) => TeacherMessageCubit(),
+              ),
+              BlocProvider(
+                create: (context) => ModelAssetHandlerBloc(),
+              ),
+              BlocProvider(
+                create: (context) => WorksheetCubit(),
+              ),
+              BlocProvider(
+                create: (context) => WorksheetSolverCubit(),
+              ),
+              BlocProvider(
+                create: (context) => ReportsPagecontrollerCubit(),
+              ),
+              BlocProvider(
+                create: (context) => SubjectPageCubit(),
+              ),
+              BlocProvider(
+                create: (context) => WorksheetPageCubit(),
+              ),
+              BlocProvider(
+                create: (context) => StudentProfileCubit(),
+              ),
+            ],
+            child: MaterialApp(
+              debugShowCheckedModeBanner: false,
+              themeMode: ThemeMode.light,
+              home: widget.studentProfile == null
+                  ? LoginScreen()
+                  : SplashScreen(),
+              // theme: ThemeData(
+              //     appBarTheme: AppBarTheme(
+              //         systemOverlayStyle: SystemUiOverlayStyle(
+              //             statusBarBrightness: Brightness.light,
+              //             statusBarColor: AppColors.accentColor))),
+              // routerConfig: GoRouterProvider().goRouter(),
             ),
-            BlocProvider(
-              create: (context) => CategoryPageCubit(),
-            ),
-            BlocProvider(
-              create: (context) => ModelsPageControllerCubit(),
-            ),
-            BlocProvider(
-              create: (context) => ModelsNewCubit(),
-            ),
-            BlocProvider(
-              create: (context) => LoginBloc(authenticationRepository),
-            ),
-            BlocProvider(
-              create: (context) => LoginValidationBloc(),
-            ),
-            BlocProvider(
-              create: (context) => GuestValidationBloc(),
-            ),
-            BlocProvider(
-              create: (context) => SplashAnimationBloc(),
-            ),
-            BlocProvider(
-              create: (context) => AppNavigatorCubit(),
-            ),
-            BlocProvider(
-              create: (context) => TeacherListBloc(),
-            ),
-            BlocProvider(
-              create: (context) => TeacherMessageCubit(),
-            ),
-            BlocProvider(
-              create: (context) => ModelAssetHandlerBloc(),
-            ),
-            BlocProvider(
-              create: (context) => WorksheetCubit(),
-            ),
-            BlocProvider(
-              create: (context) => WorksheetSolverCubit(),
-            ),
-            BlocProvider(
-              create: (context) => ReportsPagecontrollerCubit(),
-            ),
-            BlocProvider(
-              create: (context) => SubjectPageCubit(),
-            ),
-            BlocProvider(
-              create: (context) => WorksheetPageCubit(),
-            ),
-          ],
-          child: MaterialApp(
-            debugShowCheckedModeBanner: false,
-            themeMode: ThemeMode.light,
-            home:
-                widget.studentProfile == null ? LoginScreen() : SplashScreen(),
-            // theme: ThemeData(
-            //     appBarTheme: AppBarTheme(
-            //         systemOverlayStyle: SystemUiOverlayStyle(
-            //             statusBarBrightness: Brightness.light,
-            //             statusBarColor: AppColors.accentColor))),
-            // routerConfig: GoRouterProvider().goRouter(),
           ),
-        );
+          disconnected: Scaffold(
+            body: RotatedBox(
+              quarterTurns: 0,
+              child: Center(
+                child: Column(
+                  // mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    50.verticalSpacer,
+                    SizedBox(
+                        // height: 100.h,
+                        width: 60.wp,
+                        child: Lottie.asset('assets/Wifi.json')),
+                    5.verticalSpacer,
+                    Text(
+                      'Checking Connection...',
+                      style: AppTextStyles.nunito100w700black.copyWith(
+                          color: AppColors.primaryColor, fontSize: 120.sp),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ));
       },
     );
   }
 }
+
+
 
 // import 'arkitdemo/body_tracking_page.dart';
 // import 'arkitdemo/camera_position_scene.dart';

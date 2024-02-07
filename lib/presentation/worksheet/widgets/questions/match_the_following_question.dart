@@ -8,9 +8,9 @@ import '../../models/questions.dart';
 
 class MatchFollowingQuestion extends StatefulWidget {
   const MatchFollowingQuestion(
-      {Key? key, required this.matchTheFollowingQuestion, this.markedAnswer})
+      {Key? key, required this.question, this.markedAnswer})
       : super(key: key);
-  final MatchTheFollowingQuestion matchTheFollowingQuestion;
+  final MatchTheFollowingQuestion question;
 
   final dynamic markedAnswer;
   @override
@@ -20,30 +20,43 @@ class MatchFollowingQuestion extends StatefulWidget {
 class MatchFollowingQuestionState extends State<MatchFollowingQuestion> {
   List<Offset> boxPositions = [];
 
-  Size boxSizes = const Size(85, 85);
+  late Size boxSizes;
 
   Map<String, Offset> currentLine = {};
   List<Map<String, Offset>> allLines = [];
   late List<String> questionsList;
   late List<String> answersList;
-
+  bool isImageQuestion = true;
   @override
   void initState() {
     super.initState();
-    questionsList = widget.matchTheFollowingQuestion.options.keys.toList();
-    answersList = widget.matchTheFollowingQuestion.options.values.toList()
-      ..shuffle();
+    questionsList = widget.question.options.keys.toList();
+    //check for question has images or text
+    if (questionsList.first.contains('http')) {
+      //image question
+      boxSizes = const Size(85, 85);
+    } else {
+      //text question
+      isImageQuestion = false;
+      boxSizes = const Size(145, 55);
+    }
+    answersList = widget.question.options.values.toList()..shuffle();
     double startX = 100.wp / (questionsList.length + questionsList.length - 1);
+
+    if (!isImageQuestion) {
+      print('questionType: $isImageQuestion');
+      startX = 10.wp;
+    }
     //?fill question boxes
-    for (var i = 0; i < widget.matchTheFollowingQuestion.options.length; i++) {
+    for (var i = 0; i < widget.question.options.length; i++) {
       print('start pos: ' + startX.toString());
-      boxPositions.add(Offset(20.wp + (50.wp * i), 40.0.h));
+      boxPositions
+          .add(Offset(isImageQuestion ? 20.wp : 12.wp + (50.wp * i), 40.0.h));
     }
     //?fill answer boxes
-    for (var i = widget.matchTheFollowingQuestion.options.length - 1;
-        i >= 0;
-        i--) {
-      boxPositions.add(Offset(20.wp + (50.wp * i), 260.0.h));
+    for (var i = widget.question.options.length - 1; i >= 0; i--) {
+      boxPositions.add(Offset(isImageQuestion ? 20.wp : 12.wp + (50.wp * i),
+          isImageQuestion ? 260.0.h : 295.0.h));
     }
     drawSavedAnswer();
   }
@@ -96,56 +109,94 @@ class MatchFollowingQuestionState extends State<MatchFollowingQuestion> {
             left: boxPositions[i].dx,
             top: boxPositions[i].dy,
             child: Container(
-              width: boxSizes.width,
-              height: boxSizes.height,
-              decoration: BoxDecoration(
-                  color: Colors.white, borderRadius: BorderRadius.circular(14)),
-              child: i < boxPositions.length / 2
-                  ? questionsList[i].contains('http')
-                      ? CachedNetworkImage(
-                          imageUrl: questionsList[i],
-                          fit: BoxFit.cover,
-                          imageBuilder: (context, imageProvider) => Container(
-                            width: boxSizes.width,
-                            height: boxSizes.height,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(14),
-                              image: DecorationImage(
-                                image: imageProvider,
-                                fit: BoxFit.scaleDown,
+                width: boxSizes.width,
+                height: boxSizes.height,
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(14)),
+                child: i < boxPositions.length / 2
+                    ? questionsList[i].contains('http')
+                        ? CachedNetworkImage(
+                            imageUrl: questionsList[i],
+                            fit: BoxFit.cover,
+                            imageBuilder: (context, imageProvider) => Container(
+                              width: boxSizes.width,
+                              height: boxSizes.height,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(14),
+                                image: DecorationImage(
+                                  image: imageProvider,
+                                  fit: BoxFit.scaleDown,
+                                ),
                               ),
                             ),
-                          ),
-                          placeholder: (context, url) => const Placeholder(),
-                          errorWidget: (context, url, error) =>
-                              const Icon(Icons.error),
-                        )
-                      : Text(questionsList[i])
-                  : answersList[boxPositions.length - i - 1].contains('http')
-                      ? CachedNetworkImage(
-                          imageUrl: answersList[boxPositions.length - i - 1],
-                          fit: BoxFit.cover,
-                          imageBuilder: (context, imageProvider) => Container(
-                            width: boxSizes.width,
-                            height: boxSizes.height,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(14),
-                              image: DecorationImage(
-                                image: imageProvider,
-                                fit: BoxFit.scaleDown,
+                            placeholder: (context, url) => const Placeholder(),
+                            errorWidget: (context, url, error) =>
+                                const Icon(Icons.error),
+                          )
+                        : Center(
+                            child: Container(
+                            margin: EdgeInsets.symmetric(horizontal: 2.wp),
+                            padding: EdgeInsets.symmetric(horizontal: 1.wp),
+                            child: FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Text(
+                                questionsList[i],
+                                overflow: TextOverflow.ellipsis,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: const Color(0xFF4F3A9C),
+                                  fontSize: 120.sp,
+                                  fontFamily: 'Nunito',
+                                  fontWeight: FontWeight.w700,
+                                ),
                               ),
                             ),
-                          ),
-                          placeholder: (context, url) => const Center(
-                            child: CircularProgressIndicator.adaptive(
-                                strokeCap: StrokeCap.round),
-                          ),
-                          errorWidget: (context, url, error) =>
-                              const Icon(Icons.error),
-                        )
-                      : Text(answersList[boxPositions.length - i - 1]),
-            ),
+                          ))
+                    : answersList[boxPositions.length - i - 1].contains('http')
+                        ? CachedNetworkImage(
+                            imageUrl: answersList[boxPositions.length - i - 1],
+                            fit: BoxFit.cover,
+                            imageBuilder: (context, imageProvider) => Container(
+                              width: boxSizes.width,
+                              height: boxSizes.height,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(14),
+                                image: DecorationImage(
+                                  image: imageProvider,
+                                  fit: BoxFit.scaleDown,
+                                ),
+                              ),
+                            ),
+                            placeholder: (context, url) => const Center(
+                              child: CircularProgressIndicator.adaptive(
+                                  strokeCap: StrokeCap.round),
+                            ),
+                            errorWidget: (context, url, error) =>
+                                const Icon(Icons.error),
+                          )
+                        : Center(
+                            child: Container(
+                              margin: EdgeInsets.symmetric(horizontal: 2.wp),
+                              padding: EdgeInsets.symmetric(horizontal: 1.wp),
+                              child: FittedBox(
+                                fit: BoxFit.scaleDown,
+                                child: Text(
+                                  answersList[boxPositions.length - i - 1],
+                                  overflow: TextOverflow.ellipsis,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: const Color(0xFF4F3A9C),
+                                    fontSize: 120.sp,
+                                    fontFamily: 'Nunito',
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          )),
           ),
+
         GestureDetector(
           onPanUpdate: (details) {
             setState(() {
@@ -178,12 +229,13 @@ class MatchFollowingQuestionState extends State<MatchFollowingQuestion> {
               int fromIndex = _getTouchedBox(line['from']!);
               int toIndex = _getTouchedBox(line['to']!);
 
-              int fromSection =
-                  fromIndex ~/ widget.matchTheFollowingQuestion.options.length;
-              int toSection =
-                  toIndex ~/ widget.matchTheFollowingQuestion.options.length;
-
-              return fromSection == toSection;
+              int fromSection = fromIndex ~/ widget.question.options.length;
+              int toSection = toIndex ~/ widget.question.options.length;
+              // Remove lines from answer to question (fromIndex is in the answers section, and toIndex is in the questions section)
+              bool isAnswerToQuestion =
+                  fromIndex >= widget.question.options.length &&
+                      toIndex < widget.question.options.length;
+              return fromSection == toSection || isAnswerToQuestion;
             });
             Set<Map<String, Offset>> uniqueLines = Set.from(allLines);
             allLines = List.from(uniqueLines);
