@@ -1,8 +1,10 @@
+import 'package:connection_notifier/connection_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:size_config/size_config.dart';
 
+import '../../../core/reusable_widgets/network_disconnected.dart';
 import '../../../core/util/device_type.dart';
 import '../../../core/util/styles.dart';
 import '../../parent_zone/pages/parent_zone_screen.dart';
@@ -35,42 +37,29 @@ class _SubjectScreenState extends State<SubjectScreen> {
       canPop: false,
       child: Scaffold(
         backgroundColor: AppColors.parentZoneScaffoldColor,
-        body: Stack(
-          alignment: Alignment.center,
-          children: [
-            //! Center Image and Subject Name
-            _buildSubjectImage(context),
-            _buildSubjectName(),
-            Padding(
-              padding: EdgeInsets.fromLTRB(8.wp, 4.wp, 8.wp, 4.wp),
-              child: Column(
-                children: [
-                  //! Top
-                  buildTop(context),
-                  //! Center page previous and next buttons
-                  Expanded(
-                      child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      GestureDetector(
-                        onTap: () =>
-                            context.read<SubjectPageCubit>().setPreviousPage(),
-                        child: SizedBox(
-                          height: 45.h,
-                          width: 45.h,
-                          child: Image.asset(
-                            'assets/ui/Group.png', // right arrow
-                            fit: BoxFit.scaleDown,
-                            height: 45.h,
-                            width: 45.h,
-                          ),
-                        ),
-                      ),
-                      GestureDetector(
-                        onTap: () =>
-                            context.read<SubjectPageCubit>().setNextPage(),
-                        child: RotatedBox(
-                          quarterTurns: 2,
+        body: ConnectionNotifierToggler(
+          disconnected: const NetworkDisconnected(),
+          connected: Stack(
+            alignment: Alignment.center,
+            children: [
+              //! Center Image and Subject Name
+              _buildSubjectImage(context),
+              _buildSubjectName(),
+              Padding(
+                padding: EdgeInsets.fromLTRB(8.wp, 4.wp, 8.wp, 4.wp),
+                child: Column(
+                  children: [
+                    //! Top
+                    buildTop(context),
+                    //! Center page previous and next buttons
+                    Expanded(
+                        child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        GestureDetector(
+                          onTap: () => context
+                              .read<SubjectPageCubit>()
+                              .setPreviousPage(),
                           child: SizedBox(
                             height: 45.h,
                             width: 45.h,
@@ -82,15 +71,32 @@ class _SubjectScreenState extends State<SubjectScreen> {
                             ),
                           ),
                         ),
-                      ),
-                    ],
-                  )),
-                  //! Bottom
-                  buildBottom(context),
-                ],
+                        GestureDetector(
+                          onTap: () =>
+                              context.read<SubjectPageCubit>().setNextPage(),
+                          child: RotatedBox(
+                            quarterTurns: 2,
+                            child: SizedBox(
+                              height: 45.h,
+                              width: 45.h,
+                              child: Image.asset(
+                                'assets/ui/Group.png', // right arrow
+                                fit: BoxFit.scaleDown,
+                                height: 45.h,
+                                width: 45.h,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    )),
+                    //! Bottom
+                    buildBottom(context),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

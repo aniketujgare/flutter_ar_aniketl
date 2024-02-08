@@ -1,5 +1,7 @@
+import 'package:connection_notifier/connection_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../../../core/reusable_widgets/network_disconnected.dart';
 import '../../../core/util/reusable_widgets/reusable_button.dart';
 import '../../../data/models/teacher_message.dart';
 import '../bloc/teacher_message_cubit/teacher_message_cubit.dart';
@@ -92,345 +94,349 @@ class _MessageViewState extends State<MessageView> {
             ],
           ),
         ),
-        body: Padding(
-          padding: EdgeInsets.fromLTRB(4.wp, 0, 4.wp, 0),
-          child: BlocBuilder<TeacherMessageCubit, TeacherMessageState>(
-            builder: (context, state) {
-              switch (state.status) {
-                case TeacherMessageStatus.initial:
-                  return const Center(
-                      child: CircularProgressIndicator.adaptive(
-                    strokeCap: StrokeCap.round,
-                  ));
-                case TeacherMessageStatus.loading:
-                  return const Center(
-                      child: CircularProgressIndicator.adaptive(
-                    strokeCap: StrokeCap.round,
-                  ));
-                case TeacherMessageStatus.error:
-                  return const Center(child: Text('Failed to load messages'));
-                case TeacherMessageStatus.loaded:
-                  return ListView.separated(
-                    // reverse: true,
-                    itemCount: state.teachersMessages.length,
-                    separatorBuilder: (BuildContext context, int index) {
-                      return SizedBox(height: 20.h);
-                    },
-                    itemBuilder: (BuildContext context, int index) {
-                      var message = state.teachersMessages[index];
-                      switch (message.type) {
-                        //! View Lesson
-                        case "lesson":
-                          return Container(
-                            margin: EdgeInsets.only(bottom: 10.h),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisSize: MainAxisSize.min,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  // message.date + message.time,
-                                  DateFormat('h:mm a MMM d').format(
-                                      createDateTime(
-                                          message.date, message.time)),
-                                  // '3:11 PM Dec 21',
-                                  style: AppTextStyles.nunito62w400TextItalic,
-                                ),
-                                Container(
-                                  width: 50.wp,
-                                  // height: 239.h,
-                                  padding: EdgeInsets.symmetric(
-                                      vertical: 3.wp, horizontal: 2.wp),
-                                  decoration: ShapeDecoration(
-                                    color: AppColors.accentColor,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(4.wp)),
-                                    ),
+        body: ConnectionNotifierToggler(
+          disconnected: NetworkDisconnected(),
+          connected: Padding(
+            padding: EdgeInsets.fromLTRB(4.wp, 0, 4.wp, 0),
+            child: BlocBuilder<TeacherMessageCubit, TeacherMessageState>(
+              builder: (context, state) {
+                switch (state.status) {
+                  case TeacherMessageStatus.initial:
+                    return const Center(
+                        child: CircularProgressIndicator.adaptive(
+                      strokeCap: StrokeCap.round,
+                    ));
+                  case TeacherMessageStatus.loading:
+                    return const Center(
+                        child: CircularProgressIndicator.adaptive(
+                      strokeCap: StrokeCap.round,
+                    ));
+                  case TeacherMessageStatus.error:
+                    return const Center(child: Text('Failed to load messages'));
+                  case TeacherMessageStatus.loaded:
+                    return ListView.separated(
+                      // reverse: true,
+                      itemCount: state.teachersMessages.length,
+                      separatorBuilder: (BuildContext context, int index) {
+                        return SizedBox(height: 20.h);
+                      },
+                      itemBuilder: (BuildContext context, int index) {
+                        var message = state.teachersMessages[index];
+                        switch (message.type) {
+                          //! View Lesson
+                          case "lesson":
+                            return Container(
+                              margin: EdgeInsets.only(bottom: 10.h),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    // message.date + message.time,
+                                    DateFormat('h:mm a MMM d').format(
+                                        createDateTime(
+                                            message.date, message.time)),
+                                    // '3:11 PM Dec 21',
+                                    style: AppTextStyles.nunito62w400TextItalic,
                                   ),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text.rich(
-                                        TextSpan(
-                                          children: [
-                                            TextSpan(
-                                              text: '${message.subject}\n',
-                                              // 'EVS Lesson:\n',
-                                              style: AppTextStyles
-                                                  .nunito88w400Text,
-                                            ),
-                                            TextSpan(
-                                              text: message.content,
-                                              // 'Parts of a Plant',
-                                              style: AppTextStyles
-                                                  .nunito88w700Text,
-                                            ),
-                                          ],
-                                        ),
-                                        textAlign: TextAlign.center,
-                                      ),
-                                      10.verticalSpacer,
-                                      Text.rich(
-                                        TextSpan(
-                                          children: [
-                                            TextSpan(
-                                              text: 'Published on:\n',
-                                              style: AppTextStyles
-                                                  .nunito88w400Text,
-                                            ),
-                                            TextSpan(
-                                              text: DateFormat('MMM d, yyyy')
-                                                  .format(convertToDate(
-                                                      message.date)),
-                                              // 'April 28, 2023',
-                                              style: AppTextStyles
-                                                  .nunito88w700Text,
-                                            ),
-                                          ],
-                                        ),
-                                        textAlign: TextAlign.center,
-                                      ),
-                                      10.verticalSpacer,
-                                      ReusableButton(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 0),
-                                        onPressed: () {},
-                                        buttonColor: AppColors.primaryColor,
-                                        text: 'View Lesson',
-                                        textColor: Colors.white,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          );
-
-                        case "text":
-                          return //!Message
-                              Container(
-                            margin: EdgeInsets.only(bottom: 10.h),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisSize: MainAxisSize.min,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  '3:11 PM Dec 21',
-                                  style: AppTextStyles.nunito62w400TextItalic,
-                                ),
-                                Container(
-                                    width: double.maxFinite,
-                                    padding: EdgeInsets.all(3.wp),
+                                  Container(
+                                    width: 50.wp,
+                                    // height: 239.h,
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: 3.wp, horizontal: 2.wp),
                                     decoration: ShapeDecoration(
-                                      color: AppColors.messageContainerColor,
+                                      color: AppColors.accentColor,
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.all(
                                             Radius.circular(4.wp)),
                                       ),
                                     ),
-                                    child: Text(
-                                      message.content,
-                                      style: AppTextStyles.nunito88w400Text,
-                                    )),
-                              ],
-                            ),
-                          );
-                      }
-                    },
-                  );
-              }
-            },
-          ),
-          /*
-          SingleChildScrollView(
-            child: 
-            
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                //! PDF Document
-                Column(
-                  children: [
-                    Container(
-                      width: 40.wp,
-                      height: 259.h,
-                      decoration: ShapeDecoration(
-                        color: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(4.wp),
-                            topRight: Radius.circular(4.wp),
-                          ),
-                        ),
-                      ),
-                      child: const Center(child: Text('Some PDF')),
-                    ),
-                    Container(
-                      width: 40.wp,
-                      // height: 78.h,
-                      clipBehavior: Clip.antiAlias,
-                      padding: EdgeInsets.symmetric(
-                          horizontal: 3.wp, vertical: 10.h),
-                      decoration: ShapeDecoration(
-                        color: AppColors.redMessageSharedFileContainerColor,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.only(
-                            bottomLeft: Radius.circular(4.wp),
-                            bottomRight: Radius.circular(4.wp),
-                          ),
-                        ),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Expanded(
-                            flex: 4,
-                            child: SizedBox(
-                              child: Text('Holiday tomorrow.pdf',
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: AppTextStyles.nunito100w400white
-                                      .copyWith(fontSize: 75.sp)),
-                            ),
-                          ),
-                          const Spacer(
-                            flex: 1,
-                          ),
-                          Expanded(
-                            flex: 1,
-                            child: Container(
-                              // width: 45.h,
-                              // height: 45.h,
-                              padding: EdgeInsets.symmetric(vertical: 1.wp),
-                              child: Image.asset(
-                                'assets/images/PNG Icons/download_button.png',
-                                fit: BoxFit.fitWidth,
-                                alignment: Alignment.centerRight,
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text.rich(
+                                          TextSpan(
+                                            children: [
+                                              TextSpan(
+                                                text: '${message.subject}\n',
+                                                // 'EVS Lesson:\n',
+                                                style: AppTextStyles
+                                                    .nunito88w400Text,
+                                              ),
+                                              TextSpan(
+                                                text: message.content,
+                                                // 'Parts of a Plant',
+                                                style: AppTextStyles
+                                                    .nunito88w700Text,
+                                              ),
+                                            ],
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                        10.verticalSpacer,
+                                        Text.rich(
+                                          TextSpan(
+                                            children: [
+                                              TextSpan(
+                                                text: 'Published on:\n',
+                                                style: AppTextStyles
+                                                    .nunito88w400Text,
+                                              ),
+                                              TextSpan(
+                                                text: DateFormat('MMM d, yyyy')
+                                                    .format(convertToDate(
+                                                        message.date)),
+                                                // 'April 28, 2023',
+                                                style: AppTextStyles
+                                                    .nunito88w700Text,
+                                              ),
+                                            ],
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                        10.verticalSpacer,
+                                        ReusableButton(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 0),
+                                          onPressed: () {},
+                                          buttonColor: AppColors.primaryColor,
+                                          text: 'View Lesson',
+                                          textColor: Colors.white,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
                               ),
+                            );
+
+                          case "text":
+                            return //!Message
+                                Container(
+                              margin: EdgeInsets.only(bottom: 10.h),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    '3:11 PM Dec 21',
+                                    style: AppTextStyles.nunito62w400TextItalic,
+                                  ),
+                                  Container(
+                                      width: double.maxFinite,
+                                      padding: EdgeInsets.all(3.wp),
+                                      decoration: ShapeDecoration(
+                                        color: AppColors.messageContainerColor,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(4.wp)),
+                                        ),
+                                      ),
+                                      child: Text(
+                                        message.content,
+                                        style: AppTextStyles.nunito88w400Text,
+                                      )),
+                                ],
+                              ),
+                            );
+                        }
+                      },
+                    );
+                }
+              },
+            ),
+            /*
+            SingleChildScrollView(
+              child: 
+              
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  //! PDF Document
+                  Column(
+                    children: [
+                      Container(
+                        width: 40.wp,
+                        height: 259.h,
+                        decoration: ShapeDecoration(
+                          color: Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(4.wp),
+                              topRight: Radius.circular(4.wp),
                             ),
                           ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 20),
-                //! View Lesson
-                Container(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        '3:11 PM Dec 21',
-                        style: AppTextStyles.nunito62w400TextItalic,
+                        ),
+                        child: const Center(child: Text('Some PDF')),
                       ),
                       Container(
-                        width: 50.wp,
-                        // height: 239.h,
-                        padding: EdgeInsets.symmetric(
-                            vertical: 3.wp, horizontal: 2.wp),
+                        width: 40.wp,
+                        // height: 78.h,
                         clipBehavior: Clip.antiAlias,
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 3.wp, vertical: 10.h),
                         decoration: ShapeDecoration(
-                          color: AppColors.accentColor,
+                          color: AppColors.redMessageSharedFileContainerColor,
                           shape: RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(4.wp)),
+                            borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(4.wp),
+                              bottomRight: Radius.circular(4.wp),
+                            ),
                           ),
                         ),
-                        child: Column(
+                        child: Row(
                           mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text.rich(
-                              TextSpan(
-                                children: [
-                                  TextSpan(
-                                    text: 'EVS Lesson:\n',
-                                    style: AppTextStyles.nunito88w400Text,
-                                  ),
-                                  TextSpan(
-                                    text: 'Parts of a Plant',
-                                    style: AppTextStyles.nunito88w700Text,
-                                  ),
-                                ],
+                            Expanded(
+                              flex: 4,
+                              child: SizedBox(
+                                child: Text('Holiday tomorrow.pdf',
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: AppTextStyles.nunito100w400white
+                                        .copyWith(fontSize: 75.sp)),
                               ),
-                              textAlign: TextAlign.center,
                             ),
-                            10.verticalSpacer,
-                            Text.rich(
-                              TextSpan(
-                                children: [
-                                  TextSpan(
-                                    text: 'Published on:\n',
-                                    style: AppTextStyles.nunito88w400Text,
-                                  ),
-                                  TextSpan(
-                                    text: 'April 28, 2023',
-                                    style: AppTextStyles.nunito88w700Text,
-                                  ),
-                                ],
+                            const Spacer(
+                              flex: 1,
+                            ),
+                            Expanded(
+                              flex: 1,
+                              child: Container(
+                                // width: 45.h,
+                                // height: 45.h,
+                                padding: EdgeInsets.symmetric(vertical: 1.wp),
+                                child: Image.asset(
+                                  'assets/images/PNG Icons/download_button.png',
+                                  fit: BoxFit.fitWidth,
+                                  alignment: Alignment.centerRight,
+                                ),
                               ),
-                              textAlign: TextAlign.center,
-                            ),
-                            10.verticalSpacer,
-                            ReusableButton(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 0),
-                              onPressed: () {},
-                              buttonColor: AppColors.primaryColor,
-                              text: 'View Lesson',
-                              textColor: Colors.white,
                             ),
                           ],
                         ),
                       ),
                     ],
                   ),
-                ),
-                const SizedBox(height: 20),
-                //!Message
-                Container(
-                  margin: EdgeInsets.only(bottom: 40.h),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        '3:11 PM Dec 21',
-                        style: AppTextStyles.nunito62w400TextItalic,
-                      ),
-                      Container(
-                          width: double.maxFinite,
-                          padding: EdgeInsets.all(3.wp),
+                  const SizedBox(height: 20),
+                  //! View Lesson
+                  Container(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          '3:11 PM Dec 21',
+                          style: AppTextStyles.nunito62w400TextItalic,
+                        ),
+                        Container(
+                          width: 50.wp,
+                          // height: 239.h,
+                          padding: EdgeInsets.symmetric(
+                              vertical: 3.wp, horizontal: 2.wp),
                           clipBehavior: Clip.antiAlias,
                           decoration: ShapeDecoration(
-                            color: AppColors.messageContainerColor,
+                            color: AppColors.accentColor,
                             shape: RoundedRectangleBorder(
                               borderRadius:
                                   BorderRadius.all(Radius.circular(4.wp)),
                             ),
                           ),
-                          child: Text(
-                            'Hello parents this is a test message. Test message 1,2,3,4 @ school. We are delighted to announce that the schools is deploying a new learning ecosystem for the school. It is being rolled out as we speak. It is going to help sudents learn better and help teachers teach smarter. All while keeping you in the leap. Hope you’re as excited as us about SmartXR!',
-                            style: AppTextStyles.nunito88w400Text,
-                          )),
-                    ],
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text.rich(
+                                TextSpan(
+                                  children: [
+                                    TextSpan(
+                                      text: 'EVS Lesson:\n',
+                                      style: AppTextStyles.nunito88w400Text,
+                                    ),
+                                    TextSpan(
+                                      text: 'Parts of a Plant',
+                                      style: AppTextStyles.nunito88w700Text,
+                                    ),
+                                  ],
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                              10.verticalSpacer,
+                              Text.rich(
+                                TextSpan(
+                                  children: [
+                                    TextSpan(
+                                      text: 'Published on:\n',
+                                      style: AppTextStyles.nunito88w400Text,
+                                    ),
+                                    TextSpan(
+                                      text: 'April 28, 2023',
+                                      style: AppTextStyles.nunito88w700Text,
+                                    ),
+                                  ],
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                              10.verticalSpacer,
+                              ReusableButton(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 0),
+                                onPressed: () {},
+                                buttonColor: AppColors.primaryColor,
+                                text: 'View Lesson',
+                                textColor: Colors.white,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                  const SizedBox(height: 20),
+                  //!Message
+                  Container(
+                    margin: EdgeInsets.only(bottom: 40.h),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          '3:11 PM Dec 21',
+                          style: AppTextStyles.nunito62w400TextItalic,
+                        ),
+                        Container(
+                            width: double.maxFinite,
+                            padding: EdgeInsets.all(3.wp),
+                            clipBehavior: Clip.antiAlias,
+                            decoration: ShapeDecoration(
+                              color: AppColors.messageContainerColor,
+                              shape: RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(4.wp)),
+                              ),
+                            ),
+                            child: Text(
+                              'Hello parents this is a test message. Test message 1,2,3,4 @ school. We are delighted to announce that the schools is deploying a new learning ecosystem for the school. It is being rolled out as we speak. It is going to help sudents learn better and help teachers teach smarter. All while keeping you in the leap. Hope you’re as excited as us about SmartXR!',
+                              style: AppTextStyles.nunito88w400Text,
+                            )),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              
             ),
-            
+            */
           ),
-          */
         ),
       ),
     );

@@ -15,7 +15,10 @@ class ModelAssetHandlerBloc
   ModelAssetHandlerBloc() : super(const Initial()) {
     on<ModelAssetHandlerEvent>((events, emit) async {
       await downloadAssetsController.init();
-      await events.map(load: (event) async => await _loadAssets(event, emit));
+      await events.map(
+        load: (event) async => await _loadAssets(event, emit),
+        retry: (event) async => await _retryLoadAssets(event, emit),
+      );
     });
   }
 
@@ -88,5 +91,11 @@ class ModelAssetHandlerBloc
           status: ModelAssetHandlerStatus.error,
           errorMessage: 'Error: ${e.toString()}'));
     }
+  }
+
+  _retryLoadAssets(
+      RetryLoadModelAsset event, Emitter<ModelAssetHandlerState> emit) {
+    emit(state.copyWith(status: ModelAssetHandlerStatus.loading));
+    _downloadAssets(event.modelName);
   }
 }

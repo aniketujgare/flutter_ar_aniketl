@@ -1,3 +1,4 @@
+import 'package:connection_notifier/connection_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -5,6 +6,7 @@ import 'package:size_config/size_config.dart';
 
 import '../../../../core/util/device_type.dart';
 import '../../../../core/util/styles.dart';
+import '../../../core/reusable_widgets/network_disconnected.dart';
 import '../bloc/worksheet_cubit/worksheet_cubit.dart';
 import 'worksheet_solver.dart';
 
@@ -87,47 +89,50 @@ class _WorksheetHistoryViewState extends State<WorksheetHistoryView> {
             ],
           ),
         ),
-        body: Padding(
-          padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-          child: SizedBox.expand(
-              child: BlocBuilder<WorksheetCubit, WorksheetState>(
-            builder: (context, state) {
-              if (state.status == WorksheetStatus.loaded) {
-                print(
-                    'history worksheet length: ${state.historyWorksheets.length}');
-                return ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: state.historyWorksheets.length,
-                  padding: EdgeInsets.only(
-                      top: DeviceType().isMobile ? 4.wp : 18.wp,
-                      left: 4.wp,
-                      right: 4.wp,
-                      bottom: DeviceType().isMobile ? 4.wp : 18.wp),
-                  itemBuilder: (BuildContext context, int i) {
-                    var workSheet = state.historyWorksheets[i];
-                    return GestureDetector(
-                      onTap: () {
-                        // getStudentId().then((studentId) {
-                        //   Navigator.of(context).push(MaterialPageRoute(
-                        //       builder: (context) => WorksheetSolverView(
-                        //           workSheetId: workSheet.id)));
-                        // });
-                      },
-                      child: Container(
-                          padding: const EdgeInsets.all(8),
-                          margin: const EdgeInsets.all(8),
-                          color: AppColors.accentColor,
-                          child: Text(workSheet.worksheetName)),
-                    );
-                  },
-                );
-              } else {
-                return const Center(
-                    child: CircularProgressIndicator.adaptive(
-                        strokeCap: StrokeCap.round));
-              }
-            },
-          )),
+        body: ConnectionNotifierToggler(
+          disconnected: const NetworkDisconnected(),
+          connected: Padding(
+            padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+            child: SizedBox.expand(
+                child: BlocBuilder<WorksheetCubit, WorksheetState>(
+              builder: (context, state) {
+                if (state.status == WorksheetStatus.loaded) {
+                  print(
+                      'history worksheet length: ${state.historyWorksheets.length}');
+                  return ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: state.historyWorksheets.length,
+                    padding: EdgeInsets.only(
+                        top: DeviceType().isMobile ? 4.wp : 18.wp,
+                        left: 4.wp,
+                        right: 4.wp,
+                        bottom: DeviceType().isMobile ? 4.wp : 18.wp),
+                    itemBuilder: (BuildContext context, int i) {
+                      var workSheet = state.historyWorksheets[i];
+                      return GestureDetector(
+                        onTap: () {
+                          // getStudentId().then((studentId) {
+                          //   Navigator.of(context).push(MaterialPageRoute(
+                          //       builder: (context) => WorksheetSolverView(
+                          //           workSheetId: workSheet.id)));
+                          // });
+                        },
+                        child: Container(
+                            padding: const EdgeInsets.all(8),
+                            margin: const EdgeInsets.all(8),
+                            color: AppColors.accentColor,
+                            child: Text(workSheet.worksheetName)),
+                      );
+                    },
+                  );
+                } else {
+                  return const Center(
+                      child: CircularProgressIndicator.adaptive(
+                          strokeCap: StrokeCap.round));
+                }
+              },
+            )),
+          ),
         ),
       ),
     );

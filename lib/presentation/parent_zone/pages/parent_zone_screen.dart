@@ -1,5 +1,7 @@
+import 'package:connection_notifier/connection_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_ar/core/reusable_widgets/network_disconnected.dart';
 import 'package:flutter_ar/presentation/parent_zone/bloc/parent_details_cubit/parent_details_cubit.dart';
 import '../../../core/util/styles.dart';
 import '../bloc/navbar_cubit/app_navigator_cubit.dart';
@@ -8,7 +10,6 @@ import '../widgets/message_view.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:size_config/size_config.dart';
 import 'package:auto_orientation/auto_orientation.dart';
-import '../../../core/rotation_mixin.dart';
 import '../../../core/util/device_type.dart';
 import '../widgets/home_view.dart';
 import '../widgets/group_view.dart';
@@ -89,22 +90,25 @@ class _ParentZoneScreenState extends State<ParentZoneScreen> {
                 },
               ),
             ),
-            body: PopScope(
-              canPop: false,
-              child: Stack(
-                children: [
-                  BlocBuilder<AppNavigatorCubit, AppNavigatorState>(
-                    builder: (context, state) {
-                      return IndexedStack(
-                        index: state.index,
-                        children: screenList,
-                      );
-                    },
-                  ),
-                  const Align(
-                      alignment: Alignment.bottomCenter,
-                      child: AppBottomNavBar()),
-                ],
+            body: ConnectionNotifierToggler(
+              disconnected: const NetworkDisconnected(),
+              connected: PopScope(
+                canPop: false,
+                child: Stack(
+                  children: [
+                    BlocBuilder<AppNavigatorCubit, AppNavigatorState>(
+                      builder: (context, state) {
+                        return IndexedStack(
+                          index: state.index,
+                          children: screenList,
+                        );
+                      },
+                    ),
+                    const Align(
+                        alignment: Alignment.bottomCenter,
+                        child: AppBottomNavBar()),
+                  ],
+                ),
               ),
             ),
           );

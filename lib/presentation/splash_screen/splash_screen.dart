@@ -1,10 +1,12 @@
 import 'dart:math';
 import 'dart:ui';
 
+import 'package:connection_notifier/connection_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_ar/core/student_profile_cubit/student_profile_cubit.dart';
 import 'package:flutter_ar/domain/repositories/authentication_repository.dart';
+import '../../core/reusable_widgets/network_disconnected.dart';
 import '../../core/route/route_name.dart';
 import '../../core/util/device_type.dart';
 import '../../data/models/student_profile_model.dart';
@@ -66,157 +68,160 @@ class SplashScreenState extends State<SplashScreen>
         // resizeToAvoidBottomInset: false,
         // extendBody: true,
         extendBodyBehindAppBar: true,
-        backgroundColor: Color(0XffD1CBF9),
-        body: Stack(
-          alignment: Alignment.center,
-          clipBehavior: Clip.none,
-          children: [
-            Positioned(
-              top: 195.h,
-              child: Opacity(
-                opacity: _animationController.opacityLogos.value,
-                child: Transform(
-                  transform: Matrix4.rotationY(
-                    _animationController.flipLogosAnimation.value *
-                        -1 *
-                        3 *
-                        3.14 /
-                        6,
-                  )..setEntry(3, 2, 0.001),
-                  alignment: Alignment.center,
-                  child: Opacity(
-                    opacity:
-                        _animationController.opacityAnimationSmartXRLogo.value,
-                    child: Image.asset(
-                        'assets/images/PNG Icons/SmartXR Logo P.png',
-                        width: 2200.w),
-                  ),
-                ),
-              ),
-            ),
-            Positioned(
-              top: DeviceType().isMobile ? 250.h : 265.h,
-              child: Transform(
-                transform: Matrix4.rotationY(
-                    _animationController.flipLogosAnimation.value *
-                        -1 *
-                        3 *
-                        3.14 /
-                        6)
-                  ..setEntry(3, 2, 0.001),
-                alignment: Alignment.center,
+        backgroundColor: const Color(0XffD1CBF9),
+        body: ConnectionNotifierToggler(
+          disconnected: const NetworkDisconnected(),
+          connected: Stack(
+            alignment: Alignment.center,
+            clipBehavior: Clip.none,
+            children: [
+              Positioned(
+                top: 195.h,
                 child: Opacity(
                   opacity: _animationController.opacityLogos.value,
-                  child: SizedBox(
-                    width: 1110.w,
-                    // height: 2000.h,
+                  child: Transform(
+                    transform: Matrix4.rotationY(
+                      _animationController.flipLogosAnimation.value *
+                          -1 *
+                          3 *
+                          3.14 /
+                          6,
+                    )..setEntry(3, 2, 0.001),
+                    alignment: Alignment.center,
                     child: Opacity(
-                      opacity:
-                          _animationController.opacityAnimationKidsLogo.value,
-                      child: Transform(
-                        alignment: Alignment.center,
-                        transform: Matrix4.rotationY(
-                            _animationController.rotateAnimationKidsLogo.value),
-                        child: Image.asset(
-                          'assets/images/PNG Icons/kids_1.png',
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-
-            //!BIg Circile
-            Align(
-              alignment: Alignment.center,
-              child: Transform.scale(
-                scale: 7.h * _animationController.animationOuterCircle.value,
-                // origin: Offset(12, 12),
-                alignment: Alignment.center,
-                child: Opacity(
-                  opacity: _animationController.opacityCircle.value,
-                  child: CircleAvatar(
-                    radius: 5.h,
-                    backgroundColor: AppColors.primaryColor,
-                  ),
-                ),
-              ),
-            ),
-
-            //!Small Circile
-
-            Align(
-              alignment: Alignment.center,
-              child: ClipOval(
-                child: Container(
-                  padding: EdgeInsets.all(20.h),
-                  width: _animationController.animationInnerCircle.value,
-                  height: _animationController.animationInnerCircle.value,
-                  color: AppColors.accentColor,
-                  child: Visibility(
-                    visible: _animationController.animationDodoVisible.value,
-                    child: Transform.translate(
-                      offset: Offset(
-                          0, _animationController.animationDodoTranslate.value),
+                      opacity: _animationController
+                          .opacityAnimationSmartXRLogo.value,
                       child: Image.asset(
-                        'assets/images/Dog/Dodo Animation.gif',
-                        fit: BoxFit.contain,
-                      ),
+                          'assets/images/PNG Icons/SmartXR Logo P.png',
+                          width: 2200.w),
                     ),
-                  ), // Adjust the color as needed
-                ),
-              ),
-            ),
-
-            Positioned(
-              top: 0,
-              child: Transform.translate(
-                offset: _animationController.animationPaws.value,
-                child: Opacity(
-                  opacity: _animationController.opacityPaws.value,
-                  child: Image.asset(
-                    'assets/images/Dog/Paws_Splash-Screen.png',
-                    width: 305.h +
-                        _animationController.animationPawsStreatch.value,
-                    height: 75.h,
-                    fit: BoxFit.fill,
                   ),
                 ),
               ),
-            ),
-
-            Align(
-              alignment: Alignment.center,
-              child: Transform.scale(
-                scale: 1.2,
-                // origin: Offset(12, 12),
-                alignment: Alignment.center,
-                child: AnimatedBuilder(
-                  animation: _animationController.irisAnimation,
-                  builder: (context, child) {
-                    return ClipPath(
-                      clipper:
-                          IrisClipper(_animationController.irisAnimation.value),
-                      child: BackdropFilter(
-                        filter: ImageFilter.blur(sigmaX: 15.0, sigmaY: 15.0),
-                        child: Container(
-                          // width: 400.h,
-                          // height: 400.h,
-                          color: AppColors.primaryColor,
+              Positioned(
+                top: DeviceType().isMobile ? 250.h : 265.h,
+                child: Transform(
+                  transform: Matrix4.rotationY(
+                      _animationController.flipLogosAnimation.value *
+                          -1 *
+                          3 *
+                          3.14 /
+                          6)
+                    ..setEntry(3, 2, 0.001),
+                  alignment: Alignment.center,
+                  child: Opacity(
+                    opacity: _animationController.opacityLogos.value,
+                    child: SizedBox(
+                      width: 1110.w,
+                      // height: 2000.h,
+                      child: Opacity(
+                        opacity:
+                            _animationController.opacityAnimationKidsLogo.value,
+                        child: Transform(
+                          alignment: Alignment.center,
+                          transform: Matrix4.rotationY(_animationController
+                              .rotateAnimationKidsLogo.value),
+                          child: Image.asset(
+                            'assets/images/PNG Icons/kids_1.png',
+                            fit: BoxFit.cover,
+                          ),
                         ),
                       ),
-                    );
-                  },
+                    ),
+                  ),
                 ),
               ),
-            ),
 
-            Opacity(
-                opacity: _animationController.opacityProfileForm.value,
-                child: profileChooseForm(context)),
-          ],
+              //!BIg Circile
+              Align(
+                alignment: Alignment.center,
+                child: Transform.scale(
+                  scale: 7.h * _animationController.animationOuterCircle.value,
+                  // origin: Offset(12, 12),
+                  alignment: Alignment.center,
+                  child: Opacity(
+                    opacity: _animationController.opacityCircle.value,
+                    child: CircleAvatar(
+                      radius: 5.h,
+                      backgroundColor: AppColors.primaryColor,
+                    ),
+                  ),
+                ),
+              ),
+
+              //!Small Circile
+
+              Align(
+                alignment: Alignment.center,
+                child: ClipOval(
+                  child: Container(
+                    padding: EdgeInsets.all(20.h),
+                    width: _animationController.animationInnerCircle.value,
+                    height: _animationController.animationInnerCircle.value,
+                    color: AppColors.accentColor,
+                    child: Visibility(
+                      visible: _animationController.animationDodoVisible.value,
+                      child: Transform.translate(
+                        offset: Offset(0,
+                            _animationController.animationDodoTranslate.value),
+                        child: Image.asset(
+                          'assets/images/Dog/Dodo Animation.gif',
+                          fit: BoxFit.contain,
+                        ),
+                      ),
+                    ), // Adjust the color as needed
+                  ),
+                ),
+              ),
+
+              Positioned(
+                top: 0,
+                child: Transform.translate(
+                  offset: _animationController.animationPaws.value,
+                  child: Opacity(
+                    opacity: _animationController.opacityPaws.value,
+                    child: Image.asset(
+                      'assets/images/Dog/Paws_Splash-Screen.png',
+                      width: 305.h +
+                          _animationController.animationPawsStreatch.value,
+                      height: 75.h,
+                      fit: BoxFit.fill,
+                    ),
+                  ),
+                ),
+              ),
+
+              Align(
+                alignment: Alignment.center,
+                child: Transform.scale(
+                  scale: 1.2,
+                  // origin: Offset(12, 12),
+                  alignment: Alignment.center,
+                  child: AnimatedBuilder(
+                    animation: _animationController.irisAnimation,
+                    builder: (context, child) {
+                      return ClipPath(
+                        clipper: IrisClipper(
+                            _animationController.irisAnimation.value),
+                        child: BackdropFilter(
+                          filter: ImageFilter.blur(sigmaX: 15.0, sigmaY: 15.0),
+                          child: Container(
+                            // width: 400.h,
+                            // height: 400.h,
+                            color: AppColors.primaryColor,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ),
+
+              Opacity(
+                  opacity: _animationController.opacityProfileForm.value,
+                  child: profileChooseForm(context)),
+            ],
+          ),
         ));
   }
 
@@ -279,7 +284,7 @@ class SplashScreenState extends State<SplashScreen>
                     ],
                   );
                 } else {
-                  return CircularProgressIndicator();
+                  return const CircularProgressIndicator();
                 }
               },
             ),
@@ -335,8 +340,8 @@ class SplashScreenState extends State<SplashScreen>
 
   GestureDetector profileIcon(BuildContext context, String name) {
     return GestureDetector(
-      onTap: () => Navigator.of(context)
-          .push(MaterialPageRoute(builder: (context) => MainMenuScreen())),
+      onTap: () => Navigator.of(context).push(
+          MaterialPageRoute(builder: (context) => const MainMenuScreen())),
       child: Column(
         children: [
           Image.asset(

@@ -1,5 +1,7 @@
+import 'package:connection_notifier/connection_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_ar/core/reusable_widgets/network_disconnected.dart';
 import '../../../core/util/styles.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:size_config/size_config.dart';
@@ -21,7 +23,9 @@ class CategoryScreen extends StatelessWidget {
       child: SafeArea(
         child: Scaffold(
           backgroundColor: AppColors.parentZoneScaffoldColor,
-          body: Padding(
+          body: ConnectionNotifierToggler(
+            disconnected: const NetworkDisconnected(),
+            connected: Padding(
               padding: EdgeInsets.fromLTRB(8.wp, 4.wp, 8.wp, 4.wp),
               child: Row(
                 children: [
@@ -58,7 +62,7 @@ class CategoryScreen extends StatelessWidget {
                     ],
                   ),
                   //! center part
-                  Expanded(child: CategoryList()),
+                  const Expanded(child: CategoryList()),
                   //! right part
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
@@ -90,10 +94,6 @@ class CategoryScreen extends StatelessWidget {
                         child: GestureDetector(
                           onTap: () {
                             Navigator.of(context).pop();
-                            // Navigator.of(context).pushReplacement(
-                            //     MaterialPageRoute(
-                            //         builder: (context) =>
-                            //             const MainMenuScreen()));
                           },
                           child: SizedBox(
                             height: 75.h,
@@ -108,96 +108,9 @@ class CategoryScreen extends StatelessWidget {
                     ],
                   )
                 ],
-              )
-
-              /*
-            Stack(
-              children: [
-                Padding(
-                  padding: EdgeInsets.fromLTRB(8.wp, 4.wp, 8.wp, 4.wp),
-                  child: const CategoryList(),
-                ),
-                Align(
-                  alignment: Alignment.topLeft,
-                  child: SizedBox(
-                    height: 75.h,
-                    width: 75.h,
-                    child: Image.asset(
-                      'assets/ui/image 40.png', // User Icon
-                      fit: BoxFit.contain,
-                    ),
-                  ),
-                ),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Padding(
-                    padding: EdgeInsets.only(
-                        left: DeviceType().isMobile ? 130.w : 50.w),
-                    child: SizedBox(
-                      height: 45.h,
-                      width: 45.h,
-                      child: GestureDetector(
-                        // splashColor: AppColors.secondaryColor,
-                        // borderRadius: BorderRadius.circular(50),
-                        onTap: () =>
-                            context.read<CategoryPageCubit>().setPreviousPage(),
-                        child: Image.asset(
-                          'assets/ui/Group.png', // left arrow
-                          fit: BoxFit.scaleDown,
-                          height: 45.h,
-                          width: 45.h,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                Align(
-                  alignment: Alignment.bottomRight,
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.of(context).pushReplacement(MaterialPageRoute(
-                          builder: (context) => const MainMenuScreen()));
-                    },
-                    child: SizedBox(
-                      height: 75.h,
-                      width: 75.h,
-                      child: Image.asset(
-                        'assets/ui/Custom Buttons.002 1.png', // Home Icon
-                        fit: BoxFit.contain,
-                      ),
-                    ),
-                  ),
-                ),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: Padding(
-                    padding: EdgeInsets.only(
-                        right: DeviceType().isMobile ? 130.w : 50.w),
-                    child: GestureDetector(
-                      // splashColor:  AppColors.secondaryColor,
-                      // borderRadius: BorderRadius.circular(50),
-                      onTap: () =>
-                          context.read<CategoryPageCubit>().setNextPage(),
-                      child: SizedBox(
-                        height: 45.h,
-                        width: 45.h,
-                        child: RotatedBox(
-                          quarterTurns: 2,
-                          child: Image.asset(
-                            'assets/ui/Group.png', // right arrow
-                            fit: BoxFit.scaleDown,
-                            height: 45.h,
-                            width: 45.h,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            */
               ),
+            ),
+          ),
         ),
       ),
     );

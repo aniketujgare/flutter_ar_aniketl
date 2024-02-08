@@ -167,6 +167,17 @@ class _LoginPage2OtpState extends State<LoginPage2Otp> {
             keyboardType: TextInputType.number,
             onChanged: (value) {
               otpStrings[nodeIdx] = value;
+              // ServicesBinding.instance.keyboard.addHandler((KeyEvent event) {
+              //   if (event is KeyDownEvent) {
+              //     print('key doen: ${event.logicalKey}');
+              //   }
+              //   if (event.logicalKey.keyLabel == 'Backspace') {
+              //     if (value.isEmpty) {
+              //       FocusScope.of(context).previousFocus();
+              //     }
+              //   }
+              //   return false;
+              // });
               if (nodeIdx == 5 && value.isNotEmpty) {
                 FocusScope.of(context).unfocus();
               } else if (value.isEmpty && nodeIdx > 0) {

@@ -1,8 +1,11 @@
 import 'dart:io';
 
+import 'package:connection_notifier/connection_notifier.dart';
 import 'package:download_assets/download_assets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
+import '../core/reusable_widgets/network_disconnected.dart';
 
 class AssetDownload extends StatefulWidget {
   AssetDownload(
@@ -39,36 +42,39 @@ class AssetDownloadState extends State<AssetDownload> {
         appBar: AppBar(
           title: Text(widget.title),
         ),
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Text(message),
-              if (downloaded) ...[
-                Container(
-                  width: 150,
-                  height: 150,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: FileImage(File(
-                          '${downloadAssetsController.assetsDir}/dart.jpeg')),
-                      fit: BoxFit.fitWidth,
+        body: ConnectionNotifierToggler(
+          disconnected: NetworkDisconnected(),
+          connected: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text(message),
+                if (downloaded) ...[
+                  Container(
+                    width: 150,
+                    height: 150,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: FileImage(File(
+                            '${downloadAssetsController.assetsDir}/dart.jpeg')),
+                        fit: BoxFit.fitWidth,
+                      ),
                     ),
                   ),
-                ),
-                Container(
-                  width: 150,
-                  height: 150,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: FileImage(File(
-                          '${downloadAssetsController.assetsDir}/flutter.png')),
-                      fit: BoxFit.fitWidth,
+                  Container(
+                    width: 150,
+                    height: 150,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: FileImage(File(
+                            '${downloadAssetsController.assetsDir}/flutter.png')),
+                        fit: BoxFit.fitWidth,
+                      ),
                     ),
                   ),
-                ),
+                ],
               ],
-            ],
+            ),
           ),
         ),
         floatingActionButton: Row(

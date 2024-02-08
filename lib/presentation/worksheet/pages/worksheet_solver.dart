@@ -1,4 +1,5 @@
 import 'package:collection/collection.dart';
+import 'package:connection_notifier/connection_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_ar/presentation/worksheet/widgets/questions/odd_one_out_question.dart';
@@ -6,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:size_config/size_config.dart';
 
 import '../../../../core/util/device_type.dart';
+import '../../../core/reusable_widgets/network_disconnected.dart';
 import '../../../core/util/styles.dart';
 import '../bloc/worksheet_solver_cubit/worksheet_solver_cubit.dart';
 import '../models/questions.dart';
@@ -259,26 +261,29 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView> {
         ),
         backgroundColor: const Color(0XFFD1CBF9),
         appBar: appBarWorksheetSolver(context),
-        body: BlocBuilder<WorksheetSolverCubit, WorksheetSolverState>(
-          builder: (context, state) {
-            if (state.status == WorkSheetSolverStatus.loaded) {
-              if (state.questions.isEmpty) {
-                return Center(
-                  child: Text(
-                    'No questions are available in the worksheet at the moment.',
-                    style: AppTextStyles.nunito105w700Text,
+        body: ConnectionNotifierToggler(
+          disconnected: const NetworkDisconnected(),
+          connected: BlocBuilder<WorksheetSolverCubit, WorksheetSolverState>(
+            builder: (context, state) {
+              if (state.status == WorkSheetSolverStatus.loaded) {
+                if (state.questions.isEmpty) {
+                  return Center(
+                    child: Text(
+                      'No questions are available in the worksheet at the moment.',
+                      style: AppTextStyles.nunito105w700Text,
+                    ),
+                  );
+                }
+                return getQuestion(state, state.currentQuestion);
+              } else {
+                return const Center(
+                  child: CircularProgressIndicator.adaptive(
+                    strokeCap: StrokeCap.round,
                   ),
                 );
               }
-              return getQuestion(state, state.currentQuestion);
-            } else {
-              return const Center(
-                child: CircularProgressIndicator.adaptive(
-                  strokeCap: StrokeCap.round,
-                ),
-              );
-            }
-          },
+            },
+          ),
         ),
       ),
     );

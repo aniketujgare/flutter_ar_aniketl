@@ -1,5 +1,7 @@
+import 'package:connection_notifier/connection_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_ar/core/reusable_widgets/network_disconnected.dart';
 import 'package:flutter_ar/temp_testing/hive_test.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:size_config/size_config.dart';
@@ -46,29 +48,32 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
             canPop: false,
             child: Scaffold(
               backgroundColor: AppColors.parentZoneScaffoldColor,
-              body: Padding(
-                padding: EdgeInsets.fromLTRB(8.wp, 4.wp, 8.wp, 4.wp),
-                child: Column(
-                  children: [
-                    // IconButton(
-                    //     onPressed: () async {
-                    //       print('tapped');
-                    //       await HiveTesting().saveDataToHive();
-                    //     },
-                    //     icon: Icon(Icons.bug_report)),
-                    // IconButton(
-                    //     onPressed: () async {
-                    //       print('tapped');
-                    //       HiveTesting().getStudentProfile();
-                    //     },
-                    //     icon: Icon(Icons.print)),
-                    //! Top
-                    buildTop(context),
-                    //! Center
-                    buildCenter(context),
-                    //! Bottom
-                    buildBottom(context),
-                  ],
+              body: ConnectionNotifierToggler(
+                disconnected: const NetworkDisconnected(),
+                connected: Padding(
+                  padding: EdgeInsets.fromLTRB(8.wp, 4.wp, 8.wp, 4.wp),
+                  child: Column(
+                    children: [
+                      // IconButton(
+                      //     onPressed: () async {
+                      //       print('tapped');
+                      //       await HiveTesting().saveDataToHive();
+                      //     },
+                      //     icon: Icon(Icons.bug_report)),
+                      // IconButton(
+                      //     onPressed: () async {
+                      //       print('tapped');
+                      //       HiveTesting().getStudentProfile();
+                      //     },
+                      //     icon: Icon(Icons.print)),
+                      //! Top
+                      buildTop(context),
+                      //! Center
+                      buildCenter(context),
+                      //! Bottom
+                      buildBottom(context),
+                    ],
+                  ),
                 ),
               ),
             ),

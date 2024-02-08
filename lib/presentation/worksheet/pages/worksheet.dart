@@ -1,9 +1,11 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:connection_notifier/connection_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ar/data/models/student_profile_model.dart';
 import 'package:flutter_ar/domain/repositories/authentication_repository.dart';
+import '../../../core/reusable_widgets/network_disconnected.dart';
 import '../../../core/util/reusable_widgets/reusable_button.dart';
 import '../../../data/models/teacher_message.dart';
 import '../../parent_zone/bloc/teacher_message_cubit/teacher_message_cubit.dart';
@@ -91,144 +93,131 @@ class _WorksheetViewState extends State<WorksheetView> {
             ],
           ),
         ),
-        body: Stack(
-          children: [
-            BlocBuilder<WorksheetCubit, WorksheetState>(
-              builder: (context, state) {
-                if (state.status == WorksheetStatus.loaded) {
-                  context.read<WorksheetPageCubit>().setmaxLength(
-                      (BlocProvider.of<WorksheetCubit>(context)
-                                  .state
-                                  .worksheets
-                                  .length /
-                              (DeviceType().isMobile ? 4 : 3))
-                          .ceil());
-                  return BlocBuilder<WorksheetPageCubit, int>(
-                    builder: (context, index) {
-                      if (state.worksheets.isEmpty) {
-                        return Center(
-                          child: Text(
-                            'No Worksheets Available at the Moment',
-                            style: AppTextStyles.nunito105w700Text,
-                          ),
-                        );
-                      }
-                      return PageView.builder(
-                        controller: context.read<WorksheetPageCubit>().pageCont,
-                        scrollDirection: Axis.horizontal,
-                        onPageChanged: (value) {
-                          context.read<WorksheetPageCubit>().setPage(value);
-                        },
-                        itemCount: context
-                            .read<WorksheetPageCubit>()
-                            .maxLen, // Number of pages
-                        itemBuilder: (context, page) {
-                          int startIndex =
-                              page * (DeviceType().isMobile ? 4 : 3);
-                          int endIndex =
-                              (page + 1) * (DeviceType().isMobile ? 4 : 3);
-
-                          // Ensure endIndex does not exceed the total number of elements
-                          endIndex = endIndex > state.worksheets.length
-                              ? state.worksheets.length
-                              : endIndex;
-
-                          // Create a list of widgets for this page
-                          List<Widget> pageWidgets = [];
-
-                          for (int i = startIndex; i < endIndex; i++) {
-                            var workSheet = state.worksheets[i];
-                            pageWidgets.add(
-                              Expanded(
-                                child: GestureDetector(
-                                  onTap: () {
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            WorksheetSolverView(
-                                                workSheetId: workSheet.id),
-                                      ),
-                                    );
-                                  },
-                                  child: Lesson(
-                                    worksheetTitle: workSheet.worksheetName,
-                                    subject: workSheet.subject,
-                                    date: worksheet[i % worksheet.length][2],
-                                    teacher: workSheet.teacher,
-                                  ),
-                                ),
-                              ),
-                            );
-                          }
-                          int noOfPages =
-                              context.read<WorksheetPageCubit>().maxLen;
-                          int noOfCards =
-                              noOfPages * (DeviceType().isMobile ? 4 : 3);
-                          print('no of cards: $noOfCards');
-                          print('rem box: ${pageWidgets.length}');
-                          if (pageWidgets.length <
-                              (DeviceType().isMobile ? 4 : 3)) {
-                            for (int i = pageWidgets.length;
-                                i < (DeviceType().isMobile ? 4 : 3);
-                                i++) {
-                              pageWidgets.add(const Expanded(
-                                child: SizedBox(),
-                              ));
-                            }
-                          }
-
-                          return Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 16.wp),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: pageWidgets,
+        body: ConnectionNotifierToggler(
+          disconnected: const NetworkDisconnected(),
+          connected: Stack(
+            children: [
+              BlocBuilder<WorksheetCubit, WorksheetState>(
+                builder: (context, state) {
+                  if (state.status == WorksheetStatus.loaded) {
+                    context.read<WorksheetPageCubit>().setmaxLength(
+                        (BlocProvider.of<WorksheetCubit>(context)
+                                    .state
+                                    .worksheets
+                                    .length /
+                                (DeviceType().isMobile ? 4 : 3))
+                            .ceil());
+                    return BlocBuilder<WorksheetPageCubit, int>(
+                      builder: (context, index) {
+                        if (state.worksheets.isEmpty) {
+                          return Center(
+                            child: Text(
+                              'No Worksheets Available at the Moment',
+                              style: AppTextStyles.nunito105w700Text,
                             ),
                           );
-                        },
-                      );
-                    },
-                  );
-                } else {
-                  return const Center(
-                    child: CircularProgressIndicator.adaptive(
-                        strokeCap: StrokeCap.round),
-                  );
-                }
-              },
-            ),
-            BlocBuilder<WorksheetCubit, WorksheetState>(
-              builder: (context, state) {
-                if (state.worksheets.isNotEmpty) {
-                  return Padding(
-                    padding: EdgeInsets.fromLTRB(8.wp, 4.wp, 8.wp, 4.wp),
-                    child: Column(
-                      children: [
-                        //! Center page previous and next buttons
-                        Expanded(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              GestureDetector(
-                                onTap: () => context
-                                    .read<WorksheetPageCubit>()
-                                    .setPreviousPage(),
-                                child: SizedBox(
-                                  height: 45.h,
-                                  width: 45.h,
-                                  child: Image.asset(
-                                    'assets/ui/Group.png', // right arrow
-                                    fit: BoxFit.scaleDown,
-                                    height: 45.h,
-                                    width: 45.h,
+                        }
+                        return PageView.builder(
+                          controller:
+                              context.read<WorksheetPageCubit>().pageCont,
+                          scrollDirection: Axis.horizontal,
+                          onPageChanged: (value) {
+                            context.read<WorksheetPageCubit>().setPage(value);
+                          },
+                          itemCount: context
+                              .read<WorksheetPageCubit>()
+                              .maxLen, // Number of pages
+                          itemBuilder: (context, page) {
+                            int startIndex =
+                                page * (DeviceType().isMobile ? 4 : 3);
+                            int endIndex =
+                                (page + 1) * (DeviceType().isMobile ? 4 : 3);
+
+                            // Ensure endIndex does not exceed the total number of elements
+                            endIndex = endIndex > state.worksheets.length
+                                ? state.worksheets.length
+                                : endIndex;
+
+                            // Create a list of widgets for this page
+                            List<Widget> pageWidgets = [];
+
+                            for (int i = startIndex; i < endIndex; i++) {
+                              var workSheet = state.worksheets[i];
+                              pageWidgets.add(
+                                Expanded(
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              WorksheetSolverView(
+                                                  workSheetId: workSheet.id),
+                                        ),
+                                      );
+                                    },
+                                    child: Lesson(
+                                      worksheetTitle: workSheet.worksheetName,
+                                      subject: workSheet.subject,
+                                      date: worksheet[i % worksheet.length][2],
+                                      teacher: workSheet.teacher,
+                                    ),
                                   ),
                                 ),
+                              );
+                            }
+                            int noOfPages =
+                                context.read<WorksheetPageCubit>().maxLen;
+                            int noOfCards =
+                                noOfPages * (DeviceType().isMobile ? 4 : 3);
+                            print('no of cards: $noOfCards');
+                            print('rem box: ${pageWidgets.length}');
+                            if (pageWidgets.length <
+                                (DeviceType().isMobile ? 4 : 3)) {
+                              for (int i = pageWidgets.length;
+                                  i < (DeviceType().isMobile ? 4 : 3);
+                                  i++) {
+                                pageWidgets.add(const Expanded(
+                                  child: SizedBox(),
+                                ));
+                              }
+                            }
+
+                            return Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 16.wp),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: pageWidgets,
                               ),
-                              GestureDetector(
-                                onTap: () => context
-                                    .read<WorksheetPageCubit>()
-                                    .setNextPage(),
-                                child: RotatedBox(
-                                  quarterTurns: 2,
+                            );
+                          },
+                        );
+                      },
+                    );
+                  } else {
+                    return const Center(
+                      child: CircularProgressIndicator.adaptive(
+                          strokeCap: StrokeCap.round),
+                    );
+                  }
+                },
+              ),
+              BlocBuilder<WorksheetCubit, WorksheetState>(
+                builder: (context, state) {
+                  if (state.worksheets.isNotEmpty) {
+                    return Padding(
+                      padding: EdgeInsets.fromLTRB(8.wp, 4.wp, 8.wp, 4.wp),
+                      child: Column(
+                        children: [
+                          //! Center page previous and next buttons
+                          Expanded(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                GestureDetector(
+                                  onTap: () => context
+                                      .read<WorksheetPageCubit>()
+                                      .setPreviousPage(),
                                   child: SizedBox(
                                     height: 45.h,
                                     width: 45.h,
@@ -240,18 +229,36 @@ class _WorksheetViewState extends State<WorksheetView> {
                                     ),
                                   ),
                                 ),
-                              ),
-                            ],
+                                GestureDetector(
+                                  onTap: () => context
+                                      .read<WorksheetPageCubit>()
+                                      .setNextPage(),
+                                  child: RotatedBox(
+                                    quarterTurns: 2,
+                                    child: SizedBox(
+                                      height: 45.h,
+                                      width: 45.h,
+                                      child: Image.asset(
+                                        'assets/ui/Group.png', // right arrow
+                                        fit: BoxFit.scaleDown,
+                                        height: 45.h,
+                                        width: 45.h,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                  );
-                }
-                return SizedBox();
-              },
-            ),
-          ],
+                        ],
+                      ),
+                    );
+                  }
+                  return SizedBox();
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );

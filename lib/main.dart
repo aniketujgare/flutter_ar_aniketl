@@ -102,117 +102,84 @@ class MyAppState extends State<MyApp> {
       referenceWidth: 2556,
       builder: (BuildContext context, Orientation orientation) {
         return ConnectionNotifier(
-            child: ConnectionNotifierToggler(
-          // onConnectionStatusChanged: (connected) {
-          //   /// that means it is still in the initialization phase.
-          //   if (connected == null) return;
-          //   debugPrint(connected.toString());
-          // },
-          connected: MultiBlocProvider(
-            providers: [
-              BlocProvider(
-                create: (context) => CategoryNewCubit()..loadCategory(),
-              ),
-              BlocProvider(
-                create: (context) => CategoryPageCubit(),
-              ),
-              BlocProvider(
-                create: (context) => ModelsPageControllerCubit(),
-              ),
-              BlocProvider(
-                create: (context) => ModelsNewCubit(),
-              ),
-              BlocProvider(
-                create: (context) => LoginBloc(authenticationRepository),
-              ),
-              BlocProvider(
-                create: (context) => LoginValidationBloc(),
-              ),
-              BlocProvider(
-                create: (context) => GuestValidationBloc(),
-              ),
-              BlocProvider(
-                create: (context) => SplashAnimationBloc(),
-              ),
-              BlocProvider(
-                create: (context) => AppNavigatorCubit(),
-              ),
-              BlocProvider(
-                create: (context) => TeacherListBloc(),
-              ),
-              BlocProvider(
-                create: (context) => TeacherMessageCubit(),
-              ),
-              BlocProvider(
-                create: (context) => ModelAssetHandlerBloc(),
-              ),
-              BlocProvider(
-                create: (context) => WorksheetCubit(),
-              ),
-              BlocProvider(
-                create: (context) => WorksheetSolverCubit(),
-              ),
-              BlocProvider(
-                create: (context) => ReportsPagecontrollerCubit(),
-              ),
-              BlocProvider(
-                create: (context) => SubjectPageCubit(),
-              ),
-              BlocProvider(
-                create: (context) => WorksheetPageCubit(),
-              ),
-              BlocProvider(
-                create: (context) => StudentProfileCubit(),
-              ),
-              BlocProvider(
-                create: (context) => ParentDetailsCubit(),
-              ),
-            ],
-            child: MaterialApp(
-              debugShowCheckedModeBanner: false,
-              themeMode: ThemeMode.light,
-              home: widget.studentProfile == null
-                  ? LoginScreen()
-                  : SplashScreen(),
-              // theme: ThemeData(
-              //     appBarTheme: AppBarTheme(
-              //         systemOverlayStyle: SystemUiOverlayStyle(
-              //             statusBarBrightness: Brightness.light,
-              //             statusBarColor: AppColors.accentColor))),
-              // routerConfig: GoRouterProvider().goRouter(),
+            child: MultiBlocProvider(
+          providers: [
+            BlocProvider(
+              create: (context) => CategoryNewCubit()..loadCategory(),
             ),
-          ),
-          disconnected: Scaffold(
-            body: RotatedBox(
-              quarterTurns: 0,
-              child: Center(
-                child: Column(
-                  // mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    50.verticalSpacer,
-                    SizedBox(
-                        // height: 100.h,
-                        width: 60.wp,
-                        child: Lottie.asset('assets/Wifi.json')),
-                    5.verticalSpacer,
-                    Text(
-                      'Checking Connection...',
-                      style: AppTextStyles.nunito100w700black.copyWith(
-                          color: AppColors.primaryColor, fontSize: 120.sp),
-                    ),
-                  ],
-                ),
-              ),
+            BlocProvider(
+              create: (context) => CategoryPageCubit(),
             ),
+            BlocProvider(
+              create: (context) => ModelsPageControllerCubit(),
+            ),
+            BlocProvider(
+              create: (context) => ModelsNewCubit(),
+            ),
+            BlocProvider(
+              create: (context) => LoginBloc(authenticationRepository),
+            ),
+            BlocProvider(
+              create: (context) => LoginValidationBloc(),
+            ),
+            BlocProvider(
+              create: (context) => GuestValidationBloc(),
+            ),
+            BlocProvider(
+              create: (context) => SplashAnimationBloc(),
+            ),
+            BlocProvider(
+              create: (context) => AppNavigatorCubit(),
+            ),
+            BlocProvider(
+              create: (context) => TeacherListBloc(),
+            ),
+            BlocProvider(
+              create: (context) => TeacherMessageCubit(),
+            ),
+            BlocProvider(
+              create: (context) => ModelAssetHandlerBloc(),
+            ),
+            BlocProvider(
+              create: (context) => WorksheetCubit(),
+            ),
+            BlocProvider(
+              create: (context) => WorksheetSolverCubit(),
+            ),
+            BlocProvider(
+              create: (context) => ReportsPagecontrollerCubit(),
+            ),
+            BlocProvider(
+              create: (context) => SubjectPageCubit(),
+            ),
+            BlocProvider(
+              create: (context) => WorksheetPageCubit(),
+            ),
+            BlocProvider(
+              create: (context) => StudentProfileCubit(),
+            ),
+            BlocProvider(
+              create: (context) => ParentDetailsCubit(),
+            ),
+          ],
+          child: MaterialApp(
+            debugShowCheckedModeBanner: false,
+            themeMode: ThemeMode.light,
+            home: widget.studentProfile == null
+                ? const LoginScreen()
+                : const SplashScreen(),
+            // theme: ThemeData(
+            //     appBarTheme: AppBarTheme(
+            //         systemOverlayStyle: SystemUiOverlayStyle(
+            //             statusBarBrightness: Brightness.light,
+            //             statusBarColor: AppColors.accentColor))),
+            // routerConfig: GoRouterProvider().goRouter(),
           ),
         ));
       },
     );
   }
 }
-
-
 
 // import 'arkitdemo/body_tracking_page.dart';
 // import 'arkitdemo/camera_position_scene.dart';

@@ -1,5 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:connection_notifier/connection_notifier.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_ar/core/reusable_widgets/network_disconnected.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shimmer/shimmer.dart';
@@ -23,113 +25,31 @@ class CategoryModelsPageView extends StatelessWidget {
       child: SafeArea(
         child: Scaffold(
           backgroundColor: AppColors.parentZoneScaffoldColor,
-          body: Padding(
-            padding: EdgeInsets.fromLTRB(8.wp, 4.wp, 8.wp, 4.wp),
-            child: Row(
-              children: [
-                //! left part
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    SizedBox(
-                      width: 75.h,
-                      child: Image.asset(
-                        'assets/ui/image 40.png', // User Icon
-                        fit: BoxFit.contain,
+          body: ConnectionNotifierToggler(
+            disconnected: const NetworkDisconnected(),
+            connected: Padding(
+              padding: EdgeInsets.fromLTRB(8.wp, 4.wp, 8.wp, 4.wp),
+              child: Row(
+                children: [
+                  //! left part
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      SizedBox(
+                        width: 75.h,
+                        child: Image.asset(
+                          'assets/ui/image 40.png', // User Icon
+                          fit: BoxFit.contain,
+                        ),
                       ),
-                    ),
-                    BlocBuilder<ModelsNewCubit, ModelsNewState>(
-                      builder: (context, state) {
-                        if (state.arModels.length > 6) {
-                          return GestureDetector(
-                            onTap: () => context
-                                .read<ModelsPageControllerCubit>()
-                                .setPreviousPage(),
-                            child: SizedBox(
-                              height: 45.h,
-                              width: 45.h,
-                              child: Image.asset(
-                                'assets/ui/Group.png', // right arrow
-                                fit: BoxFit.scaleDown,
-                                height: 45.h,
-                                width: 45.h,
-                              ),
-                            ),
-                          );
-                        }
-                        return SizedBox();
-                      },
-                    ),
-                    SizedBox(
-                      width: 75.h,
-                      height: 75.h,
-                    ),
-                  ],
-                ),
-                //! center part
-                Expanded(
-                  child: BlocBuilder<ModelsNewCubit, ModelsNewState>(
-                    builder: (context, state) {
-                      if (state.status == ModelsStatus.loaded) {
-                        context
-                            .read<ModelsPageControllerCubit>()
-                            .setmaxLength((state.arModels.length / 6).ceil());
-                        return BlocBuilder<ModelsPageControllerCubit, int>(
-                          builder: (context, index) {
-                            return PageView.builder(
-                              itemCount: (state.arModels.length / 6)
-                                  .ceil(), // 6 containers per page (2 rows with 3 containers each)
-                              controller: context
+                      BlocBuilder<ModelsNewCubit, ModelsNewState>(
+                        builder: (context, state) {
+                          if (state.arModels.length > 6) {
+                            return GestureDetector(
+                              onTap: () => context
                                   .read<ModelsPageControllerCubit>()
-                                  .pageCont,
-                              onPageChanged: (value) {
-                                context
-                                    .read<ModelsPageControllerCubit>()
-                                    .setPage(value);
-                                debugPrint('page changed $value');
-                              },
-                              itemBuilder: (context, pageIndex) {
-                                return DeviceType().isMobile
-                                    ? buildPage(pageIndex, state.arModels)
-                                    : Center(
-                                        child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceEvenly,
-                                        children: [
-                                          buildPage(pageIndex, state.arModels),
-                                        ],
-                                      ));
-                              },
-                            );
-                          },
-                        );
-                      }
-                      return const Center(
-                          child: CircularProgressIndicator.adaptive(
-                        strokeCap: StrokeCap.round,
-                      ));
-                    },
-                  ),
-                ),
-                //! right part
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    SizedBox(
-                      width: 75.h,
-                      height: 75.h,
-                    ),
-                    BlocBuilder<ModelsNewCubit, ModelsNewState>(
-                      builder: (context, state) {
-                        if (state.arModels.length > 6) {
-                          return GestureDetector(
-                            onTap: () => context
-                                .read<ModelsPageControllerCubit>()
-                                .setNextPage(),
-                            child: RotatedBox(
-                              quarterTurns: 2,
+                                  .setPreviousPage(),
                               child: SizedBox(
                                 height: 45.h,
                                 width: 45.h,
@@ -140,31 +60,117 @@ class CategoryModelsPageView extends StatelessWidget {
                                   width: 45.h,
                                 ),
                               ),
-                            ),
+                            );
+                          }
+                          return SizedBox();
+                        },
+                      ),
+                      SizedBox(
+                        width: 75.h,
+                        height: 75.h,
+                      ),
+                    ],
+                  ),
+                  //! center part
+                  Expanded(
+                    child: BlocBuilder<ModelsNewCubit, ModelsNewState>(
+                      builder: (context, state) {
+                        if (state.status == ModelsStatus.loaded) {
+                          context
+                              .read<ModelsPageControllerCubit>()
+                              .setmaxLength((state.arModels.length / 6).ceil());
+                          return BlocBuilder<ModelsPageControllerCubit, int>(
+                            builder: (context, index) {
+                              return PageView.builder(
+                                itemCount: (state.arModels.length / 6)
+                                    .ceil(), // 6 containers per page (2 rows with 3 containers each)
+                                controller: context
+                                    .read<ModelsPageControllerCubit>()
+                                    .pageCont,
+                                onPageChanged: (value) {
+                                  context
+                                      .read<ModelsPageControllerCubit>()
+                                      .setPage(value);
+                                  debugPrint('page changed $value');
+                                },
+                                itemBuilder: (context, pageIndex) {
+                                  return DeviceType().isMobile
+                                      ? buildPage(pageIndex, state.arModels)
+                                      : Center(
+                                          child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
+                                          children: [
+                                            buildPage(
+                                                pageIndex, state.arModels),
+                                          ],
+                                        ));
+                                },
+                              );
+                            },
                           );
                         }
-                        return SizedBox();
+                        return const Center(
+                            child: CircularProgressIndicator.adaptive(
+                          strokeCap: StrokeCap.round,
+                        ));
                       },
                     ),
-                    SizedBox(
-                      width: 75.h,
-                      child: GestureDetector(
-                        onTap: () {
-                          Navigator.of(context).pop();
+                  ),
+                  //! right part
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      SizedBox(
+                        width: 75.h,
+                        height: 75.h,
+                      ),
+                      BlocBuilder<ModelsNewCubit, ModelsNewState>(
+                        builder: (context, state) {
+                          if (state.arModels.length > 6) {
+                            return GestureDetector(
+                              onTap: () => context
+                                  .read<ModelsPageControllerCubit>()
+                                  .setNextPage(),
+                              child: RotatedBox(
+                                quarterTurns: 2,
+                                child: SizedBox(
+                                  height: 45.h,
+                                  width: 45.h,
+                                  child: Image.asset(
+                                    'assets/ui/Group.png', // right arrow
+                                    fit: BoxFit.scaleDown,
+                                    height: 45.h,
+                                    width: 45.h,
+                                  ),
+                                ),
+                              ),
+                            );
+                          }
+                          return SizedBox();
                         },
-                        child: SizedBox(
-                          height: 75.h,
-                          width: 75.h,
-                          child: Image.asset(
-                            'assets/ui/Custom Buttons.002 1.png', // Home Icon
-                            fit: BoxFit.contain,
+                      ),
+                      SizedBox(
+                        width: 75.h,
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: SizedBox(
+                            height: 75.h,
+                            width: 75.h,
+                            child: Image.asset(
+                              'assets/ui/Custom Buttons.002 1.png', // Home Icon
+                              fit: BoxFit.contain,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
-                )
-              ],
+                    ],
+                  )
+                ],
+              ),
             ),
           ),
         ),

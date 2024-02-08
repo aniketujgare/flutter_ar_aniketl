@@ -85,7 +85,7 @@ class CognitionPage extends StatelessWidget {
                           percent: 0.77,
                           center: Text(
                             "${data[index]['percentage']}%",
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w700,
                             ),
