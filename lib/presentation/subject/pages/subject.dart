@@ -21,7 +21,7 @@ class SubjectScreen extends StatefulWidget {
 class _SubjectScreenState extends State<SubjectScreen> {
   @override
   void initState() {
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+    // SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.landscapeLeft,
       DeviceOrientation.landscapeRight,
@@ -44,7 +44,7 @@ class _SubjectScreenState extends State<SubjectScreen> {
             children: [
               //! Center Image and Subject Name
               _buildSubjectImage(context),
-              _buildSubjectName(),
+              // _buildSubjectName(),
               Padding(
                 padding: EdgeInsets.fromLTRB(8.wp, 4.wp, 8.wp, 4.wp),
                 child: Column(
@@ -195,6 +195,7 @@ class _SubjectScreenState extends State<SubjectScreen> {
 
   BlocBuilder _buildSubjectImage(BuildContext context) {
     List<String> subImages = ['evs', 'english', 'math'];
+    List<String> subNames = ['E.V.S', 'English', 'Maths'];
 
     return BlocBuilder<SubjectPageCubit, int>(
       builder: (context, index) {
@@ -206,13 +207,26 @@ class _SubjectScreenState extends State<SubjectScreen> {
           },
           itemCount: 3, // 6 containers per page (2 rows with 3 containers each)
           itemBuilder: (context, a) {
-            return Container(
-                height: double.maxFinite,
-                padding: EdgeInsets.fromLTRB(0, 8.wp, 0, 12.wp),
-                child: Image.asset(
-                  'assets/images/PNG Icons/${subImages[a]}.png',
-                  fit: BoxFit.contain,
-                ));
+            return Stack(
+              alignment: Alignment.center,
+              children: [
+                Container(
+                    height: double.maxFinite,
+                    padding: EdgeInsets.fromLTRB(0, 8.wp, 0, 12.wp),
+                    child: Image.asset(
+                      'assets/images/PNG Icons/${subImages[a]}.png',
+                      fit: BoxFit.contain,
+                    )),
+                Positioned(
+                  bottom: 35.h,
+                  child: Text(
+                    subNames[a],
+                    textAlign: TextAlign.center,
+                    style: AppTextStyles.unitedRounded95w700,
+                  ),
+                )
+              ],
+            );
           },
         );
       },

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_ar/presentation/worksheet/widgets/questions/odd_one_out_question.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lottie/lottie.dart';
 import 'package:size_config/size_config.dart';
 
 import '../../../../core/util/device_type.dart';
@@ -12,7 +13,9 @@ import '../../../core/util/styles.dart';
 import '../bloc/worksheet_solver_cubit/worksheet_solver_cubit.dart';
 import '../models/questions.dart';
 import '../widgets/appbar_worksheet_solver.dart';
+import '../widgets/asc_dec.dart';
 import '../widgets/bottom_indicator_bar_questions.dart';
+import '../widgets/questions/ascending_decending_question.dart';
 import '../widgets/questions/fill_in_blank_question.dart';
 import '../widgets/questions/long_answer_question.dart';
 import '../widgets/questions/match_the_following_question.dart';
@@ -188,19 +191,11 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView> {
         return _buildOddOneOutImageQuestion(
             i, oddOneOutImageQuestion, markedAnswer);
       case QuestionType.ascDescOrder:
-        AscDescOrderQuestion ascDescOrderQuestion =
-            state.questions[i] as AscDescOrderQuestion;
-        return Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('${i + 1}) ${ascDescOrderQuestion.question}'),
-            Text(ascDescOrderQuestion.numbers.join(' ,')),
-            TextFormField(
-                initialValue: (markedAnswer as List<String>?) == null
-                    ? ''
-                    : (markedAnswer as List<String>).join(' ,')),
-          ],
+        // return const AscendingDecendingTese();
+        return AscendingDecendingQuestion(
+          questionIndex: i,
+          question: state.questions[i] as AscDescOrderQuestion,
+          markedAnswer: markedAnswer,
         );
       case QuestionType.arithmetic:
         return Text(state.questions[i].questionType.toString());
@@ -261,29 +256,26 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView> {
         ),
         backgroundColor: const Color(0XFFD1CBF9),
         appBar: appBarWorksheetSolver(context),
-        body: ConnectionNotifierToggler(
-          disconnected: const NetworkDisconnected(),
-          connected: BlocBuilder<WorksheetSolverCubit, WorksheetSolverState>(
-            builder: (context, state) {
-              if (state.status == WorkSheetSolverStatus.loaded) {
-                if (state.questions.isEmpty) {
-                  return Center(
-                    child: Text(
-                      'No questions are available in the worksheet at the moment.',
-                      style: AppTextStyles.nunito105w700Text,
-                    ),
-                  );
-                }
-                return getQuestion(state, state.currentQuestion);
-              } else {
-                return const Center(
-                  child: CircularProgressIndicator.adaptive(
-                    strokeCap: StrokeCap.round,
+        body: BlocBuilder<WorksheetSolverCubit, WorksheetSolverState>(
+          builder: (context, state) {
+            if (state.status == WorkSheetSolverStatus.loaded) {
+              if (state.questions.isEmpty) {
+                return Center(
+                  child: Text(
+                    'No questions are available in the worksheet at the moment.',
+                    style: AppTextStyles.nunito105w700Text,
                   ),
                 );
               }
-            },
-          ),
+              return getQuestion(state, state.currentQuestion);
+            } else {
+              return const Center(
+                child: CircularProgressIndicator.adaptive(
+                  strokeCap: StrokeCap.round,
+                ),
+              );
+            }
+          },
         ),
       ),
     );

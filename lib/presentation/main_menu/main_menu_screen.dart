@@ -24,7 +24,6 @@ class MainMenuScreen extends StatefulWidget {
 class _MainMenuScreenState extends State<MainMenuScreen> {
   @override
   void initState() {
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.landscapeLeft,
       DeviceOrientation.landscapeRight,
@@ -37,13 +36,13 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
   Widget build(BuildContext context) {
     return OrientationBuilder(
       builder: (BuildContext context, Orientation orientation) {
-        if (orientation == Orientation.portrait)
+        if (orientation == Orientation.portrait) {
           return Container(
             height: double.maxFinite,
             width: double.maxFinite,
             color: AppColors.parentZoneScaffoldColor,
           );
-        else {
+        } else {
           return PopScope(
             canPop: false,
             child: Scaffold(
@@ -54,18 +53,6 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
                   padding: EdgeInsets.fromLTRB(8.wp, 4.wp, 8.wp, 4.wp),
                   child: Column(
                     children: [
-                      // IconButton(
-                      //     onPressed: () async {
-                      //       print('tapped');
-                      //       await HiveTesting().saveDataToHive();
-                      //     },
-                      //     icon: Icon(Icons.bug_report)),
-                      // IconButton(
-                      //     onPressed: () async {
-                      //       print('tapped');
-                      //       HiveTesting().getStudentProfile();
-                      //     },
-                      //     icon: Icon(Icons.print)),
                       //! Top
                       buildTop(context),
                       //! Center
@@ -156,34 +143,38 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
 
   Expanded buildCenter(BuildContext context) {
     return Expanded(
-      child: Padding(
-        padding:
-            EdgeInsets.symmetric(vertical: DeviceType().isMobile ? 5.h : 0),
-        child: Row(
-          children: [
-            Expanded(
-              child: GestureDetector(
-                onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => const SubjectScreen()));
-                },
-                child: Image.asset(
-                  'assets/images/PNG Icons/LessonsMenu.png',
+        child: Padding(
+      padding: EdgeInsets.symmetric(vertical: DeviceType().isMobile ? 5.h : 0),
+      child: PageView.builder(
+        itemCount: 1,
+        physics: const AlwaysScrollableScrollPhysics(),
+        itemBuilder: (BuildContext context, int index) {
+          return Row(
+            children: [
+              Expanded(
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => const SubjectScreen()));
+                  },
+                  child: Image.asset(
+                    'assets/images/PNG Icons/LessonsMenu.png',
+                  ),
                 ),
               ),
-            ),
-            Expanded(
-                child: GestureDetector(
-              onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => const CategoryScreen())),
-              child: Image.asset(
-                'assets/images/PNG Icons/othermenu.png',
-              ),
-            )),
-          ],
-        ),
+              Expanded(
+                  child: GestureDetector(
+                onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => const CategoryScreen())),
+                child: Image.asset(
+                  'assets/images/PNG Icons/othermenu.png',
+                ),
+              )),
+            ],
+          );
+        },
       ),
-    );
+    ));
   }
 }
 
@@ -212,7 +203,7 @@ class buildBottom extends StatelessWidget {
                 onTap: () {
                   Navigator.of(context)
                       .push(MaterialPageRoute(builder: (context) {
-                    return WorksheetView();
+                    return const WorksheetView();
                   }));
                 },
                 child: Image.asset(

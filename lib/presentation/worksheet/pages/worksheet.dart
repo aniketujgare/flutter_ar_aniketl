@@ -169,8 +169,6 @@ class _WorksheetViewState extends State<WorksheetView> {
                                 context.read<WorksheetPageCubit>().maxLen;
                             int noOfCards =
                                 noOfPages * (DeviceType().isMobile ? 4 : 3);
-                            print('no of cards: $noOfCards');
-                            print('rem box: ${pageWidgets.length}');
                             if (pageWidgets.length <
                                 (DeviceType().isMobile ? 4 : 3)) {
                               for (int i = pageWidgets.length;

@@ -64,7 +64,7 @@ class WormIndicator extends StatelessWidget {
           5,
           5,
           index == currentQuestion
-              ? 18
+              ? 9
               : index == currentQuestion - 1
                   ? 9
                   : index == currentQuestion + 1

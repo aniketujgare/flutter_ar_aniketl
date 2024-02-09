@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_ar/presentation/login/widgets/otp_boxes_n_button.dart';
 import '../bloc/login_bloc/login_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:size_config/size_config.dart';
@@ -60,35 +61,7 @@ class _LoginPage2OtpState extends State<LoginPage2Otp> {
         SizedBox(
           height: 16.h,
         ),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 45.h),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: List.generate(6, (index) {
-              return generateOtpBox(otpNodes[index], index);
-            }),
-          ),
-        ),
-        SizedBox(
-          height: 20.h,
-        ),
-        if (context.read<LoginBloc>().state.status != LoginStatus.wrongOtp)
-          ReusableButton(
-            buttonColor: AppColors.submitGreenColor,
-            text: 'Submit',
-            textColor: Colors.white,
-            onPressed: () {
-              FocusScope.of(context).unfocus();
-              String otp = '';
-              for (var digit in otpStrings) {
-                otp += digit;
-              }
-              debugPrint(otp);
-              context
-                  .read<LoginBloc>()
-                  .add(LoginEvent.verifyOtp(verificationId: '', smsCode: otp));
-            },
-          ),
+        const OtpBoxesnButton(),
         if (context.read<LoginBloc>().state.status == LoginStatus.wrongOtp)
           Padding(
             padding: EdgeInsets.symmetric(
