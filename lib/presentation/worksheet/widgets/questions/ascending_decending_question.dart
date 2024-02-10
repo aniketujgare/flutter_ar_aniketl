@@ -60,139 +60,27 @@ class _AscendingDecendingQuestionState
             padding: EdgeInsets.symmetric(horizontal: 20.wp),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: List.generate(
-                  widget.question.numbers.length,
-                  (index) => Expanded(
-                        child: Draggable<String>(
-                          data: widget.question.numbers[index],
-                          feedback: Container(
-                            height: 65.h,
-                            width: 30.wp,
-                            margin: EdgeInsets.symmetric(horizontal: 2.wp),
-                            decoration: ShapeDecoration(
-                              color: const Color(0xFFF4F2FE),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(17),
-                              ),
-                            ),
-                            child: Container(
-                              margin: EdgeInsets.symmetric(horizontal: 2.wp),
-                              padding: EdgeInsets.symmetric(horizontal: 1.wp),
-                              child: FittedBox(
-                                fit: BoxFit.scaleDown,
-                                child: Text(
-                                  widget.question.numbers[index],
-                                  textAlign: TextAlign.center,
-                                  style: const TextStyle(
-                                    color: Color(0xFF4F3A9C),
-                                    fontSize: 20,
-                                    fontFamily: 'Nunito',
-                                    fontWeight: FontWeight.w700,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          childWhenDragging: Container(
-                            width: 30.wp,
-                            padding: EdgeInsets.symmetric(vertical: 2.wp),
-                            decoration: ShapeDecoration(
-                              color: AppColors.hintTextColor,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(17),
-                              ),
-                            ),
-                            child: Text(
-                              widget.question.numbers[index],
-                              textAlign: TextAlign.center,
-                              style: const TextStyle(
-                                color: Color(0xFF4F3A9C),
-                                fontSize: 20,
-                                fontFamily: 'Nunito',
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                          ),
-                          child: Container(
-                            key: const Key('ascDesChild'),
-                            height: 65.h,
-                            margin: EdgeInsets.symmetric(horizontal: 2.wp),
-                            decoration: ShapeDecoration(
-                              color: const Color(0xFFF4F2FE),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(17),
-                              ),
-                            ),
-                            child: Container(
-                              margin: EdgeInsets.symmetric(horizontal: 2.wp),
-                              padding: EdgeInsets.symmetric(horizontal: 1.wp),
-                              child: FittedBox(
-                                fit: BoxFit.scaleDown,
-                                child: Text(
-                                  widget.question.numbers[index],
-                                  textAlign: TextAlign.center,
-                                  style: const TextStyle(
-                                    color: Color(0xFF4F3A9C),
-                                    fontSize: 20,
-                                    fontFamily: 'Nunito',
-                                    fontWeight: FontWeight.w700,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      )),
-            ),
-          ),
-          50.verticalSpacer,
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: List.generate(
-              widget.question.numbers.length,
-              (index) => Expanded(
-                child: DragTarget<String>(
-                  onWillAccept: (data) {
-                    print('accepted: $data');
-                    // for (int i = 0; i < selectedAnswer.length; i++) {
-                    //   if (selectedAnswer[i] == data) {
-                    //     selectedAnswer[i] = ' ';
-                    //     return data == 'red';
-                    //   }
-                    // }
-                    // for (int i = 0; i < selectedAnswer.length; i++) {
-                    //   if (selectedAnswer[i] == data) {
-                    //     selectedAnswer[i] = ' ';
-                    //     isDraggedList[index] = false;
-                    //     // return data == 'red';
-                    //   }
-                    // }
-                    isDraggedList[index] = true;
-                    selectedAnswer[index] = data ?? ' ';
-                    if (!selectedAnswer.contains(' ')) {}
-                    context
-                        .read<WorksheetSolverCubit>()
-                        .setAnswer(widget.questionIndex, selectedAnswer);
-
-                    return data == 'red';
-                  },
-                  onAccept: (data) {
-                    print('Dropped successfully!');
-                    // ScaffoldMessenger.of(context).showSnackBar(
-                    //     const SnackBar(content: Text('Dropped successfully!')));
-                  },
-                  builder: (
-                    BuildContext context,
-                    List<dynamic> accepted,
-                    List<dynamic> rejected,
-                  ) {
-                    return Container(
-                      height: 70.h,
+              children: List.generate(widget.question.numbers.length, (index) {
+                for (var i = 0; i < selectedAnswer.length; i++) {
+                  print('$i : ${selectedAnswer[i]}');
+                  if (selectedAnswer.contains(widget.question.numbers[index])) {
+                    return Expanded(
+                      child: Container(
+                        height: 65.h,
+                        width: 30.wp,
+                      ),
+                    );
+                  }
+                }
+                return Expanded(
+                  child: Draggable<String>(
+                    data: widget.question.numbers[index],
+                    feedback: Container(
+                      height: 65.h,
+                      width: 30.wp,
                       margin: EdgeInsets.symmetric(horizontal: 2.wp),
                       decoration: ShapeDecoration(
-                        color: isDraggedList[index] == true
-                            ? AppColors.primaryColor
-                            : const Color(0xFFF4F2FE),
+                        color: const Color(0xFFF4F2FE),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(17),
                         ),
@@ -203,21 +91,155 @@ class _AscendingDecendingQuestionState
                         child: FittedBox(
                           fit: BoxFit.scaleDown,
                           child: Text(
-                            selectedAnswer[index],
-                            overflow: TextOverflow.ellipsis,
+                            widget.question.numbers[index],
                             textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: const Color(0xFFF4F2FE),
-                              fontSize: 120.sp,
+                            style: const TextStyle(
+                              color: Color(0xFF4F3A9C),
+                              fontSize: 20,
                               fontFamily: 'Nunito',
                               fontWeight: FontWeight.w700,
                             ),
                           ),
                         ),
                       ),
-                    );
-                  },
-                ),
+                    ),
+                    childWhenDragging: Container(
+                      width: 30.wp,
+                      padding: EdgeInsets.symmetric(vertical: 2.wp),
+                      decoration: ShapeDecoration(
+                        color: AppColors.hintTextColor,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(17),
+                        ),
+                      ),
+                      child: Text(
+                        widget.question.numbers[index],
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          color: Color(0xFF4F3A9C),
+                          fontSize: 20,
+                          fontFamily: 'Nunito',
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                    child: Container(
+                      key: const Key('ascDesChild'),
+                      height: 65.h,
+                      margin: EdgeInsets.symmetric(horizontal: 2.wp),
+                      decoration: ShapeDecoration(
+                        color: const Color(0xFFF4F2FE),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(17),
+                        ),
+                      ),
+                      child: Container(
+                        margin: EdgeInsets.symmetric(horizontal: 2.wp),
+                        padding: EdgeInsets.symmetric(horizontal: 1.wp),
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            widget.question.numbers[index],
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              color: Color(0xFF4F3A9C),
+                              fontSize: 20,
+                              fontFamily: 'Nunito',
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              }),
+            ),
+          ),
+          50.verticalSpacer,
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 5.wp),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: List.generate(
+                widget.question.numbers.length,
+                (index) {
+                  // int idx = selectedAnswer.indexWhere(
+                  //     (element) => widget.question.numbers[index] == element);
+                  // if (idx != -1) {
+                  //   selectedAnswer[idx] = ' ';
+                  //   isDraggedList[index] = false;
+                  // }
+                  return Expanded(
+                    child: DragTarget<String>(
+                      onWillAccept: (data) {
+                        print('accepted: $data');
+                        // for (int i = 0; i < selectedAnswer.length; i++) {
+                        //   if (selectedAnswer[i] == data) {
+                        //     selectedAnswer[i] = ' ';
+                        //     return data == 'red';
+                        //   }
+                        // }
+                        // for (int i = 0; i < selectedAnswer.length; i++) {
+                        //   if (selectedAnswer[i] == data) {
+                        //     selectedAnswer[i] = ' ';
+                        //     isDraggedList[index] = false;
+                        //     // return data == 'red';
+                        //   }
+                        // }
+                        isDraggedList[index] = true;
+                        selectedAnswer[index] = data ?? ' ';
+                        if (!selectedAnswer.contains(' ')) {}
+                        context
+                            .read<WorksheetSolverCubit>()
+                            .setAnswer(widget.questionIndex, selectedAnswer);
+
+                        return data == 'red';
+                      },
+                      onAccept: (data) {
+                        print('Dropped successfully!');
+                        // ScaffoldMessenger.of(context).showSnackBar(
+                        //     const SnackBar(content: Text('Dropped successfully!')));
+                      },
+                      builder: (
+                        BuildContext context,
+                        List<dynamic> accepted,
+                        List<dynamic> rejected,
+                      ) {
+                        return Container(
+                          height: 70.h,
+                          margin: EdgeInsets.symmetric(horizontal: 2.wp),
+                          decoration: ShapeDecoration(
+                            color: isDraggedList[index] == true
+                                ? AppColors.primaryColor
+                                : const Color(0xFFF4F2FE),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(17),
+                            ),
+                          ),
+                          child: Container(
+                            margin: EdgeInsets.symmetric(horizontal: 2.wp),
+                            padding: EdgeInsets.symmetric(horizontal: 1.wp),
+                            child: FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Text(
+                                selectedAnswer[index],
+                                overflow: TextOverflow.ellipsis,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: const Color(0xFFF4F2FE),
+                                  fontSize: 120.sp,
+                                  fontFamily: 'Nunito',
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  );
+                },
               ),
             ),
           ),

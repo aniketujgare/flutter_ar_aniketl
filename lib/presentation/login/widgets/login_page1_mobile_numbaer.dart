@@ -25,6 +25,19 @@ class LoginPage1MobileNumber extends StatefulWidget {
 }
 
 class _LoginPage1MobileNumberState extends State<LoginPage1MobileNumber> {
+  late TextEditingController mobileNumberController;
+  @override
+  void initState() {
+    super.initState();
+    mobileNumberController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    mobileNumberController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     String mobNo = '';
@@ -64,7 +77,70 @@ class _LoginPage1MobileNumberState extends State<LoginPage1MobileNumber> {
           ),
           BlocBuilder<LoginValidationBloc, LoginValidationState>(
             builder: (context, state) {
-              return ReusableTextField(
+              return Container(
+                padding: EdgeInsets.symmetric(horizontal: 45.h),
+                height: DeviceType().isMobile ? 75.h : 65.h,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    TextFormField(
+                      keyboardType: TextInputType.number,
+                      controller: mobileNumberController,
+                      onChanged: (value) {
+                        if (value.length > 10) {
+                          mobileNumberController.text = value.substring(0, 10);
+                          return;
+                        }
+                        if (value.isNotEmpty) {
+                          if (RegExp(r'^[0-9]+$').hasMatch(value)) {
+                            print('matched');
+                            mobileNumberController.text = value;
+                            context.read<LoginValidationBloc>().add(
+                                PhoneNumberChanged(
+                                    phoneNumber: mobileNumberController.text));
+                          } else {
+                            print('not matched');
+                            mobileNumberController.text =
+                                value.substring(0, value.length - 1);
+                            context.read<LoginValidationBloc>().add(
+                                PhoneNumberChanged(
+                                    phoneNumber: mobileNumberController.text));
+                          }
+                        }
+                      },
+                      textAlignVertical: TextAlignVertical.center,
+                      decoration: InputDecoration(
+                        isCollapsed: true,
+                        prefixIcon: Container(
+                          padding: EdgeInsets.fromLTRB(60.w, 0, 0, 0),
+                          // height: double.maxFinite,
+                          width: 280.w,
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              '+91 ',
+                              textAlign: TextAlign.center,
+                              style: AppTextStyles.nunito100w700black,
+                            ),
+                          ),
+                        ),
+                        hintStyle: AppTextStyles.nunito100w400hintText,
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20)),
+                        contentPadding: EdgeInsets.only(
+                            left: 60.w,
+                            top: DeviceType().isMobile ? 15.h : 5.h,
+                            bottom: DeviceType().isMobile ? 15.h : 5.h),
+                        filled: true,
+                        fillColor: Colors.white,
+                      ),
+                      style: AppTextStyles.nunito100w700black,
+                    ),
+                  ],
+                ),
+              );
+              /*
+              ReusableTextField(
                 textInputType: TextInputType.phone,
                 onChanged: (value) {
                   mobNo = value;
@@ -74,6 +150,7 @@ class _LoginPage1MobileNumberState extends State<LoginPage1MobileNumber> {
                       .add(PhoneNumberChanged(phoneNumber: value));
                 },
               );
+              */
             },
           ),
           SizedBox(
@@ -99,9 +176,8 @@ class _LoginPage1MobileNumberState extends State<LoginPage1MobileNumber> {
                 // await AuthenticationRepository().getallstandardsofschool();
                 // await AuthenticationRepository().getstudentprofilesnew();
 
-                context
-                    .read<LoginBloc>()
-                    .add(CheckMobileNoExists(mobileNumber: mobNo));
+                context.read<LoginBloc>().add(CheckMobileNoExists(
+                    mobileNumber: mobileNumberController.text));
               }
               print(mobNo);
             },

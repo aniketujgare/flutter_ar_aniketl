@@ -46,7 +46,7 @@ class _ParentZoneScreenState extends State<ParentZoneScreen> {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light
         .copyWith(systemNavigationBarColor: AppColors.parentZoneScaffoldColor));
 
-    // SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
     super.dispose();
   }
 

@@ -59,7 +59,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
           await authenticationRepository.sendGuestDataToServer(
               guestName: state.parentName, guestPhone: state.mobileNumber);
 
-          emit(state.copyWith(status: LoginStatus.phoneNo1));
+          emit(state.copyWith(status: LoginStatus.success));
         } else {
           emit(state.copyWith(status: LoginStatus.success));
         }

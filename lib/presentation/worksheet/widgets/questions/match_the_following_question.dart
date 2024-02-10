@@ -49,14 +49,16 @@ class MatchFollowingQuestionState extends State<MatchFollowingQuestion> {
     }
     //?fill question boxes
     for (var i = 0; i < widget.question.options.length; i++) {
+      print('question box no: $i');
       print('start pos: ' + startX.toString());
-      boxPositions
-          .add(Offset(isImageQuestion ? 20.wp : 12.wp + (50.wp * i), 40.0.h));
+      boxPositions.add(Offset(
+          isImageQuestion ? 20.wp + (50.wp * i) : 12.wp + (50.wp * i), 25.0.h));
     }
     //?fill answer boxes
     for (var i = widget.question.options.length - 1; i >= 0; i--) {
-      boxPositions.add(Offset(isImageQuestion ? 20.wp : 12.wp + (50.wp * i),
-          isImageQuestion ? 260.0.h : 295.0.h));
+      boxPositions.add(Offset(
+          isImageQuestion ? 20.wp + (50.wp * i) : 12.wp + (50.wp * i),
+          isImageQuestion ? 260.0.h : 290.0.h));
     }
     drawSavedAnswer();
   }

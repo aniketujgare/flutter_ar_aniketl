@@ -38,6 +38,7 @@ class LoginScreenState extends State<LoginScreen>
     _animationController.controller.addListener(() {
       setState(() {});
     });
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light
         .copyWith(systemNavigationBarColor: AppColors.accentColor));
     SystemChrome.setPreferredOrientations([

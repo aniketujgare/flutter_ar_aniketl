@@ -12,10 +12,31 @@ import '../../../core/util/reusable_widgets/reusable_textfield.dart';
 import '../../../core/util/styles.dart';
 import '../bloc/guest_validation_bloc/guest_validation_bloc.dart';
 
-class LoginPage4Guest extends StatelessWidget {
+class LoginPage4Guest extends StatefulWidget {
   const LoginPage4Guest({
     super.key,
   });
+
+  @override
+  State<LoginPage4Guest> createState() => _LoginPage4GuestState();
+}
+
+class _LoginPage4GuestState extends State<LoginPage4Guest> {
+  late TextEditingController parentsNameController;
+  late TextEditingController mobileNumberController;
+  @override
+  void initState() {
+    super.initState();
+    parentsNameController = TextEditingController();
+    mobileNumberController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    parentsNameController.dispose();
+    mobileNumberController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -82,7 +103,70 @@ class LoginPage4Guest extends StatelessWidget {
           ),
           BlocBuilder<GuestValidationBloc, GuestValidationState>(
             builder: (context, state) {
-              return ReusableTextField(
+              return Container(
+                padding: EdgeInsets.symmetric(horizontal: 45.h),
+                height: DeviceType().isMobile ? 75.h : 65.h,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    TextFormField(
+                      keyboardType: TextInputType.number,
+                      controller: mobileNumberController,
+                      onChanged: (value) {
+                        if (value.length > 10) {
+                          mobileNumberController.text = value.substring(0, 10);
+                          return;
+                        }
+                        if (value.isNotEmpty) {
+                          if (RegExp(r'^[0-9]+$').hasMatch(value)) {
+                            print('matched');
+                            mobileNumberController.text = value;
+                            context.read<GuestValidationBloc>().add(
+                                PhoneNumberChanged(
+                                    phoneNumber: mobileNumberController.text));
+                          } else {
+                            print('not matched');
+                            mobileNumberController.text =
+                                value.substring(0, value.length - 1);
+                            context.read<GuestValidationBloc>().add(
+                                PhoneNumberChanged(
+                                    phoneNumber: mobileNumberController.text));
+                          }
+                        }
+                      },
+                      textAlignVertical: TextAlignVertical.center,
+                      decoration: InputDecoration(
+                        isCollapsed: true,
+                        prefixIcon: Container(
+                          padding: EdgeInsets.fromLTRB(60.w, 0, 0, 0),
+                          // height: double.maxFinite,
+                          width: 280.w,
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              '+91 ',
+                              textAlign: TextAlign.center,
+                              style: AppTextStyles.nunito100w700black,
+                            ),
+                          ),
+                        ),
+                        hintStyle: AppTextStyles.nunito100w400hintText,
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20)),
+                        contentPadding: EdgeInsets.only(
+                            left: 60.w,
+                            top: DeviceType().isMobile ? 15.h : 5.h,
+                            bottom: DeviceType().isMobile ? 15.h : 5.h),
+                        filled: true,
+                        fillColor: Colors.white,
+                      ),
+                      style: AppTextStyles.nunito100w700black,
+                    ),
+                  ],
+                ),
+              );
+              /*
+               ReusableTextField(
                 onChanged: (value) {
                   mobileNumber = value;
                   context
@@ -91,6 +175,7 @@ class LoginPage4Guest extends StatelessWidget {
                 },
                 textInputType: TextInputType.number,
               );
+              */
             },
           ),
           SizedBox(
@@ -108,7 +193,8 @@ class LoginPage4Guest extends StatelessWidget {
               final isValid = context.read<GuestValidationBloc>().state.isValid;
               if (isValid) {
                 context.read<LoginBloc>().add(LoginEvent.guestLogin(
-                    mobileNumber: mobileNumber, parentsName: parentsName));
+                    mobileNumber: mobileNumberController.text,
+                    parentsName: parentsName));
               }
             },
           ),
