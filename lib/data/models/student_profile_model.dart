@@ -48,24 +48,31 @@ class StudentProfileModel {
   final int? studentSubscriptionStatus;
   @HiveField(15)
   final int? adminStandard;
+  @HiveField(16)
+  String? grade;
+  @HiveField(17)
+  String? division;
+  @HiveField(17)
+  String? schoolName;
 
-  StudentProfileModel({
-    this.coins,
-    this.divisionId,
-    this.gems,
-    this.parentId,
-    this.profilePicId,
-    this.schoolId,
-    this.secreteCode,
-    this.standardId,
-    this.studentActiveStatus,
-    this.studentCreatedDate,
-    this.studentExpiryDate,
-    this.studentId,
-    this.studentName,
-    this.studentSubscriptionStatus,
-    this.adminStandard,
-  });
+  StudentProfileModel(
+      {this.coins,
+      this.divisionId,
+      this.gems,
+      this.parentId,
+      this.profilePicId,
+      this.schoolId,
+      this.secreteCode,
+      this.standardId,
+      this.studentActiveStatus,
+      this.studentCreatedDate,
+      this.studentExpiryDate,
+      this.studentId,
+      this.studentName,
+      this.studentSubscriptionStatus,
+      this.adminStandard,
+      this.grade,
+      this.division});
 
   factory StudentProfileModel.fromJson(Map<String, dynamic> json) =>
       StudentProfileModel(

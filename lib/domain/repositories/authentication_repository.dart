@@ -65,7 +65,9 @@ class AuthenticationRepository {
   //!
   Future<void> saveDataToHive(String mobileNo) async {
     int parentId = await getParentId(mobileNo);
-    await saveStudentProfiles(parentId);
+    if (parentId != -1) {
+      await saveStudentProfiles(parentId);
+    } else {}
   }
 
   Future<void> saveStudentProfiles(int parentId) async {
@@ -96,6 +98,16 @@ class AuthenticationRepository {
     }
   }
 
+  Future<void> saveStudentProfilesGuest(int parentId) async {
+    try {
+      var studentProfileBox =
+          await Hive.openBox<StudentProfileModel>('student_profile');
+      StudentProfileModel(studentId: -1);
+    } catch (e) {
+      print('Error in getStudentProfiles: $e');
+    }
+  }
+
   Future<int> getParentId(String mobileNo) async {
     Uri url = Uri.parse("$baseUrl/getparentid");
     try {
@@ -103,6 +115,9 @@ class AuthenticationRepository {
           await client.post(url, body: jsonEncode({"mobno": "91$mobileNo"}));
       if (response.statusCode == 200) {
         var parentId = jsonDecode(response.body);
+        if (parentId == "null") {
+          return -1;
+        }
         print(parentId);
         return parentId;
       } else {

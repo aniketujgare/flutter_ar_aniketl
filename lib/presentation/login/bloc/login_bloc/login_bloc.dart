@@ -135,10 +135,15 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   }
 
   _guestLogin(GuestLogin event, Emitter<LoginState> emit) {
-    emit(state.copyWith(
+    print('mobileNo: ${event.mobileNumber}');
+    emit(
+      state.copyWith(
         isGuest: true,
         parentName: event.parentsName,
-        mobileNumber: event.mobileNumber));
+        mobileNumber: event.mobileNumber,
+      ),
+    );
+
     add(LoginEvent.phoneNumberAuth(mobileNumber: event.mobileNumber));
   }
 

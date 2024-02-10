@@ -63,7 +63,16 @@ class _GroupsViewState extends State<GroupsView> {
                             )));
                   },
                   child: GroupNotification(
-                    subject: state.teacherMessage?.subject ?? '',
+                    subject: teacher.teacherName.contains(' ')
+                        ? teacher.teacherName
+                                .replaceAll('Mr.', '')
+                                .split(' ')
+                                .first[0] +
+                            teacher.teacherName
+                                .replaceAll('Mr.', '')
+                                .split(' ')[1][0]
+                        : teacher.teacherName.replaceAll('Mr.', '')[
+                            0], //state.teacherMessage?.subject ?? '',
                     title: teacher.teacherName.replaceAll('Mr.', ''),
                     subtitle: state.teacherMessage?.content ?? '',
                     isNow: false,

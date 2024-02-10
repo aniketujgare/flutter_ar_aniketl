@@ -118,16 +118,66 @@ class _OtpBoxesnButtonState extends State<OtpBoxesnButton> {
             height: 16.h,
           ),
           if (context.read<LoginBloc>().state.status != LoginStatus.wrongOtp)
-            ReusableButton(
-              buttonColor: AppColors.submitGreenColor,
-              text: 'Submit',
-              textColor: Colors.white,
-              onPressed: () {
-                FocusScope.of(context).unfocus();
+            Padding(
+              padding: EdgeInsets.symmetric(
+                  vertical: 25.h,
+                  horizontal: MediaQuery.of(context).size.width *
+                      (DeviceType().isMobile ? 0.2 : 0.3)),
+              child: Expanded(
+                child: ReusableButton(
+                  padding: EdgeInsets.symmetric(horizontal: 10.h),
+                  buttonColor: AppColors.submitGreenColor,
+                  text: 'Submit',
+                  textColor: Colors.white,
+                  onPressed: () {
+                    FocusScope.of(context).unfocus();
+                    print('guest verigy otp: ${pinController.text}');
+                    context.read<LoginBloc>().add(LoginEvent.verifyOtp(
+                        verificationId: '', smsCode: pinController.text));
+                  },
+                ),
+              ),
+            ),
+          if (context.read<LoginBloc>().state.status == LoginStatus.wrongOtp)
+            Padding(
+              padding: EdgeInsets.symmetric(
+                  vertical: 25.h,
+                  horizontal: MediaQuery.of(context).size.width *
+                      (DeviceType().isMobile ? 0.2 : 0.3)),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Expanded(
+                    child: SizedBox(
+                      width: 150,
+                      child: ReusableButton(
+                          padding: EdgeInsets.symmetric(horizontal: 10.h),
+                          buttonColor: AppColors.primaryColor,
+                          text: 'Resend',
+                          textColor: Colors.white,
+                          onPressed: () {
+                            context
+                                .read<LoginBloc>()
+                                .add(const LoginEvent.resendOtp());
+                          }),
+                    ),
+                  ),
+                  Expanded(
+                    child: ReusableButton(
+                      padding: EdgeInsets.symmetric(horizontal: 10.h),
+                      buttonColor: AppColors.submitGreenColor,
+                      text: 'Submit',
+                      textColor: Colors.white,
+                      onPressed: () {
+                        FocusScope.of(context).unfocus();
 
-                context.read<LoginBloc>().add(LoginEvent.verifyOtp(
-                    verificationId: '', smsCode: pinController.text));
-              },
+                        context.read<LoginBloc>().add(LoginEvent.verifyOtp(
+                            verificationId: '', smsCode: pinController.text));
+                      },
+                    ),
+                  )
+                ],
+              ),
             ),
         ],
       ),

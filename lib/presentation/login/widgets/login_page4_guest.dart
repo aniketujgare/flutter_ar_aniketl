@@ -40,8 +40,8 @@ class _LoginPage4GuestState extends State<LoginPage4Guest> {
 
   @override
   Widget build(BuildContext context) {
-    String parentsName = '';
-    String mobileNumber = '';
+    // String parentsName = '';
+    // String mobileNumber = '';
     return BlocListener<GuestValidationBloc, GuestValidationState>(
       listenWhen: (p, c) => p != c,
       listener: (context, state) {
@@ -90,10 +90,9 @@ class _LoginPage4GuestState extends State<LoginPage4Guest> {
                 countryCodeVisible: false,
                 hintText: 'Enter a parent’s full name',
                 onChanged: (value) {
-                  parentsName = value;
-                  context
-                      .read<GuestValidationBloc>()
-                      .add(GuestNameChanged(guestName: value));
+                  parentsNameController.text = value;
+                  context.read<GuestValidationBloc>().add(
+                      GuestNameChanged(guestName: parentsNameController.text));
                 },
               );
             },
@@ -192,9 +191,10 @@ class _LoginPage4GuestState extends State<LoginPage4Guest> {
                   .add(const GuestFormSubmitted());
               final isValid = context.read<GuestValidationBloc>().state.isValid;
               if (isValid) {
+                print('guestLogin Number' + mobileNumberController.text);
                 context.read<LoginBloc>().add(LoginEvent.guestLogin(
                     mobileNumber: mobileNumberController.text,
-                    parentsName: parentsName));
+                    parentsName: parentsNameController.text));
               }
             },
           ),

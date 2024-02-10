@@ -15,9 +15,9 @@ class HomeView extends StatelessWidget {
   Widget build(BuildContext context) {
     return OrientationBuilder(
       builder: (BuildContext context, Orientation orientation) {
-        if (orientation == Orientation.landscape)
+        if (orientation == Orientation.landscape) {
           return Container();
-        else {
+        } else {
           return Padding(
             padding: EdgeInsets.fromLTRB(4.wp, 20.h, 4.wp, 0),
             child: Column(
@@ -28,33 +28,30 @@ class HomeView extends StatelessWidget {
                   builder: (context, state) {
                     if (state.status == ParentDetailsStatus.loaded) {
                       return Column(
-                        children: [
-                          ...List.generate(
-                              state.parentDetails.length,
-                              (index) => Column(
-                                    children: [
-                                      ParentProfileCard(
-                                        profileTitle: state.parentDetails[index]
-                                            .parentRelation,
-                                        name: state
-                                            .parentDetails[index].parentName,
-                                        mobile: state.parentDetails[index]
-                                            .parentMobileNumber
-                                            .toString()
-                                            .substring(2)
-                                            .split('.')
-                                            .first,
-                                        email: state
-                                            .parentDetails[index].parentEmail,
-                                      ),
-                                      22.verticalSpacer
-                                    ],
-                                  ))
-                        ],
+                        children: List.generate(
+                          state.parentDetails.length,
+                          (index) => Column(
+                            children: [
+                              ParentProfileCard(
+                                profileTitle:
+                                    state.parentDetails[index].parentRelation,
+                                name: state.parentDetails[index].parentName,
+                                mobile: state
+                                    .parentDetails[index].parentMobileNumber
+                                    .toString()
+                                    .substring(2)
+                                    .split('.')
+                                    .first,
+                                email: state.parentDetails[index].parentEmail,
+                              ),
+                              22.verticalSpacer,
+                            ],
+                          ),
+                        ),
                       );
                     }
                     return const Center(
-                        child: const CircularProgressIndicator.adaptive(
+                        child: CircularProgressIndicator.adaptive(
                             strokeCap: StrokeCap.round));
                   },
                 ),
@@ -146,7 +143,7 @@ class HomeView extends StatelessWidget {
                             StudentProfileState>(
                           builder: (context, state) {
                             return Text(
-                              'Grade: ${state.studentProfileModel?.standardId}',
+                              'Grade: ${state.studentProfileModel?.grade}',
                               style: TextStyle(
                                 color: const Color(0xFF212121),
                                 fontSize: 95.sp,
@@ -164,7 +161,7 @@ class HomeView extends StatelessWidget {
                           BlocBuilder<StudentProfileCubit, StudentProfileState>(
                         builder: (context, state) {
                           return Text(
-                            'Division: ${state.studentProfileModel?.divisionId}',
+                            'Division: ${state.studentProfileModel?.division}',
                             style: TextStyle(
                               color: const Color(0xFF212121),
                               fontSize: 95.sp,
@@ -181,15 +178,19 @@ class HomeView extends StatelessWidget {
                 8.verticalSpacer,
                 SizedBox(
                   width: double.infinity,
-                  child: Text(
-                    'SmartXR School',
-                    style: TextStyle(
-                      color: const Color(0xFF212121),
-                      fontSize: 95.sp,
-                      fontFamily: 'Nunito',
-                      fontWeight: FontWeight.w400,
-                      height: 0,
-                    ),
+                  child: BlocBuilder<StudentProfileCubit, StudentProfileState>(
+                    builder: (context, state) {
+                      return Text(
+                        '${state.studentProfileModel?.schoolName}',
+                        style: TextStyle(
+                          color: const Color(0xFF212121),
+                          fontSize: 95.sp,
+                          fontFamily: 'Nunito',
+                          fontWeight: FontWeight.w400,
+                          height: 0,
+                        ),
+                      );
+                    },
                   ),
                 ),
               ],
