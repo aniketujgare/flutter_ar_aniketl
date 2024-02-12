@@ -277,8 +277,10 @@ class SplashScreenState extends State<SplashScreen>
                               (pi / 3 -
                                   _animationController
                                       .animationFlipProfile1.value)),
-                          child: profileIcon(context,
-                              state.studentProfileModel?.studentName ?? 'User'),
+                          child: profileIcon(
+                              context,
+                              state.studentProfileModel?.studentName ??
+                                  'Guest User'),
                         ),
                       )
                     ],

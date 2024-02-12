@@ -13,7 +13,7 @@ class StudentProfileCubit extends Cubit<StudentProfileState> {
   StudentProfileCubit() : super(StudentProfileState.initial());
 
   Future<void> initProfile(StudentProfileModel? profile) async {
-    if (profile != null) {
+    if (profile != null && profile.studentId != -1) {
       var standAndDiv = await getStandardAndDivision(
           standardId: profile.standardId!, schoolId: profile.schoolId!);
 
@@ -25,6 +25,8 @@ class StudentProfileCubit extends Cubit<StudentProfileState> {
       emit(state.copyWith(
           status: StudentProfileStauts.loaded, studentProfileModel: profile));
     }
+    emit(state.copyWith(
+        status: StudentProfileStauts.loaded, studentProfileModel: profile));
   }
 
   Future<Map<String, String>> getStandardAndDivision(

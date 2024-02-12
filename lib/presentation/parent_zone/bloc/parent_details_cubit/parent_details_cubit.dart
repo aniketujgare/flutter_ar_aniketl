@@ -20,6 +20,9 @@ class ParentDetailsCubit extends Cubit<ParentDetailsState> {
   Future<List<ParentDetails>> _getParentDetails() async {
     var headers = {'Content-Type': 'application/json'};
     var studentProfile = await AuthenticationRepository().getStudentProfile();
+    if (studentProfile?.studentId == -1) {
+      return [];
+    }
     var request = http.Request(
         'POST',
         Uri.parse(

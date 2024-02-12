@@ -28,17 +28,29 @@ class TeacherListBloc extends Bloc<TeacherListEvent, TeacherListState> {
       if (teachers != null) {
         for (var teacher in teachers) {
           print('here');
-          var tMessages =
+          List<TeacherMessageModel>? tMessages =
               await _getTeachersMessages(teacher.teacherUserId.toString());
-          teacherMessages.addAll(tMessages ?? []);
+          if (tMessages != null && tMessages.isNotEmpty) {
+            teacherMessages.add(tMessages.first);
+          }
         }
       }
-
-      print(teachers?.length);
+      var emptyTm = TeacherMessageModel(
+          content: '',
+          date: '',
+          divisionName: '',
+          link: '',
+          messageId: '',
+          subject: '',
+          teacherName: '',
+          teacherUserId: '',
+          time: '',
+          type: '');
+      print('Teacher Messages: ${teacherMessages.length}');
       emit(state.copyWith(
           status: TeacherListStatus.loaded,
           teachersList: teachers!,
-          teacherMessage: teacherMessages.first));
+          teacherMessage: teacherMessages));
     }
   }
 
@@ -64,6 +76,9 @@ class TeacherListBloc extends Bloc<TeacherListEvent, TeacherListState> {
   Future<List<TeacherModel>?> _getMessagesByTeacher() async {
     StudentProfileModel? studentProfile =
         await AuthenticationRepository().getStudentProfile();
+    if (studentProfile?.studentId == -1) {
+      return [];
+    }
     var response = await http.post(
       Uri.parse(
           'https://cnpewunqs5.execute-api.ap-south-1.amazonaws.com/dev/getallteacherbyschool'),
@@ -78,11 +93,15 @@ class TeacherListBloc extends Bloc<TeacherListEvent, TeacherListState> {
     );
     if (response.statusCode == 200) {
       List<TeacherModel> teachers = teacherModelFromJson(response.body);
-      List<TeacherModel> newTeachers = [];
-      for (var teacher in teachers) {}
-      print(teachers);
+      List<TeacherModel> teacherByScIdandStandId = List.from(teachers);
+      StudentProfileModel? studentProfile =
+          await AuthenticationRepository().getStudentProfile();
+      if (studentProfile != null) {
+        teacherByScIdandStandId.removeWhere(
+            (element) => element.standardId != studentProfile.standardId);
+      }
 
-      return teachers;
+      return teacherByScIdandStandId;
     } else {
       print('Failed to load categories. Status code: ${response.statusCode}');
     }

@@ -29,6 +29,7 @@ class _AscendingDecendingQuestionState
   List<String> selectedAnswer = [];
   @override
   void initState() {
+    print('marked answers: ${widget.markedAnswer}');
     for (var v in widget.question.numbers) {
       isDraggedList.add(false);
       selectedAnswer.add(' ');
@@ -62,10 +63,9 @@ class _AscendingDecendingQuestionState
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: List.generate(widget.question.numbers.length, (index) {
                 for (var i = 0; i < selectedAnswer.length; i++) {
-                  print('$i : ${selectedAnswer[i]}');
                   if (selectedAnswer.contains(widget.question.numbers[index])) {
                     return Expanded(
-                      child: Container(
+                      child: SizedBox(
                         height: 65.h,
                         width: 30.wp,
                       ),
@@ -173,20 +173,15 @@ class _AscendingDecendingQuestionState
                   return Expanded(
                     child: DragTarget<String>(
                       onWillAccept: (data) {
-                        print('accepted: $data');
-                        // for (int i = 0; i < selectedAnswer.length; i++) {
-                        //   if (selectedAnswer[i] == data) {
-                        //     selectedAnswer[i] = ' ';
-                        //     return data == 'red';
-                        //   }
-                        // }
-                        // for (int i = 0; i < selectedAnswer.length; i++) {
-                        //   if (selectedAnswer[i] == data) {
-                        //     selectedAnswer[i] = ' ';
-                        //     isDraggedList[index] = false;
-                        //     // return data == 'red';
-                        //   }
-                        // }
+                        if (selectedAnswer.contains(data)) {
+                          for (int i = 0; i < selectedAnswer.length; i++) {
+                            if (selectedAnswer[i] == data) {
+                              selectedAnswer[i] = ' ';
+                              isDraggedList[i] = false;
+                            }
+                          }
+                        }
+
                         isDraggedList[index] = true;
                         selectedAnswer[index] = data ?? ' ';
                         if (!selectedAnswer.contains(' ')) {}
@@ -197,6 +192,7 @@ class _AscendingDecendingQuestionState
                         return data == 'red';
                       },
                       onAccept: (data) {
+                        print('selected answers: $selectedAnswer');
                         print('Dropped successfully!');
                         // ScaffoldMessenger.of(context).showSnackBar(
                         //     const SnackBar(content: Text('Dropped successfully!')));

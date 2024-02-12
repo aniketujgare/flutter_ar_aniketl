@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_ar/core/util/styles.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:size_config/size_config.dart';
 
@@ -29,7 +30,9 @@ class MatchFollowingQuestionState extends State<MatchFollowingQuestion> {
   bool isImageQuestion = true;
   @override
   void initState() {
-    super.initState();
+    // debugPrint('marked answers: ${widget.markedAnswer}');
+    // debugPrint('options mtd: ${widget.question.options}');
+    // super.initState();
     questionsList = widget.question.options.keys.toList();
     //check for question has images or text
     if (questionsList.first.contains('http')) {
@@ -44,13 +47,10 @@ class MatchFollowingQuestionState extends State<MatchFollowingQuestion> {
     double startX = 100.wp / (questionsList.length + questionsList.length - 1);
 
     if (!isImageQuestion) {
-      print('questionType: $isImageQuestion');
       startX = 10.wp;
     }
     //?fill question boxes
     for (var i = 0; i < widget.question.options.length; i++) {
-      print('question box no: $i');
-      print('start pos: ' + startX.toString());
       boxPositions.add(Offset(
           isImageQuestion ? 20.wp + (50.wp * i) : 12.wp + (50.wp * i), 25.0.h));
     }
@@ -60,14 +60,22 @@ class MatchFollowingQuestionState extends State<MatchFollowingQuestion> {
           isImageQuestion ? 20.wp + (50.wp * i) : 12.wp + (50.wp * i),
           isImageQuestion ? 260.0.h : 290.0.h));
     }
+
     drawSavedAnswer();
   }
 
   void drawSavedAnswer() {
+    var originalAns = widget.question.options.values.toList();
+
     if (widget.markedAnswer != null &&
         (widget.markedAnswer as List).isNotEmpty) {
       for (int i = 0; i < widget.markedAnswer.length; i++) {
         int answerIndex = answersList.indexOf(widget.markedAnswer[i]);
+
+        // print('answerIndex original:$i: ${originalAns[i]}');
+
+        // print('answerIndex marked ${widget.markedAnswer[i]}');
+        // print('answerlist index ${answersList[answerIndex]}');
         if (answerIndex != -1 && i < questionsList.length) {
           Offset from = Offset(
             boxPositions[i].dx + boxSizes.width / 2,
@@ -75,13 +83,17 @@ class MatchFollowingQuestionState extends State<MatchFollowingQuestion> {
           );
 
           Offset to = Offset(
-            boxPositions[answerIndex + answersList.length].dx +
+            boxPositions[(answersList.length - answerIndex - 1) +
+                        answersList.length]
+                    .dx +
                 boxSizes.width / 2,
-            boxPositions[answerIndex + answersList.length].dy +
+            boxPositions[(answersList.length - answerIndex - 1) +
+                        answersList.length]
+                    .dy +
                 boxSizes.height / 2,
           );
           // answersList.reversed.toList()[toIndex % answersList.length]
-          print('answerIndex ${(answerIndex % answersList.length)}');
+
           allLines.add({'from': from, 'to': to});
         }
       }
@@ -132,7 +144,10 @@ class MatchFollowingQuestionState extends State<MatchFollowingQuestion> {
                                 ),
                               ),
                             ),
-                            placeholder: (context, url) => const Placeholder(),
+                            placeholder: (context, url) =>
+                                const CircularProgressIndicator.adaptive(
+                              strokeCap: StrokeCap.round,
+                            ),
                             errorWidget: (context, url, error) =>
                                 const Icon(Icons.error),
                           )
@@ -146,12 +161,7 @@ class MatchFollowingQuestionState extends State<MatchFollowingQuestion> {
                                 questionsList[i],
                                 overflow: TextOverflow.ellipsis,
                                 textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  color: const Color(0xFF4F3A9C),
-                                  fontSize: 120.sp,
-                                  fontFamily: 'Nunito',
-                                  fontWeight: FontWeight.w700,
-                                ),
+                                style: AppTextStyles.nunito120w700primary,
                               ),
                             ),
                           ))

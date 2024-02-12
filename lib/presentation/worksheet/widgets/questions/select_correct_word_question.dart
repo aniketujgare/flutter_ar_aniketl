@@ -60,12 +60,7 @@ class SelectCorrectWordQuestion extends StatelessWidget {
                                 question.answer[index],
                                 overflow: TextOverflow.ellipsis,
                                 textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  color: const Color(0xFF4F3A9C),
-                                  fontSize: 120.sp,
-                                  fontFamily: 'Nunito',
-                                  fontWeight: FontWeight.w700,
-                                ),
+                                style: AppTextStyles.nunito120w700primary,
                               ),
                             ),
                           ),

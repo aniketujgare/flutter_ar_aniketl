@@ -123,19 +123,17 @@ class _OtpBoxesnButtonState extends State<OtpBoxesnButton> {
                   vertical: 25.h,
                   horizontal: MediaQuery.of(context).size.width *
                       (DeviceType().isMobile ? 0.2 : 0.3)),
-              child: Expanded(
-                child: ReusableButton(
-                  padding: EdgeInsets.symmetric(horizontal: 10.h),
-                  buttonColor: AppColors.submitGreenColor,
-                  text: 'Submit',
-                  textColor: Colors.white,
-                  onPressed: () {
-                    FocusScope.of(context).unfocus();
-                    print('guest verigy otp: ${pinController.text}');
-                    context.read<LoginBloc>().add(LoginEvent.verifyOtp(
-                        verificationId: '', smsCode: pinController.text));
-                  },
-                ),
+              child: ReusableButton(
+                padding: EdgeInsets.symmetric(horizontal: 10.h),
+                buttonColor: AppColors.submitGreenColor,
+                text: 'Submit',
+                textColor: Colors.white,
+                onPressed: () {
+                  FocusScope.of(context).unfocus();
+                  print('guest verigy otp: ${pinController.text}');
+                  context.read<LoginBloc>().add(LoginEvent.verifyOtp(
+                      verificationId: '', smsCode: pinController.text));
+                },
               ),
             ),
           if (context.read<LoginBloc>().state.status == LoginStatus.wrongOtp)

@@ -120,6 +120,9 @@ class WorksheetCubit extends Cubit<WorksheetState> {
     );
     StudentProfileModel? studentProfile =
         await authenticationRepository.getStudentProfile();
+    if (studentProfile?.studentId == -1) {
+      return [];
+    }
     log(jsonEncode(studentProfile));
     request.body = json.encode({
       "standard_id": "${studentProfile!.standardId}",

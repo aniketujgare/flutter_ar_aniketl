@@ -31,10 +31,6 @@ class _WorksheetViewState extends State<WorksheetView> {
   late StudentProfileModel studentProfileModel;
   @override
   void initState() {
-    // context.read<WorksheetPageCubit>().setmaxLength(
-    //     (BlocProvider.of<WorksheetCubit>(context).state.worksheets.length /
-    //             (DeviceType().isMobile ? 4 : 3))
-    //         .ceil());
     context.read<WorksheetPageCubit>().setPage(0);
 
     super.initState();
@@ -165,10 +161,6 @@ class _WorksheetViewState extends State<WorksheetView> {
                                 ),
                               );
                             }
-                            int noOfPages =
-                                context.read<WorksheetPageCubit>().maxLen;
-                            int noOfCards =
-                                noOfPages * (DeviceType().isMobile ? 4 : 3);
                             if (pageWidgets.length <
                                 (DeviceType().isMobile ? 4 : 3)) {
                               for (int i = pageWidgets.length;
@@ -252,7 +244,7 @@ class _WorksheetViewState extends State<WorksheetView> {
                       ),
                     );
                   }
-                  return SizedBox();
+                  return const SizedBox();
                 },
               ),
             ],

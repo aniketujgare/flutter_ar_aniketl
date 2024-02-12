@@ -52,7 +52,7 @@ class StudentProfileModel {
   String? grade;
   @HiveField(17)
   String? division;
-  @HiveField(17)
+  @HiveField(18)
   String? schoolName;
 
   StudentProfileModel(
@@ -108,9 +108,9 @@ class StudentProfileModel {
         "standard_id": standardId,
         "student_active_status": studentActiveStatus,
         "student_created_date":
-            "${studentCreatedDate!.year.toString().padLeft(4, '0')}-${studentCreatedDate!.month.toString().padLeft(2, '0')}-${studentCreatedDate!.day.toString().padLeft(2, '0')}",
+            "${studentCreatedDate?.year.toString().padLeft(4, '0')}-${studentCreatedDate?.month.toString().padLeft(2, '0')}-${studentCreatedDate?.day.toString().padLeft(2, '0')}",
         "student_expiry_date":
-            "${studentExpiryDate!.year.toString().padLeft(4, '0')}-${studentExpiryDate!.month.toString().padLeft(2, '0')}-${studentExpiryDate!.day.toString().padLeft(2, '0')}",
+            "${studentExpiryDate?.year.toString().padLeft(4, '0')}-${studentExpiryDate?.month.toString().padLeft(2, '0')}-${studentExpiryDate?.day.toString().padLeft(2, '0')}",
         "student_id": studentId,
         "student_name": studentName,
         "student_subscription_status": studentSubscriptionStatus,

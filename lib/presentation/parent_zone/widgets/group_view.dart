@@ -47,6 +47,14 @@ class _GroupsViewState extends State<GroupsView> {
           case TeacherListStatus.error:
             return Center(child: Text(state.errorMessage));
           case TeacherListStatus.loaded:
+            if (state.teachersList.isEmpty) {
+              return Center(
+                child: Text(
+                  'No Messages Available at the Moment',
+                  style: AppTextStyles.nunito105w700Text,
+                ),
+              );
+            }
             return ListView.separated(
               itemCount: state.teachersList.length,
               itemBuilder: (BuildContext context, int index) {
@@ -57,7 +65,8 @@ class _GroupsViewState extends State<GroupsView> {
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => MessageView(
                               teaherUserId: teacher.teacherUserId,
-                              subject: state.teacherMessage?.subject ?? '',
+                              subject:
+                                  state.teacherMessage[index]?.subject ?? '',
                               teacher:
                                   teacher.teacherName.replaceAll('Mr.', ''),
                             )));
@@ -74,12 +83,12 @@ class _GroupsViewState extends State<GroupsView> {
                         : teacher.teacherName.replaceAll('Mr.', '')[
                             0], //state.teacherMessage?.subject ?? '',
                     title: teacher.teacherName.replaceAll('Mr.', ''),
-                    subtitle: state.teacherMessage?.content ?? '',
+                    subtitle: state.teacherMessage[index]?.content ?? '',
                     isNow: false,
-                    trailing: state.teacherMessage?.date == null
+                    trailing: state.teacherMessage[index]?.date == null
                         ? ''
                         : DateFormat('d/M').format(DateTime.parse(
-                            parseDate(state.teacherMessage!.date))),
+                            parseDate(state.teacherMessage[index]!.date))),
                     // teacher.teacherCreatedDate.toString().split(' ').first,
                   ),
                 );

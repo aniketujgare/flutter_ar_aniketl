@@ -67,7 +67,9 @@ class AuthenticationRepository {
     int parentId = await getParentId(mobileNo);
     if (parentId != -1) {
       await saveStudentProfiles(parentId);
-    } else {}
+    } else {
+      await saveStudentProfilesGuest(parentId);
+    }
   }
 
   Future<void> saveStudentProfiles(int parentId) async {
@@ -102,7 +104,8 @@ class AuthenticationRepository {
     try {
       var studentProfileBox =
           await Hive.openBox<StudentProfileModel>('student_profile');
-      StudentProfileModel(studentId: -1);
+
+      studentProfileBox.add(StudentProfileModel(studentId: -1));
     } catch (e) {
       print('Error in getStudentProfiles: $e');
     }

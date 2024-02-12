@@ -200,9 +200,9 @@ class _LoginPage1MobileNumberState extends State<LoginPage1MobileNumber> {
             buttonColor: AppColors.textFieldFillColorWhite,
             textColor: AppColors.primaryColor,
             onPressed: () async {
-              var kidsAppBox = await Hive.openBox("kidsApp");
-              var isLoggedIn = kidsAppBox.get('isLoggedIn');
-              print('isLoggedIn, $isLoggedIn');
+              // var kidsAppBox = await Hive.openBox("kidsApp");
+              // var isLoggedIn = kidsAppBox.get('isLoggedIn');
+              // print('isLoggedIn, $isLoggedIn');
 
               context.read<LoginBloc>().add(
                   const LoginEvent.updateStatus(status: LoginStatus.guest));
