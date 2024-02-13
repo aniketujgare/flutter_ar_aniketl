@@ -1,12 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:connection_notifier/connection_notifier.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_ar/core/reusable_widgets/network_disconnected.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:lottie/lottie.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:size_config/size_config.dart';
 
+import '../../../core/reusable_widgets/network_disconnected.dart';
 import '../../../core/util/device_type.dart';
 import '../../../core/util/styles.dart';
 import '../../../data/models/ar_model.dart';
@@ -16,7 +15,7 @@ import 'model_3d_view.dart';
 
 class CategoryModelsPageView extends StatelessWidget {
   // final String category;
-  CategoryModelsPageView({super.key});
+  const CategoryModelsPageView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -26,27 +25,69 @@ class CategoryModelsPageView extends StatelessWidget {
         child: Scaffold(
           backgroundColor: AppColors.parentZoneScaffoldColor,
           body: ConnectionNotifierToggler(
-            disconnected: const NetworkDisconnected(),
-            connected: Padding(
-              padding: EdgeInsets.fromLTRB(8.wp, 4.wp, 8.wp, 4.wp),
-              child: Row(
+              disconnected: const NetworkDisconnected(),
+              connected: Stack(
                 children: [
-                  //! left part
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      SizedBox(
-                        width: 75.h,
-                        child: Image.asset(
-                          'assets/ui/image 40.png', // User Icon
-                          fit: BoxFit.contain,
-                        ),
-                      ),
-                      BlocBuilder<ModelsNewCubit, ModelsNewState>(
-                        builder: (context, state) {
-                          if (state.arModels.length > 6) {
-                            return GestureDetector(
+                  BlocBuilder<ModelsNewCubit, ModelsNewState>(
+                    builder: (context, state) {
+                      if (state.status == ModelsStatus.loaded) {
+                        context
+                            .read<ModelsPageControllerCubit>()
+                            .setmaxLength((state.arModels.length / 6).ceil());
+                        return BlocBuilder<ModelsPageControllerCubit, int>(
+                          builder: (context, index) {
+                            return PageView.builder(
+                              itemCount: (state.arModels.length / 6)
+                                  .ceil(), // 6 containers per page (2 rows with 3 containers each)
+                              controller: context
+                                  .read<ModelsPageControllerCubit>()
+                                  .pageCont,
+                              onPageChanged: (value) {
+                                context
+                                    .read<ModelsPageControllerCubit>()
+                                    .setPage(value);
+                                debugPrint('page changed $value');
+                              },
+                              itemBuilder: (context, pageIndex) {
+                                return DeviceType().isMobile
+                                    ? buildPage(pageIndex, state.arModels)
+                                    : Center(
+                                        child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          buildPage(pageIndex, state.arModels),
+                                        ],
+                                      ));
+                              },
+                            );
+                          },
+                        );
+                      }
+                      return const Center(
+                          child: CircularProgressIndicator.adaptive(
+                        strokeCap: StrokeCap.round,
+                      ));
+                    },
+                  ),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(4.wp, 4.wp, 4.wp, 4.wp),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        //! Left Side back and User icon
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              width: 75.h,
+                              child: Image.asset(
+                                'assets/ui/image 40.png', // User Icon
+                                fit: BoxFit.contain,
+                              ),
+                            ),
+                            GestureDetector(
                               onTap: () => context
                                   .read<ModelsPageControllerCubit>()
                                   .setPreviousPage(),
@@ -60,76 +101,22 @@ class CategoryModelsPageView extends StatelessWidget {
                                   width: 45.h,
                                 ),
                               ),
-                            );
-                          }
-                          return SizedBox();
-                        },
-                      ),
-                      SizedBox(
-                        width: 75.h,
-                        height: 75.h,
-                      ),
-                    ],
-                  ),
-                  //! center part
-                  Expanded(
-                    child: BlocBuilder<ModelsNewCubit, ModelsNewState>(
-                      builder: (context, state) {
-                        if (state.status == ModelsStatus.loaded) {
-                          context
-                              .read<ModelsPageControllerCubit>()
-                              .setmaxLength((state.arModels.length / 6).ceil());
-                          return BlocBuilder<ModelsPageControllerCubit, int>(
-                            builder: (context, index) {
-                              return PageView.builder(
-                                itemCount: (state.arModels.length / 6)
-                                    .ceil(), // 6 containers per page (2 rows with 3 containers each)
-                                controller: context
-                                    .read<ModelsPageControllerCubit>()
-                                    .pageCont,
-                                onPageChanged: (value) {
-                                  context
-                                      .read<ModelsPageControllerCubit>()
-                                      .setPage(value);
-                                  debugPrint('page changed $value');
-                                },
-                                itemBuilder: (context, pageIndex) {
-                                  return DeviceType().isMobile
-                                      ? buildPage(pageIndex, state.arModels)
-                                      : Center(
-                                          child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceEvenly,
-                                          children: [
-                                            buildPage(
-                                                pageIndex, state.arModels),
-                                          ],
-                                        ));
-                                },
-                              );
-                            },
-                          );
-                        }
-                        return const Center(
-                            child: CircularProgressIndicator.adaptive(
-                          strokeCap: StrokeCap.round,
-                        ));
-                      },
-                    ),
-                  ),
-                  //! right part
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      SizedBox(
-                        width: 75.h,
-                        height: 75.h,
-                      ),
-                      BlocBuilder<ModelsNewCubit, ModelsNewState>(
-                        builder: (context, state) {
-                          if (state.arModels.length > 6) {
-                            return GestureDetector(
+                            ),
+                            SizedBox(
+                              height: 45.h,
+                              width: 45.h,
+                            ),
+                          ],
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            SizedBox(
+                              height: 45.h,
+                              width: 45.h,
+                            ),
+                            GestureDetector(
                               onTap: () => context
                                   .read<ModelsPageControllerCubit>()
                                   .setNextPage(),
@@ -146,33 +133,26 @@ class CategoryModelsPageView extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                            );
-                          }
-                          return SizedBox();
-                        },
-                      ),
-                      SizedBox(
-                        width: 75.h,
-                        child: GestureDetector(
-                          onTap: () {
-                            Navigator.of(context).pop();
-                          },
-                          child: SizedBox(
-                            height: 75.h,
-                            width: 75.h,
-                            child: Image.asset(
-                              'assets/ui/Custom Buttons.002 1.png', // Home Icon
-                              fit: BoxFit.contain,
                             ),
-                          ),
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: SizedBox(
+                                width: 75.h,
+                                child: Image.asset(
+                                  'assets/ui/Custom Buttons.002 1.png', // Home Icon
+                                  fit: BoxFit.contain,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
-                    ],
-                  )
+                      ],
+                    ),
+                  ),
                 ],
-              ),
-            ),
-          ),
+              )),
         ),
       ),
     );
@@ -185,8 +165,14 @@ class CategoryModelsPageView extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        buildRow(startIndex, endIndex, arModels),
-        buildRow(startIndex + 3, endIndex, arModels),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 10.wp),
+          child: buildRow(startIndex, endIndex, arModels),
+        ),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 10.wp),
+          child: buildRow(startIndex + 3, endIndex, arModels),
+        ),
       ],
     );
   }

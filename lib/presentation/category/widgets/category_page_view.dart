@@ -69,8 +69,14 @@ class _CategoryPageViewState extends State<CategoryPageView> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        buildRow(startIndex, endIndex, context),
-        buildRow(startIndex + 3, endIndex, context),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 10.wp),
+          child: buildRow(startIndex, endIndex, context),
+        ),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 10.wp),
+          child: buildRow(startIndex + 3, endIndex, context),
+        ),
       ],
     );
   }

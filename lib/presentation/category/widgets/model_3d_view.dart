@@ -67,6 +67,9 @@ class _ModelViewState extends State<ModelView> {
                 );
               }
               if (state.status == ModelAssetHandlerStatus.loaded) {
+                var downloadCont = context
+                    .read<ModelAssetHandlerBloc>()
+                    .downloadAssetsController;
                 return Padding(
                   padding: EdgeInsets.fromLTRB(116.w, 40.h, 116.w, 40.h),
                   child: Stack(
@@ -75,8 +78,9 @@ class _ModelViewState extends State<ModelView> {
                         alignment: Alignment.center,
                         child: ModelViewer(
                           backgroundColor: const Color(0XFFF4F2FE),
-                          src:
-                              'file:///data/user/0/com.example.flutter_ar/app_flutter/assets/${widget.imageFileName}.glb',
+                          src: Platform.isIOS
+                              ? '${downloadCont.assetsDir}/${widget.imageFileName}.glb'
+                              : 'file:///data/user/0/com.example.flutter_ar/app_flutter/assets/${widget.imageFileName}.glb',
                           alt: 'A 3D model of an astronaut',
                           ar: Platform.isAndroid ? true : false,
                           autoPlay: true,

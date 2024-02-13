@@ -60,7 +60,7 @@ class _OtpBoxesnButtonState extends State<OtpBoxesnButton> {
             // Specify direction if desired
             textDirection: TextDirection.ltr,
             child: Pinput(
-              length: 6,
+              length: 6, keyboardType: TextInputType.number,
               controller: pinController,
               focusNode: focusNode,
               androidSmsAutofillMethod:

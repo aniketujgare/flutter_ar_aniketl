@@ -90,7 +90,8 @@ class _LoginPage4GuestState extends State<LoginPage4Guest> {
                 countryCodeVisible: false,
                 hintText: 'Enter a parent’s full name',
                 onChanged: (value) {
-                  parentsNameController.text = value;
+                  parentsNameController.text = value.trim();
+
                   context.read<GuestValidationBloc>().add(
                       GuestNameChanged(guestName: parentsNameController.text));
                 },

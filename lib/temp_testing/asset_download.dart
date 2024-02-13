@@ -8,12 +8,7 @@ import 'package:flutter/services.dart';
 import '../core/reusable_widgets/network_disconnected.dart';
 
 class AssetDownload extends StatefulWidget {
-  AssetDownload(
-      {required this.title, required this.assetUrl, required this.assetImage});
-
-  final String title;
-  final String assetUrl;
-  final String assetImage;
+  const AssetDownload({super.key});
 
   @override
   AssetDownloadState createState() => AssetDownloadState();
@@ -40,7 +35,7 @@ class AssetDownloadState extends State<AssetDownload> {
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
-          title: Text(widget.title),
+          title: Text('Asset Download test'),
         ),
         body: ConnectionNotifierToggler(
           disconnected: NetworkDisconnected(),
@@ -56,7 +51,7 @@ class AssetDownloadState extends State<AssetDownload> {
                     decoration: BoxDecoration(
                       image: DecorationImage(
                         image: FileImage(File(
-                            '${downloadAssetsController.assetsDir}/dart.jpeg')),
+                            '${downloadAssetsController.assetsDir}/image_1.png')),
                         fit: BoxFit.fitWidth,
                       ),
                     ),
@@ -116,6 +111,7 @@ class AssetDownloadState extends State<AssetDownload> {
       setState(() {
         message = 'Click in refresh button to force download';
         print(message);
+        print(downloadAssetsController.assetsDir);
       });
       return;
     }
@@ -129,9 +125,9 @@ class AssetDownloadState extends State<AssetDownload> {
         },
         assetsUrls: [
           'https://github.com/edjostenes/download_assets/raw/main/download/image_1.png',
-          'https://github.com/edjostenes/download_assets/raw/main/download/assets.zip',
-          'https://github.com/edjostenes/download_assets/raw/main/download/image_2.png',
-          'https://github.com/edjostenes/download_assets/raw/main/download/image_3.png',
+          // 'https://github.com/edjostenes/download_assets/raw/main/download/assets.zip',
+          // 'https://github.com/edjostenes/download_assets/raw/main/download/image_2.png',
+          // 'https://github.com/edjostenes/download_assets/raw/main/download/image_3.png',
         ],
         onProgress: (progressValue) {
           downloaded = false;
