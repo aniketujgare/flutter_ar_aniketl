@@ -205,7 +205,7 @@ class LoginScreenState extends State<LoginScreen>
                                         content: Text(state.errorMessage)));
                                 context.read<LoginBloc>().add(
                                     const LoginEvent.updateStatus(
-                                        status: LoginStatus.phoneNo1));
+                                        status: LoginStatus.wrongOtp));
                               }
                               if (state.status == LoginStatus.wrongOtp) {
                                 ScaffoldMessenger.of(context).showSnackBar(
@@ -215,17 +215,6 @@ class LoginScreenState extends State<LoginScreen>
                               if (state.status == LoginStatus.success) {
                                 print('success state');
                                 Restart.restartApp();
-                                // AuthenticationRepository()
-                                //     .getStudentProfile()
-                                //     .then((profile) {
-                                //   context
-                                //       .read<StudentProfileCubit>()
-                                //       .initProfile(profile);
-                                // });
-                                // Navigator.of(context).pushReplacement(
-                                //     MaterialPageRoute(
-                                //         builder: (context) =>
-                                //             const SplashScreen()));
                               }
                             },
                             builder: (context, state) {

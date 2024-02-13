@@ -49,18 +49,21 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
               backgroundColor: AppColors.parentZoneScaffoldColor,
               body: ConnectionNotifierToggler(
                 disconnected: const NetworkDisconnected(),
-                connected: Padding(
-                  padding: EdgeInsets.fromLTRB(8.wp, 4.wp, 8.wp, 4.wp),
-                  child: Column(
-                    children: [
-                      //! Top
-                      buildTop(context),
-                      //! Center
-                      buildCenter(context),
-                      //! Bottom
-                      buildBottom(context),
-                    ],
-                  ),
+                connected: Column(
+                  children: [
+                    //! Top
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(8.wp, 4.wp, 8.wp, 4.wp),
+                      child: buildTop(context),
+                    ),
+                    //! Center
+                    buildCenter(context),
+                    //! Bottom
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(8.wp, 4.wp, 8.wp, 4.wp),
+                      child: buildBottom(context),
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -149,28 +152,31 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
         itemCount: 1,
         physics: const AlwaysScrollableScrollPhysics(),
         itemBuilder: (BuildContext context, int index) {
-          return Row(
-            children: [
-              Expanded(
-                child: GestureDetector(
-                  onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => const SubjectScreen()));
-                  },
-                  child: Image.asset(
-                    'assets/images/PNG Icons/LessonsMenu.png',
+          return Padding(
+            padding: EdgeInsets.fromLTRB(8.wp, 4.wp, 8.wp, 4.wp),
+            child: Row(
+              children: [
+                Expanded(
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => const SubjectScreen()));
+                    },
+                    child: Image.asset(
+                      'assets/images/PNG Icons/LessonsMenu.png',
+                    ),
                   ),
                 ),
-              ),
-              Expanded(
-                  child: GestureDetector(
-                onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => const CategoryScreen())),
-                child: Image.asset(
-                  'assets/images/PNG Icons/othermenu.png',
-                ),
-              )),
-            ],
+                Expanded(
+                    child: GestureDetector(
+                  onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const CategoryScreen())),
+                  child: Image.asset(
+                    'assets/images/PNG Icons/othermenu.png',
+                  ),
+                )),
+              ],
+            ),
           );
         },
       ),

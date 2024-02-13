@@ -45,7 +45,7 @@ class _LoginPage2OtpState extends State<LoginPage2Otp> {
         ),
         SizedBox(height: 20.h),
         Text(
-          'Enter your mobile number to login',
+          'Enter OTP to login',
           textAlign: TextAlign.center,
           style: DeviceType().isMobile
               ? AppTextStyles.nunito95w400white
@@ -55,121 +55,10 @@ class _LoginPage2OtpState extends State<LoginPage2Otp> {
           height: 16.h,
         ),
         const OtpBoxesnButton(),
-        // if (context.read<LoginBloc>().state.status == LoginStatus.wrongOtp)
-        //   Padding(
-        //     padding: EdgeInsets.symmetric(
-        //         vertical: 25.h,
-        //         horizontal: MediaQuery.of(context).size.width *
-        //             (DeviceType().isMobile ? 0.2 : 0.3)),
-        //     child: Row(
-        //       mainAxisAlignment: MainAxisAlignment.spaceAround,
-        //       children: [
-        //         Expanded(
-        //           child: SizedBox(
-        //             width: 150,
-        //             child: ReusableButton(
-        //                 padding: EdgeInsets.symmetric(horizontal: 10.h),
-        //                 buttonColor: AppColors.primaryColor,
-        //                 text: 'Resend',
-        //                 textColor: Colors.white,
-        //                 onPressed: () {
-        //                   context
-        //                       .read<LoginBloc>()
-        //                       .add(const LoginEvent.resendOtp());
-        //                 }),
-        //           ),
-        //         ),
-        //         // Expanded(
-        //         //   child: ReusableButton(
-        //         //     padding: EdgeInsets.symmetric(horizontal: 10.h),
-        //         //     buttonColor: AppColors.submitGreenColor,
-        //         //     text: 'Submit',
-        //         //     textColor: Colors.white,
-        //         //     onPressed: () {
-        //         //       FocusScope.of(context).unfocus();
-        //         //       String otp = '';
-        //         //       for (var digit in otpStrings) {
-        //         //         otp += digit;
-        //         //       }
-        //         //       debugPrint(otp);
-        //         //       context.read<LoginBloc>().add(LoginEvent.verifyOtp(
-        //         //           verificationId: '', smsCode: otp));
-        //         //     },
-        //         //   ),
-        //         // )
-        //       ],
-        //     ),
-        //   ),
         SizedBox(
           height: 30.h,
         ),
       ],
     );
   }
-
-  // Container generateOtpBox(
-  //   FocusNode? focusNode,
-  //   int nodeIdx,
-  // ) {
-  //   return Container(
-  //     width: 275.w,
-  //     height: 85.h,
-  //     decoration: ShapeDecoration(
-  //       color: Colors.white,
-  //       shape: RoundedRectangleBorder(
-  //         borderRadius:
-  //             BorderRadius.circular(DeviceType().isMobile ? 80.w : 40.w),
-  //       ),
-  //     ),
-  //     child: Column(
-  //       mainAxisAlignment: MainAxisAlignment.center,
-  //       children: [
-  //         TextField(
-  //           textAlign: TextAlign.center,
-  //           textAlignVertical: TextAlignVertical.center,
-  //           inputFormatters: [
-  //             LengthLimitingTextInputFormatter(1),
-  //           ],
-  //           keyboardType: TextInputType.number,
-  //           onChanged: (value) {
-  //             otpStrings[nodeIdx] = value;
-  //             // ServicesBinding.instance.keyboard.addHandler((KeyEvent event) {
-  //             //   if (event is KeyDownEvent) {
-  //             //     print('key doen: ${event.logicalKey}');
-  //             //   }
-  //             //   if (event.logicalKey.keyLabel == 'Backspace') {
-  //             //     if (value.isEmpty) {
-  //             //       FocusScope.of(context).previousFocus();
-  //             //     }
-  //             //   }
-  //             //   return false;
-  //             // });
-  //             if (nodeIdx == 5 && value.isNotEmpty) {
-  //               FocusScope.of(context).unfocus();
-  //             } else if (value.isEmpty && nodeIdx > 0) {
-  //               // If backspace is pressed and the box is not the first one,
-  //               // clear the content of the current box and move to the previous box.
-  //               otpStrings[nodeIdx] = '';
-  //               FocusScope.of(context).previousFocus();
-  //             } else if (value.isNotEmpty && nodeIdx < 5) {
-  //               // If a digit is entered and the box is not the last one,
-  //               // move the focus to the next box.
-  //               FocusScope.of(context).nextFocus();
-  //             }
-  //           },
-  //           onTap: () {
-  //             // Set the focus to the current box when tapped.
-  //             FocusScope.of(context).requestFocus(focusNode);
-  //           },
-  //           focusNode: focusNode,
-  //           decoration: const InputDecoration(
-  //             contentPadding: EdgeInsets.all(0),
-  //             border: OutlineInputBorder(borderSide: BorderSide.none),
-  //           ),
-  //           style: AppTextStyles.nunito100w700black.copyWith(fontSize: 155.sp),
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
 }

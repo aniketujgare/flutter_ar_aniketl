@@ -8,7 +8,6 @@ import '../../../../core/util/device_type.dart';
 import '../../../../core/util/styles.dart';
 import '../../../core/reusable_widgets/network_disconnected.dart';
 import '../bloc/worksheet_cubit/worksheet_cubit.dart';
-import 'worksheet_solver.dart';
 
 class WorksheetHistoryView extends StatefulWidget {
   const WorksheetHistoryView({super.key});
@@ -18,25 +17,10 @@ class WorksheetHistoryView extends StatefulWidget {
 }
 
 class _WorksheetHistoryViewState extends State<WorksheetHistoryView> {
-  // Future<int> getStudentId() async {
-  //   var kidsAppBox = await Hive.openBox("kidsApp");
-  //   var studentProfiles = kidsAppBox.get('studentProfiles');
-  //   print('StudentProfile: ' + studentProfiles.toString());
-  //   var firstProfile =
-  //       studentProfiles[0][0]; // Accessing the first map in the first list
-  //   int studentId = firstProfile['student_id'];
-  //   print('studentId: $studentId');
-  //   return studentId;
-  // }
-
   @override
   void initState() {
     super.initState();
 
-    // Use then to execute the asynchronous operation after initState completes
-    // getStudentId().then((studentId) {
-    //   context.read<WorksheetCubit>().getWorksheetsHistory(studentId.toString());
-    // });
     context.read<WorksheetCubit>().getWorksheetsHistory();
   }
 
@@ -97,6 +81,14 @@ class _WorksheetHistoryViewState extends State<WorksheetHistoryView> {
                 child: BlocBuilder<WorksheetCubit, WorksheetState>(
               builder: (context, state) {
                 if (state.status == WorksheetStatus.loaded) {
+                  if (state.historyWorksheets.isEmpty) {
+                    return Center(
+                      child: Text(
+                        'No worksheet available at the moment.',
+                        style: AppTextStyles.nunito105w700Text,
+                      ),
+                    );
+                  }
                   print(
                       'history worksheet length: ${state.historyWorksheets.length}');
                   return ListView.builder(

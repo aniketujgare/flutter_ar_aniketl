@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ar/core/util/device_type.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../bloc/reports_pagecontroller_cubit/reports_pagecontroller_cubit.dart';
@@ -49,7 +50,7 @@ class _ReportsViewState extends State<ReportsView> {
               bottom: 0,
               left: 0,
               right: 0,
-              height: 90,
+              height: DeviceType().isMobile ? 90 : 105,
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,

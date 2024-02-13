@@ -11,7 +11,9 @@ class CognitionPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       color: Colors.transparent,
-      padding: EdgeInsets.symmetric(horizontal: 5.wp),
+      padding: EdgeInsets.symmetric(
+        horizontal: 5.wp,
+      ),
       child: Column(
         children: [
           10.verticalSpacer,

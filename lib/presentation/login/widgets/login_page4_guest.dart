@@ -40,8 +40,6 @@ class _LoginPage4GuestState extends State<LoginPage4Guest> {
 
   @override
   Widget build(BuildContext context) {
-    // String parentsName = '';
-    // String mobileNumber = '';
     return BlocListener<GuestValidationBloc, GuestValidationState>(
       listenWhen: (p, c) => p != c,
       listener: (context, state) {
@@ -86,15 +84,53 @@ class _LoginPage4GuestState extends State<LoginPage4Guest> {
           ),
           BlocBuilder<GuestValidationBloc, GuestValidationState>(
             builder: (context, state) {
-              return ReusableTextField(
-                countryCodeVisible: false,
-                hintText: 'Enter a parent’s full name',
-                onChanged: (value) {
-                  parentsNameController.text = value.trim();
+              return Container(
+                padding: EdgeInsets.symmetric(horizontal: 45.h),
+                height: DeviceType().isMobile ? 75.h : 65.h,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    TextFormField(
+                      keyboardType: TextInputType.name,
+                      controller: parentsNameController,
+                      onChanged: (value) {
+                        parentsNameController.text = value;
+                        //no first spaces
 
-                  context.read<GuestValidationBloc>().add(
-                      GuestNameChanged(guestName: parentsNameController.text));
-                },
+                        if (parentsNameController.text.isNotEmpty &&
+                            !RegExp(r'^[a-z ]+$')
+                                .hasMatch(parentsNameController.text)) {
+                          parentsNameController.text =
+                              parentsNameController.text.substring(
+                                  0, parentsNameController.text.length - 1);
+
+                          // print(newValue);
+                        } else {
+                          parentsNameController.text =
+                              parentsNameController.text;
+                        }
+                        context.read<GuestValidationBloc>().add(
+                            GuestNameChanged(
+                                guestName: parentsNameController.text));
+                      },
+                      textAlignVertical: TextAlignVertical.center,
+                      decoration: InputDecoration(
+                        hintText: 'Enter a parent’s full name',
+                        isCollapsed: true,
+                        hintStyle: AppTextStyles.nunito100w400hintText,
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20)),
+                        contentPadding: EdgeInsets.only(
+                            left: 60.w,
+                            top: DeviceType().isMobile ? 15.h : 5.h,
+                            bottom: DeviceType().isMobile ? 15.h : 5.h),
+                        filled: true,
+                        fillColor: Colors.white,
+                      ),
+                      style: AppTextStyles.nunito100w700black,
+                    ),
+                  ],
+                ),
               );
             },
           ),
@@ -165,17 +201,6 @@ class _LoginPage4GuestState extends State<LoginPage4Guest> {
                   ],
                 ),
               );
-              /*
-               ReusableTextField(
-                onChanged: (value) {
-                  mobileNumber = value;
-                  context
-                      .read<GuestValidationBloc>()
-                      .add(PhoneNumberChanged(phoneNumber: value));
-                },
-                textInputType: TextInputType.number,
-              );
-              */
             },
           ),
           SizedBox(
@@ -195,7 +220,7 @@ class _LoginPage4GuestState extends State<LoginPage4Guest> {
                 print('guestLogin Number' + mobileNumberController.text);
                 context.read<LoginBloc>().add(LoginEvent.guestLogin(
                     mobileNumber: mobileNumberController.text,
-                    parentsName: parentsNameController.text));
+                    parentsName: parentsNameController.text.trim()));
               }
             },
           ),

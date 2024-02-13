@@ -38,9 +38,9 @@ class _OtpBoxesnButtonState extends State<OtpBoxesnButton> {
     final defaultPinTheme = PinTheme(
       width: 275.w,
       height: 85.h,
-      textStyle: const TextStyle(
-        fontSize: 22,
-        color: Color.fromRGBO(30, 60, 87, 1),
+      textStyle: TextStyle(
+        fontSize: DeviceType().isMobile ? 22 : 128.sp,
+        color: const Color.fromRGBO(30, 60, 87, 1),
       ),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -60,7 +60,8 @@ class _OtpBoxesnButtonState extends State<OtpBoxesnButton> {
             // Specify direction if desired
             textDirection: TextDirection.ltr,
             child: Pinput(
-              length: 6, keyboardType: TextInputType.number,
+              length: 6,
+              keyboardType: TextInputType.number,
               controller: pinController,
               focusNode: focusNode,
               androidSmsAutofillMethod:
@@ -131,8 +132,10 @@ class _OtpBoxesnButtonState extends State<OtpBoxesnButton> {
                 onPressed: () {
                   FocusScope.of(context).unfocus();
                   print('guest verigy otp: ${pinController.text}');
-                  context.read<LoginBloc>().add(LoginEvent.verifyOtp(
-                      verificationId: '', smsCode: pinController.text));
+                  if (pinController.length == 6) {
+                    context.read<LoginBloc>().add(LoginEvent.verifyOtp(
+                        verificationId: '', smsCode: pinController.text));
+                  }
                 },
               ),
             ),
