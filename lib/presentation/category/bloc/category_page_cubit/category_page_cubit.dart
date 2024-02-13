@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -13,32 +15,24 @@ class CategoryPageCubit extends Cubit<int> {
     );
   }
 
-  late int maxLen;
+  int _noOfPages = 1;
   CategoryPageCubit() : super(0);
   int curridx = 0;
   void setPage(int pageIndex) {
-    print('pageIdx $pageIndex');
     curridx = pageIndex;
-    // emit(curridx);
-    // if (pageIndex < maxLen && pageIndex > 0) {}
   }
 
   void setNextPage() {
-    if (curridx < maxLen) {
-      ++curridx;
-      goToPage(curridx);
-    }
+    int idx = min(curridx + 1, _noOfPages);
+    goToPage(idx);
   }
 
   void setPreviousPage() {
-    if (curridx > 0) {
-      --curridx;
-      goToPage(curridx);
-    }
+    int idx = max(curridx - 1, 0);
+    goToPage(idx);
   }
 
   void setmaxLength(int len) {
-    maxLen = len - 1;
-    print('maxLen $maxLen');
+    _noOfPages = len - 1;
   }
 }

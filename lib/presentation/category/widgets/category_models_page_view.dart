@@ -13,9 +13,22 @@ import '../bloc/model_page_controler_cubit/models_page_controller_cubit.dart';
 import '../bloc/models_new_cubit/models_new_cubit.dart';
 import 'model_3d_view.dart';
 
-class CategoryModelsPageView extends StatelessWidget {
+class CategoryModelsPageView extends StatefulWidget {
   // final String category;
   const CategoryModelsPageView({super.key});
+
+  @override
+  State<CategoryModelsPageView> createState() => _CategoryModelsPageViewState();
+}
+
+class _CategoryModelsPageViewState extends State<CategoryModelsPageView> {
+  @override
+  void initState() {
+    context.read<ModelsPageControllerCubit>().curridx = 0;
+    context.read<ModelsPageControllerCubit>().setmaxLength(
+        (context.read<ModelsNewCubit>().state.arModels.length / 6).ceil());
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,9 +44,6 @@ class CategoryModelsPageView extends StatelessWidget {
                   BlocBuilder<ModelsNewCubit, ModelsNewState>(
                     builder: (context, state) {
                       if (state.status == ModelsStatus.loaded) {
-                        context
-                            .read<ModelsPageControllerCubit>()
-                            .setmaxLength((state.arModels.length / 6).ceil());
                         return BlocBuilder<ModelsPageControllerCubit, int>(
                           builder: (context, index) {
                             return PageView.builder(

@@ -26,15 +26,16 @@ class _CategoryPageViewState extends State<CategoryPageView> {
     widget.arCategoryies = context.read<CategoryNewCubit>().state.arCategory;
     widget.categoryImgList =
         context.read<CategoryNewCubit>().state.categoryImgList;
+    context
+        .read<CategoryPageCubit>()
+        .setmaxLength((widget.arCategoryies.length / 6).ceil());
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     // var arCategoryies = context.read<CategoryNewCubit>().state.arCategory;
-    context
-        .read<CategoryPageCubit>()
-        .setmaxLength((widget.arCategoryies.length / 6).ceil());
+
     return BlocBuilder<CategoryPageCubit, int>(
       builder: (context, index) {
         return PageView.builder(
@@ -127,7 +128,7 @@ class BuildCategoryContainer extends StatelessWidget {
             Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (BuildContext context) {
-                  return CategoryModelsPageView();
+                  return const CategoryModelsPageView();
                 },
               ),
             );
