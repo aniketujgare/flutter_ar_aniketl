@@ -34,6 +34,8 @@ import 'presentation/parent_zone/bloc/reports_pagecontroller_cubit/reports_pagec
 import 'presentation/parent_zone/bloc/teacher_list_bloc/teacher_list_bloc.dart';
 import 'presentation/splash_screen/bloc/splash_animation_bloc.dart';
 import 'presentation/subject/bloc/subject_page_cubit.dart';
+import 'presentation/worksheet/bloc/worksheet_history_cubit/worksheet_history_cubit.dart';
+import 'presentation/worksheet/bloc/worksheet_history_page_cubit/worksheet_history_page_cubit.dart';
 import 'presentation/worksheet/bloc/worksheet_page_cubit/worksheet_page_cubit.dart';
 import 'presentation/worksheet/bloc/worksheet_solver_cubit/worksheet_solver_cubit.dart';
 import 'presentation/worksheet/widgets/worksheet_submitted_box.dart';
@@ -161,6 +163,12 @@ class MyAppState extends State<MyApp> {
             ),
             BlocProvider(
               create: (context) => ParentDetailsCubit(),
+            ),
+            BlocProvider(
+              create: (context) => WorksheetHistoryPageCubit(),
+            ),
+            BlocProvider(
+              create: (context) => WorksheetHistoryCubit(),
             ),
           ],
           child: MaterialApp(

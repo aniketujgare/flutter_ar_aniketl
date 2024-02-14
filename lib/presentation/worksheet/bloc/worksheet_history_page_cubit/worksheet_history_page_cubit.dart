@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class WorksheetPageCubit extends Cubit<int> {
+class WorksheetHistoryPageCubit extends Cubit<int> {
   PageController pageController = PageController();
   get pageCont => pageController;
 
@@ -15,7 +15,7 @@ class WorksheetPageCubit extends Cubit<int> {
   }
 
   late int maxLen;
-  WorksheetPageCubit() : super(0);
+  WorksheetHistoryPageCubit() : super(0);
   int curridx = 0;
   void setPage(int pageIndex) {
     curridx = pageIndex;
