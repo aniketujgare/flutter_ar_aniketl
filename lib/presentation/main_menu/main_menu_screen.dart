@@ -2,6 +2,7 @@ import 'package:connection_notifier/connection_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_ar/core/reusable_widgets/network_disconnected.dart';
+import 'package:flutter_ar/presentation/worksheet/widgets/worksheet_submitted_box.dart';
 import 'package:flutter_ar/temp_testing/hive_test.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:size_config/size_config.dart';
@@ -153,7 +154,11 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
         physics: const AlwaysScrollableScrollPhysics(),
         itemBuilder: (BuildContext context, int index) {
           return Padding(
-            padding: EdgeInsets.fromLTRB(8.wp, 4.wp, 8.wp, 4.wp),
+            padding: EdgeInsets.fromLTRB(
+                DeviceType().isMobile ? 4.wp : 4.wp,
+                DeviceType().isMobile ? 0.wp : 4.wp,
+                DeviceType().isMobile ? 4.wp : 4.wp,
+                DeviceType().isMobile ? 0.wp : 4.wp),
             child: Row(
               children: [
                 Expanded(

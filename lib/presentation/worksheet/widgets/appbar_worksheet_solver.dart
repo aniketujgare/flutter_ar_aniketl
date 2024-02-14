@@ -5,8 +5,21 @@ import 'package:size_config/size_config.dart';
 import '../../../core/util/device_type.dart';
 import '../../../core/util/styles.dart';
 import '../bloc/worksheet_solver_cubit/worksheet_solver_cubit.dart';
+import 'worksheet_submitted_box.dart';
 
 AppBar appBarWorksheetSolver(BuildContext context) {
+  Future<void> _showAlertDialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return const Dialog(
+          child: WorksheetSubmittedBox(),
+        );
+      },
+    );
+  }
+
   return AppBar(
     toolbarHeight: DeviceType().isMobile ? 56 : 80,
     automaticallyImplyLeading: false,
@@ -54,10 +67,7 @@ AppBar appBarWorksheetSolver(BuildContext context) {
         Expanded(
           flex: 2,
           child: GestureDetector(
-            onTap: () {
-              context.read<WorksheetSolverCubit>().answerSubmit();
-              Navigator.of(context).pop();
-            },
+            onTap: _showAlertDialog,
             child: Container(
               height: DeviceType().isMobile ? 8.wp : 6.5.wp,
               // margin: EdgeInsets.only(

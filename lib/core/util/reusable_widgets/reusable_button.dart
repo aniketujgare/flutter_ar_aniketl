@@ -10,6 +10,8 @@ class ReusableButton extends StatelessWidget {
   final Color textColor;
   final VoidCallback? onPressed;
   final EdgeInsetsGeometry? padding;
+  final double circularRadius;
+  final double? fontSize;
   const ReusableButton({
     super.key,
     required this.buttonColor,
@@ -17,6 +19,8 @@ class ReusableButton extends StatelessWidget {
     required this.textColor,
     this.onPressed,
     this.padding,
+    this.circularRadius = 18,
+    this.fontSize,
   });
 
   @override
@@ -28,14 +32,17 @@ class ReusableButton extends StatelessWidget {
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
-            shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(18))),
+            shape: RoundedRectangleBorder(
+                borderRadius:
+                    BorderRadius.all(Radius.circular(circularRadius))),
             backgroundColor: buttonColor),
         child: Text(
           text,
           style: DeviceType().isMobile
-              ? AppTextStyles.nunito100w700white.copyWith(color: textColor)
-              : AppTextStyles.nunito80w700white.copyWith(color: textColor),
+              ? AppTextStyles.nunito100w700white
+                  .copyWith(color: textColor, fontSize: fontSize)
+              : AppTextStyles.nunito80w700white
+                  .copyWith(color: textColor, fontSize: fontSize),
           textAlign: TextAlign.center,
         ),
       ),
