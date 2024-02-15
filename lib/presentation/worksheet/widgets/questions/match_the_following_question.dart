@@ -1,9 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_ar/core/util/styles.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:size_config/size_config.dart';
 
+import '../../../../core/util/styles.dart';
 import '../../bloc/worksheet_solver_cubit/worksheet_solver_cubit.dart';
 import '../../models/questions.dart';
 
@@ -30,6 +30,7 @@ class MatchFollowingQuestionState extends State<MatchFollowingQuestion> {
   bool isImageQuestion = true;
   @override
   void initState() {
+    super.initState();
     // debugPrint('marked answers: ${widget.markedAnswer}');
     // debugPrint('options mtd: ${widget.question.options}');
     // super.initState();
@@ -144,9 +145,10 @@ class MatchFollowingQuestionState extends State<MatchFollowingQuestion> {
                                 ),
                               ),
                             ),
-                            placeholder: (context, url) =>
-                                const CircularProgressIndicator.adaptive(
-                              strokeCap: StrokeCap.round,
+                            placeholder: (context, url) => const Center(
+                              child: CircularProgressIndicator.adaptive(
+                                strokeCap: StrokeCap.round,
+                              ),
                             ),
                             errorWidget: (context, url, error) =>
                                 const Icon(Icons.error),
@@ -181,8 +183,10 @@ class MatchFollowingQuestionState extends State<MatchFollowingQuestion> {
                               ),
                             ),
                             placeholder: (context, url) => const Center(
-                              child: CircularProgressIndicator.adaptive(
-                                  strokeCap: StrokeCap.round),
+                              child: Center(
+                                child: CircularProgressIndicator.adaptive(
+                                    strokeCap: StrokeCap.round),
+                              ),
                             ),
                             errorWidget: (context, url, error) =>
                                 const Icon(Icons.error),

@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ar/core/student_profile_cubit/student_profile_cubit.dart';
-import 'package:flutter_ar/presentation/parent_zone/bloc/parent_details_cubit/parent_details_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:size_config/size_config.dart';
 
-import '../../../core/util/device_type.dart';
-import '../bloc/navbar_cubit/app_navigator_cubit.dart';
-import '../pages/parent_zone_screen.dart';
+import '../../../core/student_profile_cubit/student_profile_cubit.dart';
+import '../bloc/parent_details_cubit/parent_details_cubit.dart';
+import 'edit_parent_details_box.dart';
 
 class HomeView extends StatelessWidget {
   const HomeView({super.key});
@@ -217,6 +215,18 @@ class ParentProfileCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Future<void> _showAlertDialog(String profileName) async {
+      return showDialog<void>(
+        context: context,
+        barrierDismissible: true,
+        builder: (BuildContext context) {
+          return Dialog(
+            child: EditParentDetailsBox(profileName),
+          );
+        },
+      );
+    }
+
     return Container(
       width: double.maxFinite,
       padding: EdgeInsets.symmetric(horizontal: 2.wp, vertical: 3.wp),
@@ -250,7 +260,7 @@ class ParentProfileCard extends StatelessWidget {
                   height: 40.h,
                   width: 40.h,
                   child: IconButton(
-                      onPressed: () {},
+                      onPressed: () => _showAlertDialog(profileTitle),
                       icon: Image.asset(
                         'assets/images/reusable_icons/edit.png',
                         fit: BoxFit.cover,

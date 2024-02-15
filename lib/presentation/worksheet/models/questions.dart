@@ -15,6 +15,8 @@ enum QuestionType {
   ascDescOrder,
   arithmetic,
   longAnswer,
+  rearrange,
+  identifyimage,
 }
 
 abstract class Question {
@@ -55,6 +57,10 @@ abstract class Question {
         return "Arithmetic";
       case QuestionType.longAnswer:
         return "Long Answer";
+      case QuestionType.rearrange:
+        return "Re-Arrange";
+      case QuestionType.identifyimage:
+        return "Identify Image";
     }
   }
 }
@@ -226,17 +232,17 @@ class MatchTheFollowingQuestion extends Question {
 }
 
 // One Word Question
-class OneWordQuestion extends Question {
+class OneWordQuestionType extends Question {
   final String answer;
   final String questionUrl;
-  OneWordQuestion(
+  OneWordQuestionType(
       {required this.answer,
       required this.questionUrl,
       required String question})
       : super.withType(question, QuestionType.oneWord);
 
-  factory OneWordQuestion.fromJson(Map<String, dynamic> json) {
-    return OneWordQuestion(
+  factory OneWordQuestionType.fromJson(Map<String, dynamic> json) {
+    return OneWordQuestionType(
       answer: json['oneword']['answer'],
       question: json['oneword']['question'],
       questionUrl: json['oneword']['question_url'],
@@ -455,6 +461,86 @@ class LongAnswerQuestionType extends Question {
       };
 }
 
+// Rearrange Question
+class RearrangeQuestionType extends Question {
+  final String answer;
+
+  RearrangeQuestionType({required this.answer, required String question})
+      : super.withType(question, QuestionType.rearrange);
+
+  factory RearrangeQuestionType.fromJson(Map<String, dynamic> json) {
+    return RearrangeQuestionType(
+      question: json['rearrange']['question'],
+      answer: json['rearrange']['answer'],
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+        'rearrange': {
+          'answer': answer,
+          'question': question,
+        },
+      };
+}
+
+// Identify Image Question
+class IdentifyImageQuestionType extends Question {
+  final String answer;
+
+  IdentifyImageQuestionType({required this.answer, required String question})
+      : super.withType(question, QuestionType.identifyimage);
+
+  factory IdentifyImageQuestionType.fromJson(Map<String, dynamic> json) {
+    return IdentifyImageQuestionType(
+      question: json['identifyimage']['question'],
+      answer: json['identifyimage']['answer'],
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+        'identifyimage': {
+          'answer': answer,
+          'question': question,
+        },
+      };
+}
+
+// Sorting Question
+class SortingQuestionType extends Question {
+  final String category1;
+  final String category2;
+  final List<String> category1Data;
+  final List<String> category2Data;
+
+  SortingQuestionType(
+      {required this.category1Data,
+      required this.category2Data,
+      required this.category1,
+      required this.category2,
+      required String question})
+      : super.withType(question, QuestionType.identifyimage);
+
+  factory SortingQuestionType.fromJson(Map<String, dynamic> json) {
+    return SortingQuestionType(
+      question: json['sortingquestion']['question'],
+      category1: json['sortingquestion']['category1'],
+      category2: json['sortingquestion']['category2'],
+      category1Data: json['sortingquestion']['category1_data'],
+      category2Data: json['sortingquestion']['category2_data'],
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+        'sortingquestion': {
+          'question': question,
+          'category1': category1,
+          'category2': category2,
+          'category1_data': category1Data,
+          'category2_data': category2Data,
+        },
+      };
+}
+
 List<Question> allWorsheetQuestins(String yourApiResponse) {
   // Example of parsing the provided JSON response
   final List<List<Map<String, dynamic>>> questionsList =
@@ -490,7 +576,7 @@ List<Question> allWorsheetQuestins(String yourApiResponse) {
           allQuestions.add(MatchTheFollowingQuestion.fromJson(questionData));
           break;
         case 'oneword':
-          allQuestions.add(OneWordQuestion.fromJson(questionData));
+          allQuestions.add(OneWordQuestionType.fromJson(questionData));
           break;
         case 'selectword':
           allQuestions.add(SelectWordQuestion.fromJson(questionData));
@@ -508,6 +594,9 @@ List<Question> allWorsheetQuestins(String yourApiResponse) {
           allQuestions.add(ArithmeticQuestion.fromJson(questionData));
           break;
         case 'longanswer':
+          allQuestions.add(LongAnswerQuestionType.fromJson(questionData));
+          break;
+        case 'rearrange':
           allQuestions.add(LongAnswerQuestionType.fromJson(questionData));
           break;
         // Add cases for other question types here

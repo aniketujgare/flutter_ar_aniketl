@@ -1,19 +1,13 @@
 import 'package:collection/collection.dart';
-import 'package:connection_notifier/connection_notifier.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_ar/presentation/worksheet/widgets/questions/odd_one_out_question.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:lottie/lottie.dart';
 import 'package:size_config/size_config.dart';
 
 import '../../../../core/util/device_type.dart';
-import '../../../core/reusable_widgets/network_disconnected.dart';
 import '../../../core/util/styles.dart';
 import '../bloc/worksheet_solver_cubit/worksheet_solver_cubit.dart';
 import '../models/questions.dart';
 import '../widgets/appbar_worksheet_solver.dart';
-import '../widgets/asc_dec.dart';
 import '../widgets/bottom_indicator_bar_questions.dart';
 import '../widgets/questions/ascending_decending_question.dart';
 import '../widgets/questions/fill_in_blank_question.dart';
@@ -21,9 +15,10 @@ import '../widgets/questions/long_answer_question.dart';
 import '../widgets/questions/match_the_following_question.dart';
 import '../widgets/questions/mcq_image_question.dart';
 import '../widgets/questions/mcq_text_question.dart';
+import '../widgets/questions/odd_one_out_question.dart';
+import '../widgets/questions/oneword_question.dart';
 import '../widgets/questions/select_correct_word_question.dart';
 import '../widgets/questions/true_or_false_question.dart';
-import '../widgets/worksheet_submitted_box.dart';
 
 class WorksheetSolverView extends StatefulWidget {
   final int workSheetId;
@@ -90,90 +85,16 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView> {
           markedAnswer: markedAnswer,
         );
       case QuestionType.oneWord:
-        OneWordQuestion oneWordQuestion = state.questions[i] as OneWordQuestion;
-        String? ans = markedAnswer;
+        OneWordQuestionType oneWordQuestion =
+            state.questions[i] as OneWordQuestionType;
+        // String? ans = markedAnswer;
 
-        return GestureDetector(
-          onTap: () {
-            // Dismiss the keyboard when tapped outside the TextField
-            // print('tapped outside textfield');
-            FocusScope.of(context).requestFocus(FocusNode());
-          },
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                DeviceType().isMobile ? 120.verticalSpacer : 160.verticalSpacer,
-                Text(
-                  oneWordQuestion.question,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: const Color(0xFF212121),
-                    fontSize: 160.sp,
-                    fontFamily: 'Nunito',
-                    fontWeight: FontWeight.w500,
-                    height: 0,
-                  ),
-                ),
-                DeviceType().isMobile ? 55.verticalSpacer : 85.verticalSpacer,
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 7.wp),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Stack(
-                        children: [
-                          SizedBox(
-                            width: 70.wp,
-                            height: 60,
-                            child: Image.asset(
-                              'assets/images/PNG Icons/Vector.png',
-                              fit: BoxFit.fill,
-                            ),
-                          ),
-                          Transform.translate(
-                            offset: Offset(0, 5.h),
-                            child: Container(
-                              width: 70.wp,
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 15),
-                              child: TextFormField(
-                                decoration: const InputDecoration(
-                                  // labelText: 'Type your answer',
-                                  border: InputBorder.none,
-                                ),
-                                initialValue: ans,
-                                onChanged: (value) {
-                                  context
-                                      .read<WorksheetSolverCubit>()
-                                      .setAnswer(i, value);
-                                },
-                                onEditingComplete: () {
-                                  print('complete');
-                                  FocusScope.of(context)
-                                      .requestFocus(FocusNode());
-                                },
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      5.horizontalSpacerPercent,
-                      SizedBox(
-                          width: 55,
-                          child:
-                              Image.asset('assets/images/PNG Icons/Cam 1.png'))
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
+        return OneWordQuestion(
+            questionIndex: i,
+            context: context,
+            oneWordQuestion: oneWordQuestion,
+            markedAnswer: markedAnswer);
       case QuestionType.selectWord:
-        SelectWordQuestion selectWordQuestion =
-            state.questions[i] as SelectWordQuestion;
         return SelectCorrectWordQuestion(
           questionIndex: i,
           question: state.questions[i] as SelectWordQuestion,
@@ -192,7 +113,25 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView> {
         return _buildOddOneOutImageQuestion(
             i, oddOneOutImageQuestion, markedAnswer);
       case QuestionType.ascDescOrder:
-        // return const AscendingDecendingTese();
+        // String questionn =
+        //     "This method also of type allows for easier not any shuffling of just array,";
+        // String answerr =
+        //     "This method also allows for easier shuffling of any type of array, not just";
+        // var newQ = RearrangeQuestionType(answer: answerr, question: questionn);
+        // return ReArrangeWordsQuestion(
+        //   question: newQ as RearrangeQuestionType,
+        //   markedAnswer: markedAnswer,
+        //   questionIndex: i,
+        // );
+        // var newQII = IdentifyImageQuestionType(
+        //     answer: 'zoro',
+        //     question:
+        //         'https://smartxruserfiles1.s3.ap-south-1.amazonaws.com/teacher/1/worksheet/850/ii_mcq/4wfdhskzr/0.png');
+        // return IdentifyImageQuestion(
+        //   questionIndex: i,
+        //   question: newQII,
+        //   markedAnswer: markedAnswer,
+        // );
         return AscendingDecendingQuestion(
           questionIndex: i,
           question: state.questions[i] as AscDescOrderQuestion,

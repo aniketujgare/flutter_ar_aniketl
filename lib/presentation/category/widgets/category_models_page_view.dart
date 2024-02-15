@@ -176,11 +176,13 @@ class _CategoryModelsPageViewState extends State<CategoryModelsPageView> {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: 10.wp),
+          padding: EdgeInsets.symmetric(
+              horizontal: DeviceType().isMobile ? 20.wp : 10.wp),
           child: buildRow(startIndex, endIndex, arModels),
         ),
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: 10.wp),
+          padding: EdgeInsets.symmetric(
+              horizontal: DeviceType().isMobile ? 20.wp : 10.wp),
           child: buildRow(startIndex + 3, endIndex, arModels),
         ),
       ],

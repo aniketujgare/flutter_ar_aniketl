@@ -31,6 +31,7 @@ class _WorksheetHistoryViewState extends State<WorksheetHistoryView> {
     context.read<WorksheetCubit>().getWorksheetsHistory();
   }
 
+  @override
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
@@ -56,7 +57,7 @@ class _WorksheetHistoryViewState extends State<WorksheetHistoryView> {
               ),
               const Spacer(),
               Text(
-                'Worksheets',
+                'Submitted Worksheets',
                 style: DeviceType().isMobile
                     ? AppTextStyles.uniformRounded136BoldAppBarStyle
                     : AppTextStyles.uniformRounded136BoldAppBarStyle
@@ -64,10 +65,7 @@ class _WorksheetHistoryViewState extends State<WorksheetHistoryView> {
               ),
               const Spacer(),
               GestureDetector(
-                onTap: () async {
-                  StudentProfileModel? v =
-                      await AuthenticationRepository().getStudentProfile();
-                  log(jsonEncode(v));
+                onTap: () {
                   Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => const WorksheetHistoryView()));
                 },
@@ -75,9 +73,6 @@ class _WorksheetHistoryViewState extends State<WorksheetHistoryView> {
                   margin: EdgeInsets.only(left: 2.wp, right: 3.wp),
                   height: 36.h,
                   width: 36.h,
-                  child: Image.asset(
-                    'assets/images/PNG Icons/history.png',
-                  ),
                 ),
               ),
             ],
@@ -93,13 +88,13 @@ class _WorksheetHistoryViewState extends State<WorksheetHistoryView> {
                     context.read<WorksheetHistoryPageCubit>().setmaxLength(
                         (BlocProvider.of<WorksheetCubit>(context)
                                     .state
-                                    .worksheets
+                                    .historyWorksheets
                                     .length /
                                 (DeviceType().isMobile ? 4 : 3))
                             .ceil());
                     return BlocBuilder<WorksheetHistoryPageCubit, int>(
                       builder: (context, index) {
-                        if (state.worksheets.isEmpty) {
+                        if (state.historyWorksheets.isEmpty) {
                           return Center(
                             child: Text(
                               'No Worksheets Available at the Moment',
@@ -127,15 +122,15 @@ class _WorksheetHistoryViewState extends State<WorksheetHistoryView> {
                                 (page + 1) * (DeviceType().isMobile ? 4 : 3);
 
                             // Ensure endIndex does not exceed the total number of elements
-                            endIndex = endIndex > state.worksheets.length
-                                ? state.worksheets.length
+                            endIndex = endIndex > state.historyWorksheets.length
+                                ? state.historyWorksheets.length
                                 : endIndex;
 
                             // Create a list of widgets for this page
                             List<Widget> pageWidgets = [];
 
                             for (int i = startIndex; i < endIndex; i++) {
-                              var workSheet = state.worksheets[i];
+                              var workSheet = state.historyWorksheets[i];
                               pageWidgets.add(
                                 Expanded(
                                   child: GestureDetector(
@@ -191,7 +186,7 @@ class _WorksheetHistoryViewState extends State<WorksheetHistoryView> {
               ),
               BlocBuilder<WorksheetCubit, WorksheetState>(
                 builder: (context, state) {
-                  if (state.worksheets.isNotEmpty) {
+                  if (state.historyWorksheets.isNotEmpty) {
                     return Padding(
                       padding: EdgeInsets.fromLTRB(8.wp, 4.wp, 8.wp, 4.wp),
                       child: Column(
@@ -334,7 +329,7 @@ class Lesson extends StatelessWidget {
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: const Color(0xff212121),
-                          fontSize: DeviceType().isMobile ? 16 : 20,
+                          fontSize: DeviceType().isMobile ? 16 : 65.sp,
                           fontFamily: 'Nunito',
                           fontWeight: FontWeight.w400,
                         ),
