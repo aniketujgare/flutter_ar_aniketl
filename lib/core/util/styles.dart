@@ -108,6 +108,11 @@ class AppTextStyles {
       fontSize: 88.sp,
       fontWeight: FontWeight.w400,
       color: AppColors.textFieldTextColor);
+  static var nunito88w600Text = _createTextStyle(
+      fontFamily: "Nunito",
+      fontSize: 88.sp,
+      fontWeight: FontWeight.w600,
+      color: AppColors.textFieldTextColor);
 
   static var nunito85w400Text = _createTextStyle(
       fontFamily: "Nunito",

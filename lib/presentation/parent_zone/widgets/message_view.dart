@@ -1,17 +1,16 @@
 import 'package:connection_notifier/connection_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../../../core/reusable_widgets/network_disconnected.dart';
-import '../../../core/util/reusable_widgets/reusable_button.dart';
-import '../../../data/models/teacher_message.dart';
-import '../bloc/teacher_message_cubit/teacher_message_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:size_config/size_config.dart';
 
+import '../../../core/reusable_widgets/network_disconnected.dart';
 import '../../../core/util/device_type.dart';
+import '../../../core/util/reusable_widgets/reusable_button.dart';
 import '../../../core/util/styles.dart';
+import '../../../data/models/teacher_message.dart';
+import '../bloc/teacher_message_cubit/teacher_message_cubit.dart';
 
 class MessageView extends StatefulWidget {
   final int teaherUserId;
@@ -28,9 +27,17 @@ class MessageView extends StatefulWidget {
 }
 
 class _MessageViewState extends State<MessageView> {
+  late ScrollController scrollController;
+
   @override
   void initState() {
     super.initState();
+    scrollController = ScrollController();
+    scrollController.animateTo(
+      0.0,
+      curve: Curves.easeOut,
+      duration: const Duration(milliseconds: 300),
+    );
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
     ]);
@@ -41,6 +48,7 @@ class _MessageViewState extends State<MessageView> {
 
   @override
   void dispose() {
+    scrollController.dispose();
     super.dispose();
   }
 
@@ -76,7 +84,15 @@ class _MessageViewState extends State<MessageView> {
                   shape: BoxShape.circle,
                 ),
                 child: Center(
-                  child: Text(widget.subject,
+                  child: Text(
+                      widget.teacher.contains(' ')
+                          ? widget.teacher
+                                  .replaceAll('Mr.', '')
+                                  .split(' ')
+                                  .first[0] +
+                              widget.teacher.replaceAll('Mr.', '').split(' ')[1]
+                                  [0]
+                          : widget.teacher.replaceAll('Mr.', '')[0],
                       style: DeviceType().isMobile
                           ? AppTextStyles.nunito85w700white
                           : AppTextStyles.nunito85w700white
@@ -95,7 +111,7 @@ class _MessageViewState extends State<MessageView> {
           ),
         ),
         body: ConnectionNotifierToggler(
-          disconnected: NetworkDisconnected(),
+          disconnected: const NetworkDisconnected(),
           connected: Padding(
             padding: EdgeInsets.fromLTRB(4.wp, 0, 4.wp, 0),
             child: BlocBuilder<TeacherMessageCubit, TeacherMessageState>(
@@ -116,6 +132,9 @@ class _MessageViewState extends State<MessageView> {
                   case TeacherMessageStatus.loaded:
                     return ListView.separated(
                       // reverse: true,
+                      padding: const EdgeInsets.only(top: 25),
+                      controller: scrollController,
+                      reverse: true,
                       itemCount: state.teachersMessages.length,
                       separatorBuilder: (BuildContext context, int index) {
                         return SizedBox(height: 20.h);
@@ -125,124 +144,20 @@ class _MessageViewState extends State<MessageView> {
                         switch (message.type) {
                           //! View Lesson
                           case "lesson":
-                            return Container(
-                              margin: EdgeInsets.only(bottom: 10.h),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.min,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    // message.date + message.time,
-                                    DateFormat('h:mm a MMM d').format(
-                                        createDateTime(
-                                            message.date, message.time)),
-                                    // '3:11 PM Dec 21',
-                                    style: AppTextStyles.nunito62w400TextItalic,
-                                  ),
-                                  Container(
-                                    width: 50.wp,
-                                    // height: 239.h,
-                                    padding: EdgeInsets.symmetric(
-                                        vertical: 3.wp, horizontal: 2.wp),
-                                    decoration: ShapeDecoration(
-                                      color: AppColors.accentColor,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(4.wp)),
-                                      ),
-                                    ),
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Text.rich(
-                                          TextSpan(
-                                            children: [
-                                              TextSpan(
-                                                text: '${message.subject}\n',
-                                                // 'EVS Lesson:\n',
-                                                style: AppTextStyles
-                                                    .nunito88w400Text,
-                                              ),
-                                              TextSpan(
-                                                text: message.content,
-                                                // 'Parts of a Plant',
-                                                style: AppTextStyles
-                                                    .nunito88w700Text,
-                                              ),
-                                            ],
-                                          ),
-                                          textAlign: TextAlign.center,
-                                        ),
-                                        10.verticalSpacer,
-                                        Text.rich(
-                                          TextSpan(
-                                            children: [
-                                              TextSpan(
-                                                text: 'Published on:\n',
-                                                style: AppTextStyles
-                                                    .nunito88w400Text,
-                                              ),
-                                              TextSpan(
-                                                text: DateFormat('MMM d, yyyy')
-                                                    .format(convertToDate(
-                                                        message.date)),
-                                                // 'April 28, 2023',
-                                                style: AppTextStyles
-                                                    .nunito88w700Text,
-                                              ),
-                                            ],
-                                          ),
-                                          textAlign: TextAlign.center,
-                                        ),
-                                        10.verticalSpacer,
-                                        ReusableButton(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 0),
-                                          onPressed: () {},
-                                          buttonColor: AppColors.primaryColor,
-                                          text: 'View Lesson',
-                                          textColor: Colors.white,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            );
+                            // return const TeacherPoll(
+                            //   isOp1Checked: true,
+                            //   pollQuestion:
+                            //       'The question entered by the teacher',
+                            //   option1: 'Option 1',
+                            //   option2: 'Option 2',
+                            //   votes1: 1,
+                            //   votes2: 1,
+                            // );
+                            return buildLesson(message);
 
                           case "text":
                             return //!Message
-                                Container(
-                              margin: EdgeInsets.only(bottom: 10.h),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.min,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    '3:11 PM Dec 21',
-                                    style: AppTextStyles.nunito62w400TextItalic,
-                                  ),
-                                  Container(
-                                      width: double.maxFinite,
-                                      padding: EdgeInsets.all(3.wp),
-                                      decoration: ShapeDecoration(
-                                        color: AppColors.messageContainerColor,
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(4.wp)),
-                                        ),
-                                      ),
-                                      child: Text(
-                                        message.content,
-                                        style: AppTextStyles.nunito88w400Text,
-                                      )),
-                                ],
-                              ),
-                            );
+                                buildMessage(message);
                         }
                       },
                     );
@@ -438,6 +353,253 @@ class _MessageViewState extends State<MessageView> {
             */
           ),
         ),
+      ),
+    );
+  }
+
+  Container buildMessage(TeacherMessageModel message) {
+    return Container(
+      margin: EdgeInsets.only(bottom: 10.h),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            '3:11 PM Dec 21',
+            style: AppTextStyles.nunito62w400TextItalic,
+          ),
+          Container(
+            width: double.maxFinite,
+            padding: EdgeInsets.all(3.wp),
+            decoration: ShapeDecoration(
+              color: AppColors.messageContainerColor,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(4.wp)),
+              ),
+            ),
+            child: Text(
+              message.content,
+              style: AppTextStyles.nunito88w400Text,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Container buildLesson(TeacherMessageModel message) {
+    return Container(
+      margin: EdgeInsets.only(bottom: 10.h),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            // message.date + message.time,
+            DateFormat('h:mm a MMM d')
+                .format(createDateTime(message.date, message.time)),
+            // '3:11 PM Dec 21',
+            style: AppTextStyles.nunito62w400TextItalic,
+          ),
+          Container(
+            width: 50.wp,
+            // height: 239.h,
+            padding: EdgeInsets.symmetric(vertical: 3.wp, horizontal: 2.wp),
+            decoration: ShapeDecoration(
+              color: AppColors.accentColor,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(4.wp)),
+              ),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text.rich(
+                  TextSpan(
+                    children: [
+                      TextSpan(
+                        text: '${message.subject}\n',
+                        // 'EVS Lesson:\n',
+                        style: AppTextStyles.nunito88w400Text,
+                      ),
+                      TextSpan(
+                        text: message.content,
+                        // 'Parts of a Plant',
+                        style: AppTextStyles.nunito88w700Text,
+                      ),
+                    ],
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                10.verticalSpacer,
+                Text.rich(
+                  TextSpan(
+                    children: [
+                      TextSpan(
+                        text: 'Published on:\n',
+                        style: AppTextStyles.nunito88w400Text,
+                      ),
+                      TextSpan(
+                        text: DateFormat('MMM d, yyyy')
+                            .format(convertToDate(message.date)),
+                        // 'April 28, 2023',
+                        style: AppTextStyles.nunito88w700Text,
+                      ),
+                    ],
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                10.verticalSpacer,
+                ReusableButton(
+                  padding: const EdgeInsets.symmetric(horizontal: 0),
+                  onPressed: () {},
+                  buttonColor: AppColors.primaryColor,
+                  text: 'View Lesson',
+                  textColor: Colors.white,
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class TeacherPoll extends StatefulWidget {
+  final String pollQuestion;
+  final String option1;
+  final String option2;
+  final int votes1;
+  final int votes2;
+  final bool isOp1Checked;
+
+  const TeacherPoll({
+    Key? key,
+    required this.pollQuestion,
+    required this.isOp1Checked,
+    required this.option1,
+    required this.option2,
+    required this.votes1,
+    required this.votes2,
+  }) : super(key: key);
+
+  @override
+  State<TeacherPoll> createState() => _TeacherPollState();
+}
+
+class _TeacherPollState extends State<TeacherPoll> {
+  bool isOp1CheckedCopy = false; // Track the state of the first checkbox
+  @override
+  void initState() {
+    isOp1CheckedCopy = widget.isOp1Checked;
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.only(bottom: 10.h),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Container(
+            width: 50.wp,
+            padding: EdgeInsets.symmetric(vertical: 3.wp, horizontal: 2.wp),
+            decoration: ShapeDecoration(
+              color: AppColors.accentColor,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(4.wp)),
+              ),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  widget.pollQuestion,
+                  style: AppTextStyles.nunito88w600Text,
+                ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Transform.scale(
+                      scale: 1.5,
+                      child: Checkbox(
+                        value: isOp1CheckedCopy,
+                        fillColor: !isOp1CheckedCopy
+                            ? MaterialStateProperty.all(Colors.white)
+                            : null,
+                        onChanged: (val) {
+                          setState(() {
+                            isOp1CheckedCopy = val ?? false;
+                          });
+                        },
+                        side: BorderSide(
+                          width: 1.5,
+                          color: AppColors.primaryColor,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                      ),
+                    ),
+                    Text(
+                      widget.option1,
+                      style: AppTextStyles.nunito88w400Text,
+                    ),
+                    const Spacer(),
+                    Text(
+                      'Votes: ${widget.votes1}',
+                      style: AppTextStyles.nunito75w400Text,
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Transform.scale(
+                      scale: 1.5,
+                      child: Checkbox(
+                        value: !isOp1CheckedCopy,
+                        onChanged: (val) {
+                          setState(() {
+                            isOp1CheckedCopy = !isOp1CheckedCopy;
+                          });
+                        },
+                        fillColor: !isOp1CheckedCopy
+                            ? null
+                            : MaterialStateProperty.all(Colors.white),
+                        side: BorderSide(
+                          width: 1.5,
+                          color: AppColors.primaryColor,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                      ),
+                    ),
+                    Text(
+                      widget.option2,
+                      style: AppTextStyles.nunito88w400Text,
+                    ),
+                    const Spacer(),
+                    Text(
+                      'Votes: ${widget.votes2}',
+                      style: AppTextStyles.nunito75w400Text,
+                    ),
+                  ],
+                )
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
