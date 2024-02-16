@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../core/util/device_type.dart';
 import '../../../core/util/styles.dart';
 import '../bloc/worksheet_solver_cubit/worksheet_solver_cubit.dart';
 
@@ -14,7 +15,7 @@ class BottomIndicatorQuestions extends StatelessWidget {
     return Align(
       alignment: Alignment.bottomCenter,
       child: SizedBox(
-        height: 56,
+        height: DeviceType().isMobile ? 56 : 80,
         child: BlocBuilder<WorksheetSolverCubit, WorksheetSolverState>(
           builder: (context, state) {
             return ListView.builder(

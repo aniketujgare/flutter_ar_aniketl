@@ -132,7 +132,7 @@ class _MessageViewState extends State<MessageView> {
                   case TeacherMessageStatus.loaded:
                     return ListView.separated(
                       // reverse: true,
-                      padding: const EdgeInsets.only(top: 25),
+                      padding: const EdgeInsets.only(top: 25, bottom: 25),
                       controller: scrollController,
                       reverse: true,
                       itemCount: state.teachersMessages.length,
@@ -145,7 +145,7 @@ class _MessageViewState extends State<MessageView> {
                           //! View Lesson
                           case "lesson":
                             // return const TeacherPoll(
-                            //   isOp1Checked: true,
+                            //   isOp1Checked: null,
                             //   pollQuestion:
                             //       'The question entered by the teacher',
                             //   option1: 'Option 1',
@@ -475,7 +475,7 @@ class TeacherPoll extends StatefulWidget {
   final String option2;
   final int votes1;
   final int votes2;
-  final bool isOp1Checked;
+  final bool? isOp1Checked;
 
   const TeacherPoll({
     Key? key,
@@ -492,10 +492,12 @@ class TeacherPoll extends StatefulWidget {
 }
 
 class _TeacherPollState extends State<TeacherPoll> {
-  bool isOp1CheckedCopy = false; // Track the state of the first checkbox
+  bool? isOp1CheckedCopy; // Track the state of the first checkbox
+  bool? isOp2CheckedCopy; // Track the state of the first checkbox
   @override
   void initState() {
     isOp1CheckedCopy = widget.isOp1Checked;
+    isOp2CheckedCopy = isOp1CheckedCopy != null ? !isOp1CheckedCopy! : null;
     super.initState();
   }
 
@@ -509,7 +511,7 @@ class _TeacherPollState extends State<TeacherPoll> {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Container(
-            width: 50.wp,
+            width: DeviceType().isMobile ? double.infinity : 50.wp,
             padding: EdgeInsets.symmetric(vertical: 3.wp, horizontal: 2.wp),
             decoration: ShapeDecoration(
               color: AppColors.accentColor,
@@ -517,86 +519,104 @@ class _TeacherPollState extends State<TeacherPoll> {
                 borderRadius: BorderRadius.all(Radius.circular(4.wp)),
               ),
             ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  widget.pollQuestion,
-                  style: AppTextStyles.nunito88w600Text,
-                ),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Transform.scale(
-                      scale: 1.5,
-                      child: Checkbox(
-                        value: isOp1CheckedCopy,
-                        fillColor: !isOp1CheckedCopy
-                            ? MaterialStateProperty.all(Colors.white)
-                            : null,
-                        onChanged: (val) {
-                          setState(() {
-                            isOp1CheckedCopy = val ?? false;
-                          });
-                        },
-                        side: BorderSide(
-                          width: 1.5,
-                          color: AppColors.primaryColor,
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(6),
-                        ),
-                      ),
-                    ),
-                    Text(
-                      widget.option1,
-                      style: AppTextStyles.nunito88w400Text,
-                    ),
-                    const Spacer(),
-                    Text(
-                      'Votes: ${widget.votes1}',
-                      style: AppTextStyles.nunito75w400Text,
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    Transform.scale(
-                      scale: 1.5,
-                      child: Checkbox(
-                        value: !isOp1CheckedCopy,
-                        onChanged: (val) {
-                          setState(() {
-                            isOp1CheckedCopy = !isOp1CheckedCopy;
-                          });
-                        },
-                        fillColor: !isOp1CheckedCopy
-                            ? null
-                            : MaterialStateProperty.all(Colors.white),
-                        side: BorderSide(
-                          width: 1.5,
-                          color: AppColors.primaryColor,
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(6),
+            child: Padding(
+              padding: EdgeInsets.only(right: 3.wp),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    widget.pollQuestion,
+                    style: AppTextStyles.nunito88w600Text,
+                  ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Transform.scale(
+                        scale: 1.5,
+                        child: Checkbox(
+                          value: isOp1CheckedCopy ?? false, //isOp1CheckedCopy,
+                          fillColor: (isOp1CheckedCopy == null ||
+                                  isOp1CheckedCopy == false)
+                              ? MaterialStateProperty.all(Colors.white)
+                              : null,
+                          onChanged: (val) {
+                            setState(() {
+                              isOp1CheckedCopy = val ?? false;
+                              if (isOp1CheckedCopy != null &&
+                                  isOp1CheckedCopy == true) {
+                                isOp2CheckedCopy = false;
+                              }
+                            });
+                          },
+                          side: BorderSide(
+                            width: 1.5,
+                            color: AppColors.primaryColor,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(6),
+                          ),
                         ),
                       ),
-                    ),
-                    Text(
-                      widget.option2,
-                      style: AppTextStyles.nunito88w400Text,
-                    ),
-                    const Spacer(),
-                    Text(
-                      'Votes: ${widget.votes2}',
-                      style: AppTextStyles.nunito75w400Text,
-                    ),
-                  ],
-                )
-              ],
+                      Text(
+                        widget.option1,
+                        style: AppTextStyles.nunito88w400Text,
+                      ),
+                      const Spacer(),
+                      Text(
+                        'Votes: ${widget.votes1}',
+                        style: AppTextStyles.nunito75w400Text,
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Transform.scale(
+                        scale: 1.5,
+                        child: Checkbox(
+                          value: isOp2CheckedCopy ??
+                              false, // isOp1CheckedCopy != null ? !isOp1CheckedCopy! : null,
+                          fillColor: (isOp2CheckedCopy == null ||
+                                  isOp2CheckedCopy == false)
+                              ? MaterialStateProperty.all(Colors.white)
+                              : null,
+                          onChanged: (val) {
+                            setState(() {
+                              isOp2CheckedCopy = val ?? false;
+                              if (isOp2CheckedCopy != null &&
+                                  isOp2CheckedCopy == true) {
+                                isOp1CheckedCopy = false;
+                              }
+                              // if (isOp2CheckedCopy != null &&
+                              //     isOp2CheckedCopy == false) {
+                              //   isOp1CheckedCopy = !isOp2CheckedCopy!;
+                              // }
+                            });
+                          },
+                          side: BorderSide(
+                            width: 1.5,
+                            color: AppColors.primaryColor,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                        ),
+                      ),
+                      Text(
+                        widget.option2,
+                        style: AppTextStyles.nunito88w400Text,
+                      ),
+                      const Spacer(),
+                      Text(
+                        'Votes: ${widget.votes2}',
+                        style: AppTextStyles.nunito75w400Text,
+                      ),
+                    ],
+                  )
+                ],
+              ),
             ),
           ),
         ],

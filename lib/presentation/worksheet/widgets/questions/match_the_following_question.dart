@@ -1,5 +1,9 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_ar/core/util/constants.dart';
+import 'package:flutter_ar/core/util/device_type.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:size_config/size_config.dart';
 
@@ -9,9 +13,13 @@ import '../../models/questions.dart';
 
 class MatchFollowingQuestion extends StatefulWidget {
   const MatchFollowingQuestion(
-      {Key? key, required this.question, this.markedAnswer})
+      {Key? key,
+      required this.question,
+      this.markedAnswer,
+      required this.screenSize})
       : super(key: key);
   final MatchTheFollowingQuestion question;
+  final Size screenSize;
 
   final dynamic markedAnswer;
   @override
@@ -31,43 +39,61 @@ class MatchFollowingQuestionState extends State<MatchFollowingQuestion> {
   @override
   void initState() {
     super.initState();
-    // debugPrint('marked answers: ${widget.markedAnswer}');
+    debugPrint(
+        'screenSize: ${widget.screenSize.width} || ${widget.screenSize.height}');
     // debugPrint('options mtd: ${widget.question.options}');
     // super.initState();
     questionsList = widget.question.options.keys.toList();
+    double halfEmptyBox = (questionsList.length - 1 + 2) / 2;
+    int fullQuesBox = questionsList.length;
+    double singleBoxSize =
+        widget.screenSize.width / (fullQuesBox + halfEmptyBox);
+    print('singleBoxSize: $singleBoxSize');
+
     //check for question has images or text
     if (questionsList.first.contains('http')) {
+      if (Platform.isAndroid) {
+        singleBoxSize = 110.h;
+      }
       //image question
-      boxSizes = const Size(85, 85);
+      boxSizes = Size(singleBoxSize, singleBoxSize);
     } else {
       //text question
       isImageQuestion = false;
-      boxSizes = const Size(145, 55);
+      boxSizes = Size(singleBoxSize, 75.h);
     }
     answersList = widget.question.options.values.toList()..shuffle();
-    double startX = 100.wp / (questionsList.length + questionsList.length - 1);
 
-    if (!isImageQuestion) {
-      startX = 10.wp;
-    }
-    //?fill question boxes
+    double availableVerticSpace = widget.screenSize.height -
+        singleBoxSize -
+        2 * Constants.appBarSizeWorksheet -
+        singleBoxSize / 5; //app-btm bar,boxsize
+    double availableVerticSpaceText = widget.screenSize.height -
+        75.h -
+        2 * Constants.appBarSizeWorksheet -
+        singleBoxSize / 5; //app-btm bar,boxsize
+    double availableWidth =
+        widget.screenSize.width - questionsList.length * singleBoxSize;
     for (var i = 0; i < widget.question.options.length; i++) {
       boxPositions.add(Offset(
-          isImageQuestion ? 20.wp + (50.wp * i) : 12.wp + (50.wp * i), 25.0.h));
+          availableWidth / (questionsList.length + 1) +
+              ((singleBoxSize + (availableWidth / (questionsList.length + 1))) *
+                  i),
+          singleBoxSize / 5));
     }
     //?fill answer boxes
     for (var i = widget.question.options.length - 1; i >= 0; i--) {
       boxPositions.add(Offset(
-          isImageQuestion ? 20.wp + (50.wp * i) : 12.wp + (50.wp * i),
-          isImageQuestion ? 260.0.h : 290.0.h));
+          availableWidth / (questionsList.length + 1) +
+              ((singleBoxSize + (availableWidth / (questionsList.length + 1))) *
+                  i),
+          isImageQuestion ? availableVerticSpace : availableVerticSpaceText));
     }
 
     drawSavedAnswer();
   }
 
   void drawSavedAnswer() {
-    var originalAns = widget.question.options.values.toList();
-
     if (widget.markedAnswer != null &&
         (widget.markedAnswer as List).isNotEmpty) {
       for (int i = 0; i < widget.markedAnswer.length; i++) {

@@ -80,9 +80,11 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView> {
         );
 
       case QuestionType.matchTheFollowing:
+        Size screenSize = MediaQuery.of(context).size;
         return MatchFollowingQuestion(
           question: state.questions[i] as MatchTheFollowingQuestion,
           markedAnswer: markedAnswer,
+          screenSize: screenSize,
         );
       case QuestionType.oneWord:
         OneWordQuestionType oneWordQuestion =
@@ -157,11 +159,12 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView> {
       canPop: false,
       child: Scaffold(
         bottomNavigationBar: Container(
-          height: 56,
+          height: DeviceType().isMobile ? 56 : 80,
           width: double.infinity,
           color: AppColors.primaryColor,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Padding(
                 padding: EdgeInsets.only(left: 8.wp),
