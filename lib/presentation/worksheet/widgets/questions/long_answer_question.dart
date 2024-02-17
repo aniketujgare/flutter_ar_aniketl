@@ -18,10 +18,12 @@ class LongAnswerQuestion extends StatefulWidget {
     required this.questionIndex,
     required this.question,
     required this.markedAnswer,
+    required this.screenSize,
   });
   final int questionIndex;
   final LongAnswerQuestionType question;
   final dynamic markedAnswer;
+  final Size screenSize;
 
   @override
   State<LongAnswerQuestion> createState() => _LongAnswerQuestionState();
@@ -61,7 +63,9 @@ class _LongAnswerQuestionState extends State<LongAnswerQuestion> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              DeviceType().isMobile ? 105.verticalSpacer : 160.verticalSpacer,
+              DeviceType().isMobile
+                  ? 105.verticalSpacer
+                  : (widget.screenSize.height * 0.3).verticalSpacer,
               QuestionText(question: widget.question.question),
               DeviceType().isMobile ? 55.verticalSpacer : 85.verticalSpacer,
               GestureDetector(

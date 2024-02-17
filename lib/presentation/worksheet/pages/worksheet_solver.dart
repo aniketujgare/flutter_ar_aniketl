@@ -18,6 +18,7 @@ import '../widgets/questions/mcq_text_question.dart';
 import '../widgets/questions/odd_one_out_question.dart';
 import '../widgets/questions/oneword_question.dart';
 import '../widgets/questions/select_correct_word_question.dart';
+import '../widgets/questions/sort_question.dart';
 import '../widgets/questions/true_or_false_question.dart';
 
 class WorksheetSolverView extends StatefulWidget {
@@ -58,17 +59,32 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView> {
           markedAnswer: markedAnswer,
         );
       case QuestionType.mcqImage:
+        Size screenSize = MediaQuery.of(context).size;
         return MCQImageQuestion(
-          questionIndex: i,
-          question: state.questions[i] as McqImageQuestion,
-          markedAnswer: markedAnswer,
-        );
+            questionIndex: i,
+            question: state.questions[i] as McqImageQuestion,
+            markedAnswer: markedAnswer,
+            screenSize: screenSize);
       case QuestionType.fillBlank:
+        Size screenSize = MediaQuery.of(context).size;
+
+        // var qty = SortingQuestionType(
+        //   category1Data: ["ant", "cat", "dog"],
+        //   category2Data: ["bat", "ball", "mat"],
+        //   category1: "living",
+        //   category2: "non-living",
+        //   question: "sort foolowing",
+        // );
+        // return SortQuestion(
+        //     question: qty,
+        //     markedAnswer: null,
+        //     questionIndex: i,
+        //     screenSize: screenSize);
         return FillInTheBlankQuestion(
-          question: state.questions[i] as FillBlankQuestion,
-          markedAnswer: markedAnswer,
-          questionIndex: i,
-        );
+            question: state.questions[i] as FillBlankQuestion,
+            markedAnswer: markedAnswer,
+            questionIndex: i,
+            screenSize: screenSize);
 
       case QuestionType.multiplefillblank:
         return const Text('Multiple FillBlank not available');
@@ -87,15 +103,15 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView> {
           screenSize: screenSize,
         );
       case QuestionType.oneWord:
-        OneWordQuestionType oneWordQuestion =
-            state.questions[i] as OneWordQuestionType;
+        Size screenSize = MediaQuery.of(context).size;
         // String? ans = markedAnswer;
 
         return OneWordQuestion(
             questionIndex: i,
             context: context,
-            oneWordQuestion: oneWordQuestion,
-            markedAnswer: markedAnswer);
+            oneWordQuestion: state.questions[i] as OneWordQuestionType,
+            markedAnswer: markedAnswer,
+            screenSize: screenSize);
       case QuestionType.selectWord:
         return SelectCorrectWordQuestion(
           questionIndex: i,
@@ -134,19 +150,22 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView> {
         //   question: newQII,
         //   markedAnswer: markedAnswer,
         // );
+        Size screenSize = MediaQuery.of(context).size;
+
         return AscendingDecendingQuestion(
-          questionIndex: i,
-          question: state.questions[i] as AscDescOrderQuestion,
-          markedAnswer: markedAnswer,
-        );
+            questionIndex: i,
+            question: state.questions[i] as AscDescOrderQuestion,
+            markedAnswer: markedAnswer,
+            screenSize: screenSize);
       case QuestionType.arithmetic:
         return Text(state.questions[i].questionType.toString());
       case QuestionType.longAnswer:
+        Size screenSize = MediaQuery.of(context).size;
         return LongAnswerQuestion(
-          questionIndex: i,
-          question: state.questions[i] as LongAnswerQuestionType,
-          markedAnswer: markedAnswer,
-        );
+            questionIndex: i,
+            question: state.questions[i] as LongAnswerQuestionType,
+            markedAnswer: markedAnswer,
+            screenSize: screenSize);
       default:
         return Text(
             'UI for ${state.questions[i].questionType.toString()} doesn\'t exists');

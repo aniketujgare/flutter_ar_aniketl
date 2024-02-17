@@ -12,11 +12,13 @@ class AscendingDecendingQuestion extends StatefulWidget {
   final int questionIndex;
   final AscDescOrderQuestion question;
   final List<String>? markedAnswer;
+  final Size screenSize;
   const AscendingDecendingQuestion(
       {super.key,
       required this.questionIndex,
       required this.question,
-      required this.markedAnswer});
+      required this.markedAnswer,
+      required this.screenSize});
 
   @override
   State<AscendingDecendingQuestion> createState() =>
@@ -27,6 +29,7 @@ class _AscendingDecendingQuestionState
     extends State<AscendingDecendingQuestion> {
   List<bool> isDraggedList = [];
   List<String> selectedAnswer = [];
+  late double singleBoxSize;
   @override
   void initState() {
     print('marked answers: ${widget.markedAnswer}');
@@ -43,6 +46,11 @@ class _AscendingDecendingQuestionState
           selectedAnswer[i] = widget.markedAnswer![i];
         }
       }
+    //? Setting up box sixe
+    double halfEmptyBox = (widget.question.numbers.length - 1 + 2) / 2;
+    int fullQuesBox = widget.question.numbers.length;
+    singleBoxSize = widget.screenSize.width / (fullQuesBox + halfEmptyBox);
+    //?
     super.initState();
   }
 
@@ -64,54 +72,55 @@ class _AscendingDecendingQuestionState
               children: List.generate(widget.question.numbers.length, (index) {
                 for (var i = 0; i < selectedAnswer.length; i++) {
                   if (selectedAnswer.contains(widget.question.numbers[index])) {
-                    return Expanded(
-                      child: SizedBox(
-                        height: 65.h,
-                        width: 30.wp,
-                      ),
+                    return SizedBox(
+                      height: 65.h,
+                      width: singleBoxSize,
                     );
                   }
                 }
-                return Expanded(
-                  child: Draggable<String>(
-                    data: widget.question.numbers[index],
-                    feedback: Container(
-                      height: 65.h,
-                      width: 30.wp,
-                      margin: EdgeInsets.symmetric(horizontal: 2.wp),
-                      decoration: ShapeDecoration(
-                        color: const Color(0xFFF4F2FE),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(17),
-                        ),
+                return Draggable<String>(
+                  data: widget.question.numbers[index],
+                  feedback: Container(
+                    height: 65.h,
+                    width: singleBoxSize,
+                    // margin: EdgeInsets.symmetric(horizontal: 2.wp),
+                    decoration: ShapeDecoration(
+                      color: const Color(0xFFF4F2FE),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(17),
                       ),
-                      child: Container(
-                        margin: EdgeInsets.symmetric(horizontal: 2.wp),
-                        padding: EdgeInsets.symmetric(horizontal: 1.wp),
-                        child: FittedBox(
-                          fit: BoxFit.scaleDown,
-                          child: Text(
-                            widget.question.numbers[index],
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(
-                              color: Color(0xFF4F3A9C),
-                              fontSize: 20,
-                              fontFamily: 'Nunito',
-                              fontWeight: FontWeight.w700,
-                            ),
+                    ),
+                    child: Container(
+                      height: 65.h,
+                      width: singleBoxSize,
+                      // margin: EdgeInsets.symmetric(horizontal: 2.wp),
+                      // padding: EdgeInsets.symmetric(horizontal: 1.wp),
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          widget.question.numbers[index],
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                            color: Color(0xFF4F3A9C),
+                            fontSize: 20,
+                            fontFamily: 'Nunito',
+                            fontWeight: FontWeight.w700,
                           ),
                         ),
                       ),
                     ),
-                    childWhenDragging: Container(
-                      width: 30.wp,
-                      padding: EdgeInsets.symmetric(vertical: 2.wp),
-                      decoration: ShapeDecoration(
-                        color: AppColors.hintTextColor,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(17),
-                        ),
+                  ),
+                  childWhenDragging: Container(
+                    height: 65.h,
+                    width: singleBoxSize,
+                    // padding: EdgeInsets.symmetric(vertical: 2.wp),
+                    decoration: ShapeDecoration(
+                      color: AppColors.hintTextColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(17),
                       ),
+                    ),
+                    child: Center(
                       child: Text(
                         widget.question.numbers[index],
                         textAlign: TextAlign.center,
@@ -123,30 +132,29 @@ class _AscendingDecendingQuestionState
                         ),
                       ),
                     ),
-                    child: Container(
-                      key: const Key('ascDesChild'),
-                      height: 65.h,
-                      margin: EdgeInsets.symmetric(horizontal: 2.wp),
-                      decoration: ShapeDecoration(
-                        color: const Color(0xFFF4F2FE),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(17),
-                        ),
+                  ),
+                  child: Container(
+                    height: 65.h,
+                    width: singleBoxSize,
+                    decoration: ShapeDecoration(
+                      color: const Color(0xFFF4F2FE),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(17),
                       ),
-                      child: Container(
-                        margin: EdgeInsets.symmetric(horizontal: 2.wp),
-                        padding: EdgeInsets.symmetric(horizontal: 1.wp),
-                        child: FittedBox(
-                          fit: BoxFit.scaleDown,
-                          child: Text(
-                            widget.question.numbers[index],
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(
-                              color: Color(0xFF4F3A9C),
-                              fontSize: 20,
-                              fontFamily: 'Nunito',
-                              fontWeight: FontWeight.w700,
-                            ),
+                    ),
+                    child: SizedBox(
+                      height: 65.h,
+                      width: singleBoxSize,
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          widget.question.numbers[index],
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                            color: Color(0xFF4F3A9C),
+                            fontSize: 20,
+                            fontFamily: 'Nunito',
+                            fontWeight: FontWeight.w700,
                           ),
                         ),
                       ),
@@ -164,15 +172,10 @@ class _AscendingDecendingQuestionState
               children: List.generate(
                 widget.question.numbers.length,
                 (index) {
-                  // int idx = selectedAnswer.indexWhere(
-                  //     (element) => widget.question.numbers[index] == element);
-                  // if (idx != -1) {
-                  //   selectedAnswer[idx] = ' ';
-                  //   isDraggedList[index] = false;
-                  // }
                   return Expanded(
                     child: DragTarget<String>(
-                      onWillAccept: (data) {
+                      onAccept: (data) {
+                        debugPrint('$data Dropped successfully!');
                         if (selectedAnswer.contains(data)) {
                           for (int i = 0; i < selectedAnswer.length; i++) {
                             if (selectedAnswer[i] == data) {
@@ -188,14 +191,6 @@ class _AscendingDecendingQuestionState
                         context
                             .read<WorksheetSolverCubit>()
                             .setAnswer(widget.questionIndex, selectedAnswer);
-
-                        return data == 'red';
-                      },
-                      onAccept: (data) {
-                        print('selected answers: $selectedAnswer');
-                        print('Dropped successfully!');
-                        // ScaffoldMessenger.of(context).showSnackBar(
-                        //     const SnackBar(content: Text('Dropped successfully!')));
                       },
                       builder: (
                         BuildContext context,

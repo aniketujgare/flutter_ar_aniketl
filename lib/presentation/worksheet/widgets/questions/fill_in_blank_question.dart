@@ -21,11 +21,12 @@ class FillInTheBlankQuestion extends StatefulWidget {
     required this.questionIndex,
     required this.question,
     required this.markedAnswer,
+    required this.screenSize,
   });
   final int questionIndex;
   final FillBlankQuestion question;
   final dynamic markedAnswer;
-
+  final Size screenSize;
   @override
   State<FillInTheBlankQuestion> createState() => _FillInTheBlankQuestionState();
 }
@@ -131,7 +132,7 @@ class _FillInTheBlankQuestionState extends State<FillInTheBlankQuestion> {
                     : 160.verticalSpacer)
                 : (DeviceType().isMobile
                     ? 80.verticalSpacer
-                    : 160.verticalSpacer),
+                    : (widget.screenSize.height * 0.23).verticalSpacer),
             QuestionText(question: widget.question.question),
             DeviceType().isMobile ? 55.verticalSpacer : 85.verticalSpacer,
             ...List.generate(

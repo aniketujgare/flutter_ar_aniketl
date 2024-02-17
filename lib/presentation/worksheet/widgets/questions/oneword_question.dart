@@ -13,11 +13,13 @@ class OneWordQuestion extends StatelessWidget {
     required this.oneWordQuestion,
     required this.markedAnswer,
     required this.questionIndex,
+    required this.screenSize,
   });
   final int questionIndex;
   final BuildContext context;
   final OneWordQuestionType oneWordQuestion;
   final dynamic markedAnswer;
+  final Size screenSize;
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +34,9 @@ class OneWordQuestion extends StatelessWidget {
           mainAxisSize: MainAxisSize.max,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            DeviceType().isMobile ? 120.verticalSpacer : 160.verticalSpacer,
+            DeviceType().isMobile
+                ? 120.verticalSpacer
+                : (screenSize.height * 0.25).verticalSpacer,
             Text(
               oneWordQuestion.question,
               textAlign: TextAlign.center,

@@ -13,11 +13,13 @@ class MCQImageQuestion extends StatelessWidget {
   final int questionIndex;
   final McqImageQuestion question;
   final dynamic markedAnswer;
+  final Size screenSize;
   const MCQImageQuestion(
       {super.key,
       required this.questionIndex,
       required this.question,
-      this.markedAnswer});
+      this.markedAnswer,
+      required this.screenSize});
 
   @override
   Widget build(BuildContext context) {
@@ -41,8 +43,8 @@ class MCQImageQuestion extends StatelessWidget {
                       .setAnswer(questionIndex, question.options[index]);
                 },
                 child: Container(
-                  height: 180.h,
-                  width: 180.h,
+                  height: screenSize.height / 3,
+                  width: screenSize.height / 3,
                   decoration: ShapeDecoration(
                     color: question.options[index] == markedAnswer
                         ? AppColors.boxSelectedColor
@@ -55,8 +57,8 @@ class MCQImageQuestion extends StatelessWidget {
                     imageUrl: question.options[index],
                     fit: BoxFit.scaleDown,
                     imageBuilder: (context, imageProvider) => Container(
-                      width: 180.h,
-                      height: 180.h,
+                      width: screenSize.height / 3,
+                      height: screenSize.height / 3,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(14),
                         image: DecorationImage(
