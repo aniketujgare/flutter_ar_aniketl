@@ -23,6 +23,12 @@ class MCQImageQuestion extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double halfEmptyBox = (question.options.length - 1 + 2) / 2;
+    int fullQuesBox = question.options.length;
+    double singleBoxSize = screenSize.width / (fullQuesBox + halfEmptyBox);
+    if (question.options.length <= 3) {
+      singleBoxSize = screenSize.width / 6.5;
+    }
     return Column(
       mainAxisSize: MainAxisSize.max,
       mainAxisAlignment: MainAxisAlignment.center,
@@ -31,52 +37,54 @@ class MCQImageQuestion extends StatelessWidget {
         QuestionText(question: question.question),
         DeviceType().isMobile ? 55.verticalSpacer : 85.verticalSpacer,
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20.wp),
+          padding: EdgeInsets.symmetric(horizontal: 5.wp),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: List.generate(
-              question.options.length,
-              (index) => GestureDetector(
-                onTap: () {
-                  context
-                      .read<WorksheetSolverCubit>()
-                      .setAnswer(questionIndex, question.options[index]);
-                },
-                child: Container(
-                  height: screenSize.height / 3,
-                  width: screenSize.height / 3,
-                  decoration: ShapeDecoration(
-                    color: question.options[index] == markedAnswer
-                        ? AppColors.boxSelectedColor
-                        : AppColors.boxUnselectedolor,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(17),
-                    ),
-                  ),
-                  child: CachedNetworkImage(
-                    imageUrl: question.options[index],
-                    fit: BoxFit.scaleDown,
-                    imageBuilder: (context, imageProvider) => Container(
-                      width: screenSize.height / 3,
-                      height: screenSize.height / 3,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(14),
-                        image: DecorationImage(
-                          image: imageProvider,
-                          fit: BoxFit.scaleDown,
-                        ),
+            children: [
+              ...List.generate(
+                question.options.length,
+                (index) => GestureDetector(
+                  onTap: () {
+                    context
+                        .read<WorksheetSolverCubit>()
+                        .setAnswer(questionIndex, question.options[index]);
+                  },
+                  child: Container(
+                    height: singleBoxSize,
+                    width: singleBoxSize,
+                    decoration: ShapeDecoration(
+                      color: question.options[index] == markedAnswer
+                          ? AppColors.boxSelectedColor
+                          : AppColors.boxUnselectedolor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(17),
                       ),
                     ),
-                    placeholder: (context, url) => const Center(
-                      child: CircularProgressIndicator.adaptive(
-                          strokeCap: StrokeCap.round),
+                    child: CachedNetworkImage(
+                      imageUrl: question.options[index],
+                      fit: BoxFit.scaleDown,
+                      imageBuilder: (context, imageProvider) => Container(
+                        width: screenSize.height / question.options.length,
+                        height: screenSize.height / question.options.length,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(14),
+                          image: DecorationImage(
+                            image: imageProvider,
+                            fit: BoxFit.scaleDown,
+                          ),
+                        ),
+                      ),
+                      placeholder: (context, url) => const Center(
+                        child: CircularProgressIndicator.adaptive(
+                            strokeCap: StrokeCap.round),
+                      ),
+                      errorWidget: (context, url, error) =>
+                          const Icon(Icons.error),
                     ),
-                    errorWidget: (context, url, error) =>
-                        const Icon(Icons.error),
                   ),
                 ),
-              ),
-            ),
+              )
+            ],
           ),
         ),
       ],

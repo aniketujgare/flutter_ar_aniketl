@@ -12,6 +12,8 @@ import 'data/models/student_profile_model.dart';
 import 'presentation/parent_zone/bloc/navbar_cubit/app_navigator_cubit.dart';
 import 'presentation/parent_zone/bloc/parent_details_cubit/parent_details_cubit.dart';
 import 'presentation/parent_zone/bloc/teacher_message_cubit/teacher_message_cubit.dart';
+import 'presentation/subject/widgets/pdf_viewer_page.dart';
+import 'presentation/subject/widgets/video_player.dart';
 import 'presentation/worksheet/bloc/worksheet_cubit/worksheet_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -38,6 +40,7 @@ import 'presentation/worksheet/bloc/worksheet_history_cubit/worksheet_history_cu
 import 'presentation/worksheet/bloc/worksheet_history_page_cubit/worksheet_history_page_cubit.dart';
 import 'presentation/worksheet/bloc/worksheet_page_cubit/worksheet_page_cubit.dart';
 import 'presentation/worksheet/bloc/worksheet_solver_cubit/worksheet_solver_cubit.dart';
+import 'temp_testing/html_view_screen.dart';
 
 final authenticationRepository = AuthenticationRepository();
 // void main() async {
@@ -171,18 +174,19 @@ class MyAppState extends State<MyApp> {
             ),
           ],
           child: MaterialApp(
-            debugShowCheckedModeBanner: false,
-            themeMode: ThemeMode.light,
-            home: widget.studentProfile == null
-                ? const LoginScreen()
-                : const SplashScreen(),
-            // theme: ThemeData(
-            //     appBarTheme: AppBarTheme(
-            //         systemOverlayStyle: SystemUiOverlayStyle(
-            //             statusBarBrightness: Brightness.light,
-            //             statusBarColor: AppColors.accentColor))),
-            // routerConfig: GoRouterProvider().goRouter(),
-          ),
+              debugShowCheckedModeBanner: false,
+              themeMode: ThemeMode.light,
+              home: VideoPlayerWidget()
+              // widget.studentProfile == null
+              //     ? const LoginScreen()
+              //     : const SplashScreen(),
+              // theme: ThemeData(
+              //     appBarTheme: AppBarTheme(
+              //         systemOverlayStyle: SystemUiOverlayStyle(
+              //             statusBarBrightness: Brightness.light,
+              //             statusBarColor: AppColors.accentColor))),
+              // routerConfig: GoRouterProvider().goRouter(),
+              ),
         ));
       },
     );

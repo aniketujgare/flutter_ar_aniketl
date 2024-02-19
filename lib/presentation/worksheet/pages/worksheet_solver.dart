@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_ar/presentation/worksheet/widgets/questions/odd_one_out_img_question.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:size_config/size_config.dart';
 
@@ -67,7 +68,21 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView> {
             screenSize: screenSize);
       case QuestionType.fillBlank:
         Size screenSize = MediaQuery.of(context).size;
-
+        var oddouQ = OddOneOutImageQuestion(
+            options: [
+              'https://smartxruserfiles1.s3.ap-south-1.amazonaws.com/teacher/1/worksheet/null/maths_mcq/d6666v8rb/0.png',
+              'https://d3ag5oij4wsyi3.cloudfront.net/mcq_images/mysurroundings/Sun+in+sky.png',
+              'https://d3ag5oij4wsyi3.cloudfront.net/mcq_images/mysurroundings/Sun+in+sky.png',
+              'https://d3ag5oij4wsyi3.cloudfront.net/mcq_images/mysurroundings/Sun+in+sky.png'
+            ],
+            answer:
+                'https://d3ag5oij4wsyi3.cloudfront.net/mcq_images/mysurroundings/Sun+in+sky.png',
+            question: 'Odd One out image');
+        return OddOneOutImgQuestion(
+            question: oddouQ,
+            markedAnswer: markedAnswer,
+            questionIndex: i,
+            screenSize: screenSize);
         // var qty = SortingQuestionType(
         //   category1Data: ["ant", "cat", "dog"],
         //   category2Data: ["bat", "ball", "mat"],
@@ -281,52 +296,6 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView> {
                           onChanged: (bool? value) {
                             // Handle radio button selection
                           },
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              );
-            },
-          ),
-        ),
-      ],
-    );
-  }
-
-  Column _buildOddOneOutTextQuestion(int i,
-      OddOneOutTextQuestion oddOneOutTextQuestion, dynamic markedAnswer) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-            '${i + 1}) ${oddOneOutTextQuestion.question}'), // Display the question
-        Column(
-          children: List.generate(
-            (oddOneOutTextQuestion.options.length / 2).ceil(),
-            (rowIndex) {
-              int startIndex = rowIndex * 2;
-              int endIndex = startIndex + 2;
-              endIndex = endIndex > oddOneOutTextQuestion.options.length
-                  ? oddOneOutTextQuestion.options.length
-                  : endIndex;
-
-              return Row(
-                children: List.generate(
-                  endIndex - startIndex,
-                  (j) {
-                    int optionIndex = startIndex + j;
-                    return Expanded(
-                      child: ListTile(
-                        title: Text(oddOneOutTextQuestion.options[optionIndex]),
-                        leading: Radio<bool>(
-                          value: oddOneOutTextQuestion.options[optionIndex] ==
-                                  markedAnswer
-                              ? true
-                              : false,
-                          groupValue: true,
-                          onChanged: null, // Set to null to disable interaction
                         ),
                       ),
                     );
