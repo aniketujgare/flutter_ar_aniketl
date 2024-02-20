@@ -34,7 +34,7 @@ def keystoreProperties = new Properties()
   }
 android {
     namespace "com.example.flutter_ar"
-    compileSdkVersion 33
+    compileSdkVersion 34
     ndkVersion flutter.ndkVersion
  packagingOptions {
       pickFirst 'lib/x86/libc++_shared.so'

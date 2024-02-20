@@ -12,6 +12,7 @@ import 'data/models/student_profile_model.dart';
 import 'presentation/parent_zone/bloc/navbar_cubit/app_navigator_cubit.dart';
 import 'presentation/parent_zone/bloc/parent_details_cubit/parent_details_cubit.dart';
 import 'presentation/parent_zone/bloc/teacher_message_cubit/teacher_message_cubit.dart';
+import 'presentation/subject/widgets/camera_feature.dart';
 import 'presentation/subject/widgets/pdf_viewer_page.dart';
 import 'presentation/subject/widgets/video_player.dart';
 import 'presentation/worksheet/bloc/worksheet_cubit/worksheet_cubit.dart';
@@ -173,10 +174,10 @@ class MyAppState extends State<MyApp> {
               create: (context) => WorksheetHistoryCubit(),
             ),
           ],
-          child: MaterialApp(
+          child: const MaterialApp(
               debugShowCheckedModeBanner: false,
               themeMode: ThemeMode.light,
-              home: VideoPlayerWidget()
+              home: CameraFeature()
               // widget.studentProfile == null
               //     ? const LoginScreen()
               //     : const SplashScreen(),
