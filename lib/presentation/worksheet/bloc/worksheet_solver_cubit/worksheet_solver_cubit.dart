@@ -80,13 +80,17 @@ class WorksheetSolverCubit extends Cubit<WorksheetSolverState> {
       updatedAnswerSheet.add(newAns);
     }
     debugPrint(jsonEncode(updatedAnswerSheet));
+
+    if (state.currentQuestion == state.questions.length - 1) {
+      answerSubmit(true);
+    }
     emit(state.copyWith(
       status: WorkSheetSolverStatus.loaded,
       answerSheet: updatedAnswerSheet,
     ));
   }
 
-  void answerSubmit() async {
+  void answerSubmit(bool lastQuestion) async {
     emit(state.copyWith(status: WorkSheetSolverStatus.loading));
 
     // Assuming state.answerSheet contains your data
@@ -129,7 +133,9 @@ class WorksheetSolverCubit extends Cubit<WorksheetSolverState> {
         // log(jsonString);
         print('Response status code: ${response.statusCode}');
         print(json.encode(finalString));
-        await setStudentWorksheetStatus();
+        if (lastQuestion) {
+          await setStudentWorksheetStatus();
+        }
       } else {
         debugPrint('Request failed with status: ${response.statusCode}');
         throw Exception('Failed to Save worksheet');

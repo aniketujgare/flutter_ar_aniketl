@@ -206,8 +206,6 @@ class SplashScreenState extends State<SplashScreen>
                         child: BackdropFilter(
                           filter: ImageFilter.blur(sigmaX: 15.0, sigmaY: 15.0),
                           child: Container(
-                            // width: 400.h,
-                            // height: 400.h,
                             color: AppColors.primaryColor,
                           ),
                         ),
@@ -258,7 +256,9 @@ class SplashScreenState extends State<SplashScreen>
                 if (state.status != StudentProfileStauts.loaded) {
                   var profile =
                       await AuthenticationRepository().getStudentProfile();
-                  context.read<StudentProfileCubit>().initProfile(profile);
+                  if (mounted) {
+                    context.read<StudentProfileCubit>().initProfile(profile);
+                  }
                 }
               },
               builder: (context, state) {

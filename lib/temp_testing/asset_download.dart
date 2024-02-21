@@ -35,10 +35,10 @@ class AssetDownloadState extends State<AssetDownload> {
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
-          title: Text('Asset Download test'),
+          title: const Text('Asset Download test'),
         ),
         body: ConnectionNotifierToggler(
-          disconnected: NetworkDisconnected(),
+          disconnected: const NetworkDisconnected(),
           connected: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -78,7 +78,7 @@ class AssetDownloadState extends State<AssetDownload> {
             FloatingActionButton(
               onPressed: _downloadAssets,
               tooltip: 'Download',
-              child: Icon(Icons.arrow_downward),
+              child: const Icon(Icons.arrow_downward),
             ),
             const SizedBox(
               width: 25,
@@ -89,7 +89,7 @@ class AssetDownloadState extends State<AssetDownload> {
                 await _downloadAssets();
               },
               tooltip: 'Refresh',
-              child: Icon(Icons.refresh),
+              child: const Icon(Icons.refresh),
             ),
             const SizedBox(
               width: 25,
@@ -97,7 +97,7 @@ class AssetDownloadState extends State<AssetDownload> {
             FloatingActionButton(
               onPressed: _cancel,
               tooltip: 'Cancel',
-              child: Icon(Icons.cancel_outlined),
+              child: const Icon(Icons.cancel_outlined),
             ),
           ],
         ), // This trailing comma makes auto-formatting nicer for build methods.

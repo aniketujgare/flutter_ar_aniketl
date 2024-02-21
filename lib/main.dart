@@ -42,6 +42,7 @@ import 'presentation/worksheet/bloc/worksheet_history_page_cubit/worksheet_histo
 import 'presentation/worksheet/bloc/worksheet_page_cubit/worksheet_page_cubit.dart';
 import 'presentation/worksheet/bloc/worksheet_solver_cubit/worksheet_solver_cubit.dart';
 import 'temp_testing/html_view_screen.dart';
+import 'temp_testing/screenshot_test.dart';
 
 final authenticationRepository = AuthenticationRepository();
 // void main() async {
@@ -174,7 +175,7 @@ class MyAppState extends State<MyApp> {
               create: (context) => WorksheetHistoryCubit(),
             ),
           ],
-          child: const MaterialApp(
+          child: MaterialApp(
               debugShowCheckedModeBanner: false,
               themeMode: ThemeMode.light,
               home: CameraFeature()
