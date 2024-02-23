@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
+import 'package:flutter/services.dart';
 import 'package:image_cropper/image_cropper.dart';
 
 // class CameraFeature extends StatefulWidget {
@@ -132,6 +133,10 @@ class CameraFeatureState extends State<CameraFeature> {
 
   @override
   void initState() {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      // DeviceOrientation.portraitDown,
+    ]);
     loadCamera();
     super.initState();
   }
@@ -155,6 +160,12 @@ class CameraFeatureState extends State<CameraFeature> {
 
   @override
   void dispose() {
+    SystemChrome.setPreferredOrientations([
+      // DeviceOrientation.landscapeRight,
+      DeviceOrientation.landscapeLeft,
+      // DeviceOrientation.portraitUp,
+      // DeviceOrientation.portraitDown,
+    ]);
     controller?.dispose();
     super.dispose();
   }
@@ -192,13 +203,14 @@ class CameraFeatureState extends State<CameraFeature> {
     var size = MediaQuery.of(context).size;
     return Stack(children: [
       SizedBox(
-          child: controller == null
-              ? const Center(child: Text("Loading Camera..."))
-              : !controller!.value.isInitialized
-                  ? const Center(
-                      child: CircularProgressIndicator(),
-                    )
-                  : CameraPreview(controller!)),
+        child: controller == null
+            ? const Center(child: Text("Loading Camera..."))
+            : !controller!.value.isInitialized
+                ? const Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : CameraPreview(controller!),
+      ),
       Align(
         alignment: Alignment.bottomCenter,
         child: ElevatedButton.icon(

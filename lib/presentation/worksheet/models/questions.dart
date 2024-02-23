@@ -17,6 +17,7 @@ enum QuestionType {
   longAnswer,
   rearrange,
   identifyimage,
+  srotingquestion
 }
 
 abstract class Question {
@@ -61,6 +62,8 @@ abstract class Question {
         return "Re-Arrange";
       case QuestionType.identifyimage:
         return "Identify Image";
+      case QuestionType.srotingquestion:
+        return "Sort the Following";
     }
   }
 }
@@ -428,23 +431,26 @@ class ArithmeticQuestion extends Question {
       };
 }
 
-// Arithmetic Question
+// LongAnswer Question
 class LongAnswerQuestionType extends Question {
-  final String questionUrl;
-  final String questionRows;
+  // final String questionUrl;
+  // final String questionRows;
+  // final String questionAnswer;
   final List<String> questionKeywords;
 
   LongAnswerQuestionType(
       {required this.questionKeywords,
-      required this.questionUrl,
-      required this.questionRows,
+      // required this.questionUrl,
+      // required this.questionRows,
+      // required this.questionAnswer,
       required String question})
       : super.withType(question, QuestionType.longAnswer);
 
   factory LongAnswerQuestionType.fromJson(Map<String, dynamic> json) {
     return LongAnswerQuestionType(
-      questionUrl: json['longanswer']['question_url'],
-      questionRows: json['longanswer']['question_rows'],
+      // questionUrl: json['longanswer']['question_url'],
+      // questionRows: json['longanswer']['question_rows'],
+      // questionAnswer: json['longanswer']['question_answer'],
       questionKeywords:
           List<String>.from(json['longanswer']['question_keywords']),
       question: json['longanswer']['question'],
@@ -453,8 +459,9 @@ class LongAnswerQuestionType extends Question {
 
   Map<String, dynamic> toJson() => {
         'longanswer': {
-          'question_url': questionUrl,
-          'question_rows': questionRows,
+          // 'question_url': questionUrl,
+          // 'question_answer': questionAnswer,
+          // 'question_rows': questionRows,
           'question_keywords': questionKeywords,
           'question': question,
         },
@@ -518,20 +525,22 @@ class SortingQuestionType extends Question {
       required this.category1,
       required this.category2,
       required String question})
-      : super.withType(question, QuestionType.identifyimage);
+      : super.withType(question, QuestionType.srotingquestion);
 
   factory SortingQuestionType.fromJson(Map<String, dynamic> json) {
     return SortingQuestionType(
-      question: json['sortingquestion']['question'],
-      category1: json['sortingquestion']['category1'],
-      category2: json['sortingquestion']['category2'],
-      category1Data: json['sortingquestion']['category1_data'],
-      category2Data: json['sortingquestion']['category2_data'],
+      question: json['srotingquestion']['question'],
+      category1: json['srotingquestion']['category1'],
+      category2: json['srotingquestion']['category2'],
+      category1Data:
+          List<String>.from(json['srotingquestion']['category1_data']),
+      category2Data:
+          List<String>.from(json['srotingquestion']['category2_data']),
     );
   }
 
   Map<String, dynamic> toJson() => {
-        'sortingquestion': {
+        'srotingquestion': {
           'question': question,
           'category1': category1,
           'category2': category2,
@@ -596,8 +605,14 @@ List<Question> allWorsheetQuestins(String yourApiResponse) {
         case 'longanswer':
           allQuestions.add(LongAnswerQuestionType.fromJson(questionData));
           break;
+        case 'identifyimage':
+          allQuestions.add(IdentifyImageQuestionType.fromJson(questionData));
+          break;
         case 'rearrange':
-          allQuestions.add(LongAnswerQuestionType.fromJson(questionData));
+          allQuestions.add(RearrangeQuestionType.fromJson(questionData));
+          break;
+        case 'srotingquestion':
+          allQuestions.add(SortingQuestionType.fromJson(questionData));
           break;
         // Add cases for other question types here
       }

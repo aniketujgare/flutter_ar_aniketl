@@ -10,14 +10,17 @@ import '../bloc/worksheet_solver_cubit/worksheet_solver_cubit.dart';
 import '../models/questions.dart';
 import '../widgets/appbar_worksheet_solver.dart';
 import '../widgets/bottom_indicator_bar_questions.dart';
+import '../widgets/questions/arithmetic_question.dart';
 import '../widgets/questions/ascending_decending_question.dart';
 import '../widgets/questions/fill_in_blank_question.dart';
+import '../widgets/questions/identify_image_question.dart';
 import '../widgets/questions/long_answer_question.dart';
 import '../widgets/questions/match_the_following_question.dart';
 import '../widgets/questions/mcq_image_question.dart';
 import '../widgets/questions/mcq_text_question.dart';
 import '../widgets/questions/odd_one_out_question.dart';
 import '../widgets/questions/oneword_question.dart';
+import '../widgets/questions/rearrange_words_question.dart';
 import '../widgets/questions/select_correct_word_question.dart';
 import '../widgets/questions/sort_question.dart';
 import '../widgets/questions/true_or_false_question.dart';
@@ -68,33 +71,22 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView> {
             screenSize: screenSize);
       case QuestionType.fillBlank:
         Size screenSize = MediaQuery.of(context).size;
-        var oddouQ = OddOneOutImageQuestion(
-            options: [
-              'https://smartxruserfiles1.s3.ap-south-1.amazonaws.com/teacher/1/worksheet/null/maths_mcq/d6666v8rb/0.png',
-              'https://d3ag5oij4wsyi3.cloudfront.net/mcq_images/mysurroundings/Sun+in+sky.png',
-              'https://d3ag5oij4wsyi3.cloudfront.net/mcq_images/mysurroundings/Sun+in+sky.png',
-              'https://d3ag5oij4wsyi3.cloudfront.net/mcq_images/mysurroundings/Sun+in+sky.png'
-            ],
-            answer:
-                'https://d3ag5oij4wsyi3.cloudfront.net/mcq_images/mysurroundings/Sun+in+sky.png',
-            question: 'Odd One out image');
-        return OddOneOutImgQuestion(
-            question: oddouQ,
-            markedAnswer: markedAnswer,
-            questionIndex: i,
-            screenSize: screenSize);
-        // var qty = SortingQuestionType(
-        //   category1Data: ["ant", "cat", "dog"],
-        //   category2Data: ["bat", "ball", "mat"],
-        //   category1: "living",
-        //   category2: "non-living",
-        //   question: "sort foolowing",
-        // );
-        // return SortQuestion(
-        //     question: qty,
-        //     markedAnswer: null,
+        // var oddouQ = OddOneOutImageQuestion(
+        //     options: [
+        //       'https://smartxruserfiles1.s3.ap-south-1.amazonaws.com/teacher/1/worksheet/null/maths_mcq/d6666v8rb/0.png',
+        //       'https://d3ag5oij4wsyi3.cloudfront.net/mcq_images/mysurroundings/Sun+in+sky.png',
+        //       'https://d3ag5oij4wsyi3.cloudfront.net/mcq_images/mysurroundings/Sun+in+sky.png',
+        //       'https://d3ag5oij4wsyi3.cloudfront.net/mcq_images/mysurroundings/Sun+in+sky.png'
+        //     ],
+        //     answer:
+        //         'https://d3ag5oij4wsyi3.cloudfront.net/mcq_images/mysurroundings/Sun+in+sky.png',
+        //     question: 'Odd One out image');
+        // return OddOneOutImgQuestion(
+        //     question: oddouQ,
+        //     markedAnswer: markedAnswer,
         //     questionIndex: i,
         //     screenSize: screenSize);
+
         return FillInTheBlankQuestion(
             question: state.questions[i] as FillBlankQuestion,
             markedAnswer: markedAnswer,
@@ -146,25 +138,6 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView> {
         return _buildOddOneOutImageQuestion(
             i, oddOneOutImageQuestion, markedAnswer);
       case QuestionType.ascDescOrder:
-        // String questionn =
-        //     "This method also of type allows for easier not any shuffling of just array,";
-        // String answerr =
-        //     "This method also allows for easier shuffling of any type of array, not just";
-        // var newQ = RearrangeQuestionType(answer: answerr, question: questionn);
-        // return ReArrangeWordsQuestion(
-        //   question: newQ as RearrangeQuestionType,
-        //   markedAnswer: markedAnswer,
-        //   questionIndex: i,
-        // );
-        // var newQII = IdentifyImageQuestionType(
-        //     answer: 'zoro',
-        //     question:
-        //         'https://smartxruserfiles1.s3.ap-south-1.amazonaws.com/teacher/1/worksheet/850/ii_mcq/4wfdhskzr/0.png');
-        // return IdentifyImageQuestion(
-        //   questionIndex: i,
-        //   question: newQII,
-        //   markedAnswer: markedAnswer,
-        // );
         Size screenSize = MediaQuery.of(context).size;
 
         return AscendingDecendingQuestion(
@@ -181,6 +154,46 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView> {
             question: state.questions[i] as LongAnswerQuestionType,
             markedAnswer: markedAnswer,
             screenSize: screenSize);
+      case QuestionType.srotingquestion:
+        Size screenSize = MediaQuery.of(context).size;
+
+        // var qty = SortingQuestionType(
+        //   category1Data: ["ant", "cat", "dog"],
+        //   category2Data: ["bat", "ball", "mat"],
+        //   category1: "living",
+        //   category2: "non-living",
+        //   question: "sort foolowing",
+        // );
+        return SortQuestion(
+            question: state.questions[i] as SortingQuestionType,
+            markedAnswer: null,
+            questionIndex: i,
+            screenSize: screenSize);
+      case QuestionType.rearrange:
+        Size screenSize = MediaQuery.of(context).size;
+        // String questionn =
+        //     "This method also of type allows for easier not any shuffling of just array,";
+        // String answerr =
+        //     "This method also allows for easier shuffling of any type of array, not just";
+        // var newQ = RearrangeQuestionType(answer: answerr, question: questionn);
+        return ArithmeticQuestionUI(screenSize: screenSize);
+        return ReArrangeWordsQuestion(
+          screenSize: screenSize,
+          question: state.questions[i] as RearrangeQuestionType,
+          markedAnswer: ["markedAnswer"],
+          questionIndex: i,
+        );
+      case QuestionType.identifyimage:
+        // var newQII = IdentifyImageQuestionType(
+        //     answer: 'zoro',
+        //     question:
+        //         'https://smartxruserfiles1.s3.ap-south-1.amazonaws.com/teacher/1/worksheet/850/ii_mcq/4wfdhskzr/0.png');
+        return IdentifyImageQuestion(
+          questionIndex: i,
+          question: state.questions[i] as IdentifyImageQuestionType,
+          markedAnswer: markedAnswer,
+        );
+
       default:
         return Text(
             'UI for ${state.questions[i].questionType.toString()} doesn\'t exists');

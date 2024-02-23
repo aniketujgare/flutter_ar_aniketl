@@ -1,6 +1,7 @@
 import 'package:connection_notifier/connection_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_ar/presentation/lesson_mode/lesson_mode_page.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:size_config/size_config.dart';
@@ -455,7 +456,10 @@ class _MessageViewState extends State<MessageView> {
                 10.verticalSpacer,
                 ReusableButton(
                   padding: const EdgeInsets.symmetric(horizontal: 0),
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => LessonModePage()));
+                  },
                   buttonColor: AppColors.primaryColor,
                   text: 'View Lesson',
                   textColor: Colors.white,

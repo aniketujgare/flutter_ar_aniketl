@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_ar/presentation/subject/widgets/camera_feature.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:size_config/size_config.dart';
 
@@ -32,10 +33,10 @@ class IdentifyImageQuestion extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           // crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            DeviceType().isMobile ? 50.verticalSpacer : 90.verticalSpacer,
+            DeviceType().isMobile ? 25.verticalSpacer : 90.verticalSpacer,
             Container(
-              height: 180.h,
-              width: 180.h,
+              height: 45.wp,
+              width: 45.wp,
               decoration: ShapeDecoration(
                 color: AppColors.boxUnselectedolor,
                 shape: RoundedRectangleBorder(
@@ -46,8 +47,8 @@ class IdentifyImageQuestion extends StatelessWidget {
                 imageUrl: question.question,
                 fit: BoxFit.cover,
                 imageBuilder: (context, imageProvider) => Container(
-                  width: 180.h,
-                  height: 180.h,
+                  // width: 180.h,
+                  // height: 180.h,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(14),
                     image: DecorationImage(
@@ -63,7 +64,7 @@ class IdentifyImageQuestion extends StatelessWidget {
                 errorWidget: (context, url, error) => const Icon(Icons.error),
               ),
             ),
-            DeviceType().isMobile ? 55.verticalSpacer : 85.verticalSpacer,
+            DeviceType().isMobile ? 25.verticalSpacer : 85.verticalSpacer,
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 7.wp),
               child: Row(
@@ -105,9 +106,16 @@ class IdentifyImageQuestion extends StatelessWidget {
                     ],
                   ),
                   5.horizontalSpacerPercent,
-                  SizedBox(
-                      width: 55,
-                      child: Image.asset('assets/images/PNG Icons/Cam 1.png'))
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => CameraFeature()));
+                    },
+                    child: SizedBox(
+                        width: 55,
+                        child:
+                            Image.asset('assets/images/PNG Icons/Cam 1.png')),
+                  )
                 ],
               ),
             ),

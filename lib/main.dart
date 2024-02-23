@@ -4,11 +4,13 @@ import 'package:connection_notifier/connection_notifier.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_ar/presentation/lesson_mode/bloc/cubit/lesson_mode_cubit.dart';
 import 'package:flutter_ar/presentation/login/pages/login_screen.dart';
 import 'package:flutter_ar/presentation/splash_screen/splash_screen.dart';
 import 'package:lottie/lottie.dart';
 import 'core/student_profile_cubit/student_profile_cubit.dart';
 import 'data/models/student_profile_model.dart';
+import 'presentation/lesson_mode/bloc/lesson_page_cubit/lesson_page_cubit.dart';
 import 'presentation/parent_zone/bloc/navbar_cubit/app_navigator_cubit.dart';
 import 'presentation/parent_zone/bloc/parent_details_cubit/parent_details_cubit.dart';
 import 'presentation/parent_zone/bloc/teacher_message_cubit/teacher_message_cubit.dart';
@@ -174,21 +176,26 @@ class MyAppState extends State<MyApp> {
             BlocProvider(
               create: (context) => WorksheetHistoryCubit(),
             ),
+            BlocProvider(
+              create: (context) => LessonModeCubit(),
+            ),
+            BlocProvider(
+              create: (context) => LessonPageCubit(),
+            ),
           ],
           child: MaterialApp(
-              debugShowCheckedModeBanner: false,
-              themeMode: ThemeMode.light,
-              home: CameraFeature()
-              // widget.studentProfile == null
-              //     ? const LoginScreen()
-              //     : const SplashScreen(),
-              // theme: ThemeData(
-              //     appBarTheme: AppBarTheme(
-              //         systemOverlayStyle: SystemUiOverlayStyle(
-              //             statusBarBrightness: Brightness.light,
-              //             statusBarColor: AppColors.accentColor))),
-              // routerConfig: GoRouterProvider().goRouter(),
-              ),
+            debugShowCheckedModeBanner: false,
+            themeMode: ThemeMode.light,
+            home: widget.studentProfile == null
+                ? const LoginScreen()
+                : const SplashScreen(),
+            // theme: ThemeData(
+            //     appBarTheme: AppBarTheme(
+            //         systemOverlayStyle: SystemUiOverlayStyle(
+            //             statusBarBrightness: Brightness.light,
+            //             statusBarColor: AppColors.accentColor))),
+            // routerConfig: GoRouterProvider().goRouter(),
+          ),
         ));
       },
     );

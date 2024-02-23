@@ -15,4 +15,8 @@ between cows are 3, 4 and 3 respectively.
 
 0 [1] [2] [3] [4] 5 [6]
    1                 1
+
+  min max type of question new pattern in binary search 
+  max(min) or min(max)
+  
 */

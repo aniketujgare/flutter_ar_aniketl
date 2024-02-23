@@ -29,19 +29,27 @@ class _SortQuestionState extends State<SortQuestion> {
   List<String> category1Answers = [];
   List<String> category2Answers = [];
   late double singleBoxSize;
+  late bool isImg = false;
   @override
   void initState() {
+    //?For images test
+    // String imageUrl =
+    //     "https://d3ag5oij4wsyi3.cloudfront.net/mcq_images/mysurroundings/Sun+in+sky.png";
+    // for (var i = 0; i < 8; i++) {
+    //   questionsList.add(imageUrl);
+    // }
+
     questionsList.addAll(widget.question.category1Data);
     questionsList.addAll(widget.question.category2Data);
     questionsList.shuffle();
-
+    isImg = questionsList.first.contains('http') ? true : false;
     //? Setting up size of box
     double halfEmptyBox = (questionsList.length - 1 + 2) / 2;
     int fullQuesBox = questionsList.length;
     singleBoxSize = widget.screenSize.width / (fullQuesBox + halfEmptyBox);
     debugPrint('singleBoxSize: $singleBoxSize');
     //?
-
+    singleBoxSize = widget.screenSize.width * 0.14;
     if (widget.markedAnswer != null &&
         widget.markedAnswer!.length == questionsList.length)
       // ignore: curly_braces_in_flow_control_structures
@@ -60,152 +68,53 @@ class _SortQuestionState extends State<SortQuestion> {
       width: double.infinity,
       child: Column(
         mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          QuestionText(question: widget.question.question),
-          DeviceType().isMobile ? 55.verticalSpacer : 85.verticalSpacer,
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20.wp),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: questionsList.isEmpty
-                  ? [SizedBox(height: 70.h)]
-                  : List.generate(questionsList.length, (index) {
-                      return Draggable<String>(
-                        data: questionsList[index],
-                        feedback: Container(
-                          height: 70.h,
-                          width: singleBoxSize,
-                          decoration: ShapeDecoration(
-                            color: const Color(0xFFF4F2FE),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(17),
-                            ),
-                          ),
-                          child: SizedBox(
-                            height: 70.h,
-                            width: singleBoxSize,
-                            child: FittedBox(
-                              fit: BoxFit.scaleDown,
-                              child: Text(
-                                questionsList[index],
-                                textAlign: TextAlign.center,
-                                style: const TextStyle(
-                                  color: Color(0xFF4F3A9C),
-                                  fontSize: 20,
-                                  fontFamily: 'Nunito',
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        childWhenDragging: Container(
-                          height: 70.h,
-                          width: singleBoxSize,
-                          // padding: EdgeInsets.symmetric(vertical: 2.wp),
-                          decoration: ShapeDecoration(
-                            color: AppColors.hintTextColor,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(17),
-                            ),
-                          ),
-                          child: Center(
-                            child: Text(
-                              questionsList[index],
-                              textAlign: TextAlign.center,
-                              style: const TextStyle(
-                                color: Color(0xFF4F3A9C),
-                                fontSize: 20,
-                                fontFamily: 'Nunito',
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                          ),
-                        ),
-                        child: Container(
-                          height: 70.h,
-                          width: singleBoxSize,
-                          decoration: ShapeDecoration(
-                            color: const Color(0xFFF4F2FE),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(17),
-                            ),
-                          ),
-                          child: SizedBox(
-                            height: 70.h,
-                            width: singleBoxSize,
-                            child: FittedBox(
-                              fit: BoxFit.scaleDown,
-                              child: Text(
-                                questionsList[index],
-                                textAlign: TextAlign.center,
-                                style: const TextStyle(
-                                  color: Color(0xFF4F3A9C),
-                                  fontSize: 20,
-                                  fontFamily: 'Nunito',
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      );
-                    }),
-            ),
-          ),
-          50.verticalSpacer,
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 10.wp),
-            child: Row(
-              children: [
-                //! Category 1 Ans Box
-                Expanded(
-                    child: DragTarget<String>(
+          Row(
+            children: [
+              //! Category 1 Answers
+              Expanded(
+                flex: isImg ? 2 : 3,
+                child: DragTarget<String>(
                   builder: (
                     BuildContext context,
                     List<dynamic> accepted,
                     List<dynamic> rejected,
                   ) {
                     return Container(
-                      height: widget.screenSize.height * 0.4,
-                      color: Colors.amber,
-                      child: ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: category1Answers.length,
-                          padding: EdgeInsets.only(top: 10.h),
-                          itemBuilder: (context, index) {
-                            return UnconstrainedBox(
-                              child: Container(
-                                  height: 70.h,
-                                  width: singleBoxSize,
-                                  margin: EdgeInsets.symmetric(vertical: 1.wp),
-                                  decoration: ShapeDecoration(
-                                    color: const Color(0xFFF4F2FE),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(17),
-                                    ),
-                                  ),
-                                  child: SizedBox(
-                                    height: 65.h,
-                                    width: singleBoxSize,
-                                    child: FittedBox(
-                                      fit: BoxFit.scaleDown,
-                                      child: Text(
-                                        category1Answers[index],
-                                        textAlign: TextAlign.center,
-                                        style: const TextStyle(
-                                          color: Color(0xFF4F3A9C),
-                                          fontSize: 20,
-                                          fontFamily: 'Nunito',
-                                          fontWeight: FontWeight.w700,
-                                        ),
-                                      ),
-                                    ),
-                                  )),
-                            );
-                          }),
+                      margin: EdgeInsets.fromLTRB(8.wp, 0, 4.wp, 0),
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(22.h)),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          5.verticalSpacer,
+                          Text(
+                            widget.question.category1,
+                            style: AppTextStyles.nunito160w500textCol
+                                .copyWith(color: AppColors.primaryColor),
+                          ),
+                          Container(
+                            height: widget.screenSize.height * 0.5,
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(22.h)),
+                            child: GridView.count(
+                                crossAxisCount: isImg ? 3 : 2,
+                                mainAxisSpacing: 0,
+                                crossAxisSpacing: 0,
+                                childAspectRatio: isImg ? 1 : 2.1,
+                                children: category1Answers.isEmpty
+                                    ? [SizedBox(height: 70.h)]
+                                    : questionsList[0].contains('http')
+                                        ? generateSolutionChipImg(
+                                            category1Answers)
+                                        : generateSolutionChipTxt()),
+                          ),
+                        ],
+                      ),
                     );
                   },
                   onAccept: (data) {
@@ -215,81 +124,315 @@ class _SortQuestionState extends State<SortQuestion> {
                       questionsList.remove(data);
                       setState(() {});
                     }
-                    if (questionsList.isEmpty) {}
-                    context.read<WorksheetSolverCubit>().setAnswer(
-                        widget.questionIndex,
-                        List.from(category1Answers + category2Answers));
+                    // if (questionsList.isEmpty) {}
+                    // context.read<WorksheetSolverCubit>().setAnswer(
+                    //     widget.questionIndex,
+                    //     List.from(category1Answers + category2Answers));
                   },
-                )),
-                10.horizontalSpacerPercent,
-
-                //! Category 2 Ans Box
-                Expanded(
-                    child: DragTarget<String>(
-                  builder: (
-                    BuildContext context,
-                    List<dynamic> accepted,
-                    List<dynamic> rejected,
-                  ) {
-                    return Container(
-                      height: widget.screenSize.height * 0.4,
-                      color: Colors.red,
-                      child: ListView.builder(
-                          itemCount: category2Answers.length,
-                          padding: EdgeInsets.only(top: 10.h),
-                          itemBuilder: (context, index) {
-                            return UnconstrainedBox(
-                              child: Container(
-                                  key: const Key('ascDesChild'),
-                                  height: 70.h,
-                                  margin: EdgeInsets.symmetric(vertical: 1.wp),
-                                  decoration: ShapeDecoration(
-                                    color: const Color(0xFFF4F2FE),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(17),
-                                    ),
-                                  ),
-                                  child: Container(
-                                    height: 70.h,
-                                    width: singleBoxSize,
-                                    padding:
-                                        EdgeInsets.symmetric(horizontal: 1.wp),
-                                    child: FittedBox(
-                                      fit: BoxFit.scaleDown,
-                                      child: Text(
-                                        category2Answers[index],
-                                        textAlign: TextAlign.center,
-                                        style: const TextStyle(
-                                          color: Color(0xFF4F3A9C),
-                                          fontSize: 20,
-                                          fontFamily: 'Nunito',
-                                          fontWeight: FontWeight.w700,
-                                        ),
-                                      ),
-                                    ),
-                                  )),
-                            );
-                          }),
-                    );
-                  },
-                  onAccept: (data) {
-                    debugPrint('$data Dropped successfully!');
-                    category2Answers.add(data);
-                    if (questionsList.contains(data)) {
-                      questionsList.remove(data);
-                      setState(() {});
-                    }
-                    if (questionsList.isEmpty) {}
-                    context.read<WorksheetSolverCubit>().setAnswer(
-                        widget.questionIndex,
-                        List.from(category1Answers + category2Answers));
-                  },
-                )),
-              ],
-            ),
-          )
+                ),
+              ),
+              //! Options Chips
+              Expanded(
+                flex: isImg ? 1 : 2,
+                child: Container(
+                  height: widget.screenSize.height * (isImg ? 0.7 : 0.6),
+                  decoration: BoxDecoration(
+                    // color: Colors.green,
+                    borderRadius: BorderRadius.circular(22.h),
+                  ),
+                  child: GridView.count(
+                    mainAxisSpacing: 0,
+                    crossAxisSpacing: 0,
+                    childAspectRatio: isImg ? 1.2 : 1.7,
+                    crossAxisCount: 2,
+                    children: questionsList.isEmpty
+                        ? [SizedBox(height: 70.h)]
+                        : questionsList[0].contains('http')
+                            ? generateImgChips()
+                            : generateTextChips(),
+                  ),
+                ),
+              ),
+              Expanded(
+                  flex: isImg ? 2 : 3,
+                  child: DragTarget<String>(
+                    builder: (
+                      BuildContext context,
+                      List<dynamic> accepted,
+                      List<dynamic> rejected,
+                    ) {
+                      return Container(
+                        margin: EdgeInsets.fromLTRB(4.wp, 0, 8.wp, 0),
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(22.h)),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            5.verticalSpacer,
+                            Text(
+                              widget.question.category2,
+                              style: AppTextStyles.nunito160w500textCol
+                                  .copyWith(color: AppColors.primaryColor),
+                            ),
+                            Container(
+                              height: widget.screenSize.height * 0.5,
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(22.h)),
+                              child: GridView.count(
+                                  crossAxisCount: isImg ? 3 : 2,
+                                  mainAxisSpacing: 0,
+                                  crossAxisSpacing: 0,
+                                  childAspectRatio: isImg ? 1 : 2.1,
+                                  children: category2Answers.isEmpty
+                                      ? [SizedBox(height: 70.h)]
+                                      : questionsList[0].contains('http')
+                                          ? generateSolutionChipImg(
+                                              category2Answers)
+                                          : generateSolutionChipTxt()),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                    onAccept: (data) {
+                      debugPrint('$data Dropped successfully!');
+                      category2Answers.add(data);
+                      if (questionsList.contains(data)) {
+                        questionsList.remove(data);
+                        setState(() {});
+                      }
+                      if (questionsList.isEmpty) {}
+                      // context.read<WorksheetSolverCubit>().setAnswer(
+                      //     widget.questionIndex,
+                      //     List.from(category1Answers + category2Answers));
+                    },
+                  )),
+            ],
+          ),
         ],
       ),
     );
+  }
+
+  List<Widget> generateSolutionChipImg(List<String> category) {
+    return List.generate(
+      category.length,
+      (index) => UnconstrainedBox(
+        child: Container(
+            height: 110.h,
+            width: 110.h,
+            margin: EdgeInsets.symmetric(vertical: 1.wp),
+            decoration: ShapeDecoration(
+              color: const Color(0xFFF4F2FE),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(17),
+              ),
+            ),
+            child: SizedBox(
+              // height: 65.h,
+              // width: singleBoxSize,
+              child: Image.network(
+                category[index],
+                fit: BoxFit.cover,
+              ),
+            )),
+      ),
+    );
+  }
+
+  List<Widget> generateSolutionChipTxt() {
+    return List.generate(
+      category1Answers.length,
+      (index) => UnconstrainedBox(
+        child: Container(
+            height: 70.h,
+            width: singleBoxSize,
+            margin: EdgeInsets.symmetric(vertical: 1.wp),
+            decoration: ShapeDecoration(
+              color: const Color(0xFFF4F2FE),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(17),
+              ),
+            ),
+            child: SizedBox(
+              height: 65.h,
+              width: singleBoxSize,
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  category1Answers[index],
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    color: Color(0xFF4F3A9C),
+                    fontSize: 20,
+                    fontFamily: 'Nunito',
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+            )),
+      ),
+    );
+  }
+
+  List<Widget> generateImgChips() {
+    return List.generate(questionsList.length, (index) {
+      return Draggable<String>(
+        data: questionsList[index],
+        feedback: Container(
+          height: 150.h,
+          width: 150.h,
+          decoration: ShapeDecoration(
+            color: const Color(0xFFF4F2FE),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(17),
+            ),
+          ),
+          child: SizedBox(
+            height: 75.h,
+            width: 75.h,
+            child: Image.network(
+              questionsList[index],
+              fit: BoxFit.cover,
+            ),
+          ),
+        ),
+        childWhenDragging: UnconstrainedBox(
+          child: Container(
+            height: 75.h,
+            width: 75.h,
+            decoration: ShapeDecoration(
+              color: const Color(0xFFF4F2FE),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(17),
+              ),
+            ),
+            child: SizedBox(
+              height: 75.h,
+              width: 75.h,
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Image.network(
+                  questionsList[index],
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+          ),
+        ),
+        child: UnconstrainedBox(
+          child: Container(
+            height: 75.h,
+            width: 75.h,
+            decoration: ShapeDecoration(
+              color: const Color(0xFFF4F2FE),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(17),
+              ),
+            ),
+            child: SizedBox(
+              height: 75.h,
+              width: 75.h,
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Image.network(
+                  questionsList[index],
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+    });
+  }
+
+  List<Widget> generateTextChips() {
+    return List.generate(questionsList.length, (index) {
+      return Draggable<String>(
+        data: questionsList[index],
+        feedback: Container(
+          height: 70.h,
+          width: singleBoxSize,
+          decoration: ShapeDecoration(
+            color: const Color(0xFFF4F2FE),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(17),
+            ),
+          ),
+          child: SizedBox(
+            height: 70.h,
+            width: singleBoxSize,
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                questionsList[index],
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  color: Color(0xFF4F3A9C),
+                  fontSize: 20,
+                  fontFamily: 'Nunito',
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ),
+          ),
+        ),
+        childWhenDragging: Container(
+          height: 70.h,
+          width: singleBoxSize,
+          // padding: EdgeInsets.symmetric(vertical: 2.wp),
+          decoration: ShapeDecoration(
+            color: AppColors.hintTextColor,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(17),
+            ),
+          ),
+          child: Center(
+            child: Text(
+              questionsList[index],
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                color: Color(0xFF4F3A9C),
+                fontSize: 20,
+                fontFamily: 'Nunito',
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ),
+        ),
+        child: UnconstrainedBox(
+          child: Container(
+            height: 70.h,
+            width: 100,
+            decoration: ShapeDecoration(
+              color: const Color(0xFFF4F2FE),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(17),
+              ),
+            ),
+            child: SizedBox(
+              height: 70.h,
+              width: singleBoxSize,
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  questionsList[index],
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    color: Color(0xFF4F3A9C),
+                    fontSize: 20,
+                    fontFamily: 'Nunito',
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+    });
   }
 }

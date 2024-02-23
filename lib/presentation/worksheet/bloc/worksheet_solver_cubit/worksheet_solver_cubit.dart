@@ -17,11 +17,11 @@ part 'worksheet_solver_cubit.freezed.dart';
 part 'worksheet_solver_state.dart';
 
 class WorksheetSolverCubit extends Cubit<WorksheetSolverState> {
-  int _workSheetId = 0;
+  int _workSheetId = 850;
   int _studentId = 0;
   WorksheetSolverCubit() : super(const WorksheetSolverState.initial());
   void init(int workSheetId) async {
-    _workSheetId = workSheetId;
+    _workSheetId = 850;
     StudentProfileModel? studentProfile =
         await AuthenticationRepository().getStudentProfile();
     _studentId = studentProfile?.studentId ?? 0;
