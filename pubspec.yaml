@@ -86,6 +86,7 @@ dependencies:
   mask_for_camera_view: ^2.0.4
   screenshot: ^2.1.0
   pod_player: ^0.2.1
+  url_launcher: ^6.2.5
 
 dev_dependencies:
   build_runner: ^2.4.7

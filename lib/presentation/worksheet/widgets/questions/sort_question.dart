@@ -108,10 +108,45 @@ class _SortQuestionState extends State<SortQuestion> {
                                 childAspectRatio: isImg ? 1 : 2.1,
                                 children: category1Answers.isEmpty
                                     ? [SizedBox(height: 70.h)]
-                                    : questionsList[0].contains('http')
-                                        ? generateSolutionChipImg(
-                                            category1Answers)
-                                        : generateSolutionChipTxt()),
+                                    // :
+                                    // questionsList[0].contains('http')
+                                    //     ? generateSolutionChipImg(
+                                    //         category1Answers)
+                                    : List.generate(
+                                        category1Answers.length,
+                                        (index) => UnconstrainedBox(
+                                          child: Container(
+                                              height: 70.h,
+                                              width: singleBoxSize,
+                                              margin: EdgeInsets.symmetric(
+                                                  vertical: 1.wp),
+                                              decoration: ShapeDecoration(
+                                                color: const Color(0xFFF4F2FE),
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(17),
+                                                ),
+                                              ),
+                                              child: SizedBox(
+                                                height: 65.h,
+                                                width: singleBoxSize,
+                                                child: FittedBox(
+                                                  fit: BoxFit.scaleDown,
+                                                  child: Text(
+                                                    category1Answers[index],
+                                                    textAlign: TextAlign.center,
+                                                    style: const TextStyle(
+                                                      color: Color(0xFF4F3A9C),
+                                                      fontSize: 20,
+                                                      fontFamily: 'Nunito',
+                                                      fontWeight:
+                                                          FontWeight.w700,
+                                                    ),
+                                                  ),
+                                                ),
+                                              )),
+                                        ),
+                                      )),
                           ),
                         ],
                       ),
@@ -147,9 +182,10 @@ class _SortQuestionState extends State<SortQuestion> {
                     crossAxisCount: 2,
                     children: questionsList.isEmpty
                         ? [SizedBox(height: 70.h)]
-                        : questionsList[0].contains('http')
-                            ? generateImgChips()
-                            : generateTextChips(),
+                        // :
+                        // questionsList[0].contains('http')
+                        //     ? generateImgChips()
+                        : generateTextChips(),
                   ),
                 ),
               ),
@@ -187,10 +223,49 @@ class _SortQuestionState extends State<SortQuestion> {
                                   childAspectRatio: isImg ? 1 : 2.1,
                                   children: category2Answers.isEmpty
                                       ? [SizedBox(height: 70.h)]
-                                      : questionsList[0].contains('http')
-                                          ? generateSolutionChipImg(
-                                              category2Answers)
-                                          : generateSolutionChipTxt()),
+                                      // :
+                                      //  questionsList[0].contains('http')
+                                      //     ? generateSolutionChipImg(
+                                      // category2Answers)
+                                      : List.generate(
+                                          category2Answers.length,
+                                          (index) => UnconstrainedBox(
+                                            child: Container(
+                                                height: 70.h,
+                                                width: singleBoxSize,
+                                                margin: EdgeInsets.symmetric(
+                                                    vertical: 1.wp),
+                                                decoration: ShapeDecoration(
+                                                  color:
+                                                      const Color(0xFFF4F2FE),
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            17),
+                                                  ),
+                                                ),
+                                                child: SizedBox(
+                                                  height: 65.h,
+                                                  width: singleBoxSize,
+                                                  child: FittedBox(
+                                                    fit: BoxFit.scaleDown,
+                                                    child: Text(
+                                                      category2Answers[index],
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                      style: const TextStyle(
+                                                        color:
+                                                            Color(0xFF4F3A9C),
+                                                        fontSize: 20,
+                                                        fontFamily: 'Nunito',
+                                                        fontWeight:
+                                                            FontWeight.w700,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                )),
+                                          ),
+                                        )),
                             ),
                           ],
                         ),

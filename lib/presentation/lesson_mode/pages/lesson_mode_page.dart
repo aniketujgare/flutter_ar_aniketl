@@ -3,9 +3,26 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_ar/presentation/lesson_mode/bloc/cubit/lesson_mode_cubit.dart';
+import 'package:flutter_ar/presentation/lesson_mode/bloc/lesson_page_cubit/lesson_page_cubit.dart';
 import 'package:flutter_ar/presentation/lesson_mode/data/model/lesson_model.dart';
+import 'package:flutter_ar/presentation/lesson_mode/widgets/fill_in_blank_lesson.dart';
+import 'package:flutter_ar/presentation/lesson_mode/widgets/gdrive_lesson.dart';
+import 'package:flutter_ar/presentation/lesson_mode/widgets/mcq_q_lesson.dart';
+import 'package:flutter_ar/presentation/lesson_mode/widgets/onewordQ_lesson.dart';
+import 'package:flutter_ar/presentation/lesson_mode/widgets/truefalse_Q_lesson.dart';
+import 'package:flutter_ar/presentation/lesson_mode/widgets/youtube_video_lesson.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:model_viewer_plus/model_viewer_plus.dart';
 import 'package:pod_player/pod_player.dart';
+import 'package:size_config/size_config.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+import '../../../core/util/device_type.dart';
+import '../../../core/util/styles.dart';
+import '../../worksheet/models/questions.dart';
+import '../../worksheet/widgets/questions/mcq_text_question.dart';
+import '../widgets/image_lesson.dart';
+import '../widgets/model_view_lesson.dart';
 
 class LessonModePage extends StatefulWidget {
   const LessonModePage({super.key});
@@ -31,95 +48,179 @@ class _LessonModePageState extends State<LessonModePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Column(
-      children: [
-        BlocBuilder<LessonModeCubit, LessonModeState>(
-          builder: (context, state) {
-            if (state.status == LessonModeStatus.loaded) {
-              print(state.lesson.first);
-              return Expanded(
-                child: ListView.builder(
-                  itemCount: state.lesson.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    var currLesson = state.lesson[index];
-                    if (currLesson.youtubeVideo != null) {
-                      return Center(
-                        child: YoutubeVideoViewer(
-                          ytUrl: currLesson.youtubeVideo!.videoUrl,
-                        ),
-                      );
-                    }
-                    // if (currLesson.threed != null) {
-                    //   return Center(
-                    //     child: Text('thread'),
-                    //   );
-                    // }
-                    // if (currLesson.image != null) {
-                    //   return Center(
-                    //     child: Text('image'),
-                    //   );
-                    // }
-                    // if (currLesson.gdrive != null) {
-                    //   return Center(
-                    //     child: Text('gdrive'),
-                    //   );
-                    // }
-                    // if (currLesson.mcq != null) {
-                    //   return Center(
-                    //     child: Text('mcq'),
-                    //   );
-                    // }
-                    return Container();
-                  },
+      bottomNavigationBar: Container(
+        height: DeviceType().isMobile ? 56 : 80,
+        width: double.infinity,
+        color: AppColors.primaryColor,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Padding(
+              padding: EdgeInsets.only(left: 8.wp),
+              child: IconButton(
+                onPressed: () {
+                  context.read<LessonModeCubit>().loadPreviousQuestion();
+                },
+                icon: Image.asset(
+                  'assets/ui/Group.png',
+                  height: 40,
+                ),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(right: 8.wp),
+              child: IconButton(
+                onPressed: () {
+                  context.read<LessonModeCubit>().loadNextQuestion();
+                  int currQuestionIdx =
+                      context.read<LessonModeCubit>().state.currentQuestion;
+                  bool isLastQuestion = currQuestionIdx ==
+                      (context.read<LessonModeCubit>().state.lesson.length - 1);
+                  print('is last index: $isLastQuestion');
+                  // context.read<LessonModeCubit>().answerSubmit(false);
+                },
+                icon: RotatedBox(
+                  quarterTurns: 2,
+                  child: Image.asset(
+                    'assets/ui/Group.png',
+                    height: 40,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+      backgroundColor: const Color(0XFFD1CBF9),
+      // appBar: appBarWorksheetSolver(context),
+      body: BlocBuilder<LessonModeCubit, LessonModeState>(
+        builder: (context, state) {
+          if (state.status == LessonModeStatus.loaded) {
+            if (state.lesson.isEmpty) {
+              return Center(
+                child: Text(
+                  'No Lessons are available at the moment.',
+                  style: AppTextStyles.nunito105w700Text,
                 ),
               );
-            } else {
-              return const Center(child: CircularProgressIndicator());
             }
-          },
-        )
-      ],
-    ));
-  }
-}
-
-class YoutubeVideoViewer extends StatefulWidget {
-  const YoutubeVideoViewer({Key? key, required this.ytUrl}) : super(key: key);
-  final String ytUrl;
-
-  @override
-  State<YoutubeVideoViewer> createState() => _YoutubeVideoViewerState();
-}
-
-class _YoutubeVideoViewerState extends State<YoutubeVideoViewer> {
-  late final PodPlayerController controller;
-  bool isLoading = true;
-  @override
-  void initState() {
-    loadVideo();
-    super.initState();
-  }
-
-  void loadVideo() async {
-    final urls = await PodPlayerController.getYoutubeUrls(
-      widget.ytUrl,
-    );
-    setState(() => isLoading = false);
-    controller = PodPlayerController(
-      playVideoFrom: PlayVideoFrom.networkQualityUrls(videoUrls: urls!),
-      podPlayerConfig: const PodPlayerConfig(
-        videoQualityPriority: [360],
+            return getQuestion(state, state.currentQuestion);
+          } else {
+            return const Center(
+              child: CircularProgressIndicator.adaptive(
+                strokeCap: StrokeCap.round,
+              ),
+            );
+          }
+        },
       ),
-    )..initialise();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return isLoading
-        ? const Center(child: CircularProgressIndicator())
-        : Center(child: PodVideoPlayer(controller: controller));
+    );
   }
 }
+
+Widget getQuestion(LessonModeState state, int i) {
+  print(jsonEncode(state.lesson[i]));
+  if (state.lesson[i].youtubeVideo != null) {
+    return YoutubeVideoLesson(ytUrl: state.lesson[i].youtubeVideo!.videoUrl);
+  } else if (state.lesson[i].threed != null) {
+    return ModelViewLesson(
+        modelUrl: state.lesson[i].threed!.url,
+        modelName: state.lesson[i].threed!.name);
+  } else if (state.lesson[i].image != null) {
+    return ImageLesson(
+      imgUrl: state.lesson[i].image!.imageUrl,
+    );
+  } else if (state.lesson[i].gdrive != null) {
+    return GdriveLesson(url: state.lesson[i].gdrive!.url);
+  } else if (state.lesson[i].mcq != null) {
+    var mcqQ = McqTextQuestion(
+        answer: state.lesson[i].mcq!.answer,
+        options: state.lesson[i].mcq!.options,
+        question: state.lesson[i].mcq!.question,
+        questionUrl: state.lesson[i].mcq!.questionUrl);
+    return MCQLesson(
+      question: mcqQ,
+      markedAnswer: null,
+    );
+  } else if (state.lesson[i].fib != null) {
+    var fibQ = FillBlankQuestion(
+      answer: state.lesson[i].fib!.answer,
+      question: state.lesson[i].fib!.question,
+    );
+    return FillInTheBlankQLesson(
+      question: fibQ,
+      markedAnswer: '',
+    );
+  } else if (state.lesson[i].owa != null) {
+    var owqQ = OneWordQuestionType(
+      answer: state.lesson[i].owa!.answer,
+      question: state.lesson[i].owa!.question,
+      questionUrl: state.lesson[i].owa!.questionUrl,
+    );
+    return OneWordQuestionLesson(
+      oneWordQuestion: owqQ,
+      markedAnswer: '',
+    );
+  } else if (state.lesson[i].tf != null) {
+    var tfQ = TrueFalseQuestion(
+      answer: true,
+      question: state.lesson[i].tf!.question,
+    );
+    return TrueOrFalseLesson(
+      question: tfQ,
+      markedAnswer: '',
+    );
+  }
+  return Center(
+      child: Text(
+    'No lesson available at moment.',
+    style: AppTextStyles.nunito105w700Text,
+  ));
+}
+
+Future<void> _launchUrl(String url) async {
+  if (!await launchUrl(Uri.parse(url))) {
+    throw Exception('Could not launch ${url}');
+  }
+}
+// class YoutubeVideoViewer extends StatefulWidget {
+//   const YoutubeVideoViewer({Key? key, required this.ytUrl}) : super(key: key);
+//   final String ytUrl;
+
+//   @override
+//   State<YoutubeVideoViewer> createState() => _YoutubeVideoViewerState();
+// }
+
+// class _YoutubeVideoViewerState extends State<YoutubeVideoViewer> {
+//   late final PodPlayerController controller;
+//   bool isLoading = true;
+//   @override
+//   void initState() {
+//     loadVideo();
+//     super.initState();
+//   }
+
+//   void loadVideo() async {
+//     final urls = await PodPlayerController.getYoutubeUrls(
+//       widget.ytUrl,
+//     );
+//     setState(() => isLoading = false);
+//     controller = PodPlayerController(
+//       playVideoFrom: PlayVideoFrom.networkQualityUrls(videoUrls: urls!),
+//       podPlayerConfig: const PodPlayerConfig(
+//         videoQualityPriority: [360],
+//       ),
+//     )..initialise();
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return isLoading
+//         ? const Center(child: CircularProgressIndicator())
+//         : Center(child: PodVideoPlayer(controller: controller));
+//   }
+// }
 
 
 

@@ -14,7 +14,7 @@ String lessonModeModelToJson(List<LessonModeModel> data) =>
 class LessonModeModel {
   final YoutubeVideo? youtubeVideo;
   final Threed? threed;
-  final Image? image;
+  final ImageQ? image;
   final Gdrive? gdrive;
   final Mcq? mcq;
   final Fib? fib;
@@ -35,7 +35,7 @@ class LessonModeModel {
   LessonModeModel copyWith({
     YoutubeVideo? youtubeVideo,
     Threed? threed,
-    Image? image,
+    ImageQ? image,
     Gdrive? gdrive,
     Mcq? mcq,
     Fib? fib,
@@ -59,7 +59,7 @@ class LessonModeModel {
             ? null
             : YoutubeVideo.fromJson(json["YoutubeVideo"]),
         threed: json["threed"] == null ? null : Threed.fromJson(json["threed"]),
-        image: json["image"] == null ? null : Image.fromJson(json["image"]),
+        image: json["image"] == null ? null : ImageQ.fromJson(json["image"]),
         gdrive: json["gdrive"] == null ? null : Gdrive.fromJson(json["gdrive"]),
         mcq: json["mcq"] == null ? null : Mcq.fromJson(json["mcq"]),
         fib: json["fib"] == null ? null : Fib.fromJson(json["fib"]),
@@ -161,21 +161,21 @@ class Gdrive {
       };
 }
 
-class Image {
+class ImageQ {
   final String imageUrl;
 
-  Image({
+  ImageQ({
     required this.imageUrl,
   });
 
-  Image copyWith({
+  ImageQ copyWith({
     String? imageUrl,
   }) =>
-      Image(
+      ImageQ(
         imageUrl: imageUrl ?? this.imageUrl,
       );
 
-  factory Image.fromJson(Map<String, dynamic> json) => Image(
+  factory ImageQ.fromJson(Map<String, dynamic> json) => ImageQ(
         imageUrl: json["image_url"],
       );
 

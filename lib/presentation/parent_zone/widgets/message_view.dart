@@ -1,7 +1,7 @@
 import 'package:connection_notifier/connection_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_ar/presentation/lesson_mode/lesson_mode_page.dart';
+import 'package:flutter_ar/presentation/lesson_mode/pages/lesson_mode_page.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:size_config/size_config.dart';

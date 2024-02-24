@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_ar/core/util/reusable_widgets/reusable_textfield.dart';
 import 'package:flutter_ar/core/util/styles.dart';
@@ -15,33 +17,72 @@ class ArithmeticQuestionUI extends StatefulWidget {
 
 class _ArithmeticQuestionUIState extends State<ArithmeticQuestionUI> {
   var qu = ArithmeticQuestion(
-      num1: '163',
+      num1: '863',
       num2: '158',
       operator: '+',
       answer: 'answer',
       question: 'question');
+  late String number1;
+  late String number2;
   late int num1Boxes;
   late int num2Boxes;
   late double digitBoxSize;
+  List<TextEditingController> carryControllers = [];
+  List<TextEditingController> ansControllers = [];
   // late List<TextFormField> ansTextFields = [];
   late List<String> ansFieldsText = [];
+  late int noOfansFields;
+  List<double> opcityOfButtons = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
   @override
   void initState() {
     super.initState();
-    num1Boxes = qu.num1.length;
-    num2Boxes = qu.num2.length;
-    digitBoxSize = widget.screenSize.width * 0.15;
+    number1 = qu.num1;
+    number2 = qu.num2;
+    //?
+
+    int maxLength =
+        number1.length > number2.length ? number1.length : number2.length;
+
+// Append zeros to the shorter string until both strings have the same length
+    while (number1.length < maxLength) {
+      number1 = '0$number1';
+    }
+
+    while (number2.length < maxLength) {
+      number2 = '0$number2';
+    }
+
+    //?
+    num1Boxes = number1.length;
+    num2Boxes = number2.length;
+
     // Addition
     //? To calculate no of ans box
-    int resultAddition = int.parse(qu.num1) + int.parse(qu.num2);
+    int resultAddition = int.parse(number1.trim()) + int.parse(number2.trim());
+    print('addditon res: ${widget.screenSize.width}');
+    noOfansFields = resultAddition.toString().length;
+    digitBoxSize = (widget.screenSize.width * 0.6) /
+        (noOfansFields + (noOfansFields >= 4 ? 0 : 1));
+    print('addditon res 1: $digitBoxSize');
+    noOfansFields = resultAddition.toString().length;
     // Subtraction
-    int resultSubtraction = int.parse(qu.num1) - int.parse(qu.num2);
+    int resultSubtraction =
+        int.parse(number1.trim()) - int.parse(number2.trim());
 
     for (var i = 0; i < num1Boxes + 1; i++) {
       ansFieldsText.add('');
     }
+    for (var i = 0; i < noOfansFields; i++) {
+      ansControllers.add(TextEditingController());
+      if (i < noOfansFields - 1) {
+        carryControllers.add(TextEditingController());
+      }
+    }
   }
 
+  int numPressedint = -1;
+  int focusedTextField = -1;
+  int focusedCarryField = -1;
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -54,34 +95,61 @@ class _ArithmeticQuestionUIState extends State<ArithmeticQuestionUI> {
               // crossAxisAlignment: CrossAxisAlignment.end,
               // mainAxisAlignment: MainAxisAlignment.end,
               children: [
+                //!Carry fields
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: List.generate(
-                    num1Boxes + 1,
-                    (index) => Padding(
-                      padding: const EdgeInsets.all(8),
-                      child: Container(
-                        height: 50,
-                        width: digitBoxSize,
-                        // color: index == num1Boxes
-                        //     ? Colors.transparent
-                        //     : AppColors.parentZoneScaffoldColor,
-                        child: index == num1Boxes
-                            ? null
-                            : Row(
-                                children: [
-                                  SizedBox(
-                                      width: widget.screenSize.width * 0.05,
-                                      child: const ReusableTextField2(
-                                        textFieldImage:
-                                            'assets/images/PNG Icons/Textfiled_small.png',
-                                      )),
-                                ],
-                              ),
-                      ),
-                    ),
+                    noOfansFields,
+                    (index) {
+                      // if (index == noOfansFields - 1) {
+                      //   return Container(
+                      //     height: 50,
+                      //     width: digitBoxSize,
+                      //   );
+                      // }
+                      if (index < carryControllers.length - 1 &&
+                          ansControllers[index + 2].text.isEmpty) {
+                        return Container(
+                          height: 50,
+                          width: digitBoxSize,
+                        );
+                      }
+                      return Padding(
+                        padding: const EdgeInsets.all(8),
+                        child: Container(
+                          height: 50,
+                          width: digitBoxSize,
+                          // color: index == num1Boxes
+                          //     ? Colors.transparent
+                          //     : AppColors.parentZoneScaffoldColor,
+                          child: index == noOfansFields - 1
+                              ? null
+                              : Row(
+                                  children: [
+                                    SizedBox(
+                                        width: widget.screenSize.width * 0.05,
+                                        child: ReusableTextField2(
+                                          controller: carryControllers[index],
+                                          onChanged: (val) {
+                                            print(val);
+                                          },
+                                          onTap: () {
+                                            focusedTextField = -1;
+                                            focusedCarryField = index;
+                                            print(
+                                                'focusedCarryField idx: $index');
+                                          },
+                                          textFieldImage:
+                                              'assets/images/PNG Icons/Textfiled_small.png',
+                                        )),
+                                  ],
+                                ),
+                        ),
+                      );
+                    },
                   ),
                 ),
+                //!num1
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
@@ -106,7 +174,7 @@ class _ArithmeticQuestionUIState extends State<ArithmeticQuestionUI> {
                               borderRadius: BorderRadius.circular(22.h)),
                           child: Center(
                             child: Text(
-                              qu.num1[index],
+                              number1[index],
                               style: AppTextStyles.unitedRounded270w700
                                   .copyWith(
                                       color: Colors.black, fontSize: 122.sp),
@@ -147,7 +215,7 @@ class _ArithmeticQuestionUIState extends State<ArithmeticQuestionUI> {
                               borderRadius: BorderRadius.circular(22.h)),
                           child: Center(
                             child: Text(
-                              qu.num2[index],
+                              number2[index],
                               style: AppTextStyles.unitedRounded270w700
                                   .copyWith(
                                       color: Colors.black, fontSize: 122.sp),
@@ -172,27 +240,49 @@ class _ArithmeticQuestionUIState extends State<ArithmeticQuestionUI> {
                 //! Ans TextFields
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
-                  children: List.generate(
-                      num1Boxes + 1,
-                      (index) => Padding(
-                            padding: const EdgeInsets.all(8),
-                            child: Container(
-                              height: 50,
-                              width: digitBoxSize,
-                              // color: index == num1Boxes
-                              //     ? Colors.transparent
-                              //     : AppColors.parentZoneScaffoldColor,
-                              child: const ReusableTextField2(
-                                textFieldImage:
-                                    'assets/images/PNG Icons/textfield_arithmetic_ans.png',
-                              ),
-                            ),
-                          )),
+                  children: List.generate(noOfansFields, (index) {
+                    // if (index == 0 && ansControllers[1].text.isEmpty) {
+                    //   return Container(
+                    //     height: 50,
+                    //     width: digitBoxSize,
+                    //   );
+                    // }
+                    if (index < ansControllers.length - 1 &&
+                        ansControllers[index + 1].text.isEmpty) {
+                      return Container(
+                        height: 50,
+                        width: digitBoxSize,
+                      );
+                    }
+                    return Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: Container(
+                        height: 50,
+                        width: digitBoxSize,
+                        child: ReusableTextField2(
+                          readOnly: false,
+                          showCursor: false,
+                          controller: ansControllers[index],
+                          onChanged: (val) {
+                            print('controller idx: $index');
+                          },
+                          onTap: () {
+                            focusedCarryField = -1;
+                            focusedTextField = index;
+                            print('controller idx: $index');
+                          },
+                          textFieldImage:
+                              'assets/images/PNG Icons/textfield_arithmetic_ans.png',
+                        ),
+                      ),
+                    );
+                  }),
                 ),
               ],
             ),
           ),
         ),
+        //! numPad
         Expanded(
             flex: 2,
             child: Container(
@@ -201,12 +291,81 @@ class _ArithmeticQuestionUIState extends State<ArithmeticQuestionUI> {
                 children: [
                   Row(
                     children: List.generate(
+                      3,
+                      (index) => Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: GestureDetector(
+                            onTapDown: (TapDownDetails details) {
+                              // Handle the tap down event, you can change the appearance here
+                              setState(() {
+                                // Example: Change opacity to simulate a button press
+                                opcityOfButtons[index] = 0.5;
+                              });
+                            },
+                            onTapUp: (TapUpDetails details) {
+                              // Handle the tap up event, revert the appearance back to normal
+                              setState(() {
+                                // Example: Revert opacity to its original value
+                                opcityOfButtons[index] = 1.0;
+                              });
+                              // Perform the desired action here (e.g., update text field)
+                              numPressed(index + 1);
+                              if (focusedTextField != -1) {
+                                ansControllers[focusedTextField].text =
+                                    numPressedint.toString();
+                                // focusedTextField = -1;
+                              }
+                              if (focusedCarryField != -1) {
+                                carryControllers[focusedCarryField].text =
+                                    numPressedint.toString();
+                              }
+                            },
+                            onTapCancel: () {
+                              // Handle the tap cancel event, revert the appearance back to normal
+                              setState(() {
+                                // Example: Revert opacity to its original value
+                                opcityOfButtons[index] = 1.0;
+                              });
+                            },
+                            child: AnimatedOpacity(
+                              opacity: opcityOfButtons[
+                                  index], // Variable to control opacity
+                              duration: Duration(
+                                  milliseconds:
+                                      100), // Duration of the animation
+                              child: Image.asset(
+                                'assets/images/PNG Icons/arithmetic_keyboard/${index + 1}.png',
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Row(
+                    children: List.generate(
                         3,
                         (index) => Expanded(
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Image.asset(
-                                    'assets/images/PNG Icons/arithmetic_keyboard/${index + 1}.png'),
+                              child: GestureDetector(
+                                onTap: () {
+                                  numPressed(index + 4);
+                                  if (focusedTextField != -1) {
+                                    ansControllers[focusedTextField].text =
+                                        numPressedint.toString();
+                                    // focusedTextField = -1;
+                                  }
+                                  if (focusedCarryField != -1) {
+                                    carryControllers[focusedCarryField].text =
+                                        numPressedint.toString();
+                                    // focusedCarryField == -1;
+                                  }
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Image.asset(
+                                      'assets/images/PNG Icons/arithmetic_keyboard/${index + 4}.png'),
+                                ),
                               ),
                             )),
                   ),
@@ -214,35 +373,80 @@ class _ArithmeticQuestionUIState extends State<ArithmeticQuestionUI> {
                     children: List.generate(
                         3,
                         (index) => Expanded(
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Image.asset(
-                                    'assets/images/PNG Icons/arithmetic_keyboard/${index + 4}.png'),
+                              child: GestureDetector(
+                                onTap: () {
+                                  numPressed(index + 7);
+                                  if (focusedTextField != -1) {
+                                    ansControllers[focusedTextField].text =
+                                        numPressedint.toString();
+                                    // focusedTextField = -1;
+                                  }
+                                  if (focusedCarryField != -1) {
+                                    carryControllers[focusedCarryField].text =
+                                        numPressedint.toString();
+                                    // focusedCarryField == -1;
+                                  }
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Image.asset(
+                                      'assets/images/PNG Icons/arithmetic_keyboard/${index + 7}.png'),
+                                ),
                               ),
                             )),
                   ),
                   Row(
-                    children: List.generate(
-                        3,
-                        (index) => Expanded(
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Image.asset(
-                                    'assets/images/PNG Icons/arithmetic_keyboard/${index + 7}.png'),
-                              ),
-                            )),
-                  ),
-                  Row(
-                    children: List.generate(
-                        1,
-                        (index) => Expanded(
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 8.0),
-                                child: Image.asset(
-                                    'assets/images/PNG Icons/arithmetic_keyboard/0.png'),
-                              ),
-                            )),
+                    children: [
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () {
+                            numPressed(0);
+                            if (focusedTextField != -1) {
+                              ansControllers[focusedTextField].text =
+                                  numPressedint.toString();
+                              // focusedTextField = -1;
+                            }
+                            if (focusedCarryField != -1) {
+                              carryControllers[focusedCarryField].text =
+                                  numPressedint.toString();
+                              // focusedCarryField == -1;
+                            }
+                          },
+                          child: Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 8.0),
+                            child: Image.asset(
+                              'assets/images/PNG Icons/arithmetic_keyboard/0.png',
+                            ),
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                          child: Expanded(
+                        child: GestureDetector(
+                          onTap: () {
+                            numPressed(0);
+                            if (focusedTextField != -1) {
+                              ansControllers[focusedTextField].clear();
+                              // focusedTextField = -1;
+                            }
+                            if (focusedCarryField != -1) {
+                              carryControllers[focusedCarryField].clear();
+                              // focusedCarryField == -1;
+                            }
+                          },
+                          child: Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 8.0),
+                            child: Container(
+                                decoration: BoxDecoration(
+                                    border: Border.all(
+                                        color: Colors.amber, width: 3)),
+                                child: Center(child: Text('Back <-'))),
+                          ),
+                        ),
+                      ))
+                    ],
                   ),
                   // Expanded(
                   //   child: Image.asset(
@@ -253,5 +457,10 @@ class _ArithmeticQuestionUIState extends State<ArithmeticQuestionUI> {
             ))
       ],
     );
+  }
+
+  void numPressed(int num) {
+    numPressedint = num;
+    setState(() {});
   }
 }

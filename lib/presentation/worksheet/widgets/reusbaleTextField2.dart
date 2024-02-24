@@ -7,10 +7,16 @@ class ReusableTextField2 extends StatelessWidget {
       {super.key,
       required this.textFieldImage,
       this.showCursor,
-      this.readOnly = false});
+      this.readOnly = false,
+      required this.controller,
+      this.onChanged,
+      this.onTap});
   final String textFieldImage;
   final bool? showCursor;
   final bool readOnly;
+  final TextEditingController controller;
+  final Function(String)? onChanged;
+  final void Function()? onTap;
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -29,8 +35,11 @@ class ReusableTextField2 extends StatelessWidget {
             width: 70.wp,
             padding: const EdgeInsets.symmetric(horizontal: 15),
             child: TextFormField(
-              showCursor: showCursor,
-              readOnly: readOnly,
+              textAlign: TextAlign.center,
+              onTap: onTap,
+              controller: controller,
+              showCursor: true,
+              readOnly: true,
               style: AppTextStyles.unitedRounded270w700
                   .copyWith(color: Colors.black, fontSize: 122.sp),
               decoration: const InputDecoration(
@@ -38,11 +47,7 @@ class ReusableTextField2 extends StatelessWidget {
                 border: InputBorder.none,
               ),
               // initialValue: ans,
-              onChanged: (value) {
-                // context
-                //     .read<WorksheetSolverCubit>()
-                //     .setAnswer(questionIndex, value);
-              },
+              onChanged: onChanged,
               onEditingComplete: () {
                 print('complete');
                 FocusScope.of(context).requestFocus(FocusNode());

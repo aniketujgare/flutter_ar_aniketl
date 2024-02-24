@@ -17,6 +17,27 @@ class LessonModeCubit extends Cubit<LessonModeState> {
     emit(state.copyWith(status: LessonModeStatus.loaded, lesson: v!));
   }
 
+  Future<void> loadNextQuestion() async {
+    if (state.currentQuestion + 1 < state.lesson.length) {
+      emit(state.copyWith(status: LessonModeStatus.loading));
+      await Future.delayed(const Duration(milliseconds: 100));
+      emit(state.copyWith(
+          status: LessonModeStatus.loaded,
+          currentQuestion: state.currentQuestion + 1));
+    }
+  }
+
+  Future<void> loadPreviousQuestion() async {
+    if (state.currentQuestion - 1 >= 0) {
+      emit(state.copyWith(status: LessonModeStatus.loading));
+      await Future.delayed(const Duration(milliseconds: 100));
+
+      emit(state.copyWith(
+          status: LessonModeStatus.loaded,
+          currentQuestion: state.currentQuestion - 1));
+    }
+  }
+
   Future<List<LessonModeModel>> getLessonMode() async {
     var headers = {'Content-Type': 'application/json'};
     var request = http.Request(
