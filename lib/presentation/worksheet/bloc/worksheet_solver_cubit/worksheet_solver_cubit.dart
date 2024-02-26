@@ -91,7 +91,7 @@ class WorksheetSolverCubit extends Cubit<WorksheetSolverState> {
   }
 
   void answerSubmit(bool lastQuestion) async {
-    emit(state.copyWith(status: WorkSheetSolverStatus.loading));
+    // emit(state.copyWith(status: WorkSheetSolverStatus.loading));
 
     // Assuming state.answerSheet contains your data
     List<StudentAnswer> answerSheet = List.from(state.answerSheet);

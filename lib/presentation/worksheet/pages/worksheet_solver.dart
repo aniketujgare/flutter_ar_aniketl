@@ -231,6 +231,7 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView> {
                 child: IconButton(
                   onPressed: () {
                     context.read<WorksheetSolverCubit>().loadNextQuestion();
+
                     int currQuestionIdx = context
                         .read<WorksheetSolverCubit>()
                         .state
@@ -242,7 +243,7 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView> {
                                 .questions
                                 .length -
                             1);
-                    print('is last index: $isLastQuestion');
+                    // print('is last index: $isLastQuestion');
                     context.read<WorksheetSolverCubit>().answerSubmit(false);
                   },
                   icon: RotatedBox(

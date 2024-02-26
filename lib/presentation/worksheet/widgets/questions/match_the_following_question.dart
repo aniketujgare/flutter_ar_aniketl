@@ -1,3 +1,5 @@
+import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -240,53 +242,83 @@ class MatchFollowingQuestionState extends State<MatchFollowingQuestion> {
           ),
 
         GestureDetector(
+          onPanStart: (details) {
+            setState(() {
+              Offset touchPoint = details.localPosition;
+
+              int touchedBoxIndex = _getTouchedBox(touchPoint);
+              // touch should lie inside boxes and box should be of question
+              if (touchedBoxIndex != -1 &&
+                  touchedBoxIndex < boxPositions.length / 2) {
+                print('start line');
+                // get mid point of touchehd box
+                Offset middleOfBox = Offset(
+                  boxPositions[touchedBoxIndex].dx + boxSizes.width / 2,
+                  boxPositions[touchedBoxIndex].dy + boxSizes.height / 2,
+                );
+                // If new line strting from a box who is alrady attach with some ans then remove that pre connected line
+                allLines.removeWhere((line) => (line['from'] == middleOfBox));
+                currentLine['from'] = middleOfBox;
+              }
+            });
+          },
           onPanUpdate: (details) {
             setState(() {
               Offset touchPoint = details.localPosition;
               currentLine['to'] = touchPoint;
+              allLines.removeWhere((line) => line['to'] == currentLine['to']);
+              allLines.add(currentLine);
 
-//?
-              // int touchedBoxIndex = _getTouchedBox(touchPoint);
-              // if (touchedBoxIndex == -1 ||
-              //     touchedBoxIndex >= boxPositions.length / 2) {
-              //   // If the touch is outside the boxes or in the bottom section, cancel line drawing and remove the entry
-              //   // allLines.remove(currentLine);
-              //   return;
+              // if (allLines.last['from'] == null ||
+              //     allLines.last['to'] == null ||
+              //     _getTouchedBox(allLines.last['to']!) == -1) {
+              //   allLines.removeLast();
               // }
-//?
-              for (int i = 0; i < boxPositions.length; i++) {
-                if (_isInsideBox(
-                    currentLine['to']!, boxPositions[i], boxSizes)) {
-                  currentLine['to'] = Offset(
-                    boxPositions[i].dx + boxSizes.width / 2,
-                    boxPositions[i].dy + boxSizes.height / 2,
-                  );
-
-                  Offset endPoint = currentLine['to']!;
-                  allLines.removeWhere((line) => line['to'] == endPoint);
-                  allLines.add(currentLine);
-                  return;
-                }
-              }
             });
+            // print('-------------');
+            // for (var element in allLines) {
+            //   print(
+            //       'from: ${_getTouchedBox(element['from']!)} -> to: ${_getTouchedBox(element['to']!)}');
+            // }
+            // print('-------------');
           },
           onPanEnd: (details) {
-            //?
+            //remove unattached lines (null safe code dont remove)
+            allLines.removeWhere(
+                (line) => line['from'] == null || line['to'] == null);
+            // remove unattached lines
+            allLines.removeWhere((line) =>
+                _getTouchedBox(line['from']!) == -1 ||
+                _getTouchedBox(line['to']!) == -1 ||
+                _getTouchedBox(line['to']!) < boxPositions.length / 2);
+            allLines.removeWhere(
+                (line) => line['from'] == null || line['to'] == null);
+            // print('total lines: ${allLines.length}');
+            // print('-------------');
+            // for (var element in allLines) {
+            //   print(
+            //       'from: ${_getTouchedBox(element['from']!)} -> to: ${_getTouchedBox(element['to']!)}');
+            // }
+            // print('-------------');
+            // last line attach to center of box
+            if (allLines.isNotEmpty) {
+              var lastLine = allLines.last;
 
-            //?
-            // Remove lines connecting question to question or answer to answer container
-            allLines.removeWhere((line) {
-              int fromIndex = _getTouchedBox(line['from']!);
-              int toIndex = _getTouchedBox(line['to']!);
+              int touchBoxIndex = _getTouchedBox(lastLine['to']!);
+              allLines.last['to'] = Offset(
+                boxPositions[touchBoxIndex].dx + boxSizes.width / 2,
+                boxPositions[touchBoxIndex].dy + boxSizes.height / 2,
+              );
 
-              int fromSection = fromIndex ~/ widget.question.options.length;
-              int toSection = toIndex ~/ widget.question.options.length;
-              // Remove lines from answer to question (fromIndex is in the answers section, and toIndex is in the questions section)
-              bool isAnswerToQuestion =
-                  fromIndex >= widget.question.options.length &&
-                      toIndex < widget.question.options.length;
-              return fromSection == toSection || isAnswerToQuestion;
-            });
+              //If ans has 2 lines then remove previous line
+              for (int i = 0; i < allLines.length - 1; i++) {
+                if (allLines[i]['to'] == allLines.last['to']) {
+                  allLines.removeAt(i);
+                  break;
+                }
+              }
+            }
+
             Set<Map<String, Offset>> uniqueLines = Set.from(allLines);
             allLines = List.from(uniqueLines);
             setState(() {
@@ -298,49 +330,12 @@ class MatchFollowingQuestionState extends State<MatchFollowingQuestion> {
               print('mtf ans: $v');
               var ans = v['answer']!.values.toList();
 
-              // List<String> listString = [];
-
-              // v.forEach((outerKey, innerMap) {
-              //   innerMap.forEach((innerKey, innerValue) {
-              //     listString.add(innerValue);
-              //   });
-              // });
-
-              // print(listString);
               var state = context.read<WorksheetSolverCubit>().state;
               context
                   .read<WorksheetSolverCubit>()
                   .setAnswer(state.currentQuestion, ans);
               // [{"1":{"fillblank":{"answer":"test1"}}}]
             }
-          },
-          onPanStart: (details) {
-            setState(() {
-              Offset touchPoint = details.localPosition;
-
-              print(touchPoint);
-              int touchedBoxIndex = _getTouchedBox(touchPoint);
-              //?
-              // if (touchedBoxIndex >= boxPositions.length / 2) {
-              //   print('ansbox tapped');
-              //   // Check if any existing line ends at the same point where the current line ends
-              //   // allLines.removeWhere((line) {
-              //   //   return line['to'] == currentLine['to'];
-              //   // });
-              //   return;
-              // }
-//?
-              if (touchedBoxIndex != -1 &&
-                  touchedBoxIndex < boxPositions.length / 2) {
-                Offset middleOfBox = Offset(
-                  boxPositions[touchedBoxIndex].dx + boxSizes.width / 2,
-                  boxPositions[touchedBoxIndex].dy + boxSizes.height / 2,
-                );
-                // If new line strting from a box who is alrady attach with some ans then remove that pre connected line
-                allLines.removeWhere((line) => (line['from'] == middleOfBox));
-                currentLine['from'] = middleOfBox;
-              }
-            });
           },
           child: Container(
             margin: const EdgeInsets.all(1.0),
@@ -360,11 +355,13 @@ class MatchFollowingQuestionState extends State<MatchFollowingQuestion> {
     };
 
     for (var line in lines) {
-      int fromIndex = _getTouchedBox(line['from']!);
-      int toIndex = _getTouchedBox(line['to']!);
-      // result["answer"]![fromIndex] = answersList[toIndex % answersList.length];
-      result["answer"]![fromIndex] =
-          answersList.reversed.toList()[toIndex % answersList.length];
+      if (line['from'] != null) {
+        int fromIndex = _getTouchedBox(line['from']!);
+        int toIndex = _getTouchedBox(line['to']!);
+        // result["answer"]![fromIndex] = answersList[toIndex % answersList.length];
+        result["answer"]![fromIndex] =
+            answersList.reversed.toList()[toIndex % answersList.length];
+      }
     }
     result["answer"] = Map.fromEntries(result["answer"]!.entries.toList()
       ..sort((a, b) => a.key.compareTo(b.key)));
@@ -401,7 +398,7 @@ class LinePainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     var choosecol = ['FF644E', '0092D2', 'FFC605', '0D9855'];
     for (int i = 0; i < lines.length; i++) {
-      availableColors.add(choosecol[i]);
+      availableColors.add(choosecol[i % choosecol.length]);
     }
     for (int i = 0; i < lines.length; i++) {
       Paint paint = Paint()
