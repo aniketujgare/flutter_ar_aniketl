@@ -21,11 +21,10 @@ class ReArrangeWordsQuestion extends StatefulWidget {
       required this.screenSize});
 
   @override
-  State<ReArrangeWordsQuestion> createState() =>
-      _AscendingDecendingQuestionState();
+  State<ReArrangeWordsQuestion> createState() => _ReArrangeWordsQuestionState();
 }
 
-class _AscendingDecendingQuestionState extends State<ReArrangeWordsQuestion> {
+class _ReArrangeWordsQuestionState extends State<ReArrangeWordsQuestion> {
   List<bool> isDraggedList = [];
   List<String> selectedAnswer = [];
   List<String> questinWords = [];
@@ -36,6 +35,7 @@ class _AscendingDecendingQuestionState extends State<ReArrangeWordsQuestion> {
   @override
   void initState() {
     questionsList.addAll(widget.question.question.split(' '));
+    questionsList.shuffle();
     questionsLength = questionsList.length;
     //? Setting up size of box
     double halfEmptyBox = (questionsList.length - 1 + 2) / 2;
@@ -77,7 +77,8 @@ class _AscendingDecendingQuestionState extends State<ReArrangeWordsQuestion> {
           QuestionText(question: widget.question.question),
           DeviceType().isMobile ? 55.verticalSpacer : 85.verticalSpacer,
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20.wp),
+            padding: EdgeInsets.symmetric(
+                horizontal: DeviceType().isMobile ? 20.wp : 5.wp),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: questionsList.isEmpty
@@ -179,7 +180,6 @@ class _AscendingDecendingQuestionState extends State<ReArrangeWordsQuestion> {
                       ) {
                         return UnconstrainedBox(
                           child: Container(
-                              key: const Key('ascDesChild'),
                               height: 70.h,
                               margin: EdgeInsets.symmetric(vertical: 1.wp),
                               decoration: ShapeDecoration(
@@ -228,88 +228,6 @@ class _AscendingDecendingQuestionState extends State<ReArrangeWordsQuestion> {
                       },
                     )),
           )
-          // Padding(
-          //   padding: EdgeInsets.symmetric(horizontal: 5.wp),
-          //   child: Row(
-          //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          //     children: List.generate(
-          //       questinWords.length,
-          //       (index) {
-          //         int idx = selectedAnswer
-          //             .indexWhere((element) => questinWords[index] == element);
-          //         if (idx != -1) {
-          //           selectedAnswer[idx] = ' ';
-          //           isDraggedList[index] = false;
-          //         }
-          //         return Expanded(
-          //           child: DragTarget<String>(
-          //             onWillAccept: (data) {
-          //               if (selectedAnswer.contains(data)) {
-          //                 for (int i = 0; i < selectedAnswer.length; i++) {
-          //                   if (selectedAnswer[i] == data) {
-          //                     selectedAnswer[i] = ' ';
-          //                     isDraggedList[i] = false;
-          //                   }
-          //                 }
-          //               }
-
-          //               isDraggedList[index] = true;
-          //               selectedAnswer[index] = data ?? ' ';
-          //               // if (!selectedAnswer.contains(' ')) {}
-          //               // context
-          //               //     .read<WorksheetSolverCubit>()
-          //               //     .setAnswer(widget.questionIndex, selectedAnswer);
-
-          //               return data == 'red';
-          //             },
-          //             onAccept: (data) {
-          //               print('selected answers: $selectedAnswer');
-          //               print('Dropped successfully!');
-          //               // ScaffoldMessenger.of(context).showSnackBar(
-          //               //     const SnackBar(content: Text('Dropped successfully!')));
-          //             },
-          //             builder: (
-          //               BuildContext context,
-          //               List<dynamic> accepted,
-          //               List<dynamic> rejected,
-          //             ) {
-          //               return Container(
-          //                 height: 70.h,
-          //                 margin: EdgeInsets.symmetric(horizontal: 2.wp),
-          //                 decoration: ShapeDecoration(
-          //                   color: isDraggedList[index] == true
-          //                       ? AppColors.primaryColor
-          //                       : const Color(0xFFF4F2FE),
-          //                   shape: RoundedRectangleBorder(
-          //                     borderRadius: BorderRadius.circular(17),
-          //                   ),
-          //                 ),
-          //                 child: Container(
-          //                   margin: EdgeInsets.symmetric(horizontal: 2.wp),
-          //                   padding: EdgeInsets.symmetric(horizontal: 1.wp),
-          //                   child: FittedBox(
-          //                     fit: BoxFit.scaleDown,
-          //                     child: Text(
-          //                       selectedAnswer[index],
-          //                       overflow: TextOverflow.ellipsis,
-          //                       textAlign: TextAlign.center,
-          //                       style: TextStyle(
-          //                         color: const Color(0xFFF4F2FE),
-          //                         fontSize: 120.sp,
-          //                         fontFamily: 'Nunito',
-          //                         fontWeight: FontWeight.w700,
-          //                       ),
-          //                     ),
-          //                   ),
-          //                 ),
-          //               );
-          //             },
-          //           ),
-          //         );
-          //       },
-          //     ),
-          //   ),
-          // ),
         ],
       ),
     );

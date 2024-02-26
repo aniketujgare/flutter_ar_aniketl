@@ -75,7 +75,7 @@ class _SortQuestionState extends State<SortQuestion> {
             children: [
               //! Category 1 Answers
               Expanded(
-                flex: isImg ? 2 : 3,
+                flex: DeviceType().isMobile ? (isImg ? 2 : 3) : (isImg ? 2 : 5),
                 child: DragTarget<String>(
                   builder: (
                     BuildContext context,
@@ -83,7 +83,11 @@ class _SortQuestionState extends State<SortQuestion> {
                     List<dynamic> rejected,
                   ) {
                     return Container(
-                      margin: EdgeInsets.fromLTRB(8.wp, 0, 4.wp, 0),
+                      margin: EdgeInsets.fromLTRB(
+                          DeviceType().isMobile ? 8.wp : 4.wp,
+                          0,
+                          DeviceType().isMobile ? 4.wp : 2.wp,
+                          0),
                       decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(22.h)),
@@ -105,7 +109,9 @@ class _SortQuestionState extends State<SortQuestion> {
                                 crossAxisCount: isImg ? 3 : 2,
                                 mainAxisSpacing: 0,
                                 crossAxisSpacing: 0,
-                                childAspectRatio: isImg ? 1 : 2.1,
+                                childAspectRatio: DeviceType().isMobile
+                                    ? (isImg ? 1 : 2.1)
+                                    : (isImg ? 1.2 : 1.9),
                                 children: category1Answers.isEmpty
                                     ? [SizedBox(height: 70.h)]
                                     // :
@@ -168,7 +174,7 @@ class _SortQuestionState extends State<SortQuestion> {
               ),
               //! Options Chips
               Expanded(
-                flex: isImg ? 1 : 2,
+                flex: DeviceType().isMobile ? (isImg ? 1 : 2) : (isImg ? 1 : 3),
                 child: Container(
                   height: widget.screenSize.height * (isImg ? 0.7 : 0.6),
                   decoration: BoxDecoration(
@@ -178,7 +184,9 @@ class _SortQuestionState extends State<SortQuestion> {
                   child: GridView.count(
                     mainAxisSpacing: 0,
                     crossAxisSpacing: 0,
-                    childAspectRatio: isImg ? 1.2 : 1.7,
+                    childAspectRatio: DeviceType().isMobile
+                        ? (isImg ? 1.2 : 1.7)
+                        : (isImg ? 1.2 : 1.4),
                     crossAxisCount: 2,
                     children: questionsList.isEmpty
                         ? [SizedBox(height: 70.h)]
@@ -189,8 +197,10 @@ class _SortQuestionState extends State<SortQuestion> {
                   ),
                 ),
               ),
+              //! Category 2 Container
               Expanded(
-                  flex: isImg ? 2 : 3,
+                  flex:
+                      DeviceType().isMobile ? (isImg ? 2 : 3) : (isImg ? 2 : 5),
                   child: DragTarget<String>(
                     builder: (
                       BuildContext context,
@@ -198,7 +208,11 @@ class _SortQuestionState extends State<SortQuestion> {
                       List<dynamic> rejected,
                     ) {
                       return Container(
-                        margin: EdgeInsets.fromLTRB(4.wp, 0, 8.wp, 0),
+                        margin: EdgeInsets.fromLTRB(
+                            DeviceType().isMobile ? 4.wp : 2.wp,
+                            0,
+                            DeviceType().isMobile ? 8.wp : 4.wp,
+                            0),
                         decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(22.h)),
@@ -220,7 +234,9 @@ class _SortQuestionState extends State<SortQuestion> {
                                   crossAxisCount: isImg ? 3 : 2,
                                   mainAxisSpacing: 0,
                                   crossAxisSpacing: 0,
-                                  childAspectRatio: isImg ? 1 : 2.1,
+                                  childAspectRatio: DeviceType().isMobile
+                                      ? (isImg ? 1 : 2.1)
+                                      : (isImg ? 1.2 : 1.9),
                                   children: category2Answers.isEmpty
                                       ? [SizedBox(height: 70.h)]
                                       // :

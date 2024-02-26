@@ -245,6 +245,15 @@ class MatchFollowingQuestionState extends State<MatchFollowingQuestion> {
               Offset touchPoint = details.localPosition;
               currentLine['to'] = touchPoint;
 
+//?
+              // int touchedBoxIndex = _getTouchedBox(touchPoint);
+              // if (touchedBoxIndex == -1 ||
+              //     touchedBoxIndex >= boxPositions.length / 2) {
+              //   // If the touch is outside the boxes or in the bottom section, cancel line drawing and remove the entry
+              //   // allLines.remove(currentLine);
+              //   return;
+              // }
+//?
               for (int i = 0; i < boxPositions.length; i++) {
                 if (_isInsideBox(
                     currentLine['to']!, boxPositions[i], boxSizes)) {
@@ -254,18 +263,17 @@ class MatchFollowingQuestionState extends State<MatchFollowingQuestion> {
                   );
 
                   Offset endPoint = currentLine['to']!;
-                  if (allLines.any((line) => line['to'] == endPoint)) {
-                    allLines.removeWhere((line) => line['to'] == endPoint);
-                  }
-                  setState(() {
-                    allLines.add(currentLine);
-                  });
+                  allLines.removeWhere((line) => line['to'] == endPoint);
+                  allLines.add(currentLine);
                   return;
                 }
               }
             });
           },
           onPanEnd: (details) {
+            //?
+
+            //?
             // Remove lines connecting question to question or answer to answer container
             allLines.removeWhere((line) {
               int fromIndex = _getTouchedBox(line['from']!);
@@ -309,17 +317,27 @@ class MatchFollowingQuestionState extends State<MatchFollowingQuestion> {
           onPanStart: (details) {
             setState(() {
               Offset touchPoint = details.localPosition;
+
               print(touchPoint);
               int touchedBoxIndex = _getTouchedBox(touchPoint);
-              if (touchedBoxIndex != -1) {
+              //?
+              // if (touchedBoxIndex >= boxPositions.length / 2) {
+              //   print('ansbox tapped');
+              //   // Check if any existing line ends at the same point where the current line ends
+              //   // allLines.removeWhere((line) {
+              //   //   return line['to'] == currentLine['to'];
+              //   // });
+              //   return;
+              // }
+//?
+              if (touchedBoxIndex != -1 &&
+                  touchedBoxIndex < boxPositions.length / 2) {
                 Offset middleOfBox = Offset(
                   boxPositions[touchedBoxIndex].dx + boxSizes.width / 2,
                   boxPositions[touchedBoxIndex].dy + boxSizes.height / 2,
                 );
                 // If new line strting from a box who is alrady attach with some ans then remove that pre connected line
-                allLines.removeWhere((line) {
-                  return (line['from'] == middleOfBox);
-                });
+                allLines.removeWhere((line) => (line['from'] == middleOfBox));
                 currentLine['from'] = middleOfBox;
               }
             });

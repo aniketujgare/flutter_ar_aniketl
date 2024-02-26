@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ar/core/util/device_type.dart';
 import 'package:flutter_ar/core/util/styles.dart';
 import 'package:size_config/size_config.dart';
 
@@ -10,31 +11,35 @@ class ReusableTextField2 extends StatelessWidget {
       this.readOnly = false,
       required this.controller,
       this.onChanged,
-      this.onTap});
+      this.onTap,
+      this.offset = const Offset(-1, -7)});
   final String textFieldImage;
   final bool? showCursor;
   final bool readOnly;
   final TextEditingController controller;
   final Function(String)? onChanged;
   final void Function()? onTap;
+  final Offset offset;
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
         SizedBox(
           width: 70.wp,
-          height: 60,
+          height: 70.h,
           child: Image.asset(
             textFieldImage,
             fit: BoxFit.fill,
           ),
         ),
         Transform.translate(
-          offset: Offset(-1.h, -7.h),
+          offset: DeviceType().isMobile ? Offset(-1.h, -7.h) : offset,
           child: Container(
             width: 70.wp,
-            padding: const EdgeInsets.symmetric(horizontal: 15),
+            padding: EdgeInsets.symmetric(
+                horizontal: DeviceType().isMobile ? 15 : 0),
             child: TextFormField(
+              cursorHeight: DeviceType().isMobile ? null : 35.h,
               textAlign: TextAlign.center,
               onTap: onTap,
               controller: controller,

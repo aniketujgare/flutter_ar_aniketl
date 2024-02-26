@@ -147,7 +147,7 @@ class _WorksheetViewState extends State<WorksheetView> {
                                         MaterialPageRoute(
                                           builder: (context) =>
                                               WorksheetSolverView(
-                                                  workSheetId: 850),
+                                                  workSheetId: workSheet.id),
                                         ),
                                       );
                                     },

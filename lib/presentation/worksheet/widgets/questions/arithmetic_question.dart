@@ -32,7 +32,7 @@ class _ArithmeticQuestionUIState extends State<ArithmeticQuestionUI> {
   // late List<TextFormField> ansTextFields = [];
   late List<String> ansFieldsText = [];
   late int noOfansFields;
-  List<double> opcityOfButtons = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
+  List<double> opcityOfButtons = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
   @override
   void initState() {
     super.initState();
@@ -86,14 +86,14 @@ class _ArithmeticQuestionUIState extends State<ArithmeticQuestionUI> {
   @override
   Widget build(BuildContext context) {
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Expanded(
           flex: 5,
           child: Padding(
             padding: const EdgeInsets.only(top: 15, right: 10),
             child: Column(
-              // crossAxisAlignment: CrossAxisAlignment.end,
-              // mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 //!Carry fields
                 Row(
@@ -130,6 +130,7 @@ class _ArithmeticQuestionUIState extends State<ArithmeticQuestionUI> {
                                         width: widget.screenSize.width * 0.05,
                                         child: ReusableTextField2(
                                           controller: carryControllers[index],
+                                          offset: const Offset(0, 0),
                                           onChanged: (val) {
                                             print(val);
                                           },
@@ -250,14 +251,14 @@ class _ArithmeticQuestionUIState extends State<ArithmeticQuestionUI> {
                     if (index < ansControllers.length - 1 &&
                         ansControllers[index + 1].text.isEmpty) {
                       return Container(
-                        height: 50,
+                        height: 70.h,
                         width: digitBoxSize,
                       );
                     }
                     return Padding(
                       padding: const EdgeInsets.all(8),
                       child: Container(
-                        height: 50,
+                        height: 70.h,
                         width: digitBoxSize,
                         child: ReusableTextField2(
                           readOnly: false,
@@ -288,6 +289,7 @@ class _ArithmeticQuestionUIState extends State<ArithmeticQuestionUI> {
             child: Container(
               margin: EdgeInsets.all(30.h),
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Row(
                     children: List.generate(
@@ -331,7 +333,7 @@ class _ArithmeticQuestionUIState extends State<ArithmeticQuestionUI> {
                             child: AnimatedOpacity(
                               opacity: opcityOfButtons[
                                   index], // Variable to control opacity
-                              duration: Duration(
+                              duration: const Duration(
                                   milliseconds:
                                       100), // Duration of the animation
                               child: Image.asset(
@@ -347,24 +349,51 @@ class _ArithmeticQuestionUIState extends State<ArithmeticQuestionUI> {
                     children: List.generate(
                         3,
                         (index) => Expanded(
-                              child: GestureDetector(
-                                onTap: () {
-                                  numPressed(index + 4);
-                                  if (focusedTextField != -1) {
-                                    ansControllers[focusedTextField].text =
-                                        numPressedint.toString();
-                                    // focusedTextField = -1;
-                                  }
-                                  if (focusedCarryField != -1) {
-                                    carryControllers[focusedCarryField].text =
-                                        numPressedint.toString();
-                                    // focusedCarryField == -1;
-                                  }
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Image.asset(
-                                      'assets/images/PNG Icons/arithmetic_keyboard/${index + 4}.png'),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: GestureDetector(
+                                  onTapDown: (TapDownDetails details) {
+                                    // Handle the tap down event, you can change the appearance here
+                                    setState(() {
+                                      // Example: Change opacity to simulate a button press
+                                      opcityOfButtons[index + 4] = 0.5;
+                                    });
+                                  },
+                                  onTapUp: (TapUpDetails details) {
+                                    // Handle the tap up event, revert the appearance back to normal
+                                    setState(() {
+                                      // Example: Revert opacity to its original value
+                                      opcityOfButtons[index + 4] = 1.0;
+                                    });
+                                    // Perform the desired action here (e.g., update text field)
+                                    numPressed(index + 4);
+                                    if (focusedTextField != -1) {
+                                      ansControllers[focusedTextField].text =
+                                          numPressedint.toString();
+                                      // focusedTextField = -1;
+                                    }
+                                    if (focusedCarryField != -1) {
+                                      carryControllers[focusedCarryField].text =
+                                          numPressedint.toString();
+                                    }
+                                  },
+                                  onTapCancel: () {
+                                    // Handle the tap cancel event, revert the appearance back to normal
+                                    setState(() {
+                                      // Example: Revert opacity to its original value
+                                      opcityOfButtons[index + 4] = 1.0;
+                                    });
+                                  },
+                                  child: AnimatedOpacity(
+                                    opacity: opcityOfButtons[index +
+                                        4], // Variable to control opacity
+                                    duration: const Duration(
+                                        milliseconds:
+                                            100), // Duration of the animation
+                                    child: Image.asset(
+                                      'assets/images/PNG Icons/arithmetic_keyboard/${index + 4}.png',
+                                    ),
+                                  ),
                                 ),
                               ),
                             )),
@@ -373,24 +402,51 @@ class _ArithmeticQuestionUIState extends State<ArithmeticQuestionUI> {
                     children: List.generate(
                         3,
                         (index) => Expanded(
-                              child: GestureDetector(
-                                onTap: () {
-                                  numPressed(index + 7);
-                                  if (focusedTextField != -1) {
-                                    ansControllers[focusedTextField].text =
-                                        numPressedint.toString();
-                                    // focusedTextField = -1;
-                                  }
-                                  if (focusedCarryField != -1) {
-                                    carryControllers[focusedCarryField].text =
-                                        numPressedint.toString();
-                                    // focusedCarryField == -1;
-                                  }
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Image.asset(
-                                      'assets/images/PNG Icons/arithmetic_keyboard/${index + 7}.png'),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: GestureDetector(
+                                  onTapDown: (TapDownDetails details) {
+                                    // Handle the tap down event, you can change the appearance here
+                                    setState(() {
+                                      // Example: Change opacity to simulate a button press
+                                      opcityOfButtons[index + 7] = 0.5;
+                                    });
+                                  },
+                                  onTapUp: (TapUpDetails details) {
+                                    // Handle the tap up event, revert the appearance back to normal
+                                    setState(() {
+                                      // Example: Revert opacity to its original value
+                                      opcityOfButtons[index + 7] = 1.0;
+                                    });
+                                    // Perform the desired action here (e.g., update text field)
+                                    numPressed(index + 7);
+                                    if (focusedTextField != -1) {
+                                      ansControllers[focusedTextField].text =
+                                          numPressedint.toString();
+                                      // focusedTextField = -1;
+                                    }
+                                    if (focusedCarryField != -1) {
+                                      carryControllers[focusedCarryField].text =
+                                          numPressedint.toString();
+                                    }
+                                  },
+                                  onTapCancel: () {
+                                    // Handle the tap cancel event, revert the appearance back to normal
+                                    setState(() {
+                                      // Example: Revert opacity to its original value
+                                      opcityOfButtons[index + 7] = 1.0;
+                                    });
+                                  },
+                                  child: AnimatedOpacity(
+                                    opacity: opcityOfButtons[index +
+                                        7], // Variable to control opacity
+                                    duration: const Duration(
+                                        milliseconds:
+                                            100), // Duration of the animation
+                                    child: Image.asset(
+                                      'assets/images/PNG Icons/arithmetic_keyboard/${index + 7}.png',
+                                    ),
+                                  ),
                                 ),
                               ),
                             )),
@@ -399,7 +455,20 @@ class _ArithmeticQuestionUIState extends State<ArithmeticQuestionUI> {
                     children: [
                       Expanded(
                         child: GestureDetector(
-                          onTap: () {
+                          onTapDown: (TapDownDetails details) {
+                            // Handle the tap down event, you can change the appearance here
+                            setState(() {
+                              // Example: Change opacity to simulate a button press
+                              opcityOfButtons[10] = 0.5;
+                            });
+                          },
+                          onTapUp: (TapUpDetails details) {
+                            // Handle the tap up event, revert the appearance back to normal
+                            setState(() {
+                              // Example: Revert opacity to its original value
+                              opcityOfButtons[10] = 1.0;
+                            });
+                            // Perform the desired action here (e.g., update text field)
                             numPressed(0);
                             if (focusedTextField != -1) {
                               ansControllers[focusedTextField].text =
@@ -409,12 +478,20 @@ class _ArithmeticQuestionUIState extends State<ArithmeticQuestionUI> {
                             if (focusedCarryField != -1) {
                               carryControllers[focusedCarryField].text =
                                   numPressedint.toString();
-                              // focusedCarryField == -1;
                             }
                           },
-                          child: Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 8.0),
+                          onTapCancel: () {
+                            // Handle the tap cancel event, revert the appearance back to normal
+                            setState(() {
+                              // Example: Revert opacity to its original value
+                              opcityOfButtons[10] = 1.0;
+                            });
+                          },
+                          child: AnimatedOpacity(
+                            opacity: opcityOfButtons[
+                                10], // Variable to control opacity
+                            duration: const Duration(
+                                milliseconds: 100), // Duration of the animation
                             child: Image.asset(
                               'assets/images/PNG Icons/arithmetic_keyboard/0.png',
                             ),
@@ -442,7 +519,7 @@ class _ArithmeticQuestionUIState extends State<ArithmeticQuestionUI> {
                                 decoration: BoxDecoration(
                                     border: Border.all(
                                         color: Colors.amber, width: 3)),
-                                child: Center(child: Text('Back <-'))),
+                                child: const Center(child: Text('Back <-'))),
                           ),
                         ),
                       ))
