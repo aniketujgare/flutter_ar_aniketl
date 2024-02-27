@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:bloc/bloc.dart';
+import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:http/http.dart' as http;
 
@@ -17,6 +18,11 @@ class TeacherMessageCubit extends Cubit<TeacherMessageState> {
     emit(state.copyWith(status: TeacherMessageStatus.loading));
     List<TeacherMessageModel>? teacherMessahes =
         await _getTeachersMessages(teacherUserId);
+
+    if (teacherMessahes != null) {
+      reverse(teacherMessahes);
+    }
+
     emit(state.copyWith(
         status: TeacherMessageStatus.loaded,
         teachersMessages: teacherMessahes ?? []));

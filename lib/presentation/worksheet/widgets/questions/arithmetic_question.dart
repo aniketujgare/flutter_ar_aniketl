@@ -9,19 +9,21 @@ import 'package:size_config/size_config.dart';
 import '../reusbaleTextField2.dart';
 
 class ArithmeticQuestionUI extends StatefulWidget {
-  const ArithmeticQuestionUI({super.key, required this.screenSize});
+  const ArithmeticQuestionUI(
+      {super.key, required this.screenSize, required this.question});
   final Size screenSize;
+  final ArithmeticQuestion question;
   @override
   State<ArithmeticQuestionUI> createState() => _ArithmeticQuestionUIState();
 }
 
 class _ArithmeticQuestionUIState extends State<ArithmeticQuestionUI> {
-  var qu = ArithmeticQuestion(
-      num1: '863',
-      num2: '158',
-      operator: '+',
-      answer: 'answer',
-      question: 'question');
+  // var qu = ArithmeticQuestion(
+  //     num1: widget.question.num1,
+  //     num2: '158',
+  //     operator: '+',
+  //     answer: 'answer',
+  //     question: 'question');
   late String number1;
   late String number2;
   late int num1Boxes;
@@ -33,11 +35,24 @@ class _ArithmeticQuestionUIState extends State<ArithmeticQuestionUI> {
   late List<String> ansFieldsText = [];
   late int noOfansFields;
   List<double> opcityOfButtons = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
+  late String operator;
+  String getOperator(String operator) {
+    switch (operator) {
+      case "Addition":
+        return '+';
+
+      default:
+    }
+    return '-';
+  }
+
   @override
   void initState() {
     super.initState();
-    number1 = qu.num1;
-    number2 = qu.num2;
+    number1 = widget.question.num1;
+    number2 = widget.question.num2;
+    operator = getOperator(widget.question.operator);
+
     //?
 
     int maxLength =
@@ -63,6 +78,9 @@ class _ArithmeticQuestionUIState extends State<ArithmeticQuestionUI> {
     noOfansFields = resultAddition.toString().length;
     digitBoxSize = (widget.screenSize.width * 0.6) /
         (noOfansFields + (noOfansFields >= 4 ? 0 : 1));
+    if (noOfansFields >= 4) {
+      digitBoxSize = (widget.screenSize.width * 0.5) / noOfansFields;
+    }
     print('addditon res 1: $digitBoxSize');
     noOfansFields = resultAddition.toString().length;
     // Subtraction
@@ -197,7 +215,7 @@ class _ArithmeticQuestionUIState extends State<ArithmeticQuestionUI> {
                         // color: AppColors.parentZoneScaffoldColor,
                         child: Center(
                           child: Text(
-                            qu.operator,
+                            operator,
                             style: AppTextStyles.unitedRounded270w700.copyWith(
                                 color: Colors.black, fontSize: 122.sp),
                           ),

@@ -34,17 +34,18 @@ class _MessageViewState extends State<MessageView> {
   void initState() {
     super.initState();
     scrollController = ScrollController();
-    scrollController.animateTo(
-      0.0,
-      curve: Curves.easeOut,
-      duration: const Duration(milliseconds: 300),
-    );
+
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
     ]);
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light
         .copyWith(systemNavigationBarColor: AppColors.parentZoneScaffoldColor));
     context.read<TeacherMessageCubit>().loadMessages('${widget.teaherUserId}');
+    // scrollController.animateTo(
+    //   0.0,
+    //   curve: Curves.easeOut,
+    //   duration: const Duration(milliseconds: 300),
+    // );
   }
 
   @override
@@ -145,20 +146,24 @@ class _MessageViewState extends State<MessageView> {
                         switch (message.type) {
                           //! View Lesson
                           case "lesson":
-                            // return const TeacherPoll(
-                            //   isOp1Checked: null,
-                            //   pollQuestion:
-                            //       'The question entered by the teacher',
-                            //   option1: 'Option 1',
-                            //   option2: 'Option 2',
-                            //   votes1: 1,
-                            //   votes2: 1,
-                            // );
                             return buildLesson(message);
 
                           case "text":
                             return //!Message
                                 buildMessage(message);
+
+                          case 'polls':
+                            return TeacherPoll(
+                              isOp1Checked: null,
+                              pollQuestion: message.content,
+                              option1: 'Option 1',
+                              option2: 'Option 2',
+                              votes1: 1,
+                              votes2: 1,
+                            );
+                          default:
+                            return //!Message
+                                Text('No UI for ${message.type}');
                         }
                       },
                     );

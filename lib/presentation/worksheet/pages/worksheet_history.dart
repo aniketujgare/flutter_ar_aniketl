@@ -139,7 +139,9 @@ class _WorksheetHistoryViewState extends State<WorksheetHistoryView> {
                                         MaterialPageRoute(
                                           builder: (context) =>
                                               WorksheetSolverView(
-                                                  workSheetId: workSheet.id),
+                                            workSheetId: workSheet.id,
+                                            isEditable: false,
+                                          ),
                                         ),
                                       );
                                     },

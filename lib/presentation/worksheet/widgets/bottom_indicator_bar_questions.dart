@@ -18,6 +18,9 @@ class BottomIndicatorQuestions extends StatelessWidget {
         height: DeviceType().isMobile ? 56 : 80,
         child: BlocBuilder<WorksheetSolverCubit, WorksheetSolverState>(
           builder: (context, state) {
+            if (state.status == WorkSheetSolverStatus.loading) {
+              return const SizedBox();
+            }
             return ListView.builder(
               scrollDirection: Axis.horizontal,
               shrinkWrap: true,
@@ -77,7 +80,7 @@ class WormIndicator extends StatelessWidget {
         duration: const Duration(milliseconds: 200),
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          color: _pickColor(index),
+          color: _pickColor(index, context),
         ),
         child: getCoin(index, size),
       ),
@@ -105,14 +108,36 @@ class WormIndicator extends StatelessWidget {
     return null;
   }
 
-  Color _pickColor(int index) {
-    if (index == currentQuestion) {
-      if ((index + 1) % 5 == 0) return Colors.transparent;
+  Color _pickColor(int index, BuildContext context) {
+    var worsheetBloc = context.read<WorksheetSolverCubit>().state;
+
+    // Check if the current index is greater than or equal to the number of answered questions
+    if (worsheetBloc.currentQuestion >= worsheetBloc.answerSheet.length) {
+      // If so, return amber color for the current index
+      if (index == worsheetBloc.currentQuestion) {
+        return AppColors.accentColor;
+      }
+    } else {
+      // If the current index is less than the number of answered questions,
+      // return submit green color if the current index is the marked answer
+      if (index == worsheetBloc.currentQuestion &&
+          worsheetBloc.answerSheet[index] != null) {
+        return AppColors.submitGreenColor;
+      }
+    }
+
+    // If the current index is marked in the answer sheet, return submit green color
+    if (worsheetBloc.answerSheet.length > index &&
+        worsheetBloc.answerSheet[index] != null) {
       return AppColors.submitGreenColor;
     }
+
+    // For every fifth index, return transparent color
     if ((index + 1) % 5 == 0) {
       return Colors.transparent;
     }
+
+    // For other cases, return the default color
     return const Color(0XFFE9E9E9);
   }
 }

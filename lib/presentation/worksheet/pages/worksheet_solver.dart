@@ -1,6 +1,10 @@
+import 'dart:convert';
+
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_ar/core/util/constants.dart';
 import 'package:flutter_ar/presentation/worksheet/widgets/questions/odd_one_out_img_question.dart';
+import 'package:flutter_ar/presentation/worksheet/widgets/worksheet_submitted_box.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:size_config/size_config.dart';
 
@@ -27,7 +31,9 @@ import '../widgets/questions/true_or_false_question.dart';
 
 class WorksheetSolverView extends StatefulWidget {
   final int workSheetId;
-  const WorksheetSolverView({super.key, required this.workSheetId});
+  final bool isEditable;
+  const WorksheetSolverView(
+      {super.key, required this.workSheetId, this.isEditable = true});
 
   @override
   State<WorksheetSolverView> createState() => _WorksheetSolverViewState();
@@ -55,6 +61,7 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView> {
     if (markedAnswer != null) {
       print('markedAnswer: $i$markedAnswer');
     }
+    print('questionType: ${state.questions[i].questionType}');
     switch (state.questions[i].questionType) {
       case QuestionType.mcqText:
         return MCQTextQuestion(
@@ -146,7 +153,14 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView> {
             markedAnswer: markedAnswer,
             screenSize: screenSize);
       case QuestionType.arithmetic:
-        return Text(state.questions[i].questionType.toString());
+        print('Question Deatils: ${jsonEncode(state.questions[i])}');
+        Size screenSize = MediaQuery.of(context).size;
+        // var newQ = ArithmeticQuestion(answer:state.questions[i].question );
+        return ArithmeticQuestionUI(
+          screenSize: screenSize,
+          question: state.questions[i] as ArithmeticQuestion,
+        );
+
       case QuestionType.longAnswer:
         Size screenSize = MediaQuery.of(context).size;
         return LongAnswerQuestion(
@@ -176,7 +190,7 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView> {
         // String answerr =
         //     "This method also allows for easier shuffling of any type of array, not just";
         // var newQ = RearrangeQuestionType(answer: answerr, question: questionn);
-        return ArithmeticQuestionUI(screenSize: screenSize);
+        // return ArithmeticQuestionUI(screenSize: screenSize);
         return ReArrangeWordsQuestion(
           screenSize: screenSize,
           question: state.questions[i] as RearrangeQuestionType,
@@ -202,6 +216,11 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView> {
 
   @override
   Widget build(BuildContext context) {
+    bool isFirstQuestin =
+        context.watch<WorksheetSolverCubit>().state.currentQuestion == 0;
+    bool isLastQuestin =
+        context.watch<WorksheetSolverCubit>().state.currentQuestion ==
+            context.watch<WorksheetSolverCubit>().state.questions.length - 1;
     return PopScope(
       canPop: false,
       child: Scaffold(
@@ -209,77 +228,111 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView> {
           height: DeviceType().isMobile ? 56 : 80,
           width: double.infinity,
           color: AppColors.primaryColor,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Padding(
-                padding: EdgeInsets.only(left: 8.wp),
-                child: IconButton(
-                  onPressed: () {
-                    context.read<WorksheetSolverCubit>().loadPreviousQuestion();
-                  },
-                  icon: Image.asset(
-                    'assets/ui/Group.png',
-                    height: 40,
-                  ),
-                ),
-              ),
-              const BottomIndicatorQuestions(),
-              Padding(
-                padding: EdgeInsets.only(right: 8.wp),
-                child: IconButton(
-                  onPressed: () {
-                    context.read<WorksheetSolverCubit>().loadNextQuestion();
-
-                    int currQuestionIdx = context
-                        .read<WorksheetSolverCubit>()
-                        .state
-                        .currentQuestion;
-                    bool isLastQuestion = currQuestionIdx ==
-                        (context
-                                .read<WorksheetSolverCubit>()
-                                .state
-                                .questions
-                                .length -
-                            1);
-                    // print('is last index: $isLastQuestion');
-                    context.read<WorksheetSolverCubit>().answerSubmit(false);
-                  },
-                  icon: RotatedBox(
-                    quarterTurns: 2,
-                    child: Image.asset(
-                      'assets/ui/Group.png',
-                      height: 40,
+          child: BlocBuilder<WorksheetSolverCubit, WorksheetSolverState>(
+            builder: (context, state) {
+              if (state.status == WorkSheetSolverStatus.loading) {
+                return const SizedBox();
+              }
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(left: 8.wp),
+                    child: IconButton(
+                      onPressed: () {
+                        context
+                            .read<WorksheetSolverCubit>()
+                            .loadPreviousQuestion();
+                      },
+                      icon: Image.asset(
+                        'assets/ui/Group.png',
+                        height: 40,
+                        color: isFirstQuestin ? Colors.transparent : null,
+                      ),
                     ),
                   ),
-                ),
-              ),
-            ],
+                  const BottomIndicatorQuestions(),
+                  Padding(
+                    padding: EdgeInsets.only(right: 8.wp),
+                    child: IconButton(
+                      onPressed: () {
+                        context.read<WorksheetSolverCubit>().loadNextQuestion();
+
+                        // print('is last index: $isLastQuestion');
+                        if (!isLastQuestin) {
+                          context
+                              .read<WorksheetSolverCubit>()
+                              .answerSubmit(false);
+                        }
+                      },
+                      icon: isLastQuestin
+                          ? IconButton(
+                              style: ButtonStyle(
+                                  backgroundColor: MaterialStatePropertyAll(
+                                      AppColors.submitGreenColor)),
+                              onPressed: () async {
+                                if (widget.isEditable) {
+                                  context
+                                      .read<WorksheetSolverCubit>()
+                                      .answerSubmit(true);
+                                  await Constants().showAlertDialog(context);
+                                }
+                              },
+                              color: AppColors.submitGreenColor,
+                              icon: Text(
+                                'Submit',
+                                style: AppTextStyles.nunito100w400white
+                                    .copyWith(fontSize: 45.sp),
+                              ),
+                            )
+                          : RotatedBox(
+                              quarterTurns: 2,
+                              child: Image.asset(
+                                'assets/ui/Group.png',
+                                height: 40,
+                              ),
+                            ),
+                    ),
+                  ),
+                ],
+              );
+            },
           ),
         ),
         backgroundColor: const Color(0XFFD1CBF9),
         appBar: appBarWorksheetSolver(context),
-        body: BlocBuilder<WorksheetSolverCubit, WorksheetSolverState>(
-          builder: (context, state) {
-            if (state.status == WorkSheetSolverStatus.loaded) {
-              if (state.questions.isEmpty) {
-                return Center(
-                  child: Text(
-                    'No questions are available in the worksheet at the moment.',
-                    style: AppTextStyles.nunito105w700Text,
-                  ),
-                );
-              }
-              return getQuestion(state, state.currentQuestion);
-            } else {
-              return const Center(
-                child: CircularProgressIndicator.adaptive(
-                  strokeCap: StrokeCap.round,
-                ),
-              );
-            }
-          },
+        body: Stack(
+          children: [
+            BlocBuilder<WorksheetSolverCubit, WorksheetSolverState>(
+              builder: (context, state) {
+                if (state.status == WorkSheetSolverStatus.loaded) {
+                  if (state.questions.isEmpty) {
+                    return Center(
+                      child: Text(
+                        'No questions are available in the worksheet at the moment.',
+                        style: AppTextStyles.nunito105w700Text,
+                      ),
+                    );
+                  }
+                  return getQuestion(state, state.currentQuestion);
+                } else {
+                  return const Center(
+                    child: CircularProgressIndicator.adaptive(
+                      strokeCap: StrokeCap.round,
+                    ),
+                  );
+                }
+              },
+            ),
+            //Prevent touch on body for viewing history
+            if (!widget.isEditable)
+              Container(
+                height: double.infinity,
+                width: double.infinity,
+                color: Colors.white.withOpacity(0),
+              ),
+          ],
         ),
       ),
     );

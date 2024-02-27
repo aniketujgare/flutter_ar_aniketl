@@ -29,6 +29,7 @@ class _CategoryPageViewState extends State<CategoryPageView> {
     context
         .read<CategoryPageCubit>()
         .setmaxLength((widget.arCategoryies.length / 6).ceil());
+    context.read<CategoryPageCubit>().setPage(0);
     super.initState();
   }
 

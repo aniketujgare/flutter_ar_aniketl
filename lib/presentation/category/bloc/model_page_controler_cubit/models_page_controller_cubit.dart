@@ -18,9 +18,11 @@ class ModelsPageControllerCubit extends Cubit<int> {
   late int maxLen;
 
   int curridx = 0;
+  get activePageIdx => curridx;
   void setPage(int pageIndex) {
     print('pageIdx $pageIndex');
     curridx = pageIndex;
+    emit(curridx);
     // emit(curridx);
     // if (pageIndex < maxLen && pageIndex > 0) {}
   }
@@ -29,6 +31,7 @@ class ModelsPageControllerCubit extends Cubit<int> {
     if (curridx < maxLen) {
       ++curridx;
       goToPage(curridx);
+      emit(curridx);
     }
   }
 
@@ -36,11 +39,13 @@ class ModelsPageControllerCubit extends Cubit<int> {
     if (curridx > 0) {
       --curridx;
       goToPage(curridx);
+      emit(curridx);
     }
   }
 
   void setmaxLength(int len) {
     maxLen = len - 1;
     print('maxLen $maxLen');
+    emit(curridx);
   }
 }

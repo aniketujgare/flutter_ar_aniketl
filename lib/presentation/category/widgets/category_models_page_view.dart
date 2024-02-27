@@ -24,9 +24,9 @@ class CategoryModelsPageView extends StatefulWidget {
 class _CategoryModelsPageViewState extends State<CategoryModelsPageView> {
   @override
   void initState() {
-    context.read<ModelsPageControllerCubit>().curridx = 0;
     context.read<ModelsPageControllerCubit>().setmaxLength(
         (context.read<ModelsNewCubit>().state.arModels.length / 6).ceil());
+    context.read<ModelsPageControllerCubit>().setPage(0);
     super.initState();
   }
 
@@ -44,8 +44,16 @@ class _CategoryModelsPageViewState extends State<CategoryModelsPageView> {
                   BlocBuilder<ModelsNewCubit, ModelsNewState>(
                     builder: (context, state) {
                       if (state.status == ModelsStatus.loaded) {
+                        //?Set Maxlen of pages (don't remove)
+                        context
+                            .read<ModelsPageControllerCubit>()
+                            .setmaxLength((state.arModels.length / 6).ceil());
+                        //?
                         return BlocBuilder<ModelsPageControllerCubit, int>(
                           builder: (context, index) {
+                            print(
+                                'active page idx: ${context.read<ModelsPageControllerCubit>().activePageIdx}');
+
                             return PageView.builder(
                               itemCount: (state.arModels.length / 6)
                                   .ceil(), // 6 containers per page (2 rows with 3 containers each)
@@ -97,21 +105,26 @@ class _CategoryModelsPageViewState extends State<CategoryModelsPageView> {
                                 fit: BoxFit.contain,
                               ),
                             ),
-                            GestureDetector(
-                              onTap: () => context
-                                  .read<ModelsPageControllerCubit>()
-                                  .setPreviousPage(),
-                              child: SizedBox(
-                                height: 45.h,
-                                width: 45.h,
-                                child: Image.asset(
-                                  'assets/ui/Group.png', // right arrow
-                                  fit: BoxFit.scaleDown,
+                            //First page does'nt has back page btn
+                            if (context
+                                    .watch<ModelsPageControllerCubit>()
+                                    .activePageIdx !=
+                                0)
+                              GestureDetector(
+                                onTap: () => context
+                                    .read<ModelsPageControllerCubit>()
+                                    .setPreviousPage(),
+                                child: SizedBox(
                                   height: 45.h,
                                   width: 45.h,
+                                  child: Image.asset(
+                                    'assets/ui/Group.png', // left arrow
+                                    fit: BoxFit.scaleDown,
+                                    height: 45.h,
+                                    width: 45.h,
+                                  ),
                                 ),
                               ),
-                            ),
                             SizedBox(
                               height: 45.h,
                               width: 45.h,
@@ -126,24 +139,31 @@ class _CategoryModelsPageViewState extends State<CategoryModelsPageView> {
                               height: 45.h,
                               width: 45.h,
                             ),
-                            GestureDetector(
-                              onTap: () => context
-                                  .read<ModelsPageControllerCubit>()
-                                  .setNextPage(),
-                              child: RotatedBox(
-                                quarterTurns: 2,
-                                child: SizedBox(
-                                  height: 45.h,
-                                  width: 45.h,
-                                  child: Image.asset(
-                                    'assets/ui/Group.png', // right arrow
-                                    fit: BoxFit.scaleDown,
+                            //last page does'nt has next page btn
+                            if (context
+                                    .watch<ModelsPageControllerCubit>()
+                                    .activePageIdx !=
+                                context
+                                    .read<ModelsPageControllerCubit>()
+                                    .maxLen)
+                              GestureDetector(
+                                onTap: () => context
+                                    .read<ModelsPageControllerCubit>()
+                                    .setNextPage(),
+                                child: RotatedBox(
+                                  quarterTurns: 2,
+                                  child: SizedBox(
                                     height: 45.h,
                                     width: 45.h,
+                                    child: Image.asset(
+                                      'assets/ui/Group.png', // right arrow
+                                      fit: BoxFit.scaleDown,
+                                      height: 45.h,
+                                      width: 45.h,
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
                             GestureDetector(
                               onTap: () {
                                 Navigator.of(context).pop();
@@ -216,34 +236,36 @@ class _CategoryModelsPageViewState extends State<CategoryModelsPageView> {
 
 class EmptyBox extends StatelessWidget {
   const EmptyBox({
-    super.key,
-  });
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: ConstrainedBox(
-        constraints: BoxConstraints(
-          maxHeight: (MediaQuery.of(context).size.height - 80.h) *
-              (DeviceType().isMobile ? 0.5 : 0.35),
-        ),
-        child: Container(
-          margin: EdgeInsets.symmetric(horizontal: 40.w, vertical: 40.w),
-          child: LayoutBuilder(builder: (context, constraints) {
-            return Column(
-              children: [
-                SizedBox(
-                  height: constraints.maxHeight *
-                      (DeviceType().isMobile ? 0.75 : 0.05),
+    return ConstrainedBox(
+      constraints: BoxConstraints(
+        maxHeight: (MediaQuery.of(context).size.height - 80.h) *
+            (DeviceType().isMobile ? 0.5 : 0.35),
+      ),
+      child: Container(
+        margin: EdgeInsets.symmetric(horizontal: 40.w, vertical: 40.w),
+        child: LayoutBuilder(builder: (context, constraints) {
+          return Column(
+            children: [
+              Expanded(
+                flex: 3,
+                child: SizedBox(
+                  height: constraints.maxHeight * 0.75,
                 ),
-                SizedBox(
-                  height: constraints.maxHeight *
-                      (DeviceType().isMobile ? 0.25 : 0.05),
+              ),
+              Expanded(
+                flex: 1,
+                child: SizedBox(
+                  height: constraints.maxHeight * 0.25,
                 ),
-              ],
-            );
-          }),
-        ),
+              ),
+            ],
+          );
+        }),
       ),
     );
   }
