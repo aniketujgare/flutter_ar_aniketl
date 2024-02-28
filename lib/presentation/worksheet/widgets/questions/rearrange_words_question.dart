@@ -11,7 +11,7 @@ import '../question_text.dart';
 class ReArrangeWordsQuestion extends StatefulWidget {
   final int questionIndex;
   final RearrangeQuestionType question;
-  final List<String>? markedAnswer;
+  final List<String> markedAnswer;
   final Size screenSize;
   const ReArrangeWordsQuestion(
       {super.key,
@@ -25,9 +25,6 @@ class ReArrangeWordsQuestion extends StatefulWidget {
 }
 
 class _ReArrangeWordsQuestionState extends State<ReArrangeWordsQuestion> {
-  List<bool> isDraggedList = [];
-  List<String> selectedAnswer = [];
-  List<String> questinWords = [];
   List<String> questionsList = [];
   List<String> studentAnswersList = [];
   late int questionsLength;
@@ -43,25 +40,18 @@ class _ReArrangeWordsQuestionState extends State<ReArrangeWordsQuestion> {
     singleBoxSize = widget.screenSize.width / (fullQuesBox + halfEmptyBox);
     debugPrint('singleBoxSize: $singleBoxSize');
     //?
-    for (var element in questionsList) {
+    for (var _ in questionsList) {
       studentAnswersList.add(' ');
     }
 
-    questinWords.addAll(widget.question.question.split(' '));
-    print('marked answers: ${widget.markedAnswer}');
-    for (var v in questinWords) {
-      isDraggedList.add(false);
-      selectedAnswer.add(' ');
-    }
-    if (widget.markedAnswer != null &&
-        widget.markedAnswer!.length == questinWords.length)
-      // ignore: curly_braces_in_flow_control_structures
-      for (int i = 0; i < widget.markedAnswer!.length; i++) {
-        if (widget.markedAnswer![i] != ' ') {
-          isDraggedList[i] = true;
-          selectedAnswer[i] = widget.markedAnswer![i];
-        }
+    if (widget.markedAnswer.isNotEmpty) {
+      for (var i = 0; i < widget.markedAnswer.length; i++) {
+        studentAnswersList[i] = widget.markedAnswer[i];
       }
+    }
+    if (studentAnswersList.length == questionsLength) {
+      // questionsList.clear();
+    }
     super.initState();
   }
 
@@ -213,18 +203,17 @@ class _ReArrangeWordsQuestionState extends State<ReArrangeWordsQuestion> {
                         if (studentAnswersList[index] != ' ') {
                           questionsList.add(studentAnswersList[index]);
                         }
-                        // category2Answers.add(data);
                         if (questionsList.contains(data)) {
                           questionsList.remove(data);
                           setState(() {});
                         }
 
                         studentAnswersList[index] = data;
-                        // if (questionsList.isEmpty) {
-                        //   print('answer Submitted');
-                        //   context.read<WorksheetSolverCubit>().setAnswer(
-                        //       widget.questionIndex, [...studentAnswersList]);
-                        // }
+                        if (studentAnswersList.length == questionsLength) {
+                          print('answer Submitted');
+                          context.read<WorksheetSolverCubit>().setAnswer(
+                              widget.questionIndex, [...studentAnswersList]);
+                        }
                       },
                     )),
           )

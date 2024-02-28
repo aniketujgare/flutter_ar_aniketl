@@ -12,7 +12,7 @@ import '../../models/questions.dart';
 class IdentifyImageQuestion extends StatelessWidget {
   final int questionIndex;
   final IdentifyImageQuestionType question;
-  final dynamic markedAnswer;
+  final String markedAnswer;
   const IdentifyImageQuestion(
       {super.key,
       required this.questionIndex,
@@ -86,6 +86,7 @@ class IdentifyImageQuestion extends StatelessWidget {
                           width: 70.wp,
                           padding: const EdgeInsets.symmetric(horizontal: 15),
                           child: TextFormField(
+                            initialValue: markedAnswer,
                             decoration: const InputDecoration(
                               // labelText: 'Type your answer',
                               border: InputBorder.none,

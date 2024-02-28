@@ -50,15 +50,7 @@ class _SortQuestionState extends State<SortQuestion> {
     debugPrint('singleBoxSize: $singleBoxSize');
     //?
     singleBoxSize = widget.screenSize.width * 0.14;
-    if (widget.markedAnswer != null &&
-        widget.markedAnswer!.length == questionsList.length)
-      // ignore: curly_braces_in_flow_control_structures
-      for (int i = 0; i < widget.markedAnswer!.length; i++) {
-        if (widget.markedAnswer![i] != ' ') {
-          // isDraggedList[i] = true;
-          // selectedAnswer[i] = widget.markedAnswer![i];
-        }
-      }
+
     super.initState();
   }
 
@@ -165,10 +157,11 @@ class _SortQuestionState extends State<SortQuestion> {
                       questionsList.remove(data);
                       setState(() {});
                     }
-                    // if (questionsList.isEmpty) {}
-                    // context.read<WorksheetSolverCubit>().setAnswer(
-                    //     widget.questionIndex,
-                    //     List.from(category1Answers + category2Answers));
+                    if (questionsList.isEmpty) {
+                      context.read<WorksheetSolverCubit>().setAnswer(
+                          widget.questionIndex,
+                          List.from(category1Answers + category2Answers));
+                    }
                   },
                 ),
               ),
@@ -294,10 +287,11 @@ class _SortQuestionState extends State<SortQuestion> {
                         questionsList.remove(data);
                         setState(() {});
                       }
-                      if (questionsList.isEmpty) {}
-                      // context.read<WorksheetSolverCubit>().setAnswer(
-                      //     widget.questionIndex,
-                      //     List.from(category1Answers + category2Answers));
+                      if (questionsList.isEmpty) {
+                        context.read<WorksheetSolverCubit>().setAnswer(
+                            widget.questionIndex,
+                            List.from(category1Answers + category2Answers));
+                      }
                     },
                   )),
             ],

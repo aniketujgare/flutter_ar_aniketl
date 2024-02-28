@@ -103,6 +103,16 @@ class AnswerQuestion {
         return QuestionType.mcqText;
       case 'mcqimg':
         return QuestionType.mcqImage;
+      case 'mcqimg':
+        return QuestionType.mcqImage;
+      case 'arithematic':
+        return QuestionType.arithmetic;
+      case 'identifyimage':
+        return QuestionType.identifyimage;
+      case 'rearrange':
+        return QuestionType.rearrange;
+      case 'srotingquestion':
+        return QuestionType.srotingquestion;
       default:
         throw Exception('Unsupported question type: $key');
     }
@@ -134,6 +144,14 @@ class AnswerQuestion {
         return 'mcqtext';
       case QuestionType.mcqImage:
         return 'mcqimg';
+      case QuestionType.rearrange:
+        return 'rearrange';
+      case QuestionType.identifyimage:
+        return 'identifyimage';
+      case QuestionType.srotingquestion:
+        return 'srotingquestion';
+      case QuestionType.arithmetic:
+        return 'arithematic';
       default:
         throw Exception('Unsupported question type: $questionType');
     }

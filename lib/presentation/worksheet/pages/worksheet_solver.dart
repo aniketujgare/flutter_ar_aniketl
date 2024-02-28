@@ -58,10 +58,8 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView> {
         ?.question
         .answer
         .answer;
-    if (markedAnswer != null) {
-      print('markedAnswer: $i$markedAnswer');
-    }
-    print('questionType: ${state.questions[i].questionType}');
+    debugPrint('markedAnswer: $i$markedAnswer');
+    debugPrint('questionType: ${state.questions[i].questionType}');
     switch (state.questions[i].questionType) {
       case QuestionType.mcqText:
         return MCQTextQuestion(
@@ -78,22 +76,6 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView> {
             screenSize: screenSize);
       case QuestionType.fillBlank:
         Size screenSize = MediaQuery.of(context).size;
-        // var oddouQ = OddOneOutImageQuestion(
-        //     options: [
-        //       'https://smartxruserfiles1.s3.ap-south-1.amazonaws.com/teacher/1/worksheet/null/maths_mcq/d6666v8rb/0.png',
-        //       'https://d3ag5oij4wsyi3.cloudfront.net/mcq_images/mysurroundings/Sun+in+sky.png',
-        //       'https://d3ag5oij4wsyi3.cloudfront.net/mcq_images/mysurroundings/Sun+in+sky.png',
-        //       'https://d3ag5oij4wsyi3.cloudfront.net/mcq_images/mysurroundings/Sun+in+sky.png'
-        //     ],
-        //     answer:
-        //         'https://d3ag5oij4wsyi3.cloudfront.net/mcq_images/mysurroundings/Sun+in+sky.png',
-        //     question: 'Odd One out image');
-        // return OddOneOutImgQuestion(
-        //     question: oddouQ,
-        //     markedAnswer: markedAnswer,
-        //     questionIndex: i,
-        //     screenSize: screenSize);
-
         return FillInTheBlankQuestion(
             question: state.questions[i] as FillBlankQuestion,
             markedAnswer: markedAnswer,
@@ -153,11 +135,11 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView> {
             markedAnswer: markedAnswer,
             screenSize: screenSize);
       case QuestionType.arithmetic:
-        print('Question Deatils: ${jsonEncode(state.questions[i])}');
         Size screenSize = MediaQuery.of(context).size;
-        // var newQ = ArithmeticQuestion(answer:state.questions[i].question );
         return ArithmeticQuestionUI(
+          questionIndex: i,
           screenSize: screenSize,
+          markedAnswer: markedAnswer,
           question: state.questions[i] as ArithmeticQuestion,
         );
 
@@ -170,14 +152,7 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView> {
             screenSize: screenSize);
       case QuestionType.srotingquestion:
         Size screenSize = MediaQuery.of(context).size;
-
-        // var qty = SortingQuestionType(
-        //   category1Data: ["ant", "cat", "dog"],
-        //   category2Data: ["bat", "ball", "mat"],
-        //   category1: "living",
-        //   category2: "non-living",
-        //   question: "sort foolowing",
-        // );
+        //TODO: code markedAnswer
         return SortQuestion(
             question: state.questions[i] as SortingQuestionType,
             markedAnswer: null,
@@ -185,27 +160,18 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView> {
             screenSize: screenSize);
       case QuestionType.rearrange:
         Size screenSize = MediaQuery.of(context).size;
-        // String questionn =
-        //     "This method also of type allows for easier not any shuffling of just array,";
-        // String answerr =
-        //     "This method also allows for easier shuffling of any type of array, not just";
-        // var newQ = RearrangeQuestionType(answer: answerr, question: questionn);
-        // return ArithmeticQuestionUI(screenSize: screenSize);
         return ReArrangeWordsQuestion(
           screenSize: screenSize,
           question: state.questions[i] as RearrangeQuestionType,
-          markedAnswer: ["markedAnswer"],
+          markedAnswer:
+              List<String>.from(markedAnswer), //markedAnswer as List<String>,
           questionIndex: i,
         );
       case QuestionType.identifyimage:
-        // var newQII = IdentifyImageQuestionType(
-        //     answer: 'zoro',
-        //     question:
-        //         'https://smartxruserfiles1.s3.ap-south-1.amazonaws.com/teacher/1/worksheet/850/ii_mcq/4wfdhskzr/0.png');
         return IdentifyImageQuestion(
           questionIndex: i,
           question: state.questions[i] as IdentifyImageQuestionType,
-          markedAnswer: markedAnswer,
+          markedAnswer: markedAnswer as String,
         );
 
       default:
