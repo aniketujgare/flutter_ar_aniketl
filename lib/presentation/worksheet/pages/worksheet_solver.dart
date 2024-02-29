@@ -155,10 +155,11 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView> {
         //TODO: code markedAnswer
         return SortQuestion(
             question: state.questions[i] as SortingQuestionType,
-            markedAnswer: null,
+            markedAnswer: markedAnswer,
             questionIndex: i,
             screenSize: screenSize);
       case QuestionType.rearrange:
+        print('answer fields: marked ans $markedAnswer');
         Size screenSize = MediaQuery.of(context).size;
         return ReArrangeWordsQuestion(
           screenSize: screenSize,

@@ -83,6 +83,8 @@ class WorksheetSolverCubit extends Cubit<WorksheetSolverState> {
 
     if (state.currentQuestion == state.questions.length - 1) {
       answerSubmit(true);
+    } else {
+      answerSubmit(false);
     }
     emit(state.copyWith(
       status: WorkSheetSolverStatus.loaded,
@@ -95,7 +97,7 @@ class WorksheetSolverCubit extends Cubit<WorksheetSolverState> {
 
     // Assuming state.answerSheet contains your data
     List<StudentAnswer> answerSheet = List.from(state.answerSheet);
-    print(jsonEncode(answerSheet));
+    debugPrint(jsonEncode(answerSheet));
     //sort the finalAnsSheet
     answerSheet.sort((a, b) => a.questionNo.compareTo(b.questionNo));
     Map<String, dynamic> formattedAnswers = {

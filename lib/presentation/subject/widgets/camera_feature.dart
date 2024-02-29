@@ -2,7 +2,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_ar/core/util/device_type.dart';
+import 'package:flutter_ar/core/util/styles.dart';
 import 'package:image_cropper/image_cropper.dart';
+import 'package:size_config/size_config.dart';
 
 // class CameraFeature extends StatefulWidget {
 //   const CameraFeature({Key? key}) : super(key: key);
@@ -161,7 +164,7 @@ class CameraFeatureState extends State<CameraFeature> {
   @override
   void dispose() {
     SystemChrome.setPreferredOrientations([
-      // DeviceOrientation.landscapeRight,
+      DeviceOrientation.landscapeRight,
       DeviceOrientation.landscapeLeft,
       // DeviceOrientation.portraitUp,
       // DeviceOrientation.portraitDown,
@@ -178,8 +181,12 @@ class CameraFeatureState extends State<CameraFeature> {
     CroppedFile? croppedFile = await ImageCropper().cropImage(
       sourcePath: imageFile.path,
       aspectRatio: CropAspectRatio(
-        ratioX: cropWidth,
-        ratioY: cropHeight,
+        ratioX: DeviceType().isMobile
+            ? cropWidth
+            : MediaQuery.of(context).size.width * 0.6,
+        ratioY: DeviceType().isMobile
+            ? cropHeight
+            : MediaQuery.of(context).size.width * 0.1,
       ),
       uiSettings: [
         AndroidUiSettings(
@@ -201,56 +208,76 @@ class CameraFeatureState extends State<CameraFeature> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    return Stack(children: [
-      SizedBox(
-        child: controller == null
-            ? const Center(child: Text("Loading Camera..."))
-            : !controller!.value.isInitialized
-                ? const Center(
-                    child: CircularProgressIndicator(),
-                  )
-                : CameraPreview(controller!),
-      ),
-      Align(
-        alignment: Alignment.bottomCenter,
-        child: ElevatedButton.icon(
-          //image capture button
-          onPressed: () async {
-            try {
-              if (controller != null) {
-                controller!.setFlashMode(FlashMode.off);
-                //check if contrller is not null
-                if (controller!.value.isInitialized) {
-                  //check if controller is initialized
-                  image = await controller!.takePicture(); //capture image
-                  if (image != null) {
-                    _cropImage(image!);
-                  }
-                  setState(() {
-                    //update UI
-                  });
-                }
-              }
-            } catch (e) {
-              debugPrint(e.toString()); //show error
-            }
-          },
-          icon: const Icon(Icons.camera),
-          label: const Text("Capture"),
+    return Scaffold(
+      body: Stack(children: [
+        SizedBox.expand(
+          child: controller == null
+              ? const Center(child: Text("Loading Camera..."))
+              : !controller!.value.isInitialized
+                  ? const Center(
+                      child: CircularProgressIndicator(),
+                    )
+                  : CameraPreview(controller!),
         ),
-      ),
-      Transform.translate(
-        offset: Offset(0, -size.height * 0.08),
-        child: Align(
-          alignment: Alignment.center,
-          child: Container(
-            width: size.width * 0.6,
-            height: size.height * 0.1,
-            decoration: BoxDecoration(
-                border: Border.all(width: 2, color: Colors.white)),
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: Transform.translate(
+            offset: Offset(0, -100.h),
+            child: ElevatedButton.icon(
+              //image capture button
+              onPressed: () async {
+                try {
+                  if (controller != null) {
+                    controller!.setFlashMode(FlashMode.off);
+                    //check if contrller is not null
+                    if (controller!.value.isInitialized) {
+                      //check if controller is initialized
+                      image = await controller!.takePicture(); //capture image
+                      if (image != null) {
+                        _cropImage(image!);
+                      }
+                      setState(() {
+                        //update UI
+                      });
+                    }
+                  }
+                } catch (e) {
+                  debugPrint(e.toString()); //show error
+                }
+              },
+              icon: const Icon(
+                Icons.camera,
+                size: 50,
+              ),
+              style: ButtonStyle(
+                  padding: MaterialStatePropertyAll(EdgeInsets.all(10))),
+              label: Text(
+                "Capture",
+                style: AppTextStyles.nunito120w700primary
+                    .copyWith(fontSize: 65.sp),
+              ),
+            ),
           ),
         ),
-      )
-    ]);
+        Transform.translate(
+          offset: DeviceType().isMobile
+              ? Offset(0, -size.height * 0.08)
+              : Offset(0, -size.height * 0.02),
+          child: Align(
+            alignment: Alignment.center,
+            child: Container(
+              width: size.width * 0.6,
+              height: size.height * 0.1,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(25.h),
+                  border: Border.all(
+                    width: 5,
+                    color: Colors.white,
+                  )),
+            ),
+          ),
+        )
+      ]),
+    );
   }
 }

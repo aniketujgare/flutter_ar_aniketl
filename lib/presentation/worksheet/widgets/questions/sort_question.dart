@@ -11,7 +11,7 @@ import '../question_text.dart';
 class SortQuestion extends StatefulWidget {
   final int questionIndex;
   final SortingQuestionType question;
-  final List<String>? markedAnswer;
+  final dynamic markedAnswer;
   final Size screenSize;
   const SortQuestion(
       {super.key,
@@ -51,6 +51,15 @@ class _SortQuestionState extends State<SortQuestion> {
     //?
     singleBoxSize = widget.screenSize.width * 0.14;
 
+    //?Fill markedAnswers
+    if (widget.markedAnswer != null) {
+      category1Answers.clear();
+      category2Answers.clear();
+      questionsList.clear();
+      print('marked: ${widget.markedAnswer}');
+      category1Answers = widget.markedAnswer[widget.question.category1];
+      category2Answers = widget.markedAnswer[widget.question.category2];
+    }
     super.initState();
   }
 
@@ -288,9 +297,14 @@ class _SortQuestionState extends State<SortQuestion> {
                         setState(() {});
                       }
                       if (questionsList.isEmpty) {
-                        context.read<WorksheetSolverCubit>().setAnswer(
-                            widget.questionIndex,
-                            List.from(category1Answers + category2Answers));
+                        Map<String, List<String>> answer = {
+                          widget.question.category1: category1Answers,
+                          widget.question.category2: category2Answers
+                        };
+                        print('answer fields:  ans-> $answer');
+                        context
+                            .read<WorksheetSolverCubit>()
+                            .setAnswer(widget.questionIndex, answer);
                       }
                     },
                   )),

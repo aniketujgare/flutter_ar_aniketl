@@ -53,6 +53,22 @@ class _ArithmeticQuestionUIState extends State<ArithmeticQuestionUI> {
     operator = getOperator(widget.question.operator);
     _prepareData();
     //?
+    //? Fill answers
+    print('markedAns: ${widget.markedAnswer}');
+    if (widget.markedAnswer != null) {
+      String answerString = widget.markedAnswer['answer'];
+      String carryString = widget.markedAnswer['carry'];
+      if (answerString.isNotEmpty) {
+        for (var i = 0; i < answerString.length; i++) {
+          ansControllers[i].text = answerString[i];
+        }
+      }
+      if (carryString.isNotEmpty) {
+        for (var i = 0; i < carryString.length; i++) {
+          carryControllers[i].text = carryString[i];
+        }
+      }
+    }
   }
 
   void _prepareData() {
@@ -391,17 +407,28 @@ class _ArithmeticQuestionUIState extends State<ArithmeticQuestionUI> {
   void saveAnswer() {
     //? Save Answer
     var ansTexts = [];
+    var carryTexts = [];
     for (var element in ansControllers) {
       if (element.text.isNotEmpty) {
         ansTexts.add(element.text);
       }
-      if (ansTexts.length == noOfansFields) {
-        debugPrint('answer fields: all boxes filled');
-        debugPrint('answer fields: $ansTexts');
-        context
-            .read<WorksheetSolverCubit>()
-            .setAnswer(widget.questionIndex, ansTexts);
+    }
+    for (var element in carryControllers) {
+      if (element.text.isNotEmpty) {
+        carryTexts.add(element.text);
       }
+    }
+    // print('answer fields:  ans-> ${ansTexts} carry-> $carryTexts');
+    if (ansTexts.length == noOfansFields) {
+      // Store answer {answer: <String> answer, carry: <String> carry}
+      String answer = '';
+      ansTexts.forEach((ans) => answer += ans);
+      String carry = '';
+      carryControllers.forEach((carrContr) => carry += carrContr.text);
+      print('answer fields:  ans-> ${answer} carry-> $carry');
+      context
+          .read<WorksheetSolverCubit>()
+          .setAnswer(widget.questionIndex, {'answer': answer, 'carry': carry});
     }
   }
 

@@ -3,23 +3,18 @@ import 'dart:developer';
 
 import 'package:connection_notifier/connection_notifier.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_ar/data/models/student_profile_model.dart';
-import 'package:flutter_ar/domain/repositories/authentication_repository.dart';
-import '../../../core/reusable_widgets/network_disconnected.dart';
-import '../../../core/util/reusable_widgets/reusable_button.dart';
-import '../../../data/models/teacher_message.dart';
-import '../../parent_zone/bloc/teacher_message_cubit/teacher_message_cubit.dart';
-import '../bloc/worksheet_cubit/worksheet_cubit.dart';
-import 'worksheet_history.dart';
-import 'worksheet_solver.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hive_flutter/hive_flutter.dart';
-import 'package:intl/intl.dart';
 import 'package:size_config/size_config.dart';
 
 import '../../../../core/util/device_type.dart';
 import '../../../../core/util/styles.dart';
+import '../../../core/reusable_widgets/network_disconnected.dart';
+import '../../../data/models/student_profile_model.dart';
+import '../../../domain/repositories/authentication_repository.dart';
+import '../bloc/worksheet_cubit/worksheet_cubit.dart';
 import '../bloc/worksheet_page_cubit/worksheet_page_cubit.dart';
+import 'worksheet_history.dart';
+import 'worksheet_solver.dart';
 
 class WorksheetView extends StatefulWidget {
   const WorksheetView({super.key});
@@ -156,6 +151,10 @@ class _WorksheetViewState extends State<WorksheetView> {
                                       subject: workSheet.subject,
                                       date: worksheet[i % worksheet.length][2],
                                       teacher: workSheet.teacher,
+                                      solvedQuestionCount:
+                                          workSheet.solvedQuestinCount,
+                                      allQuestionCount:
+                                          workSheet.allQuestionCount,
                                     ),
                                   ),
                                 ),
@@ -267,6 +266,8 @@ class Lesson extends StatelessWidget {
   final String subject;
   final String date;
   final String teacher;
+  final int solvedQuestionCount;
+  final int allQuestionCount;
 
   const Lesson({
     super.key,
@@ -274,6 +275,8 @@ class Lesson extends StatelessWidget {
     required this.subject,
     required this.date,
     required this.teacher,
+    required this.solvedQuestionCount,
+    required this.allQuestionCount,
   });
 
   @override
@@ -383,9 +386,9 @@ class Lesson extends StatelessWidget {
               ),
               const Spacer(flex: 2),
               //!Remaining questions
-              const Text(
-                "0/30",
-                style: TextStyle(
+              Text(
+                "$solvedQuestionCount/$allQuestionCount",
+                style: const TextStyle(
                   fontFamily: "Nunito",
                   fontSize: 12,
                   fontWeight: FontWeight.w400,

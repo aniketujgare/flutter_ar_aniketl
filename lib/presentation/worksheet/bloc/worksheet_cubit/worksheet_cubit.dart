@@ -5,11 +5,14 @@ import 'package:flutter/foundation.dart' show debugPrint;
 import 'package:flutter_ar/main.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import '../../../../data/models/student_profile_model.dart';
+import '../../../../domain/repositories/authentication_repository.dart';
 import '../../models/published_worksheets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:http/http.dart' as http;
 
+import '../../models/questions.dart';
+import '../../models/worksheet_ans_of_student.dart';
 import '../../models/worksheet_details.dart';
 import '../../models/worksheet_details_model.dart';
 
@@ -23,6 +26,7 @@ class WorksheetCubit extends Cubit<WorksheetState> {
   void getWorksheets() async {
     emit(state.copyWith(status: WorksheetStatus.loading));
     List<WorksheetDetailsModel> allWorksheetDetails = [];
+    List<WorksheetDetailsModel> solvedWorksheets = [];
     List<PublishedWorksheets> publishedWorksheets =
         await getPublishedWorksheet();
     await Future.forEach(publishedWorksheets,
@@ -31,9 +35,19 @@ class WorksheetCubit extends Cubit<WorksheetState> {
           await getWorksheetDetails('${sheet.worksheetId}');
       worksheetDetails.removeWhere((element) => element.status != "active");
 
+      //Remove worksheets marked with status 'submitted'
       // Perform your operation on worksheetDetails here, if needed
       await Future.forEach(worksheetDetails,
           (WorksheetDetails sheetDetail) async {
+        StudentProfileModel? studentProfile =
+            //Mark no of q solved on worksheet card
+            await AuthenticationRepository().getStudentProfile();
+        int solvedQCnt = await getSolvedQCount(
+            sheetDetail.id, studentProfile?.studentId ?? 0);
+        // Get All Questions count
+        int allQuestionCnt = await getQuestionsCount(sheetDetail.id);
+
+        // print('worksheet ID: ${sheetDetail.id} || allQCnt: $allQuestionCnt');
         WorksheetDetailsModel worksheet = WorksheetDetailsModel(
           id: sheetDetail.id,
           status: sheetDetail.status,
@@ -41,18 +55,104 @@ class WorksheetCubit extends Cubit<WorksheetState> {
           worksheetName: sheetDetail.worksheetName,
           subject: '',
           teacher: '',
+          solvedQuestinCount: solvedQCnt,
+          allQuestionCount: allQuestionCnt,
         );
         String subject = await getsubjectname(sheetDetail.subjectId.toString());
         String teacherName =
             await getteachername(sheetDetail.teacherId.toString());
         worksheet.subject = subject;
         worksheet.teacher = teacherName;
-        allWorksheetDetails.add(worksheet);
+        if (solvedQCnt != allQuestionCnt || allQuestionCnt == 0) {
+          allWorksheetDetails.add(worksheet);
+        } else if (allQuestionCnt != 0) {
+          solvedWorksheets.add(worksheet);
+        }
       });
     });
     // debugPrint('All WorkSheet: ${json.encode(allWorksheetDetails)}');
     emit(state.copyWith(
-        status: WorksheetStatus.loaded, worksheets: allWorksheetDetails));
+        status: WorksheetStatus.loaded,
+        worksheets: allWorksheetDetails,
+        historyWorksheets: solvedWorksheets));
+  }
+
+  Future<int> getQuestionsCount(int worksheetId) async {
+    emit(state.copyWith(status: WorksheetStatus.loading));
+    var headers = {'Content-Type': 'application/json'};
+    var request = http.Request(
+        'POST',
+        Uri.parse(
+            'https://cnpewunqs5.execute-api.ap-south-1.amazonaws.com/dev/getworksheetdatav2'));
+    request.body = json.encode({"worksheet_id": worksheetId});
+    request.headers.addAll(headers);
+
+    try {
+      http.StreamedResponse response = await request.send();
+
+      if (response.statusCode == 200) {
+        var responseString = await response.stream.bytesToString();
+        print(responseString);
+        if (responseString == 'null') {
+          return 0;
+        }
+        List<Question> allQuestion = allWorsheetQuestins(responseString);
+        return allQuestion.length;
+      } else {
+        debugPrint('Request failed with status: ${response.statusCode}');
+        throw Exception('Failed to load worksheet questions');
+      }
+    } catch (e) {
+      debugPrint('Error during request: $e');
+      throw Exception('Failed to loadworksheet questions');
+    }
+  }
+
+  Future<int> getSolvedQCount(int worksheetId, int studentId) async {
+    emit(state.copyWith(status: WorksheetStatus.loading));
+    var headers = {'Content-Type': 'application/json'};
+    var request = http.Request(
+      'POST',
+      Uri.parse(
+          'https://cnpewunqs5.execute-api.ap-south-1.amazonaws.com/dev/getstudentworksheetdatav2'),
+    );
+    request.body =
+        json.encode({"worksheet_id": worksheetId, "student_id": studentId});
+    request.headers.addAll(headers);
+
+    try {
+      http.StreamedResponse response = await request.send();
+
+      if (response.statusCode == 200) {
+        var responseString = await response.stream.bytesToString();
+
+        if (responseString != '0') {
+          List<Map<String, dynamic>> jsonList =
+              List<Map<String, dynamic>>.from(jsonDecode(responseString));
+
+          List<StudentAnswer> studentAnswersList =
+              jsonList.asMap().entries.map((entry) {
+            log('entry: ${entry.value}');
+
+            return StudentAnswer.fromJson(entry.key.toString(), entry.value);
+          }).toList();
+          print('studentAnsSheet: ${jsonEncode(studentAnswersList)}');
+
+          // Sorting the list based on questionNo
+          studentAnswersList
+              .sort((a, b) => a.questionNo.compareTo(b.questionNo));
+          return jsonList.length;
+        } else {
+          return 0;
+        }
+      } else {
+        debugPrint('Request failed with status: ${response.statusCode}');
+        throw Exception('Failed to load student answers');
+      }
+    } catch (e) {
+      debugPrint('Error during request: $e');
+      throw Exception('Failed to student answers');
+    }
   }
 
   Future<String> getStudentWorksheet(

@@ -28,7 +28,7 @@ class _WorksheetHistoryViewState extends State<WorksheetHistoryView> {
   void initState() {
     super.initState();
 
-    context.read<WorksheetCubit>().getWorksheetsHistory();
+    // context.read<WorksheetCubit>().getWorksheetsHistory();
   }
 
   @override
@@ -150,6 +150,10 @@ class _WorksheetHistoryViewState extends State<WorksheetHistoryView> {
                                       subject: workSheet.subject,
                                       date: worksheet[i % worksheet.length][2],
                                       teacher: workSheet.teacher,
+                                      allQuestionCount:
+                                          workSheet.allQuestionCount,
+                                      solvedQuestionCount:
+                                          workSheet.solvedQuestinCount,
                                     ),
                                   ),
                                 ),
@@ -261,13 +265,16 @@ class Lesson extends StatelessWidget {
   final String subject;
   final String date;
   final String teacher;
-
+  final int solvedQuestionCount;
+  final int allQuestionCount;
   const Lesson({
     super.key,
     required this.worksheetTitle,
     required this.subject,
     required this.date,
     required this.teacher,
+    required this.solvedQuestionCount,
+    required this.allQuestionCount,
   });
 
   @override
@@ -398,9 +405,9 @@ class Lesson extends StatelessWidget {
               ),
               Spacer(flex: DeviceType().isMobile ? 1 : 1),
               //!Remaining questions
-              const Text(
-                "15/30",
-                style: TextStyle(
+              Text(
+                "$allQuestionCount/$allQuestionCount",
+                style: const TextStyle(
                   fontFamily: "Nunito",
                   fontSize: 12,
                   fontWeight: FontWeight.w400,

@@ -43,14 +43,14 @@ class _ReArrangeWordsQuestionState extends State<ReArrangeWordsQuestion> {
     for (var _ in questionsList) {
       studentAnswersList.add(' ');
     }
-
+    //? Fill marked answers
     if (widget.markedAnswer.isNotEmpty) {
       for (var i = 0; i < widget.markedAnswer.length; i++) {
         studentAnswersList[i] = widget.markedAnswer[i];
       }
     }
     if (studentAnswersList.length == questionsLength) {
-      // questionsList.clear();
+      questionsList.clear();
     }
     super.initState();
   }
