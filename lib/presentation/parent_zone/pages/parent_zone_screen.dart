@@ -9,7 +9,6 @@ import '../widgets/app_bottom_nav_bar.dart';
 import '../widgets/message_view.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:size_config/size_config.dart';
-import 'package:auto_orientation/auto_orientation.dart';
 import '../../../core/util/device_type.dart';
 import '../widgets/home_view.dart';
 import '../widgets/group_view.dart';

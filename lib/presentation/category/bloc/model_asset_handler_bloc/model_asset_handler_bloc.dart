@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:bloc/bloc.dart';
 import 'package:download_assets/download_assets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'model_asset_handler_event.dart';

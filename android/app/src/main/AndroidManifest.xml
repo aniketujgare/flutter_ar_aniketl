@@ -1,11 +1,11 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.example.flutter_ar">
 <uses-permission android:name="android.permission.CAMERA" />
 <uses-permission android:name="android.permission.INTERNET" />
 <!-- Limits app visibility in the Google Play Store to ARCore supported devices
      (https://developers.google.com/ar/devices). -->
 <uses-feature android:name="android.hardware.camera.ar" />
     <application
-        android:label="flutter_ar"
+        android:label="Kids V2"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
         android:usesCleartextTraffic="true">

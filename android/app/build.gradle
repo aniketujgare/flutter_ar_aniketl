@@ -1,5 +1,5 @@
 plugins {
-    id "com.android.application"
+    id "com.android.application" 
     id "kotlin-android"
     id "dev.flutter.flutter-gradle-plugin"
 }
@@ -35,7 +35,7 @@ def keystoreProperties = new Properties()
 android {
     namespace "com.example.flutter_ar"
     compileSdkVersion 34
-    ndkVersion flutter.ndkVersion
+    ndkVersion "26.1.10909125" //flutter.ndkVersion
  packagingOptions {
       pickFirst 'lib/x86/libc++_shared.so'
       pickFirst 'lib/x86_64/libc++_shared.so'
@@ -44,8 +44,8 @@ android {
   }
   
     compileOptions {
-        sourceCompatibility 1.8
-        targetCompatibility 1.8
+        sourceCompatibility = '1.8'
+        targetCompatibility = '1.8'
     }
 
     kotlinOptions {
@@ -60,7 +60,7 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "com.example.flutter_ar"
+        applicationId "com.smartxr.kidsv2"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
         minSdkVersion 24
