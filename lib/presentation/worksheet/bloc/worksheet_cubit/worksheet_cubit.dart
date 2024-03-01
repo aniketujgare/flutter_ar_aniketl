@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:flutter/foundation.dart' show debugPrint;
 import 'package:flutter_ar/main.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:intl/intl.dart';
 import '../../../../data/models/student_profile_model.dart';
 import '../../../../domain/repositories/authentication_repository.dart';
 import '../../models/published_worksheets.dart';
@@ -46,7 +47,6 @@ class WorksheetCubit extends Cubit<WorksheetState> {
             sheetDetail.id, studentProfile?.studentId ?? 0);
         // Get All Questions count
         int allQuestionCnt = await getQuestionsCount(sheetDetail.id);
-
         // print('worksheet ID: ${sheetDetail.id} || allQCnt: $allQuestionCnt');
         WorksheetDetailsModel worksheet = WorksheetDetailsModel(
           id: sheetDetail.id,
@@ -57,6 +57,7 @@ class WorksheetCubit extends Cubit<WorksheetState> {
           teacher: '',
           solvedQuestinCount: solvedQCnt,
           allQuestionCount: allQuestionCnt,
+          deadline: DateFormat('dd MMM yy').format(sheet.deadline),
         );
         String subject = await getsubjectname(sheetDetail.subjectId.toString());
         String teacherName =

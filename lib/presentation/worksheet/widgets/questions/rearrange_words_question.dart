@@ -37,7 +37,8 @@ class _ReArrangeWordsQuestionState extends State<ReArrangeWordsQuestion> {
     //? Setting up size of box
     double halfEmptyBox = (questionsList.length - 1 + 2) / 2;
     int fullQuesBox = questionsList.length;
-    singleBoxSize = widget.screenSize.width / (fullQuesBox + halfEmptyBox);
+    singleBoxSize =
+        widget.screenSize.width / (fullQuesBox + (halfEmptyBox / 2));
     debugPrint('singleBoxSize: $singleBoxSize');
     //?
     for (var _ in questionsList) {

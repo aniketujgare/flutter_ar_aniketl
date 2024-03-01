@@ -149,12 +149,12 @@ class _WorksheetViewState extends State<WorksheetView> {
                                     child: Lesson(
                                       worksheetTitle: workSheet.worksheetName,
                                       subject: workSheet.subject,
-                                      date: worksheet[i % worksheet.length][2],
                                       teacher: workSheet.teacher,
                                       solvedQuestionCount:
                                           workSheet.solvedQuestinCount,
                                       allQuestionCount:
                                           workSheet.allQuestionCount,
+                                      deadline: workSheet.deadline,
                                     ),
                                   ),
                                 ),
@@ -254,29 +254,22 @@ class _WorksheetViewState extends State<WorksheetView> {
   }
 }
 
-var worksheet = [
-  ['Living and non-living things', 'EVS', '26 Jan 24', 'Teacher\'s Name'],
-  ['Vowels and Noun', 'English', '28 Jan 24', 'D. C. Pandey'],
-  ['Fraction and Division', 'Maths', '29 Jan 24', 'H. C. Verma'],
-  ['Name of worksheet', 'EVS', '30 Feb 24', 'H. K. Das'],
-];
-
 class Lesson extends StatelessWidget {
   final String worksheetTitle;
   final String subject;
-  final String date;
   final String teacher;
   final int solvedQuestionCount;
   final int allQuestionCount;
+  final String deadline;
 
   const Lesson({
     super.key,
     required this.worksheetTitle,
     required this.subject,
-    required this.date,
     required this.teacher,
     required this.solvedQuestionCount,
     required this.allQuestionCount,
+    required this.deadline,
   });
 
   @override
@@ -373,7 +366,7 @@ class Lesson extends StatelessWidget {
                       borderRadius: BorderRadius.circular(15)),
                 ),
                 child: Text(
-                  date,
+                  deadline,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: const Color(0xFFA94234),

@@ -19,6 +19,7 @@ class WorksheetDetailsModel {
   String worksheetName;
   int solvedQuestinCount;
   int allQuestionCount;
+  String deadline;
 
   WorksheetDetailsModel({
     required this.id,
@@ -29,6 +30,7 @@ class WorksheetDetailsModel {
     required this.worksheetName,
     required this.solvedQuestinCount,
     required this.allQuestionCount,
+    required this.deadline,
   });
 
   factory WorksheetDetailsModel.fromJson(Map<String, dynamic> json) =>
@@ -41,6 +43,7 @@ class WorksheetDetailsModel {
         worksheetName: json["worksheet_name"],
         solvedQuestinCount: json["solved_question_count"],
         allQuestionCount: json["all_question_count"],
+        deadline: json["deadline"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -52,5 +55,6 @@ class WorksheetDetailsModel {
         "worksheet_name": worksheetName,
         "solved_question_count": solvedQuestinCount,
         "all_question_count": allQuestionCount,
+        "deadline": deadline,
       };
 }

@@ -1,17 +1,11 @@
-import 'dart:convert';
-import 'dart:developer';
-
 import 'package:connection_notifier/connection_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:size_config/size_config.dart';
 
 import '../../../../core/util/device_type.dart';
 import '../../../../core/util/styles.dart';
 import '../../../core/reusable_widgets/network_disconnected.dart';
-import '../../../data/models/student_profile_model.dart';
-import '../../../domain/repositories/authentication_repository.dart';
 import '../bloc/worksheet_cubit/worksheet_cubit.dart';
 import '../bloc/worksheet_history_page_cubit/worksheet_history_page_cubit.dart';
 import 'worksheet_solver.dart';
@@ -27,7 +21,7 @@ class _WorksheetHistoryViewState extends State<WorksheetHistoryView> {
   @override
   void initState() {
     super.initState();
-
+    context.read<WorksheetHistoryPageCubit>().setPage(0);
     // context.read<WorksheetCubit>().getWorksheetsHistory();
   }
 
@@ -86,10 +80,7 @@ class _WorksheetHistoryViewState extends State<WorksheetHistoryView> {
                 builder: (context, state) {
                   if (state.status == WorksheetStatus.loaded) {
                     context.read<WorksheetHistoryPageCubit>().setmaxLength(
-                        (BlocProvider.of<WorksheetCubit>(context)
-                                    .state
-                                    .historyWorksheets
-                                    .length /
+                        (state.historyWorksheets.length /
                                 (DeviceType().isMobile ? 4 : 3))
                             .ceil());
                     return BlocBuilder<WorksheetHistoryPageCubit, int>(
@@ -148,12 +139,12 @@ class _WorksheetHistoryViewState extends State<WorksheetHistoryView> {
                                     child: Lesson(
                                       worksheetTitle: workSheet.worksheetName,
                                       subject: workSheet.subject,
-                                      date: worksheet[i % worksheet.length][2],
                                       teacher: workSheet.teacher,
                                       allQuestionCount:
                                           workSheet.allQuestionCount,
                                       solvedQuestionCount:
                                           workSheet.solvedQuestinCount,
+                                      deadline: workSheet.deadline,
                                     ),
                                   ),
                                 ),
@@ -202,6 +193,11 @@ class _WorksheetHistoryViewState extends State<WorksheetHistoryView> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
+                                //First page does'nt has back page btn
+                                // if (context
+                                //         .watch<WorksheetHistoryPageCubit>()
+                                //         .curridx !=
+                                //     0)
                                 GestureDetector(
                                   onTap: () => context
                                       .read<WorksheetHistoryPageCubit>()
@@ -217,6 +213,12 @@ class _WorksheetHistoryViewState extends State<WorksheetHistoryView> {
                                     ),
                                   ),
                                 ),
+                                //  if (context
+                                //     .watch<WorksheetHistoryPageCubit>()
+                                //     .curridx !=
+                                // context
+                                //     .read<WorksheetHistoryPageCubit>()
+                                //     .maxLen)
                                 GestureDetector(
                                   onTap: () => context
                                       .read<WorksheetHistoryPageCubit>()
@@ -253,28 +255,22 @@ class _WorksheetHistoryViewState extends State<WorksheetHistoryView> {
   }
 }
 
-var worksheet = [
-  ['Living and non-living things', 'EVS', '26 Jan 24', 'Teacher\'s Name'],
-  ['Vowels and Noun', 'English', '28 Jan 24', 'D. C. Pandey'],
-  ['Fraction and Division', 'Maths', '29 Jan 24', 'H. C. Verma'],
-  ['Name of worksheet', 'EVS', '29 Feb 24', 'H. K. Das'],
-];
-
 class Lesson extends StatelessWidget {
   final String worksheetTitle;
   final String subject;
-  final String date;
   final String teacher;
   final int solvedQuestionCount;
   final int allQuestionCount;
+  final String deadline;
+
   const Lesson({
     super.key,
     required this.worksheetTitle,
     required this.subject,
-    required this.date,
     required this.teacher,
     required this.solvedQuestionCount,
     required this.allQuestionCount,
+    required this.deadline,
   });
 
   @override
@@ -372,7 +368,7 @@ class Lesson extends StatelessWidget {
                           DeviceType().isMobile ? 95.sp : 60.sp)),
                 ),
                 child: Text(
-                  date,
+                  deadline,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: const Color(0xFF074C2B),
