@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import '../../../../data/models/guest_name.dart';
 import 'package:formz/formz.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:flutter/foundation.dart' show debugPrint;
 
 import '../../../../data/models/phone_number.dart';
 
@@ -67,6 +68,6 @@ class GuestValidationBloc
     } else {
       emit(state.copyWith(status: FormzSubmissionStatus.failure));
     }
-    print('validation status ' + state.status.toString());
+    debugPrint('validation status ' + state.status.toString());
   }
 }

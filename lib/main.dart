@@ -48,10 +48,10 @@ import 'temp_testing/screenshot_test.dart';
 
 final authenticationRepository = AuthenticationRepository();
 // void main() async {
-//   print('ARCORE IS AVAILABLE?');
-//   // print(await ArCoreController.checkArCoreAvailability());
-//   // print('\nAR SERVICES INSTALLED?');
-//   // print(await ArCoreController.checkIsArCoreInstalled());
+//   debugPrint('ARCORE IS AVAILABLE?');
+//   // debugPrint(await ArCoreController.checkArCoreAvailability());
+//   // debugPrint('\nAR SERVICES INSTALLED?');
+//   // debugPrint(await ArCoreController.checkIsArCoreInstalled());
 //   runApp(MaterialApp(
 //     home: const UnitySceneScreen(),
 //   ));
@@ -69,16 +69,16 @@ void main() async {
   // Opening the box
   StudentProfileModel? studentProfile =
       await AuthenticationRepository().getStudentProfile();
-  if (Platform.isAndroid) {
-    // Include Android-specific AR code
-    print('Platform.isAndroid');
-  } else if (Platform.isIOS) {
-    // Include iOS-specific AR code
-    print('Platform.isIOS');
-  } else {
-    // Handle other platforms or provide a message
-    print('AR functionality not supported on this platform.');
-  }
+  // if (Platform.isAndroid) {
+  //   // Include Android-specific AR code
+  //   debugPrint('Platform.isAndroid');
+  // } else if (Platform.isIOS) {
+  //   // Include iOS-specific AR code
+  //   debugPrint('Platform.isIOS');
+  // } else {
+  //   // Handle other platforms or provide a message
+  //   debugPrint('AR functionality not supported on this platform.');
+  // }
   runApp(MyApp(
     studentProfile: studentProfile,
   ));

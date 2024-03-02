@@ -50,7 +50,7 @@ class MatchFollowingQuestionState extends State<MatchFollowingQuestion> {
     int fullQuesBox = questionsList.length;
     double singleBoxSize =
         widget.screenSize.width / (fullQuesBox + halfEmptyBox);
-    print('singleBoxSize: $singleBoxSize');
+    debugPrint('singleBoxSize: $singleBoxSize');
 
     //check for question has images or text
     if (questionsList.first.contains('http')) {
@@ -101,10 +101,10 @@ class MatchFollowingQuestionState extends State<MatchFollowingQuestion> {
       for (int i = 0; i < widget.markedAnswer.length; i++) {
         int answerIndex = answersList.indexOf(widget.markedAnswer[i]);
 
-        // print('answerIndex original:$i: ${originalAns[i]}');
+        // debugPrint('answerIndex original:$i: ${originalAns[i]}');
 
-        // print('answerIndex marked ${widget.markedAnswer[i]}');
-        // print('answerlist index ${answersList[answerIndex]}');
+        // debugPrint('answerIndex marked ${widget.markedAnswer[i]}');
+        // debugPrint('answerlist index ${answersList[answerIndex]}');
         if (answerIndex != -1 && i < questionsList.length) {
           Offset from = Offset(
             boxPositions[i].dx + boxSizes.width / 2,
@@ -250,7 +250,7 @@ class MatchFollowingQuestionState extends State<MatchFollowingQuestion> {
               // touch should lie inside boxes and box should be of question
               if (touchedBoxIndex != -1 &&
                   touchedBoxIndex < boxPositions.length / 2) {
-                print('start line');
+                debugPrint('start line');
                 // get mid point of touchehd box
                 Offset middleOfBox = Offset(
                   boxPositions[touchedBoxIndex].dx + boxSizes.width / 2,
@@ -275,12 +275,12 @@ class MatchFollowingQuestionState extends State<MatchFollowingQuestion> {
               //   allLines.removeLast();
               // }
             });
-            // print('-------------');
+            // debugPrint('-------------');
             // for (var element in allLines) {
-            //   print(
+            //   debugPrint(
             //       'from: ${_getTouchedBox(element['from']!)} -> to: ${_getTouchedBox(element['to']!)}');
             // }
-            // print('-------------');
+            // debugPrint('-------------');
           },
           onPanEnd: (details) {
             //remove unattached lines (null safe code dont remove)
@@ -293,13 +293,13 @@ class MatchFollowingQuestionState extends State<MatchFollowingQuestion> {
                 _getTouchedBox(line['to']!) < boxPositions.length / 2);
             allLines.removeWhere(
                 (line) => line['from'] == null || line['to'] == null);
-            // print('total lines: ${allLines.length}');
-            // print('-------------');
+            // debugPrint('total lines: ${allLines.length}');
+            // debugPrint('-------------');
             // for (var element in allLines) {
-            //   print(
+            //   debugPrint(
             //       'from: ${_getTouchedBox(element['from']!)} -> to: ${_getTouchedBox(element['to']!)}');
             // }
-            // print('-------------');
+            // debugPrint('-------------');
             // last line attach to center of box
             if (allLines.isNotEmpty) {
               var lastLine = allLines.last;
@@ -325,9 +325,9 @@ class MatchFollowingQuestionState extends State<MatchFollowingQuestion> {
               currentLine = {};
             });
             if (allLines.length == questionsList.length) {
-              print('all lines are connected');
+              debugPrint('all lines are connected');
               Map<String, Map<int, String>> v = extractConnectedBoxes(allLines);
-              print('mtf ans: $v');
+              debugPrint('mtf ans: $v');
               var ans = v['answer']!.values.toList();
 
               var state = context.read<WorksheetSolverCubit>().state;

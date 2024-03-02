@@ -39,6 +39,6 @@ class LessonPageCubit extends Cubit<int> {
 
   void setmaxLength(int len) {
     maxLen = len;
-    print('maxLen $maxLen');
+    debugPrint('maxLen $maxLen');
   }
 }

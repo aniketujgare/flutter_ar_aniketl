@@ -1,9 +1,10 @@
 import 'dart:convert';
 
-import '../../../data/models/ar_category.dart';
-import '../../../data/models/ar_model.dart';
+import 'package:flutter/foundation.dart' show debugPrint;
 import 'package:http/http.dart' as http;
 
+import '../../../data/models/ar_category.dart';
+import '../../../data/models/ar_model.dart';
 import 'api_string.dart';
 
 class API {
@@ -20,11 +21,12 @@ class API {
       var arCategoryList = (decodedBody as List<dynamic>)
           .map((json) => ArCategory.fromJson(json))
           .toList();
-      print('Response status: ${response.statusCode}');
-      print('category len: ${arCategoryList.length}');
+      debugPrint('Response status: ${response.statusCode}');
+      debugPrint('category len: ${arCategoryList.length}');
       return arCategoryList;
     } else {
-      print('Failed to load categories. Status code: ${response.statusCode}');
+      debugPrint(
+          'Failed to load categories. Status code: ${response.statusCode}');
     }
   }
 
@@ -51,11 +53,12 @@ class API {
       var modelsList = (decodedBody as List<dynamic>)
           .map((json) => ArModel.fromJson(json))
           .toList();
-      print('Response status: ${response.statusCode}');
-      print('Model property: ${modelsList.length}');
+      debugPrint('Response status: ${response.statusCode}');
+      debugPrint('Model property: ${modelsList.length}');
       return modelsList;
     } else {
-      print('Failed to load categories. Status code: ${response.statusCode}');
+      debugPrint(
+          'Failed to load categories. Status code: ${response.statusCode}');
     }
     // var res = jsonDecode(response.body);
   }

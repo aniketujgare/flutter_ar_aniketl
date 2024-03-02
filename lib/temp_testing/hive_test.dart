@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:hive_flutter/adapters.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter/foundation.dart' show debugPrint;
 
 import '../data/models/student_profile_model.dart';
 
@@ -29,7 +30,7 @@ class HiveTesting {
         var allProfiles = studentProfileModelFromJson(response.body);
         if (allProfiles.isNotEmpty && allProfiles[0].isNotEmpty) {
           studentProfileBox.add(allProfiles[0][0]);
-          print('Data saved successfully.');
+          debugPrint('Data saved successfully.');
         } else {
           throw Exception('Empty profiles received');
         }
@@ -38,7 +39,7 @@ class HiveTesting {
             'Failed to load profiles. Status code: ${response.statusCode}');
       }
     } catch (e) {
-      print('Error in getStudentProfiles: $e');
+      debugPrint('Error in getStudentProfiles: $e');
     }
   }
 
@@ -58,7 +59,7 @@ class HiveTesting {
       }
     } catch (e) {
       // Handle errors here
-      print('Error in getParentId: $e');
+      debugPrint('Error in getParentId: $e');
       // You might want to rethrow the exception or return a default value here
       throw Exception('Failed to get parentId');
     }
@@ -74,11 +75,11 @@ class HiveTesting {
         log('Retrieved profile: ${jsonEncode(profiles.first)}');
         return profiles.first;
       } else {
-        print('No profiles found in the box.');
+        debugPrint('No profiles found in the box.');
         return null; // Returning null if no profiles are found
       }
     } catch (e) {
-      print('Error in getStudentProfile: $e');
+      debugPrint('Error in getStudentProfile: $e');
       return null;
     }
   }

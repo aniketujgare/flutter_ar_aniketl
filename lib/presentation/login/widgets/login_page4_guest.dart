@@ -104,7 +104,7 @@ class _LoginPage4GuestState extends State<LoginPage4Guest> {
                               parentsNameController.text.substring(
                                   0, parentsNameController.text.length - 1);
 
-                          // print(newValue);
+                          // debugPrint(newValue);
                         } else {
                           parentsNameController.text =
                               parentsNameController.text;
@@ -155,13 +155,13 @@ class _LoginPage4GuestState extends State<LoginPage4Guest> {
                         }
                         if (value.isNotEmpty) {
                           if (RegExp(r'^[0-9]+$').hasMatch(value)) {
-                            print('matched');
+                            debugPrint('matched');
                             mobileNumberController.text = value;
                             context.read<GuestValidationBloc>().add(
                                 PhoneNumberChanged(
                                     phoneNumber: mobileNumberController.text));
                           } else {
-                            print('not matched');
+                            debugPrint('not matched');
                             mobileNumberController.text =
                                 value.substring(0, value.length - 1);
                             context.read<GuestValidationBloc>().add(
@@ -217,7 +217,7 @@ class _LoginPage4GuestState extends State<LoginPage4Guest> {
                   .add(const GuestFormSubmitted());
               final isValid = context.read<GuestValidationBloc>().state.isValid;
               if (isValid) {
-                print('guestLogin Number' + mobileNumberController.text);
+                debugPrint('guestLogin Number' + mobileNumberController.text);
                 context.read<LoginBloc>().add(LoginEvent.guestLogin(
                     mobileNumber: mobileNumberController.text,
                     parentsName: parentsNameController.text.trim()));

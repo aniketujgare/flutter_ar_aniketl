@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show debugPrint;
 import 'package:formz/formz.dart';
 
 enum GuestNameValidationError { invalid }
@@ -12,8 +13,8 @@ final class GuestName extends FormzInput<String, GuestNameValidationError> {
 
   @override
   GuestNameValidationError? validator(String? value) {
-    print('$value ->${_guestNameRegex.hasMatch(value!)}');
-    print(_guestNameRegex.hasMatch(value ?? ''));
+    debugPrint('$value ->${_guestNameRegex.hasMatch(value!)}');
+    // print(_guestNameRegex.hasMatch(value ?? ''));
     // return null;
     return _guestNameRegex.hasMatch(value ?? '')
         ? null

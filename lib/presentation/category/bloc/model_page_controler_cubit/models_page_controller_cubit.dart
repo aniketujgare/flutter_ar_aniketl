@@ -1,5 +1,5 @@
-import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ModelsPageControllerCubit extends Cubit<int> {
   ModelsPageControllerCubit() : super(0);
@@ -20,7 +20,7 @@ class ModelsPageControllerCubit extends Cubit<int> {
   int curridx = 0;
   get activePageIdx => curridx;
   void setPage(int pageIndex) {
-    print('pageIdx $pageIndex');
+    debugPrint('pageIdx $pageIndex');
     curridx = pageIndex;
     emit(curridx);
     // emit(curridx);
@@ -45,7 +45,7 @@ class ModelsPageControllerCubit extends Cubit<int> {
 
   void setmaxLength(int len) {
     maxLen = len - 1;
-    print('maxLen $maxLen');
+    debugPrint('maxLen $maxLen');
     emit(curridx);
   }
 }

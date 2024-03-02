@@ -32,7 +32,7 @@ class _AscendingDecendingQuestionState
   late double singleBoxSize;
   @override
   void initState() {
-    print('marked answers: ${widget.markedAnswer}');
+    debugPrint('marked answers: ${widget.markedAnswer}');
     for (var v in widget.question.numbers) {
       isDraggedList.add(false);
       selectedAnswer.add(' ');

@@ -4,6 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter/foundation.dart' show debugPrint;
 
 import '../../../../data/models/student_profile_model.dart';
 import '../../../../data/models/teacher_message.dart';
@@ -43,7 +44,8 @@ class TeacherMessageCubit extends Cubit<TeacherMessageState> {
     if (response.statusCode == 200) {
       return teacherMessageModelFromJson(response.body);
     } else {
-      print('Failed to load messages. Status code: ${response.statusCode}');
+      debugPrint(
+          'Failed to load messages. Status code: ${response.statusCode}');
     }
   }
 }

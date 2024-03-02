@@ -68,7 +68,7 @@
 //                 boxSizes.height / 2,
 //           );
 //           // answersList.reversed.toList()[toIndex % answersList.length]
-//           print('answerIndex ${(answerIndex % answersList.length)}');
+//           debugPrint('answerIndex ${(answerIndex % answersList.length)}');
 //           allLines.add({'from': from, 'to': to});
 //         }
 //       }
@@ -193,9 +193,9 @@
 //               currentLine = {};
 //             });
 //             if (allLines.length == questionsList.length) {
-//               print('all lines are connected');
+//               debugPrint('all lines are connected');
 //               Map<String, Map<int, String>> v = extractConnectedBoxes(allLines);
-//               print('mtf ans: $v');
+//               debugPrint('mtf ans: $v');
 //               var ans = v['answer']!.values.toList();
 
 //               // List<String> listString = [];
@@ -206,7 +206,7 @@
 //               //   });
 //               // });
 
-//               // print(listString);
+//               // debugPrint(listString);
 //               var state = context.read<WorksheetSolverCubit>().state;
 //               context
 //                   .read<WorksheetSolverCubit>()
@@ -217,7 +217,7 @@
 //           onPanStart: (details) {
 //             setState(() {
 //               Offset touchPoint = details.localPosition;
-//               print(touchPoint);
+//               debugPrint(touchPoint);
 //               int touchedBoxIndex = _getTouchedBox(touchPoint);
 //               if (touchedBoxIndex != -1) {
 //                 Offset middleOfBox = Offset(

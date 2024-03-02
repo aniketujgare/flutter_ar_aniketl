@@ -84,7 +84,7 @@ class _LongAnswerQuestionState extends State<LongAnswerQuestion> {
                       }
                     }
                   } catch (e) {
-                    print('Error taking picture: $e');
+                    debugPrint('Error taking picture: $e');
                   }
                 },
                 child: SizedBox(

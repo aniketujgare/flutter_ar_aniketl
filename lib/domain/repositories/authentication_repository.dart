@@ -1,20 +1,15 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import '../../core/route/route_name.dart';
-import '../../core/util/api/api_string.dart';
-import '../../data/models/app_api.dart';
-import '../../data/models/ar_model.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
-import 'package:firebase_core/firebase_core.dart';
 
+import '../../core/util/api/api_string.dart';
+import '../../data/models/app_api.dart';
 import '../../data/models/student_profile_model.dart';
-import '../../presentation/login/bloc/login_bloc/login_bloc.dart';
 
 class AuthenticationRepository {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
@@ -87,7 +82,7 @@ class AuthenticationRepository {
           studentProfileBox.clear();
           studentProfileBox.add(allProfiles[0][0]);
           log(jsonEncode(allProfiles[0][0]));
-          print('Data saved successfully.');
+          debugPrint('Data saved successfully.');
         } else {
           throw Exception('Empty profiles received');
         }
@@ -96,7 +91,7 @@ class AuthenticationRepository {
             'Failed to load profiles. Status code: ${response.statusCode}');
       }
     } catch (e) {
-      print('Error in getStudentProfiles: $e');
+      debugPrint('Error in getStudentProfiles: $e');
     }
   }
 
@@ -107,7 +102,7 @@ class AuthenticationRepository {
 
       studentProfileBox.add(StudentProfileModel(studentId: -1));
     } catch (e) {
-      print('Error in getStudentProfiles: $e');
+      debugPrint('Error in getStudentProfiles: $e');
     }
   }
 
@@ -121,7 +116,7 @@ class AuthenticationRepository {
         if (parentId == "null") {
           return -1;
         }
-        print(parentId);
+        debugPrint(parentId.toString());
         return parentId;
       } else {
         // If the server did not return a 200 OK response,
@@ -130,7 +125,7 @@ class AuthenticationRepository {
       }
     } catch (e) {
       // Handle errors here
-      print('Error in getParentId: $e');
+      debugPrint('Error in getParentId: $e');
       // You might want to rethrow the exception or return a default value here
       throw Exception('Failed to get parentId');
     }
@@ -146,11 +141,11 @@ class AuthenticationRepository {
         log('Retrieved profile: ${jsonEncode(profiles.first)}');
         return profiles.first;
       } else {
-        print('No profiles found in the box.');
+        debugPrint('No profiles found in the box.');
         return null; // Returning null if no profiles are found
       }
     } catch (e) {
-      print('Error in getStudentProfile: $e');
+      debugPrint('Error in getStudentProfile: $e');
       return null;
     }
   }
@@ -165,7 +160,7 @@ class AuthenticationRepository {
   //       var decodedBody = jsonDecode(response.body);
   //       var kidsAppBox = await Hive.openBox("kidsApp");
   //       kidsAppBox.put('allStandardsOfSchool', decodedBody);
-  //       print(kidsAppBox.get('allStandardsOfSchool'));
+  //       debugPrint(kidsAppBox.get('allStandardsOfSchool'));
   //     } else {
   //       // If the server did not return a 200 OK response,
   //       // then throw an exception.
@@ -186,7 +181,7 @@ class AuthenticationRepository {
   //       var decodedBody = jsonDecode(response.body);
 
   //       // studentProfileBox.add(studentProfileModelFromJson(response.body));
-  //       print(kidsAppBox.get('studentProfiles'));
+  //       debugPrint(kidsAppBox.get('studentProfiles'));
   //     } else {
   //       // If the server did not return a 200 OK response,
   //       // then throw an exception.
@@ -205,9 +200,9 @@ class AuthenticationRepository {
           {'guest_user_number': guestPhone, 'guest_user_name': guestName}),
     );
     if (response.statusCode == 200) {
-      print("guest Id created succesfully ");
+      debugPrint("guest Id created succesfully ");
     } else {
-      print("Error : ${response.statusCode} - ${response.body}");
+      debugPrint("Error : ${response.statusCode} - ${response.body}");
     }
   }
 }

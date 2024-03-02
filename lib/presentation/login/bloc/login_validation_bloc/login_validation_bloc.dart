@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import '../../../../data/models/phone_number.dart';
 import 'package:formz/formz.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:flutter/foundation.dart' show debugPrint;
 
 part 'login_validation_event.dart';
 part 'login_validation_state.dart';
@@ -51,6 +52,6 @@ class LoginValidationBloc
     } else {
       emit(state.copyWith(status: FormzSubmissionStatus.failure));
     }
-    print('validation status ' + state.status.toString());
+    debugPrint('validation status ' + state.status.toString());
   }
 }

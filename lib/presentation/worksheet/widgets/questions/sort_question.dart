@@ -56,7 +56,7 @@ class _SortQuestionState extends State<SortQuestion> {
       category1Answers.clear();
       category2Answers.clear();
       questionsList.clear();
-      print('marked: ${widget.markedAnswer}');
+      debugPrint('marked: ${widget.markedAnswer}');
       category1Answers = widget.markedAnswer[widget.question.category1];
       category2Answers = widget.markedAnswer[widget.question.category2];
     }
@@ -301,7 +301,7 @@ class _SortQuestionState extends State<SortQuestion> {
                           widget.question.category1: category1Answers,
                           widget.question.category2: category2Answers
                         };
-                        print('answer fields:  ans-> $answer');
+                        debugPrint('answer fields:  ans-> $answer');
                         context
                             .read<WorksheetSolverCubit>()
                             .setAnswer(widget.questionIndex, answer);

@@ -28,7 +28,7 @@ class AnimationPLayGroundState extends State<AnimationPLayGround> {
               setState(() {
                 y = y - details.delta.dx / 100;
                 x = x + details.delta.dy / 100;
-                print('$x,$y');
+                debugPrint('$x,$y');
               });
             },
             child: Container(

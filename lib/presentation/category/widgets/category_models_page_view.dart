@@ -51,7 +51,7 @@ class _CategoryModelsPageViewState extends State<CategoryModelsPageView> {
                         //?
                         return BlocBuilder<ModelsPageControllerCubit, int>(
                           builder: (context, index) {
-                            print(
+                            debugPrint(
                                 'active page idx: ${context.read<ModelsPageControllerCubit>().activePageIdx}');
 
                             return PageView.builder(

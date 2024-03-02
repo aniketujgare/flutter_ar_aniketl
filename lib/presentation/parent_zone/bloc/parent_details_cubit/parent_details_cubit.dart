@@ -3,6 +3,8 @@ import 'package:flutter_ar/data/models/parent_details.dart';
 import 'package:flutter_ar/domain/repositories/authentication_repository.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter/foundation.dart' show debugPrint;
+
 import 'dart:convert';
 part 'parent_details_state.dart';
 part 'parent_details_cubit.freezed.dart';
@@ -39,11 +41,11 @@ class ParentDetailsCubit extends Cubit<ParentDetailsState> {
             parentDetailsFromJson(responseBody);
         return parentDetailsList;
       } else {
-        print(response.reasonPhrase);
+        debugPrint(response.reasonPhrase);
         return []; // Return an empty list in case of error
       }
     } catch (e) {
-      print('Error during request: $e');
+      debugPrint('Error during request: $e');
       return []; // Return an empty list in case of exception
     }
   }

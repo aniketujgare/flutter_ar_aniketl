@@ -1,16 +1,17 @@
 import 'dart:convert';
 
-import 'package:bloc/bloc.dart';
-import 'package:collection/collection.dart';
-import 'package:flutter_ar/data/models/student_profile_model.dart';
-import 'package:flutter_ar/domain/repositories/authentication_repository.dart';
+import 'package:flutter/foundation.dart' show debugPrint;
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:http/http.dart' as http;
-part 'student_profile_state.dart';
+
+import '../../data/models/student_profile_model.dart';
+
 part 'student_profile_cubit.freezed.dart';
+part 'student_profile_state.dart';
 
 class StudentProfileCubit extends Cubit<StudentProfileState> {
-  StudentProfileCubit() : super(StudentProfileState.initial());
+  StudentProfileCubit() : super(const StudentProfileState.initial());
 
   Future<void> initProfile(StudentProfileModel? profile) async {
     if (profile != null && profile.studentId != -1) {
@@ -21,7 +22,7 @@ class StudentProfileCubit extends Cubit<StudentProfileState> {
       profile.division = standAndDiv['division'];
       String schoolName = await getSchoolName(profile.schoolId!);
       profile.schoolName = schoolName;
-      print('profile initialslize');
+      debugPrint('profile initialslize');
       emit(state.copyWith(
           status: StudentProfileStauts.loaded, studentProfileModel: profile));
     }
@@ -48,16 +49,16 @@ class StudentProfileCubit extends Cubit<StudentProfileState> {
         String division = (jsonMap.last as List<dynamic>).firstWhere(
             (element) => element[0] == 0,
             orElse: () => ['0', ''])[1];
-        // print('Grade: $grade');
-        // print('Division: $division');
+        // debugPrint('Grade: $grade');
+        // debugPrint('Division: $division');
         return {'grade': grade.split(' ').last, 'division': division};
       } else {
-        print('Failed with status code: ${response.statusCode}');
+        debugPrint('Failed with status code: ${response.statusCode}');
         throw Exception(
             'Failed to get standard and division: ${response.reasonPhrase}');
       }
     } catch (e) {
-      print('Error: $e');
+      debugPrint('Error: $e');
       throw Exception('Failed to get standard and division: $e');
     }
   }
@@ -78,14 +79,14 @@ class StudentProfileCubit extends Cubit<StudentProfileState> {
         var jsonMap = jsonDecode(response.body);
         String schoolName = jsonMap[0]['school_name'];
 
-        print('school_name: $schoolName');
+        debugPrint('school_name: $schoolName');
         return schoolName;
       } else {
-        print('Failed with status code: ${response.statusCode}');
+        debugPrint('Failed with status code: ${response.statusCode}');
         throw Exception('Failed to get school name: ${response.reasonPhrase}');
       }
     } catch (e) {
-      print('Error: $e');
+      debugPrint('Error: $e');
       throw Exception('Failed to get school name: $e');
     }
   }

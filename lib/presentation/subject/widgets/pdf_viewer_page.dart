@@ -30,7 +30,7 @@ class PdfViewerPageState extends State<PdfViewerPage> {
       pFile = file;
     });
 
-    print(pFile);
+    debugPrint(pFile.toString());
     setState(() {
       isLoading = false;
     });

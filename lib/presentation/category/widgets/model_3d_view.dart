@@ -46,7 +46,7 @@ class _ModelViewState extends State<ModelView> {
           disconnected: const NetworkDisconnected(),
           connected: BlocBuilder<ModelAssetHandlerBloc, ModelAssetHandlerState>(
             builder: (context, state) {
-              print('current state: ${state.status}');
+              debugPrint('current state: ${state.status}');
               if (state.status == ModelAssetHandlerStatus.error) {
                 return Column(
                   children: [
@@ -80,7 +80,7 @@ class _ModelViewState extends State<ModelView> {
                           backgroundColor: const Color(0XFFF4F2FE),
                           src: Platform.isIOS
                               ? '${downloadCont.assetsDir}/${widget.imageFileName}.glb'
-                              : 'file:///data/user/0/com.example.flutter_ar/app_flutter/assets/${widget.imageFileName}.glb',
+                              : 'file:///data/user/0/com.smartxr.kidsv2/app_flutter/assets/${widget.imageFileName}.glb',
                           alt: 'A 3D model of an astronaut',
                           ar: Platform.isAndroid ? true : false,
                           autoPlay: true,

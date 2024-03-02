@@ -21,7 +21,7 @@ class OneWordQuestionLesson extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         // Dismiss the keyboard when tapped outside the TextField
-        // print('tapped outside textfield');
+        // debugPrint('tapped outside textfield');
         FocusScope.of(context).requestFocus(FocusNode());
       },
       child: SingleChildScrollView(
@@ -76,7 +76,7 @@ class OneWordQuestionLesson extends StatelessWidget {
                               //     .setAnswer(questionIndex, value);
                             },
                             onEditingComplete: () {
-                              print('complete');
+                              debugPrint('complete');
                               FocusScope.of(context).requestFocus(FocusNode());
                             },
                           ),

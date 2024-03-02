@@ -159,7 +159,7 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView> {
             questionIndex: i,
             screenSize: screenSize);
       case QuestionType.rearrange:
-        print('answer fields: marked ans $markedAnswer');
+        debugPrint('answer fields: marked ans $markedAnswer');
         Size screenSize = MediaQuery.of(context).size;
         return ReArrangeWordsQuestion(
           screenSize: screenSize,
@@ -226,7 +226,7 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView> {
                       onPressed: () {
                         context.read<WorksheetSolverCubit>().loadNextQuestion();
 
-                        // print('is last index: $isLastQuestion');
+                        // debugPrint('is last index: $isLastQuestion');
                         if (!isLastQuestin) {
                           context
                               .read<WorksheetSolverCubit>()

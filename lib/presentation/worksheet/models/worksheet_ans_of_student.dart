@@ -1,4 +1,5 @@
 import 'questions.dart';
+import 'package:flutter/foundation.dart' show debugPrint;
 
 class Answer {
   dynamic answer;
@@ -43,7 +44,7 @@ class AnswerQuestion {
   }
 
   factory AnswerQuestion.fromJson(Map<String, dynamic> json) {
-    print('keys: ' +
+    debugPrint('keys: ' +
         json.keys.first.toString() +
         'vale: ' +
         json.values.first.toString());
@@ -165,7 +166,7 @@ class StudentAnswer {
   StudentAnswer({required this.questionNo, required this.question});
 
   factory StudentAnswer.fromJson(String questionNo, Map<String, dynamic> json) {
-    print('answerJson' + json.toString());
+    debugPrint('answerJson' + json.toString());
     return StudentAnswer(
       questionNo: int.parse(questionNo),
       question: AnswerQuestion.fromJson(json),

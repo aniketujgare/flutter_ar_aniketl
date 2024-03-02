@@ -38,7 +38,7 @@ class _MCQLessonState extends State<MCQLesson> {
                     onTap: () {
                       widget.markedAnswer = index;
                       setState(() {});
-                      print('ms: ${widget.markedAnswer}');
+                      debugPrint('ms: ${widget.markedAnswer}');
 
                       // context
                       //     .read<WorksheetSolverCubit>()

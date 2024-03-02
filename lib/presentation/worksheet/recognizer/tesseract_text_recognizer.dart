@@ -8,8 +8,6 @@ class TesseractTextRecognizer extends ITextRecognizer {
       "psm": "4",
       "preserve_interword_spaces": "1",
     });
-    print("----- Res");
-    print(res);
     return res;
   }
 }

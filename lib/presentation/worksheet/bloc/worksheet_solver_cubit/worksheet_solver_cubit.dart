@@ -31,7 +31,7 @@ class WorksheetSolverCubit extends Cubit<WorksheetSolverState> {
     //Load student answer list
     List<StudentAnswer> studentAnswerList =
         await getStudentAnswerList(workSheetId, _studentId);
-    print('final ans sheet1: ${jsonEncode(studentAnswerList)}');
+    debugPrint('final ans sheet1: ${jsonEncode(studentAnswerList)}');
     //Generate final state answerlist
     List<StudentAnswer> answerSheet = [];
     log(jsonEncode(studentAnswerList));
@@ -39,7 +39,7 @@ class WorksheetSolverCubit extends Cubit<WorksheetSolverState> {
     if (studentAnswerList.isNotEmpty) {
       answerSheet.addAll(studentAnswerList);
     }
-    print('final ans sheet: ${jsonEncode(answerSheet)}');
+    debugPrint('final ans sheet: ${jsonEncode(answerSheet)}');
     /*
         1) Question
         2) Answer
@@ -52,7 +52,7 @@ class WorksheetSolverCubit extends Cubit<WorksheetSolverState> {
   }
 
   void setAnswer(int questionIdx, dynamic newAnswer) {
-    print('setAnswer $newAnswer');
+    debugPrint('setAnswer $newAnswer');
     emit(state.copyWith(status: WorkSheetSolverStatus.loading));
     // Make a copy of the current state
     List<StudentAnswer> updatedAnswerSheet = List.from(state.answerSheet);
@@ -70,7 +70,7 @@ class WorksheetSolverCubit extends Cubit<WorksheetSolverState> {
               answer: Answer(answer: newAnswer)));
       updatedAnswerSheet.add(newAns);
 
-      print('dfgv:  ' + '${newAnswer.toString()}');
+      debugPrint('dfgv:  ' + '${newAnswer.toString()}');
     } else {
       StudentAnswer newAns = StudentAnswer(
           questionNo: questionIdx,
@@ -115,7 +115,7 @@ class WorksheetSolverCubit extends Cubit<WorksheetSolverState> {
       "student_id": _studentId,
       "data": dataString,
     };
-    print(finalString);
+    debugPrint(finalString.toString());
     var headers = {'Content-Type': 'application/json'};
     var uri = Uri.parse(
         'https://cnpewunqs5.execute-api.ap-south-1.amazonaws.com/dev/addworksheetsolveddatav2');
@@ -127,14 +127,14 @@ class WorksheetSolverCubit extends Cubit<WorksheetSolverState> {
         body: jsonEncode(finalString),
       );
       // {"worksheet_id":8085,"student_id":95,"data":"[{\"mcqtext\":{\"answer\":\"45\"}},{\"fillblank\":{\"answer\":\"67\"}}]"}
-      print(response.body);
-      print(response.contentLength);
-      print(response.headers);
+      debugPrint(response.body);
+      debugPrint(response.contentLength.toString());
+      debugPrint(response.headers.toString());
       if (response.statusCode == 200) {
         emit(state.copyWith(status: WorkSheetSolverStatus.loaded));
         // log(jsonString);
-        print('Response status code: ${response.statusCode}');
-        print(json.encode(finalString));
+        debugPrint('Response status code: ${response.statusCode}');
+        debugPrint(json.encode(finalString));
         if (lastQuestion) {
           await setStudentWorksheetStatus();
         }
@@ -169,13 +169,13 @@ class WorksheetSolverCubit extends Cubit<WorksheetSolverState> {
       http.StreamedResponse response = await request.send();
 
       if (response.statusCode == 200) {
-        print(await response.stream.bytesToString());
+        debugPrint(await response.stream.bytesToString());
       } else {
-        print(response.reasonPhrase);
+        debugPrint(response.reasonPhrase);
       }
     } catch (e) {
       // Handle exceptions here
-      print('Error: $e');
+      debugPrint('Error: $e');
     }
   }
 
@@ -194,7 +194,7 @@ class WorksheetSolverCubit extends Cubit<WorksheetSolverState> {
 
       if (response.statusCode == 200) {
         var responseString = await response.stream.bytesToString();
-        print(responseString);
+        debugPrint(responseString);
         if (responseString == 'null') {
           return [];
         }
@@ -272,7 +272,7 @@ class WorksheetSolverCubit extends Cubit<WorksheetSolverState> {
 
             return StudentAnswer.fromJson(entry.key.toString(), entry.value);
           }).toList();
-          print('studentAnsSheet: ${jsonEncode(studentAnswersList)}');
+          debugPrint('studentAnsSheet: ${jsonEncode(studentAnswersList)}');
 
           // Sorting the list based on questionNo
           studentAnswersList

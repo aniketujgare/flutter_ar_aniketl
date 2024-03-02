@@ -1,4 +1,4 @@
-package com.example.flutter_ar
+package com.smartxr.kidsv2
 
 import io.flutter.embedding.android.FlutterActivity
 

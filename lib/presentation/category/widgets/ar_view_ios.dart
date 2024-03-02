@@ -1,14 +1,11 @@
 import 'dart:io';
 
 import 'package:arkit_plugin/arkit_plugin.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:size_config/size_config.dart';
-import 'package:vector_math/vector_math.dart';
-import 'package:vector_math/vector_math_64.dart' as vector;
-import 'package:collection/collection.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:size_config/size_config.dart';
+import 'package:vector_math/vector_math_64.dart' as vector;
 
 class ARViewIOS extends StatefulWidget {
   final String modelUrl;
@@ -100,14 +97,14 @@ class ARViewIOSState extends State<ARViewIOS> {
     if (node != null) {
       controller.remove(node!.name);
     }
-    print(widget.modelUrl);
+    debugPrint(widget.modelUrl);
     arkitController.getCameraEulerAngles().then((rotationVector) async {
       node = ARKitGltfNode(
         assetType: AssetType.documents,
         // Box model from
         // https://github.com/KhronosGroup/glTF-Sample-Models/raw/master/2.0/Box/glTF-Binary/Box.glb
         url:
-            'file:///data/user/0/com.example.flutter_ar/app_flutter/assets/${widget.imageFileName}.glb',
+            'file:///data/user/0/com.smartxr.kidsv2/app_flutter/assets/${widget.imageFileName}.glb',
         eulerAngles: vector.Vector3(rotationVector.y, 0,
             0), //And here is the line of code you are looking for
 
@@ -141,7 +138,7 @@ class ARViewIOSState extends State<ARViewIOS> {
   }
 
   _rotateModel() {
-    print(node?.name);
+    debugPrint(node?.name);
     final rotation = vector.Vector3.zero() + vector.Vector3(_value, 0, 0);
     node?.eulerAngles = rotation;
     debugPrint('rotation ${rotation}');
@@ -173,10 +170,10 @@ Future<File> _downloadFile(String url) async {
     final filePath = '${dir.path}/${url.split("/").last}';
     await Dio().download(url, filePath);
     final file = File(filePath);
-    print('Download completed!! path = $filePath');
+    debugPrint('Download completed!! path = $filePath');
     return file;
   } catch (e) {
-    print('Caught an exception: $e');
+    debugPrint('Caught an exception: $e');
     rethrow;
   }
 }

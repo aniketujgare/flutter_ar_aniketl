@@ -83,7 +83,7 @@ class _FillInTheBlankQLessonState extends State<FillInTheBlankQLesson> {
 
   void processImage(String imgPath, int textFiledIndex) async {
     final recognizedText = await _recognizer.processImage(imgPath);
-    print('recognized Text $recognizedText');
+    debugPrint('recognized Text $recognizedText');
     setState(() {
       _response = RecognitionResponse(
         imgPath: imgPath,
@@ -96,7 +96,7 @@ class _FillInTheBlankQLessonState extends State<FillInTheBlankQLesson> {
       // multiLineText = multiLineText.substring(1, multiLineText.length - 1);
       multiLineText = multiLineText.substring(1, multiLineText.length - 1);
 
-      print('multiline text: ' + multiLineText);
+      debugPrint('multiline text: ' + multiLineText);
       textControllers[textFiledIndex].text = multiLineText;
       // context
       //     .read<WorksheetSolverCubit>()
@@ -193,7 +193,7 @@ class _FillInTheBlankQLessonState extends State<FillInTheBlankQLesson> {
                                 }
                               },
                               onEditingComplete: () {
-                                print('complete');
+                                debugPrint('complete');
                                 FocusScope.of(context)
                                     .requestFocus(FocusNode());
                               },

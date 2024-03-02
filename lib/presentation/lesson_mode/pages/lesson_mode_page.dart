@@ -77,7 +77,7 @@ class _LessonModePageState extends State<LessonModePage> {
                       context.read<LessonModeCubit>().state.currentQuestion;
                   bool isLastQuestion = currQuestionIdx ==
                       (context.read<LessonModeCubit>().state.lesson.length - 1);
-                  print('is last index: $isLastQuestion');
+                  debugPrint('is last index: $isLastQuestion');
                   // context.read<LessonModeCubit>().answerSubmit(false);
                 },
                 icon: RotatedBox(
@@ -120,7 +120,7 @@ class _LessonModePageState extends State<LessonModePage> {
 }
 
 Widget getQuestion(LessonModeState state, int i) {
-  print(jsonEncode(state.lesson[i]));
+  debugPrint(jsonEncode(state.lesson[i]));
   if (state.lesson[i].youtubeVideo != null) {
     return YoutubeVideoLesson(ytUrl: state.lesson[i].youtubeVideo!.videoUrl);
   } else if (state.lesson[i].threed != null) {
@@ -279,7 +279,7 @@ Future<void> _launchUrl(String url) async {
 //   //       .answer
 //   //       .answer;
 //   //   if (markedAnswer != null) {
-//   //     print('markedAnswer: $i$markedAnswer');
+//   //     debugPrint('markedAnswer: $i$markedAnswer');
 //   //   }
 //   //   switch (state.questions[i].questionType) {
 //   //     case QuestionType.mcqText:
@@ -468,7 +468,7 @@ Future<void> _launchUrl(String url) async {
 //                                 .questions
 //                                 .length -
 //                             1);
-//                     print('is last index: $isLastQuestion');
+//                     debugPrint('is last index: $isLastQuestion');
 //                     context.read<WorksheetSolverCubit>().answerSubmit(false);
 //                   },
 //                   icon: RotatedBox(

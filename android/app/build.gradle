@@ -2,6 +2,7 @@ plugins {
     id "com.android.application" 
     id "kotlin-android"
     id "dev.flutter.flutter-gradle-plugin"
+    id 'com.google.gms.google-services'
 }
 
 // def keystoreProperties = new Properties()
@@ -33,7 +34,7 @@ def keystoreProperties = new Properties()
       keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
   }
 android {
-    namespace "com.example.flutter_ar"
+    namespace "com.smartxr.kidsv2"
     compileSdkVersion 34
     ndkVersion "26.1.10909125" //flutter.ndkVersion
  packagingOptions {
@@ -104,7 +105,7 @@ dependencies {
     // implementation 'com.google.ar.sceneform:assets:1.15.0'
     // implementation 'com.google.ar:core:1.8.0'
      // Import the BoM for the Firebase platform
-    implementation(platform("com.google.firebase:firebase-bom:32.7.0"))
+    implementation platform('com.google.firebase:firebase-bom:32.7.3')
 
     // Add the dependency for the Firebase Authentication library
     // When using the BoM, you don't specify versions in Firebase library dependencies

@@ -1,12 +1,14 @@
 import 'dart:convert';
 
-import 'package:bloc/bloc.dart';
-import 'package:flutter_ar/presentation/lesson_mode/data/model/lesson_model.dart';
+import 'package:flutter/foundation.dart' show debugPrint;
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:http/http.dart' as http;
 
-part 'lesson_mode_state.dart';
+import '../../data/model/lesson_model.dart';
+
 part 'lesson_mode_cubit.freezed.dart';
+part 'lesson_mode_state.dart';
 
 class LessonModeCubit extends Cubit<LessonModeState> {
   LessonModeCubit() : super(const LessonModeState.initial());
@@ -54,14 +56,14 @@ class LessonModeCubit extends Cubit<LessonModeState> {
         var responseData = await response.stream.bytesToString();
         List<LessonModeModel> parsedData =
             lessonModeModelFromJson(responseData);
-        print(parsedData); // Use the parsed data as needed
+        debugPrint(parsedData.toString()); // Use the parsed data as needed
         return parsedData;
       } else {
-        print('Error: ${response.reasonPhrase}');
+        debugPrint('Error: ${response.reasonPhrase}');
         return []; // Return an empty list in case of error
       }
     } catch (e) {
-      print('Exception occurred: $e');
+      debugPrint('Exception occurred: $e');
       return []; // Return an empty list in case of exception
     }
   }

@@ -213,7 +213,7 @@ class LoginScreenState extends State<LoginScreen>
                                         content: Text("Wrong OTP entered")));
                               }
                               if (state.status == LoginStatus.success) {
-                                print('success state');
+                                debugPrint('success state');
                                 Restart.restartApp();
                               }
                             },

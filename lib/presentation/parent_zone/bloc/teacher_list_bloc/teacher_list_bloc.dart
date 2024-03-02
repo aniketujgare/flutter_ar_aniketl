@@ -4,6 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter_ar/domain/repositories/authentication_repository.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter/foundation.dart' show debugPrint;
 
 import '../../../../data/models/student_profile_model.dart';
 import '../../../../data/models/teacher_message.dart';
@@ -27,7 +28,7 @@ class TeacherListBloc extends Bloc<TeacherListEvent, TeacherListState> {
       List<TeacherMessageModel> teacherMessages = [];
       if (teachers != null) {
         for (var teacher in teachers) {
-          print('here');
+          debugPrint('here');
           List<TeacherMessageModel>? tMessages =
               await _getTeachersMessages(teacher.teacherUserId.toString());
           if (tMessages != null && tMessages.isNotEmpty) {
@@ -46,7 +47,7 @@ class TeacherListBloc extends Bloc<TeacherListEvent, TeacherListState> {
           teacherUserId: '',
           time: '',
           type: '');
-      print('Teacher Messages: ${teacherMessages.length}');
+      debugPrint('Teacher Messages: ${teacherMessages.length}');
       emit(state.copyWith(
           status: TeacherListStatus.loaded,
           teachersList: teachers!,
@@ -69,7 +70,8 @@ class TeacherListBloc extends Bloc<TeacherListEvent, TeacherListState> {
     if (response.statusCode == 200) {
       return teacherMessageModelFromJson(response.body);
     } else {
-      print('Failed to load messages. Status code: ${response.statusCode}');
+      debugPrint(
+          'Failed to load messages. Status code: ${response.statusCode}');
     }
   }
 
@@ -103,7 +105,8 @@ class TeacherListBloc extends Bloc<TeacherListEvent, TeacherListState> {
 
       return teacherByScIdandStandId;
     } else {
-      print('Failed to load categories. Status code: ${response.statusCode}');
+      debugPrint(
+          'Failed to load categories. Status code: ${response.statusCode}');
     }
   }
 
@@ -115,7 +118,7 @@ class TeacherListBloc extends Bloc<TeacherListEvent, TeacherListState> {
           await http.post(url, body: jsonEncode({"mobno": "$subjectId"}));
       if (response.statusCode == 200) {
         String subjectName = jsonDecode(response.body);
-        print(subjectName);
+        debugPrint(subjectName);
         return subjectName;
       } else {
         // If the server did not return a 200 OK response,
@@ -124,7 +127,7 @@ class TeacherListBloc extends Bloc<TeacherListEvent, TeacherListState> {
       }
     } catch (e) {
       // Handle errors here
-      print('Error in getParentId: $e');
+      debugPrint('Error in getParentId: $e');
       // You might want to rethrow the exception or return a default value here
       throw Exception('Failed to get parentId');
     }

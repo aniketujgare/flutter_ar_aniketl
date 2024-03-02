@@ -93,13 +93,13 @@ class _LoginPage1MobileNumberState extends State<LoginPage1MobileNumber> {
                         }
                         if (value.isNotEmpty) {
                           if (RegExp(r'^[0-9]+$').hasMatch(value)) {
-                            print('matched');
+                            debugPrint('matched');
                             mobileNumberController.text = value;
                             context.read<LoginValidationBloc>().add(
                                 PhoneNumberChanged(
                                     phoneNumber: mobileNumberController.text));
                           } else {
-                            print('not matched');
+                            debugPrint('not matched');
                             mobileNumberController.text =
                                 value.substring(0, value.length - 1);
                             context.read<LoginValidationBloc>().add(
@@ -144,7 +144,7 @@ class _LoginPage1MobileNumberState extends State<LoginPage1MobileNumber> {
                 textInputType: TextInputType.phone,
                 onChanged: (value) {
                   mobNo = value;
-                  print(value);
+                  debugPrint(value);
                   context
                       .read<LoginValidationBloc>()
                       .add(PhoneNumberChanged(phoneNumber: value));
@@ -163,7 +163,7 @@ class _LoginPage1MobileNumberState extends State<LoginPage1MobileNumber> {
             onPressed: () async {
               // var kidsAppBox = await Hive.openBox("kidsApp");
               // var isLoggedIn = kidsAppBox.put('isLoggedIn', false);
-              // print('isLoggedIn, $isLoggedIn');
+              // debugPrint('isLoggedIn, $isLoggedIn');
 
               FocusScope.of(context).unfocus();
               context
@@ -179,7 +179,7 @@ class _LoginPage1MobileNumberState extends State<LoginPage1MobileNumber> {
                 context.read<LoginBloc>().add(CheckMobileNoExists(
                     mobileNumber: mobileNumberController.text));
               }
-              print(mobNo);
+              debugPrint(mobNo);
             },
           ),
           SizedBox(
@@ -202,7 +202,7 @@ class _LoginPage1MobileNumberState extends State<LoginPage1MobileNumber> {
             onPressed: () async {
               // var kidsAppBox = await Hive.openBox("kidsApp");
               // var isLoggedIn = kidsAppBox.get('isLoggedIn');
-              // print('isLoggedIn, $isLoggedIn');
+              // debugPrint('isLoggedIn, $isLoggedIn');
 
               context.read<LoginBloc>().add(
                   const LoginEvent.updateStatus(status: LoginStatus.guest));

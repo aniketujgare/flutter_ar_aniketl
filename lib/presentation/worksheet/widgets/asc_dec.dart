@@ -101,7 +101,7 @@ class AscendingDecendingTese extends StatelessWidget {
                   4,
                   (index) => DragTarget<String>(
                     onWillAccept: (data) {
-                      print('accepted data:$data');
+                      debugPrint('accepted data:$data');
                       return data == 'red';
                     },
                     onAccept: (data) {

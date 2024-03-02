@@ -54,7 +54,7 @@ class _ArithmeticQuestionUIState extends State<ArithmeticQuestionUI> {
     _prepareData();
     //?
     //? Fill answers
-    print('markedAns: ${widget.markedAnswer}');
+    debugPrint('markedAns: ${widget.markedAnswer}');
     if (widget.markedAnswer != null) {
       String answerString = widget.markedAnswer['answer'];
       String carryString = widget.markedAnswer['carry'];
@@ -418,14 +418,14 @@ class _ArithmeticQuestionUIState extends State<ArithmeticQuestionUI> {
         carryTexts.add(element.text);
       }
     }
-    // print('answer fields:  ans-> ${ansTexts} carry-> $carryTexts');
+    // debugPrint('answer fields:  ans-> ${ansTexts} carry-> $carryTexts');
     if (ansTexts.length == noOfansFields) {
       // Store answer {answer: <String> answer, carry: <String> carry}
       String answer = '';
       ansTexts.forEach((ans) => answer += ans);
       String carry = '';
       carryControllers.forEach((carrContr) => carry += carrContr.text);
-      print('answer fields:  ans-> ${answer} carry-> $carry');
+      debugPrint('answer fields:  ans-> ${answer} carry-> $carry');
       context
           .read<WorksheetSolverCubit>()
           .setAnswer(widget.questionIndex, {'answer': answer, 'carry': carry});

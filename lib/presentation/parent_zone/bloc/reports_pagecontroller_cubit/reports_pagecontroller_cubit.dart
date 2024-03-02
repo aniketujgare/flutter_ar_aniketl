@@ -23,7 +23,7 @@ class ReportsPagecontrollerCubit extends Cubit<int> {
   ReportsPagecontrollerCubit() : super(0);
   int curridx = 0;
   void setPage(int pageIndex) {
-    print('pageIdx $pageIndex');
+    debugPrint('pageIdx $pageIndex');
     curridx = pageIndex;
     emit(curridx);
 

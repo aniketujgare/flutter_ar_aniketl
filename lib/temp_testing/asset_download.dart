@@ -110,8 +110,8 @@ class AssetDownloadState extends State<AssetDownload> {
     if (assetsDownloaded) {
       setState(() {
         message = 'Click in refresh button to force download';
-        print(message);
-        print(downloadAssetsController.assetsDir);
+        debugPrint(message);
+        debugPrint(downloadAssetsController.assetsDir);
       });
       return;
     }
@@ -135,7 +135,7 @@ class AssetDownloadState extends State<AssetDownload> {
           setState(() {
             downloaded = progressValue >= 100.0;
             message = 'Downloading - ${progressValue.toStringAsFixed(2)}';
-            print(message);
+            debugPrint(message);
 
             if (downloaded) {
               message =
@@ -145,7 +145,7 @@ class AssetDownloadState extends State<AssetDownload> {
         },
       );
     } on DownloadAssetsException catch (e) {
-      print(e.toString());
+      debugPrint(e.toString());
       setState(() {
         downloaded = false;
         message = 'Error: ${e.toString()}';
