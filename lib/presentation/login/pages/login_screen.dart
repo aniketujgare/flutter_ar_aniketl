@@ -205,7 +205,7 @@ class LoginScreenState extends State<LoginScreen>
                                         content: Text(state.errorMessage)));
                                 context.read<LoginBloc>().add(
                                     const LoginEvent.updateStatus(
-                                        status: LoginStatus.wrongOtp));
+                                        status: LoginStatus.phoneNo1));
                               }
                               if (state.status == LoginStatus.wrongOtp) {
                                 ScaffoldMessenger.of(context).showSnackBar(

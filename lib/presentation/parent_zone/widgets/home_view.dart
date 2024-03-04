@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ar/data/models/parent_details.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:size_config/size_config.dart';
 
@@ -31,6 +32,7 @@ class HomeView extends StatelessWidget {
                           (index) => Column(
                             children: [
                               ParentProfileCard(
+                                parentDetails: state.parentDetails[index],
                                 profileTitle:
                                     state.parentDetails[index].parentRelation,
                                 name: state.parentDetails[index].parentName,
@@ -205,23 +207,28 @@ class ParentProfileCard extends StatelessWidget {
   final String name;
   final String mobile;
   final String email;
+  final ParentDetails parentDetails;
   const ParentProfileCard({
     super.key,
     required this.profileTitle,
     required this.name,
     required this.mobile,
     required this.email,
+    required this.parentDetails,
   });
 
   @override
   Widget build(BuildContext context) {
-    Future<void> _showAlertDialog(String profileName) async {
+    Future<void> _showAlertDialog() async {
       return showDialog<void>(
         context: context,
         barrierDismissible: true,
         builder: (BuildContext context) {
           return Dialog(
-            child: EditParentDetailsBox(profileName),
+            child: EditParentDetailsBox(
+              profileTitle: profileTitle,
+              parentDetails: parentDetails,
+            ),
           );
         },
       );
@@ -260,7 +267,7 @@ class ParentProfileCard extends StatelessWidget {
                   height: 40.h,
                   width: 40.h,
                   child: IconButton(
-                      onPressed: () => _showAlertDialog(profileTitle),
+                      onPressed: () => _showAlertDialog(),
                       icon: Image.asset(
                         'assets/images/reusable_icons/edit.png',
                         fit: BoxFit.cover,

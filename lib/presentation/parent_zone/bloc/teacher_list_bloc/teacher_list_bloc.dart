@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:bloc/bloc.dart';
 import 'package:flutter_ar/domain/repositories/authentication_repository.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart' show debugPrint;
@@ -76,38 +76,50 @@ class TeacherListBloc extends Bloc<TeacherListEvent, TeacherListState> {
   }
 
   Future<List<TeacherModel>?> _getMessagesByTeacher() async {
-    StudentProfileModel? studentProfile =
-        await AuthenticationRepository().getStudentProfile();
-    if (studentProfile?.studentId == -1) {
-      return [];
-    }
-    var response = await http.post(
-      Uri.parse(
-          'https://cnpewunqs5.execute-api.ap-south-1.amazonaws.com/dev/getallteacherbyschool'),
-      body: jsonEncode({"school_id": "${studentProfile?.schoolId}"}),
-      headers: {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin":
-            "https://d3ag5oij4wsyi3.cloudfront.net/kidsappmodel/models",
-        "Access-Control-Allow-Methods": "*",
-        "Access-Control-Allow-Headers": "X-Requested-With"
-      },
-    );
-    if (response.statusCode == 200) {
-      List<TeacherModel> teachers = teacherModelFromJson(response.body);
-      List<TeacherModel> teacherByScIdandStandId = List.from(teachers);
+    try {
       StudentProfileModel? studentProfile =
           await AuthenticationRepository().getStudentProfile();
-      if (studentProfile != null) {
-        teacherByScIdandStandId.removeWhere(
-            (element) => element.standardId != studentProfile.standardId);
+      if (studentProfile?.studentId == -1) {
+        return []; // Return empty list if studentId is -1
       }
 
-      return teacherByScIdandStandId;
-    } else {
-      debugPrint(
-          'Failed to load categories. Status code: ${response.statusCode}');
+      var response = await http.post(
+        Uri.parse(
+            'https://cnpewunqs5.execute-api.ap-south-1.amazonaws.com/dev/getallteacherbyschool'),
+        body: jsonEncode({"school_id": "${studentProfile?.schoolId}"}),
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin":
+              "https://d3ag5oij4wsyi3.cloudfront.net/kidsappmodel/models",
+          "Access-Control-Allow-Methods": "*",
+          "Access-Control-Allow-Headers": "X-Requested-With"
+        },
+      );
+
+      if (response.statusCode == 200) {
+        if (jsonDecode(response.body) != 'error') {
+          List<TeacherModel> teachers = teacherModelFromJson(response.body);
+          List<TeacherModel> teacherByScIdandStandId = List.from(teachers);
+          StudentProfileModel? studentProfile =
+              await AuthenticationRepository().getStudentProfile();
+          if (studentProfile != null) {
+            teacherByScIdandStandId.removeWhere(
+                (element) => element.standardId != studentProfile.standardId);
+          }
+          return teacherByScIdandStandId;
+        } else {
+          debugPrint(
+              'Failed to load categories. Request Body ${response.body}');
+          return [];
+        }
+      } else {
+        debugPrint(
+            'Failed to load categories. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      debugPrint('Error: $e'); // Print error message
     }
+    return []; // Return null if any error occurs
   }
 
   Future<String> getSubjectName(int subjectId) async {

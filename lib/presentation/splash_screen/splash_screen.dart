@@ -328,7 +328,7 @@ class SplashScreenState extends State<SplashScreen>
             child: BlocBuilder<StudentProfileCubit, StudentProfileState>(
               builder: (context, state) {
                 return Text(
-                  'SmartXR School',
+                  state.studentProfileModel?.schoolName ?? "SmartXR School",
                   style: AppTextStyles.unitedRounded140w700
                       .copyWith(fontSize: 120.sp, color: AppColors.accentColor),
                 );

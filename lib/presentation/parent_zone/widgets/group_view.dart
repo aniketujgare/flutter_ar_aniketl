@@ -25,7 +25,7 @@ class GroupsView extends StatefulWidget {
 class _GroupsViewState extends State<GroupsView> {
   @override
   void initState() {
-    context.read<TeacherListBloc>().add(TeacherListEvent.load());
+    context.read<TeacherListBloc>().add(const TeacherListEvent.load());
     super.initState();
   }
 
@@ -33,6 +33,7 @@ class _GroupsViewState extends State<GroupsView> {
   Widget build(BuildContext context) {
     return BlocBuilder<TeacherListBloc, TeacherListState>(
       builder: (context, state) {
+        print('parentmode state: ${state.runtimeType}');
         switch (state.status) {
           case TeacherListStatus.loading:
             return const Center(
@@ -195,7 +196,7 @@ class GroupNotification extends StatelessWidget {
             child: FittedBox(
               fit: BoxFit.scaleDown,
               child: Padding(
-                padding: EdgeInsets.all(10),
+                padding: const EdgeInsets.all(10),
                 child: Text(
                   subject,
                   style: AppTextStyles.nunito115w700white,

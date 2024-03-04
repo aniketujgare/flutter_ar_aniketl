@@ -2,17 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_ar/core/util/reusable_widgets/reusable_button.dart';
 import 'package:flutter_ar/core/util/reusable_widgets/reusable_textfield.dart';
 import 'package:flutter_ar/core/util/styles.dart';
+import 'package:flutter_ar/data/models/parent_details.dart';
+import 'package:flutter_ar/presentation/parent_zone/bloc/parent_details_cubit/parent_details_cubit.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:size_config/size_config.dart';
-
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import '../../../core/util/device_type.dart';
 
 class EditParentDetailsBox extends StatelessWidget {
-  final String profileName;
-  const EditParentDetailsBox(
-    this.profileName, {
+  final String profileTitle;
+  final ParentDetails parentDetails;
+  EditParentDetailsBox({
     super.key,
+    required this.profileTitle,
+    required this.parentDetails,
   });
-
+  String updatedProfileName = '';
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -29,12 +35,13 @@ class EditParentDetailsBox extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              '$profileName\'s Profile',
+              '$profileTitle\'s Profile',
               style: AppTextStyles.nunito105w700Text.copyWith(fontSize: 120.sp),
             ),
             ReusableTextField(
+              onChanged: (value) => updatedProfileName = value,
               countryCodeVisible: false,
-              hintText: 'Enter $profileName\'s full name',
+              hintText: 'Enter $profileTitle\'s full name',
             ),
             Padding(
               padding: EdgeInsets.symmetric(
@@ -50,8 +57,18 @@ class EditParentDetailsBox extends StatelessWidget {
             ReusableButton(
               circularRadius: 30.h,
               fontSize: 100.sp,
-              padding: EdgeInsets.symmetric(horizontal: 26.wp),
-              onPressed: () {},
+              padding: EdgeInsets.symmetric(horizontal: 18.wp),
+              onPressed: () async {
+                //? Send data to Api
+
+                var newParent =
+                    parentDetails.copyWith(parentName: updatedProfileName);
+
+                await updateParentDetails(newParent);
+                if (context.mounted) {
+                  Navigator.of(context).pop();
+                }
+              },
               buttonColor: AppColors.submitGreenColor,
               text: 'Done',
               textColor: Colors.white,
@@ -60,5 +77,36 @@ class EditParentDetailsBox extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+Future<void> updateParentDetails(ParentDetails parentDetails) async {
+  var headers = {'Content-Type': 'application/json'};
+
+  try {
+    var request = http.Request(
+        'POST',
+        Uri.parse(
+            'https://cnpewunqs5.execute-api.ap-south-1.amazonaws.com/dev/updateparentdetails'));
+
+    request.body = json.encode({
+      "parent_name": parentDetails.parentName,
+      "parent_email": parentDetails.parentEmail,
+      "parent_relation": parentDetails.parentRelation,
+      "parent_id": parentDetails.parentId,
+    });
+
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200) {
+      print(await response.stream.bytesToString());
+      print(jsonEncode(parentDetails));
+    } else {
+      print('Request failed with status: ${response.statusCode}');
+    }
+  } catch (e) {
+    print('Error: $e');
   }
 }

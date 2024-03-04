@@ -2,6 +2,7 @@ import 'package:connection_notifier/connection_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_ar/core/reusable_widgets/network_disconnected.dart';
+import 'package:flutter_ar/core/student_profile_cubit/student_profile_cubit.dart';
 import 'package:flutter_ar/presentation/worksheet/widgets/worksheet_submitted_box.dart';
 import 'package:flutter_ar/temp_testing/hive_test.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -87,21 +88,27 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
           const Spacer(),
           Row(
             children: [
-              Stack(
-                alignment: Alignment.centerRight,
-                clipBehavior: Clip.hardEdge,
-                children: [
-                  Image.asset(
-                    'assets/images/PNG Icons/esr.001.png', // User Icon
-                    fit: BoxFit.contain,
-                  ),
-                  SizedBox(
-                    width: DeviceType().isMobile ? 15.wp : 9.wp,
-                    child: FittedBox(
-                      fit: BoxFit.scaleDown,
+              SizedBox(
+                width: DeviceType().isMobile ? 15.wp : 17.wp,
+                child: Stack(
+                  clipBehavior: Clip.hardEdge,
+                  alignment: Alignment.centerRight,
+                  children: [
+                    Image.asset(
+                      'assets/images/PNG Icons/esr.001.png', // User Icon
+                      fit: BoxFit.contain,
+                    ),
+                    Positioned(
+                      right: 12.h,
                       child: Text(
-                        '999',
-                        textAlign: TextAlign.center,
+                        context
+                                .read<StudentProfileCubit>()
+                                .state
+                                .studentProfileModel
+                                ?.coins
+                                .toString() ??
+                            '999',
+                        textAlign: TextAlign.right,
                         style: DeviceType().isMobile
                             ? AppTextStyles.nunito100w700white
                             : AppTextStyles.nunito100w700white.copyWith(
@@ -109,25 +116,31 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
                                     MediaQuery.of(context).size.aspectRatio),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
               2.horizontalSpacerPercent,
-              Stack(
-                alignment: Alignment.centerRight,
-                clipBehavior: Clip.hardEdge,
-                children: [
-                  Image.asset(
-                    'assets/images/PNG Icons/esr.002.png', // User Icon
-                    fit: BoxFit.contain,
-                  ),
-                  SizedBox(
-                    width: DeviceType().isMobile ? 15.wp : 9.wp,
-                    child: FittedBox(
-                      fit: BoxFit.scaleDown,
+              SizedBox(
+                width: DeviceType().isMobile ? 15.wp : 17.wp,
+                child: Stack(
+                  clipBehavior: Clip.hardEdge,
+                  alignment: Alignment.centerRight,
+                  children: [
+                    Image.asset(
+                      'assets/images/PNG Icons/esr.002.png', // User Icon
+                      fit: BoxFit.contain,
+                    ),
+                    Positioned(
+                      right: 12.h,
                       child: Text(
-                        '999',
-                        textAlign: TextAlign.center,
+                        context
+                                .read<StudentProfileCubit>()
+                                .state
+                                .studentProfileModel
+                                ?.gems
+                                .toString() ??
+                            '999',
+                        textAlign: TextAlign.right,
                         style: DeviceType().isMobile
                             ? AppTextStyles.nunito100w700white
                             : AppTextStyles.nunito100w700white.copyWith(
@@ -135,8 +148,8 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
                                     MediaQuery.of(context).size.aspectRatio),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ],
           ),

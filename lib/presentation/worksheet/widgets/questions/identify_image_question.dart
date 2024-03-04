@@ -109,8 +109,8 @@ class IdentifyImageQuestion extends StatelessWidget {
                   5.horizontalSpacerPercent,
                   GestureDetector(
                     onTap: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => CameraFeature()));
+                      // Navigator.of(context).push(MaterialPageRoute(
+                      //     builder: (context) => CameraFeature()));
                     },
                     child: SizedBox(
                         width: 55,

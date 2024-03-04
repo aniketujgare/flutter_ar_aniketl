@@ -45,6 +45,7 @@ import 'presentation/worksheet/bloc/worksheet_page_cubit/worksheet_page_cubit.da
 import 'presentation/worksheet/bloc/worksheet_solver_cubit/worksheet_solver_cubit.dart';
 import 'temp_testing/html_view_screen.dart';
 import 'temp_testing/screenshot_test.dart';
+import 'package:firebase_app_check/firebase_app_check.dart';
 
 final authenticationRepository = AuthenticationRepository();
 // void main() async {
@@ -61,6 +62,11 @@ void main() async {
   await ConnectionNotifierTools.initialize();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
+  );
+  await FirebaseAppCheck.instance.activate(
+    // Set appleProvider to `AppleProvider.debug`
+    appleProvider: AppleProvider.debug,
+    androidProvider: AndroidProvider.debug,
   );
   await Hive.initFlutter();
   // Registering the adapter

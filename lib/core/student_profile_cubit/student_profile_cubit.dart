@@ -48,7 +48,7 @@ class StudentProfileCubit extends Cubit<StudentProfileState> {
         String grade = jsonMap[0].first;
         String division = (jsonMap.last as List<dynamic>).firstWhere(
             (element) => element[0] == 0,
-            orElse: () => ['0', ''])[1];
+            orElse: () => ['0', '-'])[1];
         // debugPrint('Grade: $grade');
         // debugPrint('Division: $division');
         return {'grade': grade.split(' ').last, 'division': division};

@@ -91,7 +91,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       } else {
         add(const LoginEvent.error(
             errorMessage: 'Your mobile is not registered!'));
-        debugPrint('phone number not exists');
+        debugPrint('Your mobile is not registered!');
       }
     } catch (e) {
       add(LoginEvent.error(errorMessage: '$e'));
@@ -103,12 +103,14 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     try {
       emit(state.copyWith(
           status: LoginStatus.loading, mobileNumber: event.mobileNumber));
-
+      await _firebaseAuth.setSettings(
+          appVerificationDisabledForTesting: true); // <-- here is the magic
       await _firebaseAuth.verifyPhoneNumber(
         phoneNumber: '+91${event.mobileNumber}',
         verificationCompleted: (PhoneAuthCredential credential) {},
         verificationFailed: (FirebaseAuthException e) {
-          add(const LoginEvent.error(errorMessage: 'Verification Failed!'));
+          add(LoginEvent.error(
+              errorMessage: 'Verification Failed!with error ${e.toString()}'));
 
           debugPrint(
               'verificationFailed for mob no: ${event.mobileNumber} with error ${e.toString()}');

@@ -21,4 +21,5 @@ class LoginEvent with _$LoginEvent {
       {@Default('') String parentsName,
       @Default('') String mobileNumber}) = GuestLogin;
   const factory LoginEvent.resendOtp() = ResendOTP;
+  const factory LoginEvent.loginPage() = ResendOTP;
 }

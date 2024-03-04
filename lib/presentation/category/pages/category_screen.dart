@@ -47,6 +47,7 @@ class CategoryScreen extends StatelessWidget {
                           children: [
                             SizedBox(
                               width: 75.h,
+                              height: 75.h,
                               child: Image.asset(
                                 'assets/ui/image 40.png', // User Icon
                                 fit: BoxFit.contain,
@@ -62,14 +63,12 @@ class CategoryScreen extends StatelessWidget {
                                 child: Image.asset(
                                   'assets/ui/Group.png', // right arrow
                                   fit: BoxFit.scaleDown,
-                                  height: 45.h,
-                                  width: 45.h,
                                 ),
                               ),
                             ),
                             SizedBox(
-                              height: 45.h,
-                              width: 45.h,
+                              height: 75.h,
+                              width: 75.h,
                             ),
                           ],
                         ),
@@ -78,8 +77,8 @@ class CategoryScreen extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             SizedBox(
-                              height: 45.h,
-                              width: 45.h,
+                              height: 75.h,
+                              width: 75.h,
                             ),
                             GestureDetector(
                               onTap: () => context
@@ -93,8 +92,6 @@ class CategoryScreen extends StatelessWidget {
                                   child: Image.asset(
                                     'assets/ui/Group.png', // right arrow
                                     fit: BoxFit.scaleDown,
-                                    height: 45.h,
-                                    width: 45.h,
                                   ),
                                 ),
                               ),
@@ -105,6 +102,7 @@ class CategoryScreen extends StatelessWidget {
                               },
                               child: SizedBox(
                                 width: 75.h,
+                                height: 75.h,
                                 child: Image.asset(
                                   'assets/ui/Custom Buttons.002 1.png', // Home Icon
                                   fit: BoxFit.contain,

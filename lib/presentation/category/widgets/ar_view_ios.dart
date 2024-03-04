@@ -25,7 +25,7 @@ class ARViewIOSState extends State<ARViewIOS> {
 
   @override
   void dispose() {
-    arkitController.dispose();
+    // arkitController.dispose();
     super.dispose();
   }
 
