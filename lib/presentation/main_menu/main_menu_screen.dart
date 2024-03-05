@@ -89,7 +89,7 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
           Row(
             children: [
               SizedBox(
-                width: DeviceType().isMobile ? 15.wp : 17.wp,
+                width: DeviceType().isMobile ? 25.wp : 17.wp,
                 child: Stack(
                   clipBehavior: Clip.hardEdge,
                   alignment: Alignment.centerRight,
@@ -121,7 +121,7 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
               ),
               2.horizontalSpacerPercent,
               SizedBox(
-                width: DeviceType().isMobile ? 15.wp : 17.wp,
+                width: DeviceType().isMobile ? 25.wp : 17.wp,
                 child: Stack(
                   clipBehavior: Clip.hardEdge,
                   alignment: Alignment.centerRight,

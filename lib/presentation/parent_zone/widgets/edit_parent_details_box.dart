@@ -13,10 +13,12 @@ import '../../../core/util/device_type.dart';
 class EditParentDetailsBox extends StatelessWidget {
   final String profileTitle;
   final ParentDetails parentDetails;
+  final BuildContext oldContext;
   EditParentDetailsBox({
     super.key,
     required this.profileTitle,
     required this.parentDetails,
+    required this.oldContext,
   });
   String updatedProfileName = '';
   @override
@@ -58,13 +60,15 @@ class EditParentDetailsBox extends StatelessWidget {
               circularRadius: 30.h,
               fontSize: 100.sp,
               padding: EdgeInsets.symmetric(horizontal: 18.wp),
-              onPressed: () async {
+              onPressed: () {
                 //? Send data to Api
 
                 var newParent =
                     parentDetails.copyWith(parentName: updatedProfileName);
-
-                await updateParentDetails(newParent);
+                oldContext
+                    .read<ParentDetailsCubit>()
+                    .updateParentDeatail(newParent);
+                print('updated');
                 if (context.mounted) {
                   Navigator.of(context).pop();
                 }
@@ -77,36 +81,5 @@ class EditParentDetailsBox extends StatelessWidget {
         ),
       ),
     );
-  }
-}
-
-Future<void> updateParentDetails(ParentDetails parentDetails) async {
-  var headers = {'Content-Type': 'application/json'};
-
-  try {
-    var request = http.Request(
-        'POST',
-        Uri.parse(
-            'https://cnpewunqs5.execute-api.ap-south-1.amazonaws.com/dev/updateparentdetails'));
-
-    request.body = json.encode({
-      "parent_name": parentDetails.parentName,
-      "parent_email": parentDetails.parentEmail,
-      "parent_relation": parentDetails.parentRelation,
-      "parent_id": parentDetails.parentId,
-    });
-
-    request.headers.addAll(headers);
-
-    http.StreamedResponse response = await request.send();
-
-    if (response.statusCode == 200) {
-      print(await response.stream.bytesToString());
-      print(jsonEncode(parentDetails));
-    } else {
-      print('Request failed with status: ${response.statusCode}');
-    }
-  } catch (e) {
-    print('Error: $e');
   }
 }

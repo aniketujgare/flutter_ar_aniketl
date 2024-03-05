@@ -32,6 +32,7 @@ class HomeView extends StatelessWidget {
                           (index) => Column(
                             children: [
                               ParentProfileCard(
+                                oldContext: context,
                                 parentDetails: state.parentDetails[index],
                                 profileTitle:
                                     state.parentDetails[index].parentRelation,
@@ -208,6 +209,7 @@ class ParentProfileCard extends StatelessWidget {
   final String mobile;
   final String email;
   final ParentDetails parentDetails;
+  final BuildContext oldContext;
   const ParentProfileCard({
     super.key,
     required this.profileTitle,
@@ -215,6 +217,7 @@ class ParentProfileCard extends StatelessWidget {
     required this.mobile,
     required this.email,
     required this.parentDetails,
+    required this.oldContext,
   });
 
   @override
@@ -223,11 +226,12 @@ class ParentProfileCard extends StatelessWidget {
       return showDialog<void>(
         context: context,
         barrierDismissible: true,
-        builder: (BuildContext context) {
+        builder: (BuildContext _) {
           return Dialog(
             child: EditParentDetailsBox(
               profileTitle: profileTitle,
               parentDetails: parentDetails,
+              oldContext: oldContext,
             ),
           );
         },

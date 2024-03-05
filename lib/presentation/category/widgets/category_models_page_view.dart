@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:connection_notifier/connection_notifier.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +24,12 @@ class CategoryModelsPageView extends StatefulWidget {
 }
 
 class _CategoryModelsPageViewState extends State<CategoryModelsPageView> {
+  var isClicked = false;
+  late Timer _timer;
+  _startTimer() {
+    _timer = Timer(const Duration(milliseconds: 400), () => isClicked = false);
+  }
+
   @override
   void initState() {
     context.read<ModelsPageControllerCubit>().setmaxLength(
@@ -111,9 +119,16 @@ class _CategoryModelsPageViewState extends State<CategoryModelsPageView> {
                                     .activePageIdx !=
                                 0)
                               GestureDetector(
-                                onTap: () => context
-                                    .read<ModelsPageControllerCubit>()
-                                    .setPreviousPage(),
+                                onTap: () {
+                                  if (isClicked == false) {
+                                    _startTimer();
+                                    isClicked = true;
+                                    // Your other code which you want to execute on click.
+                                    context
+                                        .read<ModelsPageControllerCubit>()
+                                        .setPreviousPage();
+                                  }
+                                },
                                 child: SizedBox(
                                   height: 45.h,
                                   width: 45.h,
@@ -147,9 +162,16 @@ class _CategoryModelsPageViewState extends State<CategoryModelsPageView> {
                                     .read<ModelsPageControllerCubit>()
                                     .maxLen)
                               GestureDetector(
-                                onTap: () => context
-                                    .read<ModelsPageControllerCubit>()
-                                    .setNextPage(),
+                                onTap: () {
+                                  if (isClicked == false) {
+                                    _startTimer();
+                                    isClicked = true;
+                                    // Your other code which you want to execute on click.
+                                    context
+                                        .read<ModelsPageControllerCubit>()
+                                        .setNextPage();
+                                  }
+                                },
                                 child: RotatedBox(
                                   quarterTurns: 2,
                                   child: SizedBox(
@@ -219,11 +241,11 @@ class _CategoryModelsPageViewState extends State<CategoryModelsPageView> {
           return colorIndex < arModels.length
               ? BuildModelContainer(
                   image:
-                      'https://d3ag5oij4wsyi3.cloudfront.net/kidsappmodellist/images/${arModels[colorIndex].modelId}.png',
+                      'https://d3ag5oij4wsyi3.cloudfront.net/classroom_app/images/${arModels[colorIndex].modelId}.png',
                   imageFileName: '${arModels[colorIndex].modelId}',
                   name: arModels[colorIndex].modelName,
                   model:
-                      'https://d3ag5oij4wsyi3.cloudfront.net/kidsappmodellist/models/${arModels[colorIndex].modelId}.glb',
+                      'https://d3ag5oij4wsyi3.cloudfront.net/classroom_app/models/${arModels[colorIndex].modelId}.glb',
                 )
               : const Expanded(
                   child: EmptyBox(),
@@ -365,6 +387,14 @@ class BuildModelContainer extends StatelessWidget {
                           ),
                         );
                       },
+                      errorWidget: (context, url, error) => Center(
+                        child: Icon(
+                          Icons.error,
+                          color: AppColors
+                              .redMessageSharedFileContainerColor, // Color of the error icon
+                          size: 50,
+                        ),
+                      ),
                     ),
                   ),
                   SizedBox(

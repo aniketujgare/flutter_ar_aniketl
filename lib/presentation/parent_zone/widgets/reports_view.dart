@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ar/core/util/constants.dart';
 import 'package:flutter_ar/core/util/device_type.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:size_config/size_config.dart';
 
 import '../bloc/reports_pagecontroller_cubit/reports_pagecontroller_cubit.dart';
 import 'reports_pages/cognition.dart';
@@ -47,10 +49,10 @@ class _ReportsViewState extends State<ReportsView> {
         BlocBuilder<ReportsPagecontrollerCubit, int>(
           builder: (context, state) {
             return Positioned(
-              bottom: 0,
+              bottom: 10.h,
               left: 0,
               right: 0,
-              height: DeviceType().isMobile ? 90 : 105,
+              height: DeviceType().isMobile ? 90 : 110.h,
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,

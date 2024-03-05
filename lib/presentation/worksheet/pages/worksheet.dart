@@ -103,7 +103,7 @@ class _WorksheetViewState extends State<WorksheetView> {
                         if (state.worksheets.isEmpty) {
                           return Center(
                             child: Text(
-                              'No Worksheets Available at the Moment',
+                              'No worksheet have been submitted',
                               style: AppTextStyles.nunito105w700Text,
                             ),
                           );

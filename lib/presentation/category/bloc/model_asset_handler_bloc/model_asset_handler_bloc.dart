@@ -12,17 +12,26 @@ class ModelAssetHandlerBloc
     extends Bloc<ModelAssetHandlerEvent, ModelAssetHandlerState> {
   DownloadAssetsController downloadAssetsController =
       DownloadAssetsController();
+
   ModelAssetHandlerBloc() : super(const Initial()) {
-    on<ModelAssetHandlerEvent>((events, emit) async {
-      await downloadAssetsController.init();
-      await events.map(
-        load: (event) async => await _loadAssets(event, emit),
-        retry: (event) async => await _retryLoadAssets(event, emit),
-      );
-    });
+    _initialize();
+    on<ModelAssetHandlerEvent>(_handleEvent);
+  }
+  Future<void> _initialize() async {
+    await downloadAssetsController.init();
+    on<ModelAssetHandlerEvent>(_handleEvent);
   }
 
-  _loadAssets(
+  Future<void> _handleEvent(ModelAssetHandlerEvent event,
+      Emitter<ModelAssetHandlerState> emit) async {
+    if (event is LoadModelAsset) {
+      await _loadAssets(event, emit);
+    } else if (event is RetryLoadModelAsset) {
+      _retryLoadAssets(event, emit);
+    }
+  }
+
+  Future<void> _loadAssets(
       LoadModelAsset event, Emitter<ModelAssetHandlerState> emit) async {
     emit(state.copyWith(status: ModelAssetHandlerStatus.loading));
     bool isExists = await checkModelExists(event.modelName);
@@ -30,7 +39,7 @@ class ModelAssetHandlerBloc
       emit(state.copyWith(
           status: ModelAssetHandlerStatus.loaded, modelPath: event.modelName));
     } else {
-      _downloadAssets(event.modelName);
+      await _downloadAssets(event.modelName, emit);
     }
   }
 
@@ -40,41 +49,20 @@ class ModelAssetHandlerBloc
     return isExists;
   }
 
-  Future _downloadAssets(String modelName) async {
+  Future<void> _downloadAssets(
+      String modelName, Emitter<ModelAssetHandlerState> emit) async {
+    emit(state.copyWith(status: ModelAssetHandlerStatus.downloading));
     try {
-      //  double value = 0.0;
       await downloadAssetsController.startDownload(
-        // onCancel: () {
-        //   message = 'Cancelled by user';
-        //   setState(() {});
-        // },
         assetsUrls: [
-          // 'https://d3ag5oij4wsyi3.cloudfront.net/kidsappmodellist/images/$modelName.png',
-          'https://d3ag5oij4wsyi3.cloudfront.net/kidsappmodellist/models/$modelName.glb',
-          // widget.modelUrl,
-          //  'https://d3ag5oij4wsyi3.cloudfront.net/kidsappmodellist/images/${widget.modelName}.glb'
-          // 'https://github.com/edjostenes/download_assets/raw/main/download/image_1.png',
-          // 'https://github.com/edjostenes/download_assets/raw/main/download/assets.zip',
-          // 'https://github.com/edjostenes/download_assets/raw/main/download/image_2.png',
-          // 'https://github.com/edjostenes/download_assets/raw/main/download/image_3.png',
+          'https://d3ag5oij4wsyi3.cloudfront.net/classroom_app/models/$modelName.glb',
         ],
         onProgress: (progressValue) {
-          // downloaded = false;
-          // value = progressValue;
+          print('progress value:$progressValue');
           emit(state.copyWith(
               status: ModelAssetHandlerStatus.downloading,
               progressValue:
                   'Downloading - ${progressValue.toStringAsFixed(2)}'));
-          // setState(() {
-          //   downloaded = progressValue >= 100.0;
-          //   message = 'Downloading - ${progressValue.toStringAsFixed(2)}';
-          //   print(message);
-
-          //   if (downloaded) {
-          //     message =
-          //         'Download completed\nClick in refresh button to force download';
-          //   }
-          // });
           if (progressValue >= 100.0) {
             emit(state.copyWith(
                 status: ModelAssetHandlerStatus.loaded, modelPath: modelName));
@@ -82,20 +70,15 @@ class ModelAssetHandlerBloc
         },
       );
     } on DownloadAssetsException catch (e) {
-      // print(e.toString());
-      // setState(() {
-      //   downloaded = false;
-      //   message = 'Error: ${e.toString()}';
-      // });
       emit(state.copyWith(
           status: ModelAssetHandlerStatus.error,
           errorMessage: 'Error: ${e.toString()}'));
     }
   }
 
-  _retryLoadAssets(
+  void _retryLoadAssets(
       RetryLoadModelAsset event, Emitter<ModelAssetHandlerState> emit) {
     emit(state.copyWith(status: ModelAssetHandlerStatus.loading));
-    _downloadAssets(event.modelName);
+    _downloadAssets(event.modelName, emit);
   }
 }

@@ -4,6 +4,7 @@ import 'package:flutter_ar/core/util/reusable_widgets/reusable_button.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import '../../../core/reusable_widgets/network_disconnected.dart';
+import '../../../core/util/device_type.dart';
 import '../../../core/util/styles.dart';
 import 'ar_view_ios.dart';
 // import 'package:flutter_ar/temp_testing/asset_download.dart';
@@ -46,12 +47,21 @@ class _ModelViewState extends State<ModelView> {
           disconnected: const NetworkDisconnected(),
           connected: BlocBuilder<ModelAssetHandlerBloc, ModelAssetHandlerState>(
             builder: (context, state) {
-              debugPrint('current state: ${state.status}');
               if (state.status == ModelAssetHandlerStatus.error) {
                 return Column(
                   children: [
-                    const Center(
-                      child: Text('Error Downloading model'),
+                    Center(
+                      child: Text(
+                        'Error Downloading model',
+                        style: DeviceType().isMobile
+                            ? AppTextStyles.nunito100w700black
+                            : AppTextStyles.nunito100w700black.copyWith(
+                                fontSize: DeviceType().isMobile
+                                    ? 110.sp
+                                    : 16 *
+                                        MediaQuery.of(context).size.aspectRatio,
+                              ),
+                      ),
                     ),
                     15.verticalSpacer,
                     ReusableButton(
@@ -81,11 +91,9 @@ class _ModelViewState extends State<ModelView> {
                           src: Platform.isIOS
                               ? '${downloadCont.assetsDir}/${widget.imageFileName}.glb'
                               : 'file:///data/user/0/com.smartxr.kidsv2/app_flutter/assets/${widget.imageFileName}.glb',
-                          alt: 'A 3D model of an astronaut',
                           ar: Platform.isAndroid ? true : false,
                           autoPlay: true,
                           autoRotate: true,
-                          // scale: '0.1 0.1 0.1',
                           arPlacement: ArPlacement.floor,
                           arModes: const ['scene-viewer'],
                           disableZoom: true,
@@ -186,7 +194,25 @@ class _ModelViewState extends State<ModelView> {
                       const CircularProgressIndicator.adaptive(
                         strokeCap: StrokeCap.round,
                       ),
-                      Text(state.progressValue),
+                      25.verticalSpacer,
+                      BlocBuilder<ModelAssetHandlerBloc,
+                          ModelAssetHandlerState>(
+                        builder: (context, downloadingstate) {
+                          return Text(
+                            downloadingstate.progressValue,
+                            style: DeviceType().isMobile
+                                ? AppTextStyles.nunito100w700black
+                                : AppTextStyles.nunito100w700black.copyWith(
+                                    fontSize: DeviceType().isMobile
+                                        ? 110.sp
+                                        : 16 *
+                                            MediaQuery.of(context)
+                                                .size
+                                                .aspectRatio,
+                                  ),
+                          );
+                        },
+                      ),
                     ],
                   ),
                 );

@@ -208,7 +208,7 @@ class _LoginPage4GuestState extends State<LoginPage4Guest> {
           ),
           ReusableButton(
             buttonColor: AppColors.primaryColor,
-            text: 'Send Otp',
+            text: 'Send OTP',
             textColor: Colors.white,
             onPressed: () {
               FocusScope.of(context).unfocus();
@@ -224,6 +224,29 @@ class _LoginPage4GuestState extends State<LoginPage4Guest> {
               }
             },
           ),
+          70.verticalSpacer,
+          ElevatedButton(
+            onPressed: () {
+              context.read<LoginBloc>().add(
+                  const LoginEvent.updateStatus(status: LoginStatus.phoneNo1));
+            },
+            style: ButtonStyle(
+              shape: MaterialStateProperty.all(const CircleBorder()),
+              padding: MaterialStateProperty.all(const EdgeInsets.all(20)),
+              backgroundColor: MaterialStateProperty.all(
+                  AppColors.primaryColor), // <-- Button color
+              overlayColor: MaterialStateProperty.resolveWith<Color?>((states) {
+                if (states.contains(MaterialState.pressed)) {
+                  return AppColors.accentColor; // <-- Splash color
+                }
+              }),
+            ),
+            child: const Icon(
+              Icons.arrow_back,
+              size: 26,
+              color: Colors.white,
+            ),
+          )
         ],
       ),
     );

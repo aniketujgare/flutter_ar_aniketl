@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ar/core/util/styles.dart';
 
 import '../../presentation/worksheet/widgets/worksheet_submitted_box.dart';
 import 'device_type.dart';
@@ -14,6 +15,16 @@ class Constants {
           child: WorksheetSubmittedBox(),
         );
       },
+    );
+  }
+
+  void showAppSnackbar(BuildContext context, String text) {
+    ScaffoldMessenger.of(context).removeCurrentSnackBar();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        backgroundColor: AppColors.primaryColor,
+        content: Text(text),
+      ),
     );
   }
 }

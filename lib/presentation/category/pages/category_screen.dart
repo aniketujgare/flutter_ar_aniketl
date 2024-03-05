@@ -61,7 +61,7 @@ class CategoryScreen extends StatelessWidget {
                                 height: 45.h,
                                 width: 45.h,
                                 child: Image.asset(
-                                  'assets/ui/Group.png', // right arrow
+                                  'assets/ui/Group.png', // left arrow
                                   fit: BoxFit.scaleDown,
                                 ),
                               ),

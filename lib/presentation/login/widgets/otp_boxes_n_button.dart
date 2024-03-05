@@ -139,33 +139,33 @@ class _OtpBoxesnButtonState extends State<OtpBoxesnButton> {
                 },
               ),
             ),
+          SizedBox(
+            height: 25.h,
+          ),
           if (context.read<LoginBloc>().state.status == LoginStatus.wrongOtp)
-            Padding(
-              padding: EdgeInsets.symmetric(
-                  vertical: 25.h,
-                  horizontal: MediaQuery.of(context).size.width *
-                      (DeviceType().isMobile ? 0.2 : 0.3)),
+            SizedBox(
+              width: MediaQuery.of(context).size.width * 0.65,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   Expanded(
-                    child: SizedBox(
-                      width: 150,
-                      child: ReusableButton(
-                          padding: EdgeInsets.symmetric(horizontal: 10.h),
-                          buttonColor: AppColors.primaryColor,
-                          text: 'Resend',
-                          textColor: Colors.white,
-                          onPressed: () {
-                            context
-                                .read<LoginBloc>()
-                                .add(const LoginEvent.resendOtp());
-                          }),
-                    ),
-                  ),
-                  Expanded(
+                    flex: 9,
                     child: ReusableButton(
-                      padding: EdgeInsets.symmetric(horizontal: 10.h),
+                        padding: EdgeInsets.zero,
+                        buttonColor: AppColors.primaryColor,
+                        text: 'Resend',
+                        textColor: Colors.white,
+                        onPressed: () {
+                          context
+                              .read<LoginBloc>()
+                              .add(const LoginEvent.resendOtp());
+                        }),
+                  ),
+                  const Spacer(flex: 1),
+                  Expanded(
+                    flex: 9,
+                    child: ReusableButton(
+                      padding: EdgeInsets.zero,
                       buttonColor: AppColors.submitGreenColor,
                       text: 'Submit',
                       textColor: Colors.white,

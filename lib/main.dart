@@ -64,7 +64,6 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   await FirebaseAppCheck.instance.activate(
-    // Set appleProvider to `AppleProvider.debug`
     appleProvider: AppleProvider.debug,
     androidProvider: AndroidProvider.debug,
   );
@@ -75,16 +74,7 @@ void main() async {
   // Opening the box
   StudentProfileModel? studentProfile =
       await AuthenticationRepository().getStudentProfile();
-  // if (Platform.isAndroid) {
-  //   // Include Android-specific AR code
-  //   debugPrint('Platform.isAndroid');
-  // } else if (Platform.isIOS) {
-  //   // Include iOS-specific AR code
-  //   debugPrint('Platform.isIOS');
-  // } else {
-  //   // Handle other platforms or provide a message
-  //   debugPrint('AR functionality not supported on this platform.');
-  // }
+
   runApp(MyApp(
     studentProfile: studentProfile,
   ));
