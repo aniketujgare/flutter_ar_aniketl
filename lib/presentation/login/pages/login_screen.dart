@@ -6,7 +6,6 @@ import 'package:flutter_ar/main.dart';
 import 'package:flutter_ar/presentation/main_menu/main_menu_screen.dart';
 import 'package:flutter_ar/presentation/splash_screen/splash_screen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:restart_app/restart_app.dart';
 import 'package:size_config/size_config.dart';
 
 import '../../../core/reusable_widgets/network_disconnected.dart';
