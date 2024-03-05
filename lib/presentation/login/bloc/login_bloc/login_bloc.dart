@@ -113,7 +113,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
               errorMessage: 'Verification Failed!with error ${e.toString()}'));
 
           debugPrint(
-              'verificationFailed for mob no: ${event.mobileNumber} with error ${e.toString()}');
+              'verificationFailed for mob no: ${event.mobileNumber} with error ${e.message}');
         },
         codeSent: (String verificationId, int? resendToken) async {
           verificaitonIdL = verificationId;

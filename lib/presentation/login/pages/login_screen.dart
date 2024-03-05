@@ -214,7 +214,12 @@ class LoginScreenState extends State<LoginScreen>
                               }
                               if (state.status == LoginStatus.success) {
                                 debugPrint('success state');
-                                Restart.restartApp();
+                                Navigator.pushAndRemoveUntil(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const SplashScreen()),
+                                    (_) => false);
                               }
                             },
                             builder: (context, state) {

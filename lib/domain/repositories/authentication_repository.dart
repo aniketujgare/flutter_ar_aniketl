@@ -69,8 +69,8 @@ class AuthenticationRepository {
 
   Future<void> saveStudentProfiles(int parentId) async {
     try {
-      var studentProfileBox =
-          await Hive.openBox<StudentProfileModel>('student_profile');
+      await Hive.openBox<StudentProfileModel>('student_profile');
+      var studentProfileBox = Hive.box<StudentProfileModel>('student_profile');
 
       Uri url = Uri.parse("$baseUrl/getstudentprofilesnew");
       var response =
@@ -97,8 +97,8 @@ class AuthenticationRepository {
 
   Future<void> saveStudentProfilesGuest(int parentId) async {
     try {
-      var studentProfileBox =
-          await Hive.openBox<StudentProfileModel>('student_profile');
+      await Hive.openBox<StudentProfileModel>('student_profile');
+      var studentProfileBox = Hive.box<StudentProfileModel>('student_profile');
 
       studentProfileBox.add(StudentProfileModel(studentId: -1));
     } catch (e) {
@@ -133,14 +133,16 @@ class AuthenticationRepository {
 
   Future<StudentProfileModel?> getStudentProfile() async {
     try {
-      var studentProfileBox =
-          await Hive.openBox<StudentProfileModel>('student_profile');
+      await Hive.openBox<StudentProfileModel>('student_profile');
+
+      var studentProfileBox = Hive.box<StudentProfileModel>('student_profile');
       var profiles = studentProfileBox.values.toList();
 
       if (profiles.isNotEmpty) {
         log('Retrieved profile: ${jsonEncode(profiles.first)}');
         return profiles.first;
       } else {
+        Hive.box<StudentProfileModel>('student_profile').close();
         debugPrint('No profiles found in the box.');
         return null; // Returning null if no profiles are found
       }

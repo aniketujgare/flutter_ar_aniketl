@@ -1,30 +1,15 @@
-import 'dart:io';
-
 import 'package:connection_notifier/connection_notifier.dart';
+import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_ar/presentation/lesson_mode/bloc/cubit/lesson_mode_cubit.dart';
-import 'package:flutter_ar/presentation/login/pages/login_screen.dart';
-import 'package:flutter_ar/presentation/splash_screen/splash_screen.dart';
-import 'package:lottie/lottie.dart';
-import 'core/student_profile_cubit/student_profile_cubit.dart';
-import 'data/models/student_profile_model.dart';
-import 'presentation/lesson_mode/bloc/lesson_page_cubit/lesson_page_cubit.dart';
-import 'presentation/parent_zone/bloc/navbar_cubit/app_navigator_cubit.dart';
-import 'presentation/parent_zone/bloc/parent_details_cubit/parent_details_cubit.dart';
-import 'presentation/parent_zone/bloc/teacher_message_cubit/teacher_message_cubit.dart';
-import 'presentation/subject/widgets/camera_feature.dart';
-import 'presentation/subject/widgets/pdf_viewer_page.dart';
-import 'presentation/subject/widgets/video_player.dart';
-import 'presentation/worksheet/bloc/worksheet_cubit/worksheet_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:size_config/size_config.dart';
 
-import 'core/route/go_router_provider.dart';
+import 'core/student_profile_cubit/student_profile_cubit.dart';
 import 'core/util/device_type.dart';
 import 'core/util/styles.dart';
+import 'data/models/student_profile_model.dart';
 import 'demo/firebase_options.dart';
 import 'domain/repositories/authentication_repository.dart';
 import 'presentation/category/bloc/category_new_cubit/category_new_cubit.dart';
@@ -32,20 +17,25 @@ import 'presentation/category/bloc/category_page_cubit/category_page_cubit.dart'
 import 'presentation/category/bloc/model_asset_handler_bloc/model_asset_handler_bloc.dart';
 import 'presentation/category/bloc/model_page_controler_cubit/models_page_controller_cubit.dart';
 import 'presentation/category/bloc/models_new_cubit/models_new_cubit.dart';
+import 'presentation/lesson_mode/bloc/cubit/lesson_mode_cubit.dart';
+import 'presentation/lesson_mode/bloc/lesson_page_cubit/lesson_page_cubit.dart';
 import 'presentation/login/bloc/guest_validation_bloc/guest_validation_bloc.dart';
 import 'presentation/login/bloc/login_bloc/login_bloc.dart';
 import 'presentation/login/bloc/login_validation_bloc/login_validation_bloc.dart';
+import 'presentation/login/pages/login_screen.dart';
+import 'presentation/parent_zone/bloc/navbar_cubit/app_navigator_cubit.dart';
+import 'presentation/parent_zone/bloc/parent_details_cubit/parent_details_cubit.dart';
 import 'presentation/parent_zone/bloc/reports_pagecontroller_cubit/reports_pagecontroller_cubit.dart';
 import 'presentation/parent_zone/bloc/teacher_list_bloc/teacher_list_bloc.dart';
+import 'presentation/parent_zone/bloc/teacher_message_cubit/teacher_message_cubit.dart';
 import 'presentation/splash_screen/bloc/splash_animation_bloc.dart';
+import 'presentation/splash_screen/splash_screen.dart';
 import 'presentation/subject/bloc/subject_page_cubit.dart';
+import 'presentation/worksheet/bloc/worksheet_cubit/worksheet_cubit.dart';
 import 'presentation/worksheet/bloc/worksheet_history_cubit/worksheet_history_cubit.dart';
 import 'presentation/worksheet/bloc/worksheet_history_page_cubit/worksheet_history_page_cubit.dart';
 import 'presentation/worksheet/bloc/worksheet_page_cubit/worksheet_page_cubit.dart';
 import 'presentation/worksheet/bloc/worksheet_solver_cubit/worksheet_solver_cubit.dart';
-import 'temp_testing/html_view_screen.dart';
-import 'temp_testing/screenshot_test.dart';
-import 'package:firebase_app_check/firebase_app_check.dart';
 
 final authenticationRepository = AuthenticationRepository();
 // void main() async {
@@ -70,8 +60,10 @@ void main() async {
   await Hive.initFlutter();
   // Registering the adapter
   Hive.registerAdapter(StudentProfileModelAdapter());
-
+// open box
+  await Hive.openBox<StudentProfileModel>('student_profile');
   // Opening the box
+
   StudentProfileModel? studentProfile =
       await AuthenticationRepository().getStudentProfile();
 

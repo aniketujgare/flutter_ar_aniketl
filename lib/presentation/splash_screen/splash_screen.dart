@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_ar/core/student_profile_cubit/student_profile_cubit.dart';
 import 'package:flutter_ar/domain/repositories/authentication_repository.dart';
+import 'package:hive/hive.dart';
 import '../../core/reusable_widgets/network_disconnected.dart';
 import '../../core/route/route_name.dart';
 import '../../core/util/device_type.dart';
