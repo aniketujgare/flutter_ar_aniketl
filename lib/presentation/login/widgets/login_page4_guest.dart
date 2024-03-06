@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import '../../../data/models/guest_name.dart';
-import '../../../data/models/phone_number.dart';
-import '../bloc/login_bloc/login_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
 import 'package:size_config/size_config.dart';
 
+import '../../../core/util/constants.dart';
 import '../../../core/util/device_type.dart';
 import '../../../core/util/reusable_widgets/reusable_button.dart';
-import '../../../core/util/reusable_widgets/reusable_textfield.dart';
 import '../../../core/util/styles.dart';
+import '../../../data/models/guest_name.dart';
+import '../../../data/models/phone_number.dart';
 import '../bloc/guest_validation_bloc/guest_validation_bloc.dart';
+import '../bloc/login_bloc/login_bloc.dart';
 
 class LoginPage4Guest extends StatefulWidget {
   const LoginPage4Guest({
@@ -216,11 +216,21 @@ class _LoginPage4GuestState extends State<LoginPage4Guest> {
                   .read<GuestValidationBloc>()
                   .add(const GuestFormSubmitted());
               final isValid = context.read<GuestValidationBloc>().state.isValid;
-              if (isValid) {
+              bool containsChar = false;
+              for (var i = 0; i < parentsNameController.text.length; i++) {
+                if (parentsNameController.text[i]
+                    .contains(RegExp(r'[A-Za-z]'))) {
+                  containsChar = true;
+                }
+              }
+              if (isValid && containsChar) {
                 debugPrint('guestLogin Number' + mobileNumberController.text);
                 context.read<LoginBloc>().add(LoginEvent.guestLogin(
                     mobileNumber: mobileNumberController.text,
                     parentsName: parentsNameController.text.trim()));
+              } else {
+                Constants()
+                    .showAppSnackbar(context, '! Please enter parent\'s name');
               }
             },
           ),

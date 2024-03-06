@@ -14,26 +14,22 @@ class ModelAssetHandlerBloc
       DownloadAssetsController();
 
   ModelAssetHandlerBloc() : super(const Initial()) {
-    _initialize();
-    on<ModelAssetHandlerEvent>(_handleEvent);
+    on<ModelAssetHandlerEvent>((events, emit) async {
+      await events.map(
+        init: (event) => _initialize(),
+        load: (event) async => await _loadAssets(event, emit),
+        retry: (event) => _retryLoadAssets(event, emit),
+      );
+    });
   }
   Future<void> _initialize() async {
     await downloadAssetsController.init();
-    on<ModelAssetHandlerEvent>(_handleEvent);
   }
 
-  Future<void> _handleEvent(ModelAssetHandlerEvent event,
-      Emitter<ModelAssetHandlerState> emit) async {
-    if (event is LoadModelAsset) {
-      await _loadAssets(event, emit);
-    } else if (event is RetryLoadModelAsset) {
-      _retryLoadAssets(event, emit);
-    }
-  }
-
-  Future<void> _loadAssets(
+  _loadAssets(
       LoadModelAsset event, Emitter<ModelAssetHandlerState> emit) async {
     emit(state.copyWith(status: ModelAssetHandlerStatus.loading));
+    await _initialize();
     bool isExists = await checkModelExists(event.modelName);
     if (isExists) {
       emit(state.copyWith(
@@ -49,9 +45,10 @@ class ModelAssetHandlerBloc
     return isExists;
   }
 
-  Future<void> _downloadAssets(
+  _downloadAssets(
       String modelName, Emitter<ModelAssetHandlerState> emit) async {
     emit(state.copyWith(status: ModelAssetHandlerStatus.downloading));
+    await _initialize();
     try {
       await downloadAssetsController.startDownload(
         assetsUrls: [
@@ -62,7 +59,7 @@ class ModelAssetHandlerBloc
           emit(state.copyWith(
               status: ModelAssetHandlerStatus.downloading,
               progressValue:
-                  'Downloading - ${progressValue.toStringAsFixed(2)}'));
+                  'Downloading - ${progressValue.toStringAsFixed(0)} %'));
           if (progressValue >= 100.0) {
             emit(state.copyWith(
                 status: ModelAssetHandlerStatus.loaded, modelPath: modelName));
@@ -76,7 +73,7 @@ class ModelAssetHandlerBloc
     }
   }
 
-  void _retryLoadAssets(
+  _retryLoadAssets(
       RetryLoadModelAsset event, Emitter<ModelAssetHandlerState> emit) {
     emit(state.copyWith(status: ModelAssetHandlerStatus.loading));
     _downloadAssets(event.modelName, emit);

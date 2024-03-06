@@ -6,4 +6,5 @@ class ModelAssetHandlerEvent with _$ModelAssetHandlerEvent {
       LoadModelAsset;
   const factory ModelAssetHandlerEvent.retry(
       {required final String modelName}) = RetryLoadModelAsset;
+  const factory ModelAssetHandlerEvent.init() = InitLoadModelAsset;
 }

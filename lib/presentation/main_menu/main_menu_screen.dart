@@ -1,13 +1,11 @@
 import 'package:connection_notifier/connection_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_ar/core/reusable_widgets/network_disconnected.dart';
-import 'package:flutter_ar/core/student_profile_cubit/student_profile_cubit.dart';
-import 'package:flutter_ar/presentation/worksheet/widgets/worksheet_submitted_box.dart';
-import 'package:flutter_ar/temp_testing/hive_test.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:size_config/size_config.dart';
 
+import '../../core/reusable_widgets/network_disconnected.dart';
+import '../../core/student_profile_cubit/student_profile_cubit.dart';
 import '../../core/util/device_type.dart';
 import '../../core/util/styles.dart';
 import '../category/pages/category_screen.dart';
@@ -77,7 +75,7 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
 
   SizedBox buildTop(BuildContext context) {
     return SizedBox(
-      height: 75.h,
+      height: 78.h,
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -89,7 +87,6 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
           Row(
             children: [
               SizedBox(
-                width: DeviceType().isMobile ? 25.wp : 17.wp,
                 child: Stack(
                   clipBehavior: Clip.hardEdge,
                   alignment: Alignment.centerRight,
@@ -99,7 +96,7 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
                       fit: BoxFit.contain,
                     ),
                     Positioned(
-                      right: 12.h,
+                      right: 10.h,
                       child: Text(
                         context
                                 .read<StudentProfileCubit>()
@@ -121,7 +118,6 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
               ),
               2.horizontalSpacerPercent,
               SizedBox(
-                width: DeviceType().isMobile ? 25.wp : 17.wp,
                 child: Stack(
                   clipBehavior: Clip.hardEdge,
                   alignment: Alignment.centerRight,

@@ -1,19 +1,19 @@
 import 'dart:io';
+
 import 'package:connection_notifier/connection_notifier.dart';
-import 'package:flutter_ar/core/util/reusable_widgets/reusable_button.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
-import '../../../core/reusable_widgets/network_disconnected.dart';
-import '../../../core/util/device_type.dart';
-import '../../../core/util/styles.dart';
-import 'ar_view_ios.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 // import 'package:flutter_ar/temp_testing/asset_download.dart';
 // import 'package:flutter_ar/temp_testing/unityScene.dart';
 import 'package:model_viewer_plus/model_viewer_plus.dart';
 import 'package:size_config/size_config.dart';
 
+import '../../../core/reusable_widgets/network_disconnected.dart';
+import '../../../core/util/device_type.dart';
+import '../../../core/util/reusable_widgets/reusable_button.dart';
+import '../../../core/util/styles.dart';
 import '../bloc/model_asset_handler_bloc/model_asset_handler_bloc.dart';
-import '../bloc/model_asset_handler_bloc/model_asset_handler_bloc.dart';
+import 'ar_view_ios.dart';
 
 class ModelView extends StatefulWidget {
   final String modelUrl;
@@ -30,14 +30,22 @@ class ModelView extends StatefulWidget {
 }
 
 class _ModelViewState extends State<ModelView> {
+  // DownloadAssetsController downloadAssetsController =
+  //     DownloadAssetsController();
   @override
   void initState() {
+    // context.read<ModelAssetHandlerBloc>().add(const InitLoadModelAsset());
     context
         .read<ModelAssetHandlerBloc>()
         .add(LoadModelAsset(modelName: widget.imageFileName));
     super.initState();
+    // _init();
   }
+// Future _init() async {
 
+//     await downloadAssetsController.init();
+//      await downloadAssetsController.assetsFileExists('${widget.modelName}.glb');
+//   }
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -47,7 +55,25 @@ class _ModelViewState extends State<ModelView> {
           disconnected: const NetworkDisconnected(),
           connected: BlocBuilder<ModelAssetHandlerBloc, ModelAssetHandlerState>(
             builder: (context, state) {
-              if (state.status == ModelAssetHandlerStatus.error) {
+              if (state.status == ModelAssetHandlerStatus.loading) {
+                return const Center(
+                  child: CircularProgressIndicator.adaptive(
+                      strokeCap: StrokeCap.round),
+                );
+              } else if (state.status == ModelAssetHandlerStatus.initial) {
+                return Center(
+                  child: Text(
+                    'Initial Event',
+                    style: DeviceType().isMobile
+                        ? AppTextStyles.nunito100w700black
+                        : AppTextStyles.nunito100w700black.copyWith(
+                            fontSize: DeviceType().isMobile
+                                ? 110.sp
+                                : 16 * MediaQuery.of(context).size.aspectRatio,
+                          ),
+                  ),
+                );
+              } else if (state.status == ModelAssetHandlerStatus.error) {
                 return Column(
                   children: [
                     Center(
@@ -75,8 +101,7 @@ class _ModelViewState extends State<ModelView> {
                     )
                   ],
                 );
-              }
-              if (state.status == ModelAssetHandlerStatus.loaded) {
+              } else if (state.status == ModelAssetHandlerStatus.loaded) {
                 var downloadCont = context
                     .read<ModelAssetHandlerBloc>()
                     .downloadAssetsController;
@@ -218,8 +243,7 @@ class _ModelViewState extends State<ModelView> {
                 );
               } else {
                 return const Center(
-                  child: CircularProgressIndicator.adaptive(
-                      strokeCap: StrokeCap.round),
+                  child: Text('something went wrong'),
                 );
               }
             },
