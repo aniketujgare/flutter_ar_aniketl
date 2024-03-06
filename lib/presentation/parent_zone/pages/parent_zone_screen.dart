@@ -27,7 +27,7 @@ class _ParentZoneScreenState extends State<ParentZoneScreen> {
   void initState() {
     super.initState();
     // SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
-    //     overlays: [SystemUiOverlay.top, SystemUiOverlay.bottom]);
+    //     overlays: [SystemUiOverlay.top]);
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light
         .copyWith(systemNavigationBarColor: AppColors.accentColor));
     SystemChrome.setPreferredOrientations([

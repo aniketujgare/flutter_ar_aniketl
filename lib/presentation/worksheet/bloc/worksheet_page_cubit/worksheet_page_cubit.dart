@@ -24,7 +24,7 @@ class WorksheetPageCubit extends Cubit<int> {
   }
 
   void setNextPage() {
-    if (curridx < maxLen) {
+    if (curridx < maxLen - 1) {
       ++curridx;
       goToPage(curridx);
     }

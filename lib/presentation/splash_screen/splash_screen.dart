@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_ar/core/student_profile_cubit/student_profile_cubit.dart';
 import 'package:flutter_ar/domain/repositories/authentication_repository.dart';
 import 'package:hive/hive.dart';
+import 'package:lottie/lottie.dart';
 import '../../core/reusable_widgets/network_disconnected.dart';
 import '../../core/route/route_name.dart';
 import '../../core/util/device_type.dart';
@@ -166,7 +167,7 @@ class SplashScreenState extends State<SplashScreen>
                         offset: Offset(0,
                             _animationController.animationDodoTranslate.value),
                         child: Image.asset(
-                          'assets/images/Dog/Dodo Animation.gif',
+                          'assets/images/Dog/Dodo Animation copy.gif',
                           fit: BoxFit.contain,
                         ),
                       ),

@@ -119,6 +119,7 @@ class _WorksheetViewState extends State<WorksheetView> {
                               .read<WorksheetPageCubit>()
                               .maxLen, // Number of pages
                           itemBuilder: (context, page) {
+                            context.read<WorksheetPageCubit>().curridx = page;
                             int startIndex =
                                 page * (DeviceType().isMobile ? 4 : 3);
                             int endIndex =
@@ -203,38 +204,54 @@ class _WorksheetViewState extends State<WorksheetView> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                GestureDetector(
-                                  onTap: () => context
-                                      .read<WorksheetPageCubit>()
-                                      .setPreviousPage(),
-                                  child: SizedBox(
-                                    height: 45.h,
-                                    width: 45.h,
-                                    child: Image.asset(
-                                      'assets/ui/Group.png', // right arrow
-                                      fit: BoxFit.scaleDown,
-                                      height: 45.h,
-                                      width: 45.h,
-                                    ),
-                                  ),
-                                ),
-                                GestureDetector(
-                                  onTap: () => context
-                                      .read<WorksheetPageCubit>()
-                                      .setNextPage(),
-                                  child: RotatedBox(
-                                    quarterTurns: 2,
-                                    child: SizedBox(
-                                      height: 45.h,
-                                      width: 45.h,
+                                BlocBuilder<WorksheetPageCubit, int>(
+                                  builder: (context, state) {
+                                    if (state == 0) {
+                                      return SizedBox(
+                                          height: 45.h, width: 45.h);
+                                    }
+                                    return GestureDetector(
+                                      onTap: () => context
+                                          .read<WorksheetPageCubit>()
+                                          .setPreviousPage(),
                                       child: Image.asset(
                                         'assets/ui/Group.png', // right arrow
                                         fit: BoxFit.scaleDown,
                                         height: 45.h,
                                         width: 45.h,
                                       ),
-                                    ),
-                                  ),
+                                    );
+                                  },
+                                ),
+                                BlocBuilder<WorksheetPageCubit, int>(
+                                  builder: (context, state) {
+                                    if (state ==
+                                        context
+                                                .read<WorksheetPageCubit>()
+                                                .maxLen -
+                                            1) {
+                                      return SizedBox(
+                                          height: 45.h, width: 45.h);
+                                    }
+                                    return GestureDetector(
+                                      onTap: () => context
+                                          .read<WorksheetPageCubit>()
+                                          .setNextPage(),
+                                      child: RotatedBox(
+                                        quarterTurns: 2,
+                                        child: SizedBox(
+                                          height: 45.h,
+                                          width: 45.h,
+                                          child: Image.asset(
+                                            'assets/ui/Group.png', // right arrow
+                                            fit: BoxFit.scaleDown,
+                                            height: 45.h,
+                                            width: 45.h,
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  },
                                 ),
                               ],
                             ),

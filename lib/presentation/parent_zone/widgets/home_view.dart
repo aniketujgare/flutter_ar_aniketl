@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_ar/data/models/parent_details.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:size_config/size_config.dart';
 
 import '../../../core/student_profile_cubit/student_profile_cubit.dart';
@@ -51,9 +52,34 @@ class HomeView extends StatelessWidget {
                         ),
                       );
                     }
-                    return const Center(
-                        child: CircularProgressIndicator.adaptive(
-                            strokeCap: StrokeCap.round));
+                    return Column(
+                      children: List.generate(
+                        state.parentDetails.length,
+                        (index) => Column(
+                          children: [
+                            Shimmer.fromColors(
+                              baseColor: Colors.grey.shade300,
+                              highlightColor: Colors.grey.shade100,
+                              child: ParentProfileCard(
+                                oldContext: context,
+                                parentDetails: state.parentDetails[index],
+                                profileTitle:
+                                    state.parentDetails[index].parentRelation,
+                                name: state.parentDetails[index].parentName,
+                                mobile: state
+                                    .parentDetails[index].parentMobileNumber
+                                    .toString()
+                                    .substring(2)
+                                    .split('.')
+                                    .first,
+                                email: state.parentDetails[index].parentEmail,
+                              ),
+                            ),
+                            22.verticalSpacer,
+                          ],
+                        ),
+                      ),
+                    );
                   },
                 ),
                 // const ParentProfileCard(
