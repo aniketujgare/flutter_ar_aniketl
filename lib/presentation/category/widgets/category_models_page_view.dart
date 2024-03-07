@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:connection_notifier/connection_notifier.dart';
@@ -40,29 +41,33 @@ class _CategoryModelsPageViewState extends State<CategoryModelsPageView> {
 
   @override
   Widget build(BuildContext context) {
+    var shortestSide = MediaQuery.of(context).size.shortestSide;
     return PopScope(
       canPop: false,
-      child: SafeArea(
-        child: Scaffold(
-          backgroundColor: AppColors.parentZoneScaffoldColor,
-          body: ConnectionNotifierToggler(
-              disconnected: const NetworkDisconnected(),
-              connected: Stack(
-                children: [
-                  BlocBuilder<ModelsNewCubit, ModelsNewState>(
-                    builder: (context, state) {
-                      if (state.status == ModelsStatus.loaded) {
-                        //?Set Maxlen of pages (don't remove)
-                        context
-                            .read<ModelsPageControllerCubit>()
-                            .setmaxLength((state.arModels.length / 6).ceil());
-                        //?
-                        return BlocBuilder<ModelsPageControllerCubit, int>(
-                          builder: (context, index) {
-                            debugPrint(
-                                'active page idx: ${context.read<ModelsPageControllerCubit>().activePageIdx}');
+      child: Scaffold(
+        backgroundColor: AppColors.parentZoneScaffoldColor,
+        body: ConnectionNotifierToggler(
+            disconnected: const NetworkDisconnected(),
+            connected: Stack(
+              children: [
+                BlocBuilder<ModelsNewCubit, ModelsNewState>(
+                  builder: (context, state) {
+                    if (state.status == ModelsStatus.loaded) {
+                      //?Set Maxlen of pages (don't remove)
+                      context
+                          .read<ModelsPageControllerCubit>()
+                          .setmaxLength((state.arModels.length / 6).ceil());
+                      //?
+                      return BlocBuilder<ModelsPageControllerCubit, int>(
+                        builder: (context, index) {
+                          debugPrint(
+                              'active page idx: ${context.read<ModelsPageControllerCubit>().activePageIdx}');
 
-                            return PageView.builder(
+                          return Padding(
+                            padding: Platform.isIOS && shortestSide < 600
+                                ? EdgeInsets.only(left: 6.wp)
+                                : const EdgeInsets.all(0),
+                            child: PageView.builder(
                               itemCount: (state.arModels.length / 6)
                                   .ceil(), // 6 containers per page (2 rows with 3 containers each)
                               controller: context
@@ -86,39 +91,45 @@ class _CategoryModelsPageViewState extends State<CategoryModelsPageView> {
                                         ],
                                       ));
                               },
-                            );
-                          },
-                        );
-                      }
-                      return const Center(
-                          child: CircularProgressIndicator.adaptive(
-                        strokeCap: StrokeCap.round,
-                      ));
-                    },
-                  ),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(4.wp, 4.wp, 4.wp, 4.wp),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        //! Left Side back and User icon
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(
-                              width: 75.h,
-                              child: Image.asset(
-                                'assets/ui/image 40.png', // User Icon
-                                fit: BoxFit.contain,
-                              ),
                             ),
-                            //First page does'nt has back page btn
-                            if (context
-                                    .watch<ModelsPageControllerCubit>()
-                                    .activePageIdx !=
-                                0)
-                              GestureDetector(
+                          );
+                        },
+                      );
+                    }
+                    return const Center(
+                        child: CircularProgressIndicator.adaptive(
+                      strokeCap: StrokeCap.round,
+                    ));
+                  },
+                ),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(4.wp, 4.wp, 4.wp, 4.wp),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      //! Left Side back and User icon
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                            width: 75.h,
+                            height: 75.h,
+                            child: Image.asset(
+                              'assets/ui/image 40.png', // User Icon
+                              fit: BoxFit.contain,
+                            ),
+                          ),
+                          //First page does'nt has back page btn
+                          if (context
+                                  .watch<ModelsPageControllerCubit>()
+                                  .activePageIdx !=
+                              0)
+                            Padding(
+                              padding: Platform.isIOS && shortestSide < 600
+                                  ? EdgeInsets.only(left: 12.wp)
+                                  : const EdgeInsets.all(0),
+                              child: GestureDetector(
                                 onTap: () {
                                   if (isClicked == false) {
                                     _startTimer();
@@ -130,55 +141,12 @@ class _CategoryModelsPageViewState extends State<CategoryModelsPageView> {
                                   }
                                 },
                                 child: SizedBox(
-                                  height: 45.h,
-                                  width: 45.h,
-                                  child: Image.asset(
-                                    'assets/ui/Group.png', // left arrow
-                                    fit: BoxFit.scaleDown,
-                                    height: 45.h,
-                                    width: 45.h,
-                                  ),
-                                ),
-                              ),
-                            SizedBox(
-                              height: 45.h,
-                              width: 45.h,
-                            ),
-                          ],
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            SizedBox(
-                              height: 45.h,
-                              width: 45.h,
-                            ),
-                            //last page does'nt has next page btn
-                            if (context
-                                    .watch<ModelsPageControllerCubit>()
-                                    .activePageIdx !=
-                                context
-                                    .read<ModelsPageControllerCubit>()
-                                    .maxLen)
-                              GestureDetector(
-                                onTap: () {
-                                  if (isClicked == false) {
-                                    _startTimer();
-                                    isClicked = true;
-                                    // Your other code which you want to execute on click.
-                                    context
-                                        .read<ModelsPageControllerCubit>()
-                                        .setNextPage();
-                                  }
-                                },
-                                child: RotatedBox(
-                                  quarterTurns: 2,
-                                  child: SizedBox(
-                                    height: 45.h,
-                                    width: 45.h,
+                                  height: 75.h,
+                                  width: 75.h,
+                                  child: UnconstrainedBox(
+                                    alignment: Alignment.centerLeft,
                                     child: Image.asset(
-                                      'assets/ui/Group.png', // right arrow
+                                      'assets/ui/Group.png', // left arrow
                                       fit: BoxFit.scaleDown,
                                       height: 45.h,
                                       width: 45.h,
@@ -186,26 +154,75 @@ class _CategoryModelsPageViewState extends State<CategoryModelsPageView> {
                                   ),
                                 ),
                               ),
+                            ),
+                          SizedBox(
+                            width: 75.h,
+                            height: 75.h,
+                          ),
+                        ],
+                      ),
+                      //! Right Side next and Home icon
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          SizedBox(
+                            width: 75.h,
+                            height: 75.h,
+                          ),
+                          //last page does'nt has next page btn
+                          if (context
+                                  .watch<ModelsPageControllerCubit>()
+                                  .activePageIdx !=
+                              context.read<ModelsPageControllerCubit>().maxLen)
                             GestureDetector(
                               onTap: () {
-                                Navigator.of(context).pop();
+                                if (isClicked == false) {
+                                  _startTimer();
+                                  isClicked = true;
+                                  // Your other code which you want to execute on click.
+                                  context
+                                      .read<ModelsPageControllerCubit>()
+                                      .setNextPage();
+                                }
                               },
-                              child: SizedBox(
-                                width: 75.h,
-                                child: Image.asset(
-                                  'assets/ui/Custom Buttons.002 1.png', // Home Icon
-                                  fit: BoxFit.contain,
+                              child: RotatedBox(
+                                quarterTurns: 2,
+                                child: SizedBox(
+                                  height: 75.h,
+                                  width: 75.h,
+                                  child: UnconstrainedBox(
+                                    alignment: Alignment.centerLeft,
+                                    child: Image.asset(
+                                      'assets/ui/Group.png', // left arrow
+                                      fit: BoxFit.scaleDown,
+                                      height: 45.h,
+                                      width: 45.h,
+                                    ),
+                                  ),
                                 ),
                               ),
                             ),
-                          ],
-                        ),
-                      ],
-                    ),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: SizedBox(
+                              width: 75.h,
+                              height: 75.h,
+                              child: Image.asset(
+                                'assets/ui/Custom Buttons.002 1.png', // Home Icon
+                                fit: BoxFit.contain,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
-                ],
-              )),
-        ),
+                ),
+              ],
+            )),
       ),
     );
   }

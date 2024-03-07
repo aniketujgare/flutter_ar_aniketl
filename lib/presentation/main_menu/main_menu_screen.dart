@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:connection_notifier/connection_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -25,7 +27,7 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
   @override
   void initState() {
     SystemChrome.setPreferredOrientations([
-      DeviceOrientation.landscapeLeft,
+      // DeviceOrientation.landscapeLeft,
       DeviceOrientation.landscapeRight,
     ]);
     context.read<WorksheetCubit>().getWorksheets();
@@ -75,7 +77,7 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
 
   SizedBox buildTop(BuildContext context) {
     return SizedBox(
-      height: 78.h,
+      height: DeviceType().isMobile ? 75.h : 78.h,
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -96,7 +98,7 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
                       fit: BoxFit.contain,
                     ),
                     Positioned(
-                      right: 10.h,
+                      right: 12.h,
                       child: Text(
                         context
                                 .read<StudentProfileCubit>()
@@ -155,9 +157,13 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
   }
 
   Expanded buildCenter(BuildContext context) {
+    var shortestSide = MediaQuery.of(context).size.shortestSide;
+
     return Expanded(
         child: Padding(
-      padding: EdgeInsets.symmetric(vertical: DeviceType().isMobile ? 5.h : 0),
+      padding: Platform.isIOS && shortestSide < 600
+          ? EdgeInsets.only(left: 8.wp)
+          : EdgeInsets.symmetric(vertical: DeviceType().isMobile ? 5.h : 0),
       child: PageView.builder(
         itemCount: 1,
         physics: const AlwaysScrollableScrollPhysics(),

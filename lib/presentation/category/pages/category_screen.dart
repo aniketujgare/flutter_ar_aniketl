@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:connection_notifier/connection_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,107 +18,125 @@ class CategoryScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var shortestSide = MediaQuery.of(context).size.shortestSide;
     return PopScope(
       canPop: false,
-      child: SafeArea(
-        child: Scaffold(
-          backgroundColor: AppColors.parentZoneScaffoldColor,
-          body: ConnectionNotifierToggler(
-              disconnected: const NetworkDisconnected(),
-              connected: Stack(
-                children: [
-                  BlocBuilder<CategoryNewCubit, CategoryNewState>(
-                      builder: (context, state) {
-                    if (state.status == CategoryStatus.loaded) {
-                      return CategoryPageView();
-                    }
-                    return const Center(
-                        child: CircularProgressIndicator.adaptive(
-                      strokeCap: StrokeCap.round,
-                    ));
-                  }),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(4.wp, 4.wp, 4.wp, 4.wp),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        //! Left Side back and User icon
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(
-                              width: 75.h,
-                              height: 75.h,
-                              child: Image.asset(
-                                'assets/ui/image 40.png', // User Icon
-                                fit: BoxFit.contain,
-                              ),
+      child: Scaffold(
+        backgroundColor: AppColors.parentZoneScaffoldColor,
+        body: ConnectionNotifierToggler(
+            disconnected: const NetworkDisconnected(),
+            connected: Stack(
+              children: [
+                BlocBuilder<CategoryNewCubit, CategoryNewState>(
+                    builder: (context, state) {
+                  if (state.status == CategoryStatus.loaded) {
+                    return Padding(
+                        padding: Platform.isIOS && shortestSide < 600
+                            ? EdgeInsets.only(left: 6.wp)
+                            : const EdgeInsets.all(0),
+                        child: CategoryPageView());
+                  }
+                  return const Center(
+                      child: CircularProgressIndicator.adaptive(
+                    strokeCap: StrokeCap.round,
+                  ));
+                }),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(4.wp, 4.wp, 4.wp, 4.wp),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      //! Left Side back and User icon
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                            width: 75.h,
+                            height: 75.h,
+                            child: Image.asset(
+                              'assets/ui/image 40.png', // User Icon
+                              fit: BoxFit.contain,
                             ),
-                            GestureDetector(
+                          ),
+                          Padding(
+                            padding: Platform.isIOS && shortestSide < 600
+                                ? EdgeInsets.only(left: 12.wp)
+                                : const EdgeInsets.all(0),
+                            child: GestureDetector(
                               onTap: () => context
                                   .read<CategoryPageCubit>()
                                   .setPreviousPage(),
                               child: SizedBox(
-                                height: 45.h,
-                                width: 45.h,
-                                child: Image.asset(
-                                  'assets/ui/Group.png', // left arrow
-                                  fit: BoxFit.scaleDown,
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                              height: 75.h,
-                              width: 75.h,
-                            ),
-                          ],
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            SizedBox(
-                              height: 75.h,
-                              width: 75.h,
-                            ),
-                            GestureDetector(
-                              onTap: () => context
-                                  .read<CategoryPageCubit>()
-                                  .setNextPage(),
-                              child: RotatedBox(
-                                quarterTurns: 2,
-                                child: SizedBox(
-                                  height: 45.h,
-                                  width: 45.h,
+                                height: 75.h,
+                                width: 75.h,
+                                child: UnconstrainedBox(
+                                  alignment: Alignment.centerLeft,
                                   child: Image.asset(
-                                    'assets/ui/Group.png', // right arrow
+                                    'assets/ui/Group.png', // left arrow
                                     fit: BoxFit.scaleDown,
+                                    height: 45.h,
+                                    width: 45.h,
                                   ),
                                 ),
                               ),
                             ),
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.of(context).pop();
-                              },
+                          ),
+                          SizedBox(
+                            height: 75.h,
+                            width: 75.h,
+                          ),
+                        ],
+                      ),
+                      //! Right Side next and Home icon
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          SizedBox(
+                            height: 75.h,
+                            width: 75.h,
+                          ),
+                          GestureDetector(
+                            onTap: () =>
+                                context.read<CategoryPageCubit>().setNextPage(),
+                            child: RotatedBox(
+                              quarterTurns: 2,
                               child: SizedBox(
-                                width: 75.h,
                                 height: 75.h,
-                                child: Image.asset(
-                                  'assets/ui/Custom Buttons.002 1.png', // Home Icon
-                                  fit: BoxFit.contain,
+                                width: 75.h,
+                                child: UnconstrainedBox(
+                                  alignment: Alignment.centerLeft,
+                                  child: Image.asset(
+                                    'assets/ui/Group.png', // left arrow
+                                    fit: BoxFit.scaleDown,
+                                    height: 45.h,
+                                    width: 45.h,
+                                  ),
                                 ),
                               ),
                             ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  )
-                ],
-              )),
-        ),
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: SizedBox(
+                              width: 75.h,
+                              height: 75.h,
+                              child: Image.asset(
+                                'assets/ui/Custom Buttons.002 1.png', // Home Icon
+                                fit: BoxFit.contain,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            )),
       ),
     );
   }

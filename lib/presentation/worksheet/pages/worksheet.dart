@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:connection_notifier/connection_notifier.dart';
 import 'package:flutter/material.dart';
@@ -33,55 +34,50 @@ class _WorksheetViewState extends State<WorksheetView> {
 
   @override
   Widget build(BuildContext context) {
+    var shortestSide = MediaQuery.of(context).size.shortestSide;
+
     return PopScope(
       canPop: false,
       child: Scaffold(
         backgroundColor: AppColors.parentZoneScaffoldColor,
         appBar: AppBar(
-          toolbarHeight: DeviceType().isMobile ? 56 : 80,
+          titleSpacing: 0.0,
+          toolbarHeight: DeviceType().isMobile ? null : 80.h,
           automaticallyImplyLeading: false,
           backgroundColor: AppColors.accentColor,
-          leading: null,
-          title: Row(
-            children: [
-              GestureDetector(
-                onTap: () => Navigator.pop(context),
-                child: Container(
-                  margin: EdgeInsets.only(left: 2.wp, right: 3.wp),
-                  height: 36.h,
-                  width: 36.h,
-                  child: Image.asset(
-                    'assets/images/reusable_icons/back_button_primary.png',
-                  ),
-                ),
+          leading: GestureDetector(
+            onTap: () => Navigator.pop(context),
+            child: UnconstrainedBox(
+              child: Image.asset(
+                'assets/images/reusable_icons/back_button_primary.png',
+                color: AppColors.primaryColor,
+                height: DeviceType().isMobile ? 10.wp : 6.5.wp,
               ),
-              const Spacer(),
-              Text(
-                'Worksheets',
-                style: DeviceType().isMobile
-                    ? AppTextStyles.uniformRounded136BoldAppBarStyle
-                    : AppTextStyles.uniformRounded136BoldAppBarStyle
-                        .copyWith(fontSize: 136.sp * 0.7),
-              ),
-              const Spacer(),
-              GestureDetector(
-                onTap: () async {
-                  StudentProfileModel? v =
-                      await AuthenticationRepository().getStudentProfile();
-                  log(jsonEncode(v));
+            ),
+          ),
+          actions: [
+            GestureDetector(
+              onTap: () async {
+                StudentProfileModel? v =
+                    await AuthenticationRepository().getStudentProfile();
+                // log(jsonEncode(v));
+                if (context.mounted) {
                   Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => const WorksheetHistoryView()));
-                },
-                child: Container(
-                  margin: EdgeInsets.only(left: 2.wp, right: 3.wp),
-                  height: 36.h,
-                  width: 36.h,
-                  child: Image.asset(
-                    'assets/images/PNG Icons/history.png',
-                  ),
-                ),
+                }
+              },
+              child: Image.asset(
+                'assets/images/PNG Icons/history.png',
+                height: DeviceType().isMobile ? 9.wp : 6.5.wp,
               ),
-            ],
+            ),
+          ],
+          title: Text(
+            'Worksheets',
+            style: DeviceType().isMobile
+                ? AppTextStyles.uniformRounded136BoldAppBarStyle
+                : AppTextStyles.uniformRounded136BoldAppBarStyle
+                    .copyWith(fontSize: 136.sp * 0.7),
           ),
         ),
         body: ConnectionNotifierToggler(
@@ -108,79 +104,85 @@ class _WorksheetViewState extends State<WorksheetView> {
                             ),
                           );
                         }
-                        return PageView.builder(
-                          controller:
-                              context.read<WorksheetPageCubit>().pageCont,
-                          scrollDirection: Axis.horizontal,
-                          onPageChanged: (value) {
-                            context.read<WorksheetPageCubit>().setPage(value);
-                          },
-                          itemCount: context
-                              .read<WorksheetPageCubit>()
-                              .maxLen, // Number of pages
-                          itemBuilder: (context, page) {
-                            context.read<WorksheetPageCubit>().curridx = page;
-                            int startIndex =
-                                page * (DeviceType().isMobile ? 4 : 3);
-                            int endIndex =
-                                (page + 1) * (DeviceType().isMobile ? 4 : 3);
+                        return Padding(
+                          padding: Platform.isIOS && shortestSide < 600
+                              ? EdgeInsets.only(left: 10.wp, right: 2.wp)
+                              : const EdgeInsets.all(0),
+                          child: PageView.builder(
+                            controller:
+                                context.read<WorksheetPageCubit>().pageCont,
+                            scrollDirection: Axis.horizontal,
+                            onPageChanged: (value) {
+                              context.read<WorksheetPageCubit>().setPage(value);
+                            },
+                            itemCount: context
+                                .read<WorksheetPageCubit>()
+                                .maxLen, // Number of pages
+                            itemBuilder: (context, page) {
+                              context.read<WorksheetPageCubit>().curridx = page;
+                              int startIndex =
+                                  page * (DeviceType().isMobile ? 4 : 3);
+                              int endIndex =
+                                  (page + 1) * (DeviceType().isMobile ? 4 : 3);
 
-                            // Ensure endIndex does not exceed the total number of elements
-                            endIndex = endIndex > state.worksheets.length
-                                ? state.worksheets.length
-                                : endIndex;
+                              // Ensure endIndex does not exceed the total number of elements
+                              endIndex = endIndex > state.worksheets.length
+                                  ? state.worksheets.length
+                                  : endIndex;
 
-                            // Create a list of widgets for this page
-                            List<Widget> pageWidgets = [];
+                              // Create a list of widgets for this page
+                              List<Widget> pageWidgets = [];
 
-                            for (int i = startIndex; i < endIndex; i++) {
-                              var workSheet = state.worksheets[i];
-                              pageWidgets.add(
-                                Expanded(
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              WorksheetSolverView(
-                                                  workSheetId: workSheet.id),
-                                        ),
-                                      );
-                                    },
-                                    child: Lesson(
-                                      worksheetTitle: workSheet.worksheetName,
-                                      subject: workSheet.subject,
-                                      teacher: workSheet.teacher,
-                                      solvedQuestionCount:
-                                          workSheet.solvedQuestinCount,
-                                      allQuestionCount:
-                                          workSheet.allQuestionCount,
-                                      deadline: workSheet.deadline,
+                              for (int i = startIndex; i < endIndex; i++) {
+                                var workSheet = state.worksheets[i];
+                                pageWidgets.add(
+                                  Expanded(
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                WorksheetSolverView(
+                                                    workSheetId: workSheet.id),
+                                          ),
+                                        );
+                                      },
+                                      child: Lesson(
+                                        worksheetTitle: workSheet.worksheetName,
+                                        subject: workSheet.subject,
+                                        teacher: workSheet.teacher,
+                                        solvedQuestionCount:
+                                            workSheet.solvedQuestinCount,
+                                        allQuestionCount:
+                                            workSheet.allQuestionCount,
+                                        deadline: workSheet.deadline,
+                                      ),
                                     ),
                                   ),
+                                );
+                              }
+                              if (pageWidgets.length <
+                                  (DeviceType().isMobile ? 4 : 3)) {
+                                for (int i = pageWidgets.length;
+                                    i < (DeviceType().isMobile ? 4 : 3);
+                                    i++) {
+                                  pageWidgets.add(const Expanded(
+                                    child: SizedBox(),
+                                  ));
+                                }
+                              }
+
+                              return Padding(
+                                padding:
+                                    EdgeInsets.symmetric(horizontal: 16.wp),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: pageWidgets,
                                 ),
                               );
-                            }
-                            if (pageWidgets.length <
-                                (DeviceType().isMobile ? 4 : 3)) {
-                              for (int i = pageWidgets.length;
-                                  i < (DeviceType().isMobile ? 4 : 3);
-                                  i++) {
-                                pageWidgets.add(const Expanded(
-                                  child: SizedBox(),
-                                ));
-                              }
-                            }
-
-                            return Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 16.wp),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: pageWidgets,
-                              ),
-                            );
-                          },
+                            },
+                          ),
                         );
                       },
                     );
@@ -208,17 +210,23 @@ class _WorksheetViewState extends State<WorksheetView> {
                                   builder: (context, state) {
                                     if (state == 0) {
                                       return SizedBox(
-                                          height: 45.h, width: 45.h);
+                                          height: 75.h, width: 75.h);
                                     }
-                                    return GestureDetector(
-                                      onTap: () => context
-                                          .read<WorksheetPageCubit>()
-                                          .setPreviousPage(),
-                                      child: Image.asset(
-                                        'assets/ui/Group.png', // right arrow
-                                        fit: BoxFit.scaleDown,
-                                        height: 45.h,
-                                        width: 45.h,
+                                    return Padding(
+                                      padding:
+                                          Platform.isIOS && shortestSide < 600
+                                              ? EdgeInsets.only(left: 8.wp)
+                                              : const EdgeInsets.all(0),
+                                      child: GestureDetector(
+                                        onTap: () => context
+                                            .read<WorksheetPageCubit>()
+                                            .setPreviousPage(),
+                                        child: Image.asset(
+                                          'assets/ui/Group.png', // right arrow
+                                          fit: BoxFit.scaleDown,
+                                          height: 45.h,
+                                          width: 45.h,
+                                        ),
                                       ),
                                     );
                                   },

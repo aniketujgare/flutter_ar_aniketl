@@ -26,7 +26,7 @@ class MLKitTextRecognizer extends ITextRecognizer {
     final blocks = recognized.blocks;
     for (int i = 0; i < blocks.length; i++) {
       final e = blocks[i];
-      log("Block number $i");
+      // log("Block number $i");
       log(e.text);
     }
   }

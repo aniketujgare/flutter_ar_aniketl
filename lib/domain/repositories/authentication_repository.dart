@@ -81,7 +81,7 @@ class AuthenticationRepository {
         if (allProfiles.isNotEmpty && allProfiles[0].isNotEmpty) {
           studentProfileBox.clear();
           studentProfileBox.add(allProfiles[0][0]);
-          log(jsonEncode(allProfiles[0][0]));
+          // log(jsonEncode(allProfiles[0][0]));
           debugPrint('Data saved successfully.');
         } else {
           throw Exception('Empty profiles received');

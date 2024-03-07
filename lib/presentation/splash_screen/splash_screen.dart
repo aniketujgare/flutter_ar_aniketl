@@ -44,7 +44,7 @@ class SplashScreenState extends State<SplashScreen>
 
     super.initState();
     SystemChrome.setPreferredOrientations([
-      DeviceOrientation.landscapeLeft,
+      // DeviceOrientation.landscapeLeft,
       DeviceOrientation.landscapeRight,
     ]);
     // AuthenticationRepository().getStudentProfile().then(
@@ -57,7 +57,7 @@ class SplashScreenState extends State<SplashScreen>
 
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.landscapeRight,
-      DeviceOrientation.landscapeLeft,
+      // DeviceOrientation.landscapeLeft,
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);

@@ -133,7 +133,7 @@ class WorksheetCubit extends Cubit<WorksheetState> {
 
           List<StudentAnswer> studentAnswersList =
               jsonList.asMap().entries.map((entry) {
-            log('entry: ${entry.value}');
+            // log('entry: ${entry.value}');
 
             return StudentAnswer.fromJson(entry.key.toString(), entry.value);
           }).toList();
@@ -224,7 +224,7 @@ class WorksheetCubit extends Cubit<WorksheetState> {
     if (studentProfile?.studentId == -1) {
       return [];
     }
-    log(jsonEncode(studentProfile));
+    // log(jsonEncode(studentProfile));
     request.body = json.encode({
       "standard_id": "${studentProfile!.standardId}",
       "division_id": "${studentProfile!.divisionId}"

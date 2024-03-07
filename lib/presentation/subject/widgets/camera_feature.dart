@@ -165,7 +165,7 @@ class CameraFeatureState extends State<CameraFeature> {
   void dispose() {
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.landscapeRight,
-      DeviceOrientation.landscapeLeft,
+      // DeviceOrientation.landscapeLeft,
       // DeviceOrientation.portraitUp,
       // DeviceOrientation.portraitDown,
     ]);

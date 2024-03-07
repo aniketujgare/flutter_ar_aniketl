@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:connection_notifier/connection_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -22,11 +24,12 @@ class _WorksheetHistoryViewState extends State<WorksheetHistoryView> {
   void initState() {
     super.initState();
     context.read<WorksheetHistoryPageCubit>().setPage(0);
-    // context.read<WorksheetCubit>().getWorksheetsHistory();
   }
 
   @override
   Widget build(BuildContext context) {
+    var shortestSide = MediaQuery.of(context).size.shortestSide;
+
     return PopScope(
       canPop: false,
       child: Scaffold(
@@ -93,83 +96,90 @@ class _WorksheetHistoryViewState extends State<WorksheetHistoryView> {
                             ),
                           );
                         }
-                        return PageView.builder(
-                          controller: context
-                              .read<WorksheetHistoryPageCubit>()
-                              .pageCont,
-                          scrollDirection: Axis.horizontal,
-                          onPageChanged: (value) {
-                            context
+                        return Padding(
+                          padding: Platform.isIOS && shortestSide < 600
+                              ? EdgeInsets.only(left: 10.wp, right: 2.wp)
+                              : const EdgeInsets.all(0),
+                          child: PageView.builder(
+                            controller: context
                                 .read<WorksheetHistoryPageCubit>()
-                                .setPage(value);
-                          },
-                          itemCount: context
-                              .read<WorksheetHistoryPageCubit>()
-                              .maxLen, // Number of pages
-                          itemBuilder: (context, page) {
-                            int startIndex =
-                                page * (DeviceType().isMobile ? 4 : 3);
-                            int endIndex =
-                                (page + 1) * (DeviceType().isMobile ? 4 : 3);
+                                .pageCont,
+                            scrollDirection: Axis.horizontal,
+                            onPageChanged: (value) {
+                              context
+                                  .read<WorksheetHistoryPageCubit>()
+                                  .setPage(value);
+                            },
+                            itemCount: context
+                                .read<WorksheetHistoryPageCubit>()
+                                .maxLen, // Number of pages
+                            itemBuilder: (context, page) {
+                              int startIndex =
+                                  page * (DeviceType().isMobile ? 4 : 3);
+                              int endIndex =
+                                  (page + 1) * (DeviceType().isMobile ? 4 : 3);
 
-                            // Ensure endIndex does not exceed the total number of elements
-                            endIndex = endIndex > state.historyWorksheets.length
-                                ? state.historyWorksheets.length
-                                : endIndex;
+                              // Ensure endIndex does not exceed the total number of elements
+                              endIndex =
+                                  endIndex > state.historyWorksheets.length
+                                      ? state.historyWorksheets.length
+                                      : endIndex;
 
-                            // Create a list of widgets for this page
-                            List<Widget> pageWidgets = [];
+                              // Create a list of widgets for this page
+                              List<Widget> pageWidgets = [];
 
-                            for (int i = startIndex; i < endIndex; i++) {
-                              var workSheet = state.historyWorksheets[i];
-                              pageWidgets.add(
-                                Expanded(
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              WorksheetSolverView(
-                                            workSheetId: workSheet.id,
-                                            isEditable: false,
+                              for (int i = startIndex; i < endIndex; i++) {
+                                var workSheet = state.historyWorksheets[i];
+                                pageWidgets.add(
+                                  Expanded(
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                WorksheetSolverView(
+                                              workSheetId: workSheet.id,
+                                              isEditable: false,
+                                            ),
                                           ),
-                                        ),
-                                      );
-                                    },
-                                    child: Lesson(
-                                      worksheetTitle: workSheet.worksheetName,
-                                      subject: workSheet.subject,
-                                      teacher: workSheet.teacher,
-                                      allQuestionCount:
-                                          workSheet.allQuestionCount,
-                                      solvedQuestionCount:
-                                          workSheet.solvedQuestinCount,
-                                      deadline: workSheet.deadline,
+                                        );
+                                      },
+                                      child: Lesson(
+                                        worksheetTitle: workSheet.worksheetName,
+                                        subject: workSheet.subject,
+                                        teacher: workSheet.teacher,
+                                        allQuestionCount:
+                                            workSheet.allQuestionCount,
+                                        solvedQuestionCount:
+                                            workSheet.solvedQuestinCount,
+                                        deadline: workSheet.deadline,
+                                      ),
                                     ),
                                   ),
+                                );
+                              }
+                              if (pageWidgets.length <
+                                  (DeviceType().isMobile ? 4 : 3)) {
+                                for (int i = pageWidgets.length;
+                                    i < (DeviceType().isMobile ? 4 : 3);
+                                    i++) {
+                                  pageWidgets.add(const Expanded(
+                                    child: SizedBox(),
+                                  ));
+                                }
+                              }
+
+                              return Padding(
+                                padding:
+                                    EdgeInsets.symmetric(horizontal: 16.wp),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: pageWidgets,
                                 ),
                               );
-                            }
-                            if (pageWidgets.length <
-                                (DeviceType().isMobile ? 4 : 3)) {
-                              for (int i = pageWidgets.length;
-                                  i < (DeviceType().isMobile ? 4 : 3);
-                                  i++) {
-                                pageWidgets.add(const Expanded(
-                                  child: SizedBox(),
-                                ));
-                              }
-                            }
-
-                            return Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 16.wp),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: pageWidgets,
-                              ),
-                            );
-                          },
+                            },
+                          ),
                         );
                       },
                     );
@@ -198,18 +208,23 @@ class _WorksheetHistoryViewState extends State<WorksheetHistoryView> {
                                 //         .watch<WorksheetHistoryPageCubit>()
                                 //         .curridx !=
                                 //     0)
-                                GestureDetector(
-                                  onTap: () => context
-                                      .read<WorksheetHistoryPageCubit>()
-                                      .setPreviousPage(),
-                                  child: SizedBox(
-                                    height: 45.h,
-                                    width: 45.h,
-                                    child: Image.asset(
-                                      'assets/ui/Group.png', // right arrow
-                                      fit: BoxFit.scaleDown,
+                                Padding(
+                                  padding: Platform.isIOS && shortestSide < 600
+                                      ? EdgeInsets.only(left: 8.wp)
+                                      : const EdgeInsets.all(0),
+                                  child: GestureDetector(
+                                    onTap: () => context
+                                        .read<WorksheetHistoryPageCubit>()
+                                        .setPreviousPage(),
+                                    child: SizedBox(
                                       height: 45.h,
                                       width: 45.h,
+                                      child: Image.asset(
+                                        'assets/ui/Group.png', // right arrow
+                                        fit: BoxFit.scaleDown,
+                                        height: 45.h,
+                                        width: 45.h,
+                                      ),
                                     ),
                                   ),
                                 ),

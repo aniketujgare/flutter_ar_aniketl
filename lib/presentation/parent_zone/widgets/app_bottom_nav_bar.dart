@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ar/core/util/device_type.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:size_config/size_config.dart';
 
@@ -21,22 +22,22 @@ class AppBottomNavBar extends StatelessWidget {
           buildNavBarItems(
             index: 0,
             context: context,
-            pngIcon: 'assets/images/parent_zone/home.png',
+            pngIcon: 'assets/images/parent_zone/Home.png',
           ),
           buildNavBarItems(
             index: 1,
             context: context,
-            pngIcon: 'assets/images/parent_zone/groups.png',
+            pngIcon: 'assets/images/parent_zone/Groups.png',
           ),
           buildNavBarItems(
             index: 2,
             context: context,
-            pngIcon: 'assets/images/parent_zone/reports.png',
+            pngIcon: 'assets/images/parent_zone/Reports.png',
           ),
           buildNavBarItems(
             index: 3,
             context: context,
-            pngIcon: 'assets/images/parent_zone/settings.png',
+            pngIcon: 'assets/images/parent_zone/Settings.png',
           ),
         ],
       ),
@@ -54,11 +55,28 @@ class AppBottomNavBar extends StatelessWidget {
           onTap: () {
             context.read<AppNavigatorCubit>().gotoPageAtIndex(index);
           },
-          child: Padding(
-            padding: EdgeInsets.symmetric(vertical: 10.h),
-            child: Image.asset(
-              pngIcon,
-            ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              SizedBox(
+                height: 50.h,
+                child: Image.asset(
+                  pngIcon,
+                  fit: BoxFit.contain,
+                ),
+              ),
+              Text(
+                pngIcon.split('/').last.split('.').first,
+                style: context.read<AppNavigatorCubit>().state.index == index
+                    ? AppTextStyles.nunito120w700primary.copyWith(
+                        fontSize: DeviceType().isMobile ? 80.sp : 60.sp,
+                        color: Colors.black,
+                      )
+                    : AppTextStyles.nunito120w700primary.copyWith(
+                        fontSize: DeviceType().isMobile ? 80.sp : 60.sp),
+              ),
+            ],
           ),
         );
       },

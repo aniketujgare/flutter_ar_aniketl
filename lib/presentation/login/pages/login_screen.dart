@@ -51,8 +51,8 @@ class LoginScreenState extends State<LoginScreen>
   void dispose() {
     _animationController.dispose();
     SystemChrome.setPreferredOrientations([
-      // DeviceOrientation.landscapeRight,
-      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.landscapeRight,
+      // DeviceOrientation.landscapeLeft,
       // DeviceOrientation.portraitUp,
       // DeviceOrientation.portraitDown,
     ]);
@@ -69,7 +69,7 @@ class LoginScreenState extends State<LoginScreen>
           disconnected: const NetworkDisconnected(),
           connected: Padding(
             padding: EdgeInsets.fromLTRB(
-                0, DeviceType().isMobile ? 0.h : 80.h, 0, 0),
+                0, DeviceType().isMobile ? 50.h : 80.h, 0, 0),
             child: Stack(
               alignment: Alignment.topCenter,
               clipBehavior: Clip.none,

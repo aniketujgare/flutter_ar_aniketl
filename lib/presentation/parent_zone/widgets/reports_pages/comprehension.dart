@@ -24,7 +24,7 @@ class ComprehensionPage extends StatelessWidget {
               style: AppTextStyles.nunito100w700black
                   .copyWith(fontSize: DeviceType().isMobile ? 180.sp : 120.sp),
             ),
-            (DeviceType().isMobile ? 10.h : 25.h).verticalSpacer,
+            (DeviceType().isMobile ? 20.h : 15.h).verticalSpacer,
             SizedBox(
               child: CircularPercentIndicator(
                 radius: DeviceType().isMobile ? 620.w : 460.w,
@@ -40,7 +40,7 @@ class ComprehensionPage extends StatelessWidget {
               ),
             ),
 
-            (DeviceType().isMobile ? 10.h : 25.h).verticalSpacer,
+            (DeviceType().isMobile ? 20.h : 20.h).verticalSpacer,
             ...List.generate(3, (index) {
               var data = [
                 {

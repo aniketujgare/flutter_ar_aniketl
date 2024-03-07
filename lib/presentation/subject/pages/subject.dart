@@ -23,7 +23,7 @@ class _SubjectScreenState extends State<SubjectScreen> {
   void initState() {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
     SystemChrome.setPreferredOrientations([
-      DeviceOrientation.landscapeLeft,
+      // DeviceOrientation.landscapeLeft,
       DeviceOrientation.landscapeRight,
     ]);
     context.read<SubjectPageCubit>().setPage(0);

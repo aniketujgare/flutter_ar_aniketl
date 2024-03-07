@@ -39,7 +39,7 @@ class _ParentZoneScreenState extends State<ParentZoneScreen> {
   @override
   void dispose() {
     SystemChrome.setPreferredOrientations([
-      DeviceOrientation.landscapeLeft,
+      // DeviceOrientation.landscapeLeft,
       DeviceOrientation.landscapeRight,
     ]);
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light
@@ -59,6 +59,7 @@ class _ParentZoneScreenState extends State<ParentZoneScreen> {
             appBar: AppBar(
               automaticallyImplyLeading: false,
               backgroundColor: AppColors.accentColor,
+              toolbarHeight: DeviceType().isMobile ? null : 80.h,
               title: BlocBuilder<AppNavigatorCubit, AppNavigatorState>(
                 builder: (context, state) {
                   return Row(

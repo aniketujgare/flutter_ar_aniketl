@@ -234,11 +234,8 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView> {
                         }
                       },
                       icon: isLastQuestin
-                          ? IconButton(
-                              style: ButtonStyle(
-                                  backgroundColor: MaterialStatePropertyAll(
-                                      AppColors.submitGreenColor)),
-                              onPressed: () async {
+                          ? GestureDetector(
+                              onTap: () async {
                                 if (widget.isEditable) {
                                   context
                                       .read<WorksheetSolverCubit>()
@@ -246,13 +243,40 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView> {
                                   await Constants().showAlertDialog(context);
                                 }
                               },
-                              color: AppColors.submitGreenColor,
-                              icon: Text(
-                                'Submit',
-                                style: AppTextStyles.nunito100w400white
-                                    .copyWith(fontSize: 45.sp),
+                              child: Container(
+                                width: 90.h,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(22.h),
+                                  color: AppColors.submitGreenColor,
+                                ),
+                                child: Center(
+                                    child: Text(
+                                  'Submit',
+                                  style: AppTextStyles.nunito100w400white
+                                      .copyWith(fontSize: 85.sp),
+                                )),
                               ),
                             )
+
+                          // IconButton(
+                          //     style: ButtonStyle(
+                          //         backgroundColor: MaterialStatePropertyAll(
+                          //             AppColors.submitGreenColor)),
+                          //     onPressed: () async {
+                          //       if (widget.isEditable) {
+                          //         context
+                          //             .read<WorksheetSolverCubit>()
+                          //             .answerSubmit(true);
+                          //         await Constants().showAlertDialog(context);
+                          //       }
+                          //     },
+                          //     color: AppColors.submitGreenColor,
+                          //     icon: Text(
+                          //       'Submit',
+                          //       style: AppTextStyles.nunito100w400white
+                          //           .copyWith(fontSize: 45.sp),
+                          //     ),
+                          //   )
                           : RotatedBox(
                               quarterTurns: 2,
                               child: Image.asset(

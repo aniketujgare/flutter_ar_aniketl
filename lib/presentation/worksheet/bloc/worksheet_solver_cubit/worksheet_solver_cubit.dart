@@ -34,7 +34,7 @@ class WorksheetSolverCubit extends Cubit<WorksheetSolverState> {
     debugPrint('final ans sheet1: ${jsonEncode(studentAnswerList)}');
     //Generate final state answerlist
     List<StudentAnswer> answerSheet = [];
-    log(jsonEncode(studentAnswerList));
+    // log(jsonEncode(studentAnswerList));
     // map final answer sheet with studentsAnsweList
     if (studentAnswerList.isNotEmpty) {
       answerSheet.addAll(studentAnswerList);

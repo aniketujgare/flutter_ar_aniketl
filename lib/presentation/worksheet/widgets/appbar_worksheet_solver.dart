@@ -21,68 +21,52 @@ AppBar appBarWorksheetSolver(BuildContext context) {
   }
 
   return AppBar(
-    toolbarHeight: DeviceType().isMobile ? 56 : 80,
+    titleSpacing: 0.0,
+    toolbarHeight: DeviceType().isMobile ? null : 80.h,
     automaticallyImplyLeading: false,
     backgroundColor: AppColors.primaryColor,
-    leading: null,
-    title: Row(
-      children: [
-        Expanded(
-          flex: 2,
-          child: GestureDetector(
-            onTap: () => Navigator.pop(context),
-            child: Container(
-              margin: EdgeInsets.only(left: 0.wp, right: 6.wp),
-              height: 8.wp,
-              // width: 36.h,
-              child: Image.asset(
-                'assets/images/reusable_icons/back_button_primary.png',
-                color: Colors.white,
-              ),
+    leading: GestureDetector(
+      onTap: () => Navigator.pop(context),
+      child: UnconstrainedBox(
+        child: Image.asset(
+          'assets/images/reusable_icons/back_button_primary.png',
+          color: Colors.white,
+          height: 50.h,
+        ),
+      ),
+    ),
+    actions: [
+      GestureDetector(
+        onTap: _showAlertDialog,
+        child: Container(
+          height: DeviceType().isMobile ? 8.wp : 6.5.wp,
+          decoration: ShapeDecoration(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(13),
             ),
           ),
+          child: Image.asset('assets/images/PNG Icons/info.png'),
         ),
-        Expanded(
-          flex: 13,
-          child: BlocBuilder<WorksheetSolverCubit, WorksheetSolverState>(
-            builder: (context, state) {
-              if (state.status == WorkSheetSolverStatus.loaded) {
-                if (state.questions.isEmpty) {
-                  return const SizedBox();
-                }
-                return Text(
-                    'Q.${state.currentQuestion + 1} ${state.questions[state.currentQuestion].getQuestionTypeString()}',
-                    textAlign: TextAlign.center,
-                    style: AppTextStyles.uniformRounded136BoldAppBarStyle
-                        .copyWith(
-                            fontSize:
-                                DeviceType().isMobile ? 126.sp : 136.sp * 0.7,
-                            color: Colors.white));
-              } else {
-                return const SizedBox();
-              }
-            },
-          ),
-        ),
-        Expanded(
-          flex: 2,
-          child: GestureDetector(
-            onTap: _showAlertDialog,
-            child: Container(
-              height: DeviceType().isMobile ? 8.wp : 6.5.wp,
-              // margin: EdgeInsets.only(
-              //     right: 4.wp, left: DeviceType().isMobile ? 4.wp : 2.wp),
-              decoration: ShapeDecoration(
-                // color: AppColors.submitGreenColor,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(13),
-                ),
-              ),
-              child: Image.asset('assets/images/PNG Icons/info.png'),
-            ),
-          ),
-        )
-      ],
+      ),
+    ],
+    title: BlocBuilder<WorksheetSolverCubit, WorksheetSolverState>(
+      builder: (context, state) {
+        if (state.status == WorkSheetSolverStatus.loaded) {
+          if (state.questions.isEmpty) {
+            return const SizedBox();
+          }
+          return Text(
+              'Q.${state.currentQuestion + 1} ${state.questions[state.currentQuestion].getQuestionTypeString()}',
+              textAlign: TextAlign.center,
+              style: DeviceType().isMobile
+                  ? AppTextStyles.uniformRounded136BoldAppBarStyle
+                      .copyWith(color: Colors.white)
+                  : AppTextStyles.uniformRounded136BoldAppBarStyle
+                      .copyWith(fontSize: 136.sp * 0.7, color: Colors.white));
+        } else {
+          return const SizedBox();
+        }
+      },
     ),
   );
 }
