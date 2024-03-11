@@ -98,7 +98,7 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
                       fit: BoxFit.contain,
                     ),
                     Positioned(
-                      right: 12.h,
+                      right: 10.h,
                       child: Text(
                         context
                                 .read<StudentProfileCubit>()
@@ -129,7 +129,7 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
                       fit: BoxFit.contain,
                     ),
                     Positioned(
-                      right: 12.h,
+                      right: 10.h,
                       child: Text(
                         context
                                 .read<StudentProfileCubit>()

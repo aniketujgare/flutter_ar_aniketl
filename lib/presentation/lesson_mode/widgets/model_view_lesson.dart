@@ -65,37 +65,37 @@ class _ModelViewLessonState extends State<ModelViewLesson> {
                 //         fit: BoxFit.cover,
                 //       )),
                 // ),
-                if (Platform.isIOS)
-                  Align(
-                    alignment: Alignment.bottomRight,
-                    child: GestureDetector(
-                      //? IOS AR View
-                      onTap: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(builder: (context) {
-                            return ARViewIOS(
-                              modelUrl: widget.modelUrl,
-                              imageFileName: widget.modelName,
-                            );
-                            // return ARViewIOS(modelUrl: widget.modelUrl);
-                          }),
-                        );
-                      },
-                      child: SizedBox(
-                          height: 65.h,
-                          width: 65.h,
-                          child: CircleAvatar(
-                            radius: 30,
-                            backgroundColor: Colors.green,
-                            child: Padding(
-                              padding: EdgeInsets.all(13.h),
-                              child: Image.asset(
-                                'assets/images/PNG Icons/AR Icon.png',
-                              ),
-                            ),
-                          )),
-                    ),
-                  ),
+                // if (Platform.isIOS)
+                //   Align(
+                //     alignment: Alignment.bottomRight,
+                //     child: GestureDetector(
+                //       //? IOS AR View
+                //       onTap: () {
+                //         // Navigator.of(context).push(
+                //         //   MaterialPageRoute(builder: (context) {
+                //         //     return ARViewIOS(
+                //         //       modelUrl: widget.modelUrl,
+                //         //       imageFileName: widget.modelName,
+                //         //     );
+                //         //     // return ARViewIOS(modelUrl: widget.modelUrl);
+                //         //   }),
+                //         // );
+                //       },
+                //       child: SizedBox(
+                //           height: 65.h,
+                //           width: 65.h,
+                //           child: CircleAvatar(
+                //             radius: 30,
+                //             backgroundColor: Colors.green,
+                //             child: Padding(
+                //               padding: EdgeInsets.all(13.h),
+                //               child: Image.asset(
+                //                 'assets/images/PNG Icons/AR Icon.png',
+                //               ),
+                //             ),
+                //           )),
+                //     ),
+                //   ),
                 // Align(
                 //   alignment: Alignment.topLeft,
                 //   child: SizedBox(

@@ -42,6 +42,8 @@ class _WorksheetViewState extends State<WorksheetView> {
         backgroundColor: AppColors.parentZoneScaffoldColor,
         appBar: AppBar(
           titleSpacing: 0.0,
+          leadingWidth: 125.h,
+          centerTitle: true,
           toolbarHeight: DeviceType().isMobile ? null : 80.h,
           automaticallyImplyLeading: false,
           backgroundColor: AppColors.accentColor,
@@ -66,9 +68,12 @@ class _WorksheetViewState extends State<WorksheetView> {
                       builder: (context) => const WorksheetHistoryView()));
                 }
               },
-              child: Image.asset(
-                'assets/images/PNG Icons/history.png',
-                height: DeviceType().isMobile ? 9.wp : 6.5.wp,
+              child: Padding(
+                padding: EdgeInsets.only(right: 50.h),
+                child: Image.asset(
+                  'assets/images/PNG Icons/history.png',
+                  height: DeviceType().isMobile ? 9.wp : 6.5.wp,
+                ),
               ),
             ),
           ],

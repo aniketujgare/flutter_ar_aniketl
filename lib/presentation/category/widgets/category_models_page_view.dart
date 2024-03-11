@@ -418,16 +418,24 @@ class BuildModelContainer extends StatelessWidget {
                     height: constraints.maxHeight *
                         (DeviceType().isMobile ? 0.25 : 0.2),
                     child: Center(
-                      child: Text(
-                        name,
-                        style: DeviceType().isMobile
-                            ? AppTextStyles.nunito100w700white
-                            : AppTextStyles.nunito100w700white.copyWith(
-                                fontSize: DeviceType().isMobile
-                                    ? 110.sp
-                                    : 16 *
-                                        MediaQuery.of(context).size.aspectRatio,
-                              ),
+                      child: FittedBox(
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 2.wp),
+                          child: Text(
+                            name,
+                            // overflow: TextOverflow.ellipsis,
+                            style: DeviceType().isMobile
+                                ? AppTextStyles.nunito100w700white
+                                : AppTextStyles.nunito100w700white.copyWith(
+                                    fontSize: DeviceType().isMobile
+                                        ? 110.sp
+                                        : 16 *
+                                            MediaQuery.of(context)
+                                                .size
+                                                .aspectRatio,
+                                  ),
+                          ),
+                        ),
                       ),
                     ),
                   ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ar/presentation/worksheet/bloc/question_timer_cubit/question_timer_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:size_config/size_config.dart';
 
@@ -22,11 +23,16 @@ AppBar appBarWorksheetSolver(BuildContext context) {
 
   return AppBar(
     titleSpacing: 0.0,
+    centerTitle: true,
+    leadingWidth: 125.h,
     toolbarHeight: DeviceType().isMobile ? null : 80.h,
     automaticallyImplyLeading: false,
     backgroundColor: AppColors.primaryColor,
     leading: GestureDetector(
-      onTap: () => Navigator.pop(context),
+      onTap: () {
+        context.read<QuestionTimerCubit>().stopTime();
+        Navigator.pop(context);
+      },
       child: UnconstrainedBox(
         child: Image.asset(
           'assets/images/reusable_icons/back_button_primary.png',
@@ -36,6 +42,28 @@ AppBar appBarWorksheetSolver(BuildContext context) {
       ),
     ),
     actions: [
+      Padding(
+        padding: EdgeInsets.only(right: 50.h),
+        child: BlocBuilder<QuestionTimerCubit, QuestionTimerState>(
+          builder: (context, state) {
+            if (state.status == QuestionTimerStatus.progressing ||
+                state.status == QuestionTimerStatus.end) {
+              return Text('Time: ${state.currentTime} sec',
+                  style: DeviceType().isMobile
+                      ? AppTextStyles.uniformRounded136BoldAppBarStyle.copyWith(
+                          color: state.currentTime <= 10
+                              ? AppColors.redMessageSharedFileContainerColor
+                              : Colors.white)
+                      : AppTextStyles.uniformRounded136BoldAppBarStyle.copyWith(
+                          fontSize: 136.sp * 0.7,
+                          color: state.currentTime <= 10
+                              ? AppColors.redMessageSharedFileContainerColor
+                              : Colors.white));
+            }
+            return const SizedBox();
+          },
+        ),
+      ),
       GestureDetector(
         onTap: _showAlertDialog,
         child: Container(
@@ -45,7 +73,10 @@ AppBar appBarWorksheetSolver(BuildContext context) {
               borderRadius: BorderRadius.circular(13),
             ),
           ),
-          child: Image.asset('assets/images/PNG Icons/info.png'),
+          child: Padding(
+            padding: EdgeInsets.only(right: 50.h),
+            child: Image.asset('assets/images/PNG Icons/info.png'),
+          ),
         ),
       ),
     ],

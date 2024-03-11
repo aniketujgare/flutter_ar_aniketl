@@ -10,6 +10,7 @@ import 'package:size_config/size_config.dart';
 
 import '../../../../core/util/device_type.dart';
 import '../../../core/util/styles.dart';
+import '../bloc/question_timer_cubit/question_timer_cubit.dart';
 import '../bloc/worksheet_solver_cubit/worksheet_solver_cubit.dart';
 import '../models/questions.dart';
 import '../widgets/appbar_worksheet_solver.dart';
@@ -46,6 +47,7 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView> {
 
     context.read<WorksheetSolverCubit>().setCurrentQuestionZero();
     context.read<WorksheetSolverCubit>().init(widget.workSheetId);
+    context.read<QuestionTimerCubit>().startTimer();
   }
 
   List<Map<String, dynamic>> answers = [];

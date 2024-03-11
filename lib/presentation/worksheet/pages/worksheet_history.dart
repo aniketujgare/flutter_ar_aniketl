@@ -35,44 +35,28 @@ class _WorksheetHistoryViewState extends State<WorksheetHistoryView> {
       child: Scaffold(
         backgroundColor: AppColors.parentZoneScaffoldColor,
         appBar: AppBar(
-          toolbarHeight: DeviceType().isMobile ? 56 : 80,
+          titleSpacing: 0.0,
+          centerTitle: true,
+          leadingWidth: 125.h,
+          toolbarHeight: DeviceType().isMobile ? null : 80.h,
           automaticallyImplyLeading: false,
           backgroundColor: AppColors.accentColor,
-          leading: null,
-          title: Row(
-            children: [
-              GestureDetector(
-                onTap: () => Navigator.pop(context),
-                child: Container(
-                  margin: EdgeInsets.only(left: 2.wp, right: 3.wp),
-                  height: 36.h,
-                  width: 36.h,
-                  child: Image.asset(
-                    'assets/images/reusable_icons/back_button_primary.png',
-                  ),
-                ),
+          leading: GestureDetector(
+            onTap: () => Navigator.pop(context),
+            child: UnconstrainedBox(
+              child: Image.asset(
+                'assets/images/reusable_icons/back_button_primary.png',
+                color: AppColors.primaryColor,
+                height: DeviceType().isMobile ? 10.wp : 6.5.wp,
               ),
-              const Spacer(),
-              Text(
-                'Submitted Worksheets',
-                style: DeviceType().isMobile
-                    ? AppTextStyles.uniformRounded136BoldAppBarStyle
-                    : AppTextStyles.uniformRounded136BoldAppBarStyle
-                        .copyWith(fontSize: 136.sp * 0.7),
-              ),
-              const Spacer(),
-              GestureDetector(
-                onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => const WorksheetHistoryView()));
-                },
-                child: Container(
-                  margin: EdgeInsets.only(left: 2.wp, right: 3.wp),
-                  height: 36.h,
-                  width: 36.h,
-                ),
-              ),
-            ],
+            ),
+          ),
+          title: Text(
+            'Submitted Worksheets',
+            style: DeviceType().isMobile
+                ? AppTextStyles.uniformRounded136BoldAppBarStyle
+                : AppTextStyles.uniformRounded136BoldAppBarStyle
+                    .copyWith(fontSize: 136.sp * 0.7),
           ),
         ),
         body: ConnectionNotifierToggler(

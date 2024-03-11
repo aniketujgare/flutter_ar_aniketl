@@ -11,9 +11,6 @@ import '../bloc/models_new_cubit/models_new_cubit.dart';
 import 'category_models_page_view.dart';
 
 class CategoryPageView extends StatefulWidget {
-  late final List<ArCategory> arCategoryies;
-  late List<String> categoryImgList;
-
   CategoryPageView({super.key});
 
   @override
@@ -21,14 +18,15 @@ class CategoryPageView extends StatefulWidget {
 }
 
 class _CategoryPageViewState extends State<CategoryPageView> {
+  List<ArCategory> arCategoryies = [];
+  List<String> categoryImgList = [];
   @override
   void initState() {
-    widget.arCategoryies = context.read<CategoryNewCubit>().state.arCategory;
-    widget.categoryImgList =
-        context.read<CategoryNewCubit>().state.categoryImgList;
+    arCategoryies = context.read<CategoryNewCubit>().state.arCategory;
+    categoryImgList = context.read<CategoryNewCubit>().state.categoryImgList;
     context
         .read<CategoryPageCubit>()
-        .setmaxLength((widget.arCategoryies.length / 6).ceil());
+        .setmaxLength((arCategoryies.length / 6).ceil());
     context.read<CategoryPageCubit>().setPage(0);
     super.initState();
   }
@@ -46,7 +44,7 @@ class _CategoryPageViewState extends State<CategoryPageView> {
             context.read<CategoryPageCubit>().setPage(value);
             debugPrint('page changed $value');
           },
-          itemCount: (widget.arCategoryies.length / 6)
+          itemCount: (arCategoryies.length / 6)
               .ceil(), // 6 containers per page (2 rows with 3 containers each)
           itemBuilder: (context, a) {
             return DeviceType().isMobile
@@ -92,13 +90,13 @@ class _CategoryPageViewState extends State<CategoryPageView> {
         3,
         (index) {
           final colorIndex = startIndex + index;
-          return colorIndex < widget.arCategoryies.length
+          return colorIndex < arCategoryies.length
               ? BuildCategoryContainer(
-                  image: widget.categoryImgList[colorIndex],
-                  name: widget.arCategoryies[colorIndex].categoryName,
+                  image: categoryImgList[colorIndex],
+                  name: arCategoryies[colorIndex].categoryName,
                   model:
                       'https://d3ag5oij4wsyi3.cloudfront.net/kidsappmodel/models/{arModels[colorIndex].modelId}.glb',
-                  category: '${widget.arCategoryies[colorIndex].categoryId}',
+                  category: '${arCategoryies[colorIndex].categoryId}',
                 )
               : const Expanded(child: EmptyBox());
         },

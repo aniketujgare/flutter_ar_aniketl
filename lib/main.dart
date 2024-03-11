@@ -31,6 +31,7 @@ import 'presentation/parent_zone/bloc/teacher_message_cubit/teacher_message_cubi
 import 'presentation/splash_screen/bloc/splash_animation_bloc.dart';
 import 'presentation/splash_screen/splash_screen.dart';
 import 'presentation/subject/bloc/subject_page_cubit.dart';
+import 'presentation/worksheet/bloc/question_timer_cubit/question_timer_cubit.dart';
 import 'presentation/worksheet/bloc/worksheet_cubit/worksheet_cubit.dart';
 import 'presentation/worksheet/bloc/worksheet_history_cubit/worksheet_history_cubit.dart';
 import 'presentation/worksheet/bloc/worksheet_history_page_cubit/worksheet_history_page_cubit.dart';
@@ -169,6 +170,9 @@ class MyAppState extends State<MyApp> {
             ),
             BlocProvider(
               create: (context) => LessonPageCubit(),
+            ),
+            BlocProvider(
+              create: (context) => QuestionTimerCubit(),
             ),
           ],
           child: MaterialApp(
