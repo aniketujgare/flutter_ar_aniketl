@@ -6,6 +6,7 @@ import 'package:flutter_ar/core/util/constants.dart';
 import 'package:flutter_ar/presentation/worksheet/widgets/questions/odd_one_out_img_question.dart';
 import 'package:flutter_ar/presentation/worksheet/widgets/worksheet_submitted_box.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:size_config/size_config.dart';
 
 import '../../../../core/util/device_type.dart';
@@ -15,6 +16,7 @@ import '../bloc/worksheet_solver_cubit/worksheet_solver_cubit.dart';
 import '../models/questions.dart';
 import '../widgets/appbar_worksheet_solver.dart';
 import '../widgets/bottom_indicator_bar_questions.dart';
+import '../widgets/front_cam_recording.dart';
 import '../widgets/questions/arithmetic_question.dart';
 import '../widgets/questions/ascending_decending_question.dart';
 import '../widgets/questions/fill_in_blank_question.dart';
@@ -183,6 +185,7 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView> {
     }
   }
 
+  Offset fabPosition = Offset(20.h, 20.h);
   @override
   Widget build(BuildContext context) {
     bool isFirstQuestin =
@@ -325,6 +328,31 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView> {
                 width: double.infinity,
                 color: Colors.white.withOpacity(0),
               ),
+            Positioned(
+                left: fabPosition.dx,
+                top: fabPosition.dy,
+                child: Draggable(
+                  feedback: Shimmer.fromColors(
+                    baseColor: Colors.grey.shade300,
+                    highlightColor: Colors.grey.shade100,
+                    child: Container(
+                      height: 100.h,
+                      width: 135.h,
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          border: Border.all(
+                              color: AppColors.primaryColor, width: 4.h)),
+                    ),
+                  ),
+                  onDragEnd: (details) {
+                    Offset newPos = details.offset;
+                    newPos = Offset(newPos.dx, newPos.dy - 65.h);
+                    setState(() {
+                      fabPosition = newPos; // Update FAB position when dragged
+                    });
+                  },
+                  child: FrontCamRecording(),
+                )),
           ],
         ),
       ),
