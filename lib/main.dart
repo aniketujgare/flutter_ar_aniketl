@@ -2,6 +2,8 @@ import 'package:connection_notifier/connection_notifier.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_ar/presentation/worksheet/bloc/front_cam_recording_cubit/front_cam_recording_cubit.dart';
+import 'package:flutter_ar/presentation/worksheet/widgets/front_cam_recording.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:size_config/size_config.dart';
@@ -173,6 +175,9 @@ class MyAppState extends State<MyApp> {
             ),
             BlocProvider(
               create: (context) => QuestionTimerCubit(),
+            ),
+            BlocProvider(
+              create: (context) => FrontCamRecordingCubit(),
             ),
           ],
           child: MaterialApp(

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ar/core/util/constants.dart';
+import 'package:flutter_ar/presentation/worksheet/bloc/front_cam_recording_cubit/front_cam_recording_cubit.dart';
 import 'package:flutter_ar/presentation/worksheet/widgets/questions/odd_one_out_img_question.dart';
 import 'package:flutter_ar/presentation/worksheet/widgets/worksheet_submitted_box.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -49,7 +50,14 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView> {
 
     context.read<WorksheetSolverCubit>().setCurrentQuestionZero();
     context.read<WorksheetSolverCubit>().init(widget.workSheetId);
-    context.read<QuestionTimerCubit>().startTimer();
+    context.read<QuestionTimerCubit>().initTimer();
+    context.read<FrontCamRecordingCubit>().initCameras();
+  }
+
+  @override
+  void dispose() {
+    // context.read<FrontCamRecordingCubit>().dispose();
+    super.dispose();
   }
 
   List<Map<String, dynamic>> answers = [];
@@ -311,6 +319,7 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView> {
                       ),
                     );
                   }
+                  // context.read<QuestionTimerCubit>().startTimer();
                   return getQuestion(state, state.currentQuestion);
                 } else {
                   return const Center(

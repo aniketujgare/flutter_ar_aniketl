@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ar/core/util/constants.dart';
+import 'package:flutter_ar/presentation/worksheet/bloc/front_cam_recording_cubit/front_cam_recording_cubit.dart';
 import 'package:flutter_ar/presentation/worksheet/bloc/question_timer_cubit/question_timer_cubit.dart';
+import 'package:flutter_ar/presentation/worksheet/widgets/front_cam_recording.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:size_config/size_config.dart';
 
@@ -31,6 +34,7 @@ AppBar appBarWorksheetSolver(BuildContext context) {
     leading: GestureDetector(
       onTap: () {
         context.read<QuestionTimerCubit>().stopTime();
+
         Navigator.pop(context);
       },
       child: UnconstrainedBox(
@@ -44,23 +48,79 @@ AppBar appBarWorksheetSolver(BuildContext context) {
     actions: [
       Padding(
         padding: EdgeInsets.only(right: 50.h),
-        child: BlocBuilder<QuestionTimerCubit, QuestionTimerState>(
+        child: BlocBuilder<WorksheetSolverCubit, WorksheetSolverState>(
           builder: (context, state) {
-            if (state.status == QuestionTimerStatus.progressing ||
-                state.status == QuestionTimerStatus.end) {
-              return Text('Time: ${state.currentTime} sec',
-                  style: DeviceType().isMobile
-                      ? AppTextStyles.uniformRounded136BoldAppBarStyle.copyWith(
-                          color: state.currentTime <= 10
-                              ? AppColors.redMessageSharedFileContainerColor
-                              : Colors.white)
-                      : AppTextStyles.uniformRounded136BoldAppBarStyle.copyWith(
-                          fontSize: 136.sp * 0.7,
-                          color: state.currentTime <= 10
-                              ? AppColors.redMessageSharedFileContainerColor
-                              : Colors.white));
+            if (state.status == WorkSheetSolverStatus.loaded) {
+              if (state.questions.isEmpty) {
+                return const SizedBox();
+              }
+              context.read<QuestionTimerCubit>().startTimer();
+              return BlocConsumer<QuestionTimerCubit, QuestionTimerState>(
+                listener: (context, timerstate) async {
+                  if (timerstate.status == QuestionTimerStatus.end) {
+                    if (state.currentQuestion == state.questions.length - 1) {
+                      print('time eds');
+
+                      await _showAlertDialog();
+                    }
+                  }
+                },
+                builder: (context, timerstate) {
+                  if (timerstate.status == QuestionTimerStatus.end) {
+                    // move to next question
+                    print(
+                        'logs: ${state.currentQuestion} || ${state.questions.length - 1}');
+                    if (state.currentQuestion == state.questions.length - 1) {
+                      // _showAlertDialog;
+                      context.read<WorksheetSolverCubit>().answerSubmit(true);
+
+                      print('worksheet submitted by timer');
+                      context
+                          .read<FrontCamRecordingCubit>()
+                          .stopVideoRecording();
+                    } else {
+                      context.read<WorksheetSolverCubit>().loadNextQuestion();
+                    }
+                  }
+                  if (timerstate.status == QuestionTimerStatus.progressing ||
+                      timerstate.status == QuestionTimerStatus.end) {
+                    return Text('Time: ${timerstate.currentTime} sec',
+                        style: DeviceType().isMobile
+                            ? AppTextStyles.uniformRounded136BoldAppBarStyle
+                                .copyWith(
+                                    color: timerstate.currentTime <= 10
+                                        ? AppColors
+                                            .redMessageSharedFileContainerColor
+                                        : Colors.white)
+                            : AppTextStyles.uniformRounded136BoldAppBarStyle
+                                .copyWith(
+                                    fontSize: 136.sp * 0.7,
+                                    color: timerstate.currentTime <= 10
+                                        ? AppColors
+                                            .redMessageSharedFileContainerColor
+                                        : Colors.white));
+                  }
+                  return Text('Time: 30 sec',
+                      style: DeviceType().isMobile
+                          ? AppTextStyles.uniformRounded136BoldAppBarStyle
+                              .copyWith(
+                                  color: timerstate.currentTime <= 10
+                                      ? AppColors
+                                          .redMessageSharedFileContainerColor
+                                      : Colors.white)
+                          : AppTextStyles.uniformRounded136BoldAppBarStyle
+                              .copyWith(
+                                  fontSize: 136.sp * 0.7,
+                                  color: timerstate.currentTime <= 10
+                                      ? AppColors
+                                          .redMessageSharedFileContainerColor
+                                      : Colors.white));
+                },
+              );
+            } else {
+              context.read<QuestionTimerCubit>().stopTime();
+              return const SizedBox();
             }
-            return const SizedBox();
           },
         ),
       ),
