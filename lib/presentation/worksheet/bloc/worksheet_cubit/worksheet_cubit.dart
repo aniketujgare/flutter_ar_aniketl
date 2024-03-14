@@ -23,6 +23,18 @@ part 'worksheet_cubit.freezed.dart';
 class WorksheetCubit extends Cubit<WorksheetState> {
   WorksheetCubit() : super(const WorksheetState.initial());
   //?API's using in UI
+  void updateWorksheets(int worksheetId) {
+    emit(state.copyWith(
+      status: WorksheetStatus.loading,
+    ));
+    List<WorksheetDetailsModel> updatedWprlsheets = List.from(state.worksheets);
+    print('id is :${worksheetId}');
+    updatedWprlsheets.removeWhere((element) => element.id == worksheetId);
+    emit(state.copyWith(
+        status: WorksheetStatus.loaded,
+        worksheets: updatedWprlsheets,
+        historyWorksheets: state.historyWorksheets));
+  }
 
   void getWorksheets() async {
     emit(state.copyWith(status: WorksheetStatus.loading));

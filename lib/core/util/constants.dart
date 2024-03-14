@@ -11,6 +11,8 @@ class Constants {
       context: context,
       barrierDismissible: true,
       builder: (BuildContext context) {
+        Future.delayed(Duration(milliseconds: 300))
+            .then((value) => Navigator.of(context).pop());
         return const Dialog(
           child: WorksheetSubmittedBox(),
         );

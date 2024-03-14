@@ -4,6 +4,8 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ar/core/util/constants.dart';
 import 'package:flutter_ar/presentation/worksheet/bloc/front_cam_recording_cubit/front_cam_recording_cubit.dart';
+import 'package:flutter_ar/presentation/worksheet/bloc/worksheet_cubit/worksheet_cubit.dart';
+import 'package:flutter_ar/presentation/worksheet/pages/worksheet.dart';
 import 'package:flutter_ar/presentation/worksheet/widgets/questions/odd_one_out_img_question.dart';
 import 'package:flutter_ar/presentation/worksheet/widgets/worksheet_submitted_box.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -253,7 +255,22 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView> {
                                   context
                                       .read<WorksheetSolverCubit>()
                                       .answerSubmit(true);
-                                  await Constants().showAlertDialog(context);
+
+                                  context
+                                      .read<FrontCamRecordingCubit>()
+                                      .stopVideoRecording();
+                                  context.read<QuestionTimerCubit>().stopTime();
+                                  context
+                                      .read<WorksheetCubit>()
+                                      .updateWorksheets(widget.workSheetId);
+                                  await Future.delayed(
+                                          const Duration(milliseconds: 300))
+                                      .then((value) =>
+                                          Navigator.of(context).pop());
+                                  await Constants()
+                                      .showAlertDialog(context)
+                                      .then((value) =>
+                                          Navigator.of(context).pop());
                                 }
                               },
                               child: Container(
@@ -360,7 +377,7 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView> {
                       fabPosition = newPos; // Update FAB position when dragged
                     });
                   },
-                  child: FrontCamRecording(),
+                  child: const FrontCamRecording(),
                 )),
           ],
         ),

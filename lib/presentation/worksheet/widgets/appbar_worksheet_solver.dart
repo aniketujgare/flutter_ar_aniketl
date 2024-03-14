@@ -15,7 +15,7 @@ AppBar appBarWorksheetSolver(BuildContext context) {
   Future<void> _showAlertDialog() async {
     return showDialog<void>(
       context: context,
-      barrierDismissible: true,
+      barrierDismissible: false,
       builder: (BuildContext context) {
         return const Dialog(
           child: WorksheetSubmittedBox(),
@@ -34,7 +34,7 @@ AppBar appBarWorksheetSolver(BuildContext context) {
     leading: GestureDetector(
       onTap: () {
         context.read<QuestionTimerCubit>().stopTime();
-
+        context.read<FrontCamRecordingCubit>().stopVideoRecording();
         Navigator.pop(context);
       },
       child: UnconstrainedBox(
@@ -103,18 +103,10 @@ AppBar appBarWorksheetSolver(BuildContext context) {
                   return Text('Time: 30 sec',
                       style: DeviceType().isMobile
                           ? AppTextStyles.uniformRounded136BoldAppBarStyle
-                              .copyWith(
-                                  color: timerstate.currentTime <= 10
-                                      ? AppColors
-                                          .redMessageSharedFileContainerColor
-                                      : Colors.white)
+                              .copyWith(color: Colors.white)
                           : AppTextStyles.uniformRounded136BoldAppBarStyle
                               .copyWith(
-                                  fontSize: 136.sp * 0.7,
-                                  color: timerstate.currentTime <= 10
-                                      ? AppColors
-                                          .redMessageSharedFileContainerColor
-                                      : Colors.white));
+                                  fontSize: 136.sp * 0.7, color: Colors.white));
                 },
               );
             } else {

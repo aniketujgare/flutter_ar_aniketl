@@ -17,20 +17,20 @@ part 'worksheet_solver_cubit.freezed.dart';
 part 'worksheet_solver_state.dart';
 
 class WorksheetSolverCubit extends Cubit<WorksheetSolverState> {
-  int _workSheetId = 0;
-  int _studentId = 0;
+  int workSheetId = 0;
+  int studentId = 0;
   WorksheetSolverCubit() : super(const WorksheetSolverState.initial());
   void init(int workSheetId) async {
-    _workSheetId = workSheetId;
+    workSheetId = workSheetId;
     StudentProfileModel? studentProfile =
         await AuthenticationRepository().getStudentProfile();
-    _studentId = studentProfile?.studentId ?? 0;
+    studentId = studentProfile?.studentId ?? 0;
     emit(state.copyWith(status: WorkSheetSolverStatus.loading));
     //Load questions list
     List<Question> questionsList = await getQuestionsList(workSheetId);
     //Load student answer list
     List<StudentAnswer> studentAnswerList =
-        await getStudentAnswerList(workSheetId, _studentId);
+        await getStudentAnswerList(workSheetId, studentId);
     debugPrint('final ans sheet1: ${jsonEncode(studentAnswerList)}');
     //Generate final state answerlist
     List<StudentAnswer> answerSheet = [];
@@ -101,8 +101,8 @@ class WorksheetSolverCubit extends Cubit<WorksheetSolverState> {
     //sort the finalAnsSheet
     answerSheet.sort((a, b) => a.questionNo.compareTo(b.questionNo));
     Map<String, dynamic> formattedAnswers = {
-      "worksheet_id": _workSheetId,
-      "student_id": _studentId,
+      "worksheet_id": workSheetId,
+      "student_id": studentId,
       "data": [],
     };
     for (var studentAnswer in answerSheet) {
@@ -111,8 +111,8 @@ class WorksheetSolverCubit extends Cubit<WorksheetSolverState> {
     var dataString = jsonEncode(formattedAnswers["data"]);
 
     var finalString = {
-      "worksheet_id": _workSheetId,
-      "student_id": _studentId,
+      "worksheet_id": workSheetId,
+      "student_id": studentId,
       "data": dataString,
     };
     debugPrint(finalString.toString());
@@ -159,8 +159,8 @@ class WorksheetSolverCubit extends Cubit<WorksheetSolverState> {
           Uri.parse(
               'https://cnpewunqs5.execute-api.ap-south-1.amazonaws.com/dev/setstudentworksheetstatus'));
       request.body = json.encode({
-        "worksheet_id": _workSheetId,
-        "student_id": _studentId,
+        "worksheet_id": workSheetId,
+        "student_id": studentId,
         "status": "submitted",
         "submitdate": currentDate
       });
@@ -218,7 +218,7 @@ class WorksheetSolverCubit extends Cubit<WorksheetSolverState> {
         Uri.parse(
             'https://cnpewunqs5.execute-api.ap-south-1.amazonaws.com/dev/getstudentworksheetdatav2'));
     request.body =
-        json.encode({"worksheet_id": _workSheetId, "student_id": _studentId});
+        json.encode({"worksheet_id": workSheetId, "student_id": studentId});
     request.headers.addAll(headers);
 
     http.StreamedResponse response = await request.send();
