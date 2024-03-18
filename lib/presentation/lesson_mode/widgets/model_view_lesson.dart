@@ -34,6 +34,7 @@ class _ModelViewLessonState extends State<ModelViewLesson> {
       child: Scaffold(
         backgroundColor: const Color(0XFFF4F2FE),
         body: ConnectionNotifierToggler(
+          loading: const SizedBox.shrink(),
           disconnected: const NetworkDisconnected(),
           connected: Padding(
             padding: EdgeInsets.fromLTRB(116.w, 40.h, 116.w, 40.h),

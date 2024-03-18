@@ -113,6 +113,7 @@ class _MessageViewState extends State<MessageView> {
           ),
         ),
         body: ConnectionNotifierToggler(
+          loading: const SizedBox.shrink(),
           disconnected: const NetworkDisconnected(),
           connected: Padding(
             padding: EdgeInsets.fromLTRB(4.wp, 0, 4.wp, 0),

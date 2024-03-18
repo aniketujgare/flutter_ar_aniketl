@@ -55,6 +55,7 @@ class _ModelViewState extends State<ModelView> {
     return Scaffold(
       backgroundColor: const Color(0XFFF4F2FE),
       body: ConnectionNotifierToggler(
+        loading: const SizedBox.shrink(),
         disconnected: const NetworkDisconnected(),
         connected: BlocBuilder<ModelAssetHandlerBloc, ModelAssetHandlerState>(
           builder: (context, state) {

@@ -33,7 +33,7 @@ class ReusableTextField2 extends StatelessWidget {
           ),
         ),
         Transform.translate(
-          offset: DeviceType().isMobile ? Offset(-1.h, -7.h) : offset,
+          offset: DeviceType().isMobile ? Offset(0, -7.h) : offset,
           child: Container(
             width: 70.wp,
             padding: EdgeInsets.symmetric(
@@ -42,6 +42,7 @@ class ReusableTextField2 extends StatelessWidget {
               cursorHeight: DeviceType().isMobile ? null : 35.h,
               textAlign: TextAlign.center,
               onTap: onTap,
+              scrollPhysics: const NeverScrollableScrollPhysics(),
               controller: controller,
               showCursor: true,
               readOnly: true,

@@ -1,0 +1,30 @@
+The lag you're experiencing and the 3D model not loading could be due to a few different factors. Let's address them step by step:
+
+1. **Performance Issues (Laggy Experience)**:
+    - **Complexity of the AR Scene**: If your AR scene is too complex or if the 3D models are very high in detail and file size, this can lead to performance issues, especially on less powerful devices.
+    - **Optimize 3D Models**: Ensure that your 3D models are optimized for mobile devices. This includes reducing the polygon count and texture sizes. There are tools and software that can help you optimize 3D models for AR experiences.
+    - **Update and Optimize Code**: Make sure your Flutter and `ar_flutter_plugin` are up to date. Also, review your code for any inefficient loops or operations that could be optimized.
+
+2. **3D Model Not Loading**:
+    - **URL and Model Format**: Double-check the URL of your 3D model. Ensure that the URL is correct and the model format is supported by the plugin. The `webGLB` type indicates you're using a GLB format, which is typically supported, but still, verify that the model is accessible and not corrupted.
+    - **Internet Connection**: Since the model is being loaded from a web URL, ensure that the device has a stable internet connection. You might want to add error handling to catch issues related to network requests.
+    - **Permissions**: If the model is not loading, also ensure that your app has the necessary permissions to access the internet if your model is hosted online.
+
+3. **Debugging**:
+    - **Error Handling**: Implement more detailed error handling within your `onError` callbacks. Instead of just printing a generic message, try to capture and log more details about the error.
+    - **Logging**: Add more `print` statements or use a logging package to log key events and variables' values to understand where exactly things are going wrong.
+    - **Check AR Session**: Ensure that your AR session is properly initialized and hasn't encountered any errors that could affect loading models or tracking.
+
+4. **Testing**:
+    - **Different Devices**: Test the app on different devices if possible. AR performance can vary significantly between different hardware.
+    - **Profile the App**: Utilize Flutter's performance profiling tools to identify any bottlenecks in your app.
+
+5. **Code Specific**:
+    - In your `onPlaneOrPointTapped` method, it seems correct in how it handles adding an anchor and a node. However, consider adding more logs around adding the node and anchor to ensure they are being added successfully and are not the failure points.
+    - Check the scale, position, and rotation values you're applying to the new node. Extreme values might make the model appear too small, too large, or off-camera.
+
+6. **Network and Model Checks**:
+    - Manually check the model URL in a browser or through a network request tool like Postman to ensure it's downloadable and not behind a firewall or requiring authentication.
+    - Try with a different, known-to-work model URL to determine if the issue is with the specific model or the loading process in general.
+
+Implement these steps and monitor which changes improve the app's performance and loading issues. If specific errors arise or if there's a particular area where the app struggles, that information could help narrow down the cause further.

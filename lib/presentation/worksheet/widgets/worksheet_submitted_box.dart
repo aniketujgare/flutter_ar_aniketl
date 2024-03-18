@@ -154,17 +154,33 @@ class WorksheetSubmittedBox extends StatelessWidget {
                       ),
                     ],
                   ),
-                  SizedBox(
-                    height: DeviceType().isMobile ? 50.h : 60.h,
-                    child: ReusableButton(
-                      circularRadius: 10.h,
-                      fontSize: 90.sp,
-                      padding: EdgeInsets.symmetric(horizontal: 4.wp),
-                      onPressed: () {},
-                      buttonColor: AppColors.primaryColor,
-                      text: 'View Graded Worksheet',
-                      textColor: Colors.white,
-                    ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ReusableButton(
+                          circularRadius: 10.h,
+                          fontSize: DeviceType().isMobile ? 75.sp : 65.sp,
+                          padding: EdgeInsets.symmetric(horizontal: 2.wp),
+                          onPressed: () {},
+                          buttonColor: AppColors.primaryColor,
+                          text: 'View Graded Worksheet',
+                          textColor: Colors.white,
+                        ),
+                      ),
+                      Expanded(
+                        child: ReusableButton(
+                          circularRadius: 10.h,
+                          fontSize: 90.sp,
+                          padding: EdgeInsets.symmetric(horizontal: 2.wp),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          buttonColor: AppColors.primaryColor,
+                          text: 'Back',
+                          textColor: Colors.white,
+                        ),
+                      ),
+                    ],
                   )
                 ],
               ),

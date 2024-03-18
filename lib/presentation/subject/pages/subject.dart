@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:size_config/size_config.dart';
 
 import '../../../core/reusable_widgets/network_disconnected.dart';
+import '../../../core/student_profile_cubit/student_profile_cubit.dart';
 import '../../../core/util/device_type.dart';
 import '../../../core/util/styles.dart';
 import '../../parent_zone/pages/parent_zone_screen.dart';
@@ -33,72 +34,86 @@ class _SubjectScreenState extends State<SubjectScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return PopScope(
-      canPop: false,
-      child: Scaffold(
-        backgroundColor: AppColors.parentZoneScaffoldColor,
-        body: ConnectionNotifierToggler(
-          disconnected: const NetworkDisconnected(),
-          connected: Stack(
-            alignment: Alignment.center,
-            children: [
-              //! Center Image and Subject Name
-              _buildSubjectImage(context),
-              // _buildSubjectName(),
-              Padding(
-                padding: EdgeInsets.fromLTRB(8.wp, 4.wp, 8.wp, 4.wp),
-                child: Column(
+    return OrientationBuilder(
+      builder: (BuildContext context, Orientation orientation) {
+        if (orientation == Orientation.portrait) {
+          return Container(
+            height: double.maxFinite,
+            width: double.maxFinite,
+            color: AppColors.parentZoneScaffoldColor,
+          );
+        } else {
+          return PopScope(
+            canPop: false,
+            child: Scaffold(
+              backgroundColor: AppColors.parentZoneScaffoldColor,
+              body: ConnectionNotifierToggler(
+                loading: const SizedBox.shrink(),
+                disconnected: const NetworkDisconnected(),
+                connected: Stack(
+                  alignment: Alignment.center,
                   children: [
-                    //! Top
-                    buildTop(context),
-                    //! Center page previous and next buttons
-                    Expanded(
-                        child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        GestureDetector(
-                          onTap: () => context
-                              .read<SubjectPageCubit>()
-                              .setPreviousPage(),
-                          child: SizedBox(
-                            height: 45.h,
-                            width: 45.h,
-                            child: Image.asset(
-                              'assets/ui/Group.png', // right arrow
-                              fit: BoxFit.scaleDown,
-                              height: 45.h,
-                              width: 45.h,
-                            ),
-                          ),
-                        ),
-                        GestureDetector(
-                          onTap: () =>
-                              context.read<SubjectPageCubit>().setNextPage(),
-                          child: RotatedBox(
-                            quarterTurns: 2,
-                            child: SizedBox(
-                              height: 45.h,
-                              width: 45.h,
-                              child: Image.asset(
-                                'assets/ui/Group.png', // right arrow
-                                fit: BoxFit.scaleDown,
-                                height: 45.h,
-                                width: 45.h,
+                    //! Center Image and Subject Name
+                    _buildSubjectImage(context),
+                    // _buildSubjectName(),
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(8.wp, 4.wp, 8.wp, 4.wp),
+                      child: Column(
+                        children: [
+                          //! Top
+                          buildTop(context),
+                          //! Center page previous and next buttons
+                          Expanded(
+                              child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              GestureDetector(
+                                onTap: () => context
+                                    .read<SubjectPageCubit>()
+                                    .setPreviousPage(),
+                                child: SizedBox(
+                                  height: 45.h,
+                                  width: 45.h,
+                                  child: Image.asset(
+                                    'assets/ui/Group.png', // right arrow
+                                    fit: BoxFit.scaleDown,
+                                    height: 45.h,
+                                    width: 45.h,
+                                  ),
+                                ),
                               ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    )),
-                    //! Bottom
-                    buildBottom(context),
+                              GestureDetector(
+                                onTap: () => context
+                                    .read<SubjectPageCubit>()
+                                    .setNextPage(),
+                                child: RotatedBox(
+                                  quarterTurns: 2,
+                                  child: SizedBox(
+                                    height: 45.h,
+                                    width: 45.h,
+                                    child: Image.asset(
+                                      'assets/ui/Group.png', // right arrow
+                                      fit: BoxFit.scaleDown,
+                                      height: 45.h,
+                                      width: 45.h,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          )),
+                          //! Bottom
+                          buildBottom(context),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               ),
-            ],
-          ),
-        ),
-      ),
+            ),
+          );
+        }
+      },
     );
   }
 
@@ -120,7 +135,7 @@ class _SubjectScreenState extends State<SubjectScreen> {
 
   SizedBox buildTop(BuildContext context) {
     return SizedBox(
-      height: 75.h,
+      height: DeviceType().isMobile ? 75.h : 78.h,
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -135,21 +150,26 @@ class _SubjectScreenState extends State<SubjectScreen> {
           const Spacer(),
           Row(
             children: [
-              Stack(
-                alignment: Alignment.centerRight,
-                clipBehavior: Clip.hardEdge,
-                children: [
-                  Image.asset(
-                    'assets/images/PNG Icons/esr.001.png', // User Icon
-                    fit: BoxFit.contain,
-                  ),
-                  SizedBox(
-                    width: DeviceType().isMobile ? 15.wp : 9.wp,
-                    child: FittedBox(
-                      fit: BoxFit.scaleDown,
+              SizedBox(
+                child: Stack(
+                  clipBehavior: Clip.hardEdge,
+                  alignment: Alignment.centerRight,
+                  children: [
+                    Image.asset(
+                      'assets/images/PNG Icons/esr.001.png', // User Icon
+                      fit: BoxFit.contain,
+                    ),
+                    Positioned(
+                      right: 10.h,
                       child: Text(
-                        '999',
-                        textAlign: TextAlign.center,
+                        context
+                                .read<StudentProfileCubit>()
+                                .state
+                                .studentProfileModel
+                                ?.coins
+                                .toString() ??
+                            '999',
+                        textAlign: TextAlign.right,
                         style: DeviceType().isMobile
                             ? AppTextStyles.nunito100w700white
                             : AppTextStyles.nunito100w700white.copyWith(
@@ -157,25 +177,30 @@ class _SubjectScreenState extends State<SubjectScreen> {
                                     MediaQuery.of(context).size.aspectRatio),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
               2.horizontalSpacerPercent,
-              Stack(
-                alignment: Alignment.centerRight,
-                clipBehavior: Clip.hardEdge,
-                children: [
-                  Image.asset(
-                    'assets/images/PNG Icons/esr.002.png', // User Icon
-                    fit: BoxFit.contain,
-                  ),
-                  SizedBox(
-                    width: DeviceType().isMobile ? 15.wp : 9.wp,
-                    child: FittedBox(
-                      fit: BoxFit.scaleDown,
+              SizedBox(
+                child: Stack(
+                  clipBehavior: Clip.hardEdge,
+                  alignment: Alignment.centerRight,
+                  children: [
+                    Image.asset(
+                      'assets/images/PNG Icons/esr.002.png', // User Icon
+                      fit: BoxFit.contain,
+                    ),
+                    Positioned(
+                      right: 10.h,
                       child: Text(
-                        '999',
-                        textAlign: TextAlign.center,
+                        context
+                                .read<StudentProfileCubit>()
+                                .state
+                                .studentProfileModel
+                                ?.gems
+                                .toString() ??
+                            '999',
+                        textAlign: TextAlign.right,
                         style: DeviceType().isMobile
                             ? AppTextStyles.nunito100w700white
                             : AppTextStyles.nunito100w700white.copyWith(
@@ -183,8 +208,8 @@ class _SubjectScreenState extends State<SubjectScreen> {
                                     MediaQuery.of(context).size.aspectRatio),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ],
           ),

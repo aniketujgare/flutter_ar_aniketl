@@ -145,6 +145,7 @@ Widget getQuestion(LessonModeState state, int i) {
     );
   } else if (state.lesson[i].fib != null) {
     var fibQ = FillBlankQuestion(
+      index: 0,
       answer: state.lesson[i].fib!.answer,
       question: state.lesson[i].fib!.question,
     );

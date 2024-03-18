@@ -24,6 +24,7 @@ class CategoryScreen extends StatelessWidget {
       child: Scaffold(
         backgroundColor: AppColors.parentZoneScaffoldColor,
         body: ConnectionNotifierToggler(
+            loading: const SizedBox.shrink(),
             disconnected: const NetworkDisconnected(),
             connected: Stack(
               children: [
@@ -34,7 +35,7 @@ class CategoryScreen extends StatelessWidget {
                         padding: Platform.isIOS && shortestSide < 600
                             ? EdgeInsets.only(left: 6.wp)
                             : const EdgeInsets.all(0),
-                        child: CategoryPageView());
+                        child: const CategoryPageView());
                   }
                   return const Center(
                       child: CircularProgressIndicator.adaptive(

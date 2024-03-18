@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -110,34 +113,46 @@ class WormIndicator extends StatelessWidget {
 
   Color _pickColor(int index, BuildContext context) {
     var worsheetBloc = context.read<WorksheetSolverCubit>().state;
+    var answerAtIndex = worsheetBloc.answerSheet
+        .firstWhereOrNull((element) => element.questionNo == index);
+    // if (answerAtIndex != null) {
+    //   answerAtIndex = answerAtIndex.question.answer.answer;
+    // }
 
+    // debugPrint(
+    //     'worksheet index: $index ${jsonEncode(worsheetBloc.answerSheet)}');
+    if (answerAtIndex != null && answerAtIndex.question.answer.answer != null) {
+      return Colors.green;
+    }
+    // return Colors.green;
     // Check if the current index is greater than or equal to the number of answered questions
-    if (worsheetBloc.currentQuestion >= worsheetBloc.answerSheet.length) {
-      // If so, return amber color for the current index
-      if (index == worsheetBloc.currentQuestion) {
-        return AppColors.accentColor;
-      }
-    } else {
-      // If the current index is less than the number of answered questions,
-      // return submit green color if the current index is the marked answer
-      if (index == worsheetBloc.currentQuestion &&
-          worsheetBloc.answerSheet[index] != null) {
-        return AppColors.submitGreenColor;
-      }
-    }
+    // if (worsheetBloc.currentQuestion >= worsheetBloc.answerSheet.length) {
+    //   // If so, return amber color for the current index
+    //   if (index == worsheetBloc.currentQuestion) {
+    //     return AppColors.accentColor;
+    //   }
+    // } else {
+    //   // If the current index is less than the number of answered questions,
+    //   // return submit green color if the current index is the marked answer
+    //   if (index == worsheetBloc.currentQuestion &&
+    //       worsheetBloc.answerSheet[index].question.answer.answer != null) {
+    //     return AppColors.submitGreenColor;
+    //   }
+    // }
 
-    // If the current index is marked in the answer sheet, return submit green color
-    if (worsheetBloc.answerSheet.length > index &&
-        worsheetBloc.answerSheet[index] != null) {
-      return AppColors.submitGreenColor;
-    }
+    // // If the current index is marked in the answer sheet, return submit green color
+    // if (worsheetBloc.answerSheet.length > index &&
+    //     worsheetBloc.answerSheet[index].question.answer.answer != null) {
+    //   return AppColors.submitGreenColor;
+    // }
 
-    // For every fifth index, return transparent color
-    if ((index + 1) % 5 == 0) {
-      return Colors.transparent;
-    }
+    // // For every fifth index, return transparent color
+    // if ((index + 1) % 5 == 0) {
+    //   return Colors.transparent;
+    // }
 
-    // For other cases, return the default color
+    // // For other cases, return the default color
+    // return Colors.green;
     return const Color(0XFFE9E9E9);
   }
 }

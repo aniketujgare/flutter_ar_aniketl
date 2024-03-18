@@ -237,8 +237,9 @@ class _LoginPage4GuestState extends State<LoginPage4Guest> {
           70.verticalSpacer,
           ElevatedButton(
             onPressed: () {
-              context.read<LoginBloc>().add(
-                  const LoginEvent.updateStatus(status: LoginStatus.phoneNo1));
+              context.read<LoginBloc>().add(const LoginEvent.updateStatus(
+                    status: LoginStatus.phoneNo1,
+                  ));
             },
             style: ButtonStyle(
               shape: MaterialStateProperty.all(const CircleBorder()),

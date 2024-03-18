@@ -1,4 +1,5 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.smartxr.kidsv2">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.smartxr.kidsv2" 
+ xmlns:tools="http://schemas.android.com/tools">
 <uses-permission android:name="android.permission.CAMERA" />
 <uses-permission android:name="android.permission.INTERNET" />
 <!-- Limits app visibility in the Google Play Store to ARCore supported devices
@@ -41,7 +42,7 @@
             android:value="2" />
                 <!-- "AR Required" app, requires "Google Play Services for AR" (ARCore)
          to be installed, as the app does not include any non-AR features. -->
-    <!-- <meta-data android:name="com.google.ar.core" android:value="optional"   tools:replace="android:value"/> -->
+    <meta-data android:name="com.google.ar.core" android:value="optional"   tools:replace="android:value"/>
     </application>
     <!-- Provide required visibility configuration for API level 30 and above -->
     <queries>

@@ -14,6 +14,7 @@ import 'core/util/styles.dart';
 import 'data/models/student_profile_model.dart';
 import 'demo/firebase_options.dart';
 import 'domain/repositories/authentication_repository.dart';
+import 'presentation/ar_core/flutter_ar.dart';
 import 'presentation/category/bloc/category_new_cubit/category_new_cubit.dart';
 import 'presentation/category/bloc/category_page_cubit/category_page_cubit.dart';
 import 'presentation/category/bloc/model_asset_handler_bloc/model_asset_handler_bloc.dart';
@@ -173,12 +174,12 @@ class MyAppState extends State<MyApp> {
             BlocProvider(
               create: (context) => LessonPageCubit(),
             ),
-            BlocProvider(
-              create: (context) => QuestionTimerCubit(),
-            ),
-            BlocProvider(
-              create: (context) => FrontCamRecordingCubit(),
-            ),
+            // BlocProvider(
+            //   create: (context) => QuestionTimerCubit(),
+            // ),
+            // BlocProvider(
+            //   create: (context) => FrontCamRecordingCubit(),
+            // ),
           ],
           child: MaterialApp(
             debugShowCheckedModeBanner: false,

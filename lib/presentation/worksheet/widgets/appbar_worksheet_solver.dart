@@ -33,8 +33,8 @@ AppBar appBarWorksheetSolver(BuildContext context) {
     backgroundColor: AppColors.primaryColor,
     leading: GestureDetector(
       onTap: () {
-        context.read<QuestionTimerCubit>().stopTime();
-        context.read<FrontCamRecordingCubit>().stopVideoRecording();
+        // context.read<QuestionTimerCubit>().stopTime();
+        // context.read<FrontCamRecordingCubit>().stopVideoRecording();
         Navigator.pop(context);
       },
       child: UnconstrainedBox(
@@ -46,78 +46,78 @@ AppBar appBarWorksheetSolver(BuildContext context) {
       ),
     ),
     actions: [
-      Padding(
-        padding: EdgeInsets.only(right: 50.h),
-        child: BlocBuilder<WorksheetSolverCubit, WorksheetSolverState>(
-          builder: (context, state) {
-            if (state.status == WorkSheetSolverStatus.loaded) {
-              if (state.questions.isEmpty) {
-                return const SizedBox();
-              }
-              context.read<QuestionTimerCubit>().startTimer();
-              return BlocConsumer<QuestionTimerCubit, QuestionTimerState>(
-                listener: (context, timerstate) async {
-                  if (timerstate.status == QuestionTimerStatus.end) {
-                    if (state.currentQuestion == state.questions.length - 1) {
-                      print('time eds');
+      // Padding(
+      //   padding: EdgeInsets.only(right: 50.h),
+      //   child: BlocBuilder<WorksheetSolverCubit, WorksheetSolverState>(
+      //     builder: (context, state) {
+      //       if (state.status == WorkSheetSolverStatus.loaded) {
+      //         if (state.questions.isEmpty) {
+      //           return const SizedBox();
+      //         }
+      //         // context.read<QuestionTimerCubit>().startTimer();
+      //         return BlocConsumer<QuestionTimerCubit, QuestionTimerState>(
+      //           listener: (context, timerstate) async {
+      //             if (timerstate.status == QuestionTimerStatus.end) {
+      //               if (state.currentQuestion == state.questions.length - 1) {
+      //                 print('time eds');
 
-                      await _showAlertDialog();
-                    }
-                  }
-                },
-                builder: (context, timerstate) {
-                  if (timerstate.status == QuestionTimerStatus.end) {
-                    // move to next question
-                    print(
-                        'logs: ${state.currentQuestion} || ${state.questions.length - 1}');
-                    if (state.currentQuestion == state.questions.length - 1) {
-                      // _showAlertDialog;
-                      context.read<WorksheetSolverCubit>().answerSubmit(true);
+      //                 await _showAlertDialog();
+      //               }
+      //             }
+      //           },
+      //           builder: (context, timerstate) {
+      //             if (timerstate.status == QuestionTimerStatus.end) {
+      //               // move to next question
+      //               print(
+      //                   'logs: ${state.currentQuestion} || ${state.questions.length - 1}');
+      //               if (state.currentQuestion == state.questions.length - 1) {
+      //                 // _showAlertDialog;
+      //                 context.read<WorksheetSolverCubit>().answerSubmit(true);
 
-                      print('worksheet submitted by timer');
-                      context
-                          .read<FrontCamRecordingCubit>()
-                          .stopVideoRecording();
-                    } else {
-                      context.read<WorksheetSolverCubit>().loadNextQuestion();
-                    }
-                  }
-                  if (timerstate.status == QuestionTimerStatus.progressing ||
-                      timerstate.status == QuestionTimerStatus.end) {
-                    return Text('Time: ${timerstate.currentTime} sec',
-                        style: DeviceType().isMobile
-                            ? AppTextStyles.uniformRounded136BoldAppBarStyle
-                                .copyWith(
-                                    color: timerstate.currentTime <= 10
-                                        ? AppColors
-                                            .redMessageSharedFileContainerColor
-                                        : Colors.white)
-                            : AppTextStyles.uniformRounded136BoldAppBarStyle
-                                .copyWith(
-                                    fontSize: 136.sp * 0.7,
-                                    color: timerstate.currentTime <= 10
-                                        ? AppColors
-                                            .redMessageSharedFileContainerColor
-                                        : Colors.white));
-                  }
-                  return Text('Time: 30 sec',
-                      style: DeviceType().isMobile
-                          ? AppTextStyles.uniformRounded136BoldAppBarStyle
-                              .copyWith(color: Colors.white)
-                          : AppTextStyles.uniformRounded136BoldAppBarStyle
-                              .copyWith(
-                                  fontSize: 136.sp * 0.7, color: Colors.white));
-                },
-              );
-            } else {
-              context.read<QuestionTimerCubit>().stopTime();
-              return const SizedBox();
-            }
-          },
-        ),
-      ),
+      //                 print('worksheet submitted by timer');
+      //                 context
+      //                     .read<FrontCamRecordingCubit>()
+      //                     .stopVideoRecording();
+      //               } else {
+      //                 context.read<WorksheetSolverCubit>().loadNextQuestion();
+      //               }
+      //             }
+      //             if (timerstate.status == QuestionTimerStatus.progressing ||
+      //                 timerstate.status == QuestionTimerStatus.end) {
+      //               return Text('Time: ${timerstate.currentTime} sec',
+      //                   style: DeviceType().isMobile
+      //                       ? AppTextStyles.uniformRounded136BoldAppBarStyle
+      //                           .copyWith(
+      //                               color: timerstate.currentTime <= 10
+      //                                   ? AppColors
+      //                                       .redMessageSharedFileContainerColor
+      //                                   : Colors.white)
+      //                       : AppTextStyles.uniformRounded136BoldAppBarStyle
+      //                           .copyWith(
+      //                               fontSize: 136.sp * 0.7,
+      //                               color: timerstate.currentTime <= 10
+      //                                   ? AppColors
+      //                                       .redMessageSharedFileContainerColor
+      //                                   : Colors.white));
+      //             }
+      //             return Text('Time: 30 sec',
+      //                 style: DeviceType().isMobile
+      //                     ? AppTextStyles.uniformRounded136BoldAppBarStyle
+      //                         .copyWith(color: Colors.white)
+      //                     : AppTextStyles.uniformRounded136BoldAppBarStyle
+      //                         .copyWith(
+      //                             fontSize: 136.sp * 0.7, color: Colors.white));
+      //           },
+      //         );
+      //       } else {
+      //         context.read<QuestionTimerCubit>().stopTime();
+      //         return const SizedBox();
+      //       }
+      //     },
+      //   ),
+      // ),
       GestureDetector(
-        onTap: _showAlertDialog,
+        onTap: () {},
         child: Container(
           height: DeviceType().isMobile ? 8.wp : 6.5.wp,
           decoration: ShapeDecoration(

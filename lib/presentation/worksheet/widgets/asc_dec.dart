@@ -19,7 +19,7 @@ class AscendingDecendingTese extends StatelessWidget {
           children: <Widget>[
             // Draggable Widget
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 ...List.generate(
                     4,

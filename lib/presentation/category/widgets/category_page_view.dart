@@ -11,7 +11,7 @@ import '../bloc/models_new_cubit/models_new_cubit.dart';
 import 'category_models_page_view.dart';
 
 class CategoryPageView extends StatefulWidget {
-  CategoryPageView({super.key});
+  const CategoryPageView({super.key});
 
   @override
   State<CategoryPageView> createState() => _CategoryPageViewState();

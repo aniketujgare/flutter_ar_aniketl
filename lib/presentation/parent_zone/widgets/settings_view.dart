@@ -66,15 +66,15 @@ class _SettingsViewState extends State<SettingsView> {
             },
           ),
         ),
-        56.verticalSpacer,
-        ReusableButton(
-          onPressed: () {
-            Constants().showAppSnackbar(context, 'Saved succesfully!');
-          },
-          buttonColor: AppColors.primaryColor,
-          text: 'Save Settings',
-          textColor: Colors.white,
-        ),
+        // 56.verticalSpacer,
+        // ReusableButton(
+        //   onPressed: () {
+        //     Constants().showAppSnackbar(context, 'Saved succesfully!');
+        //   },
+        //   buttonColor: AppColors.primaryColor,
+        //   text: 'Save Settings',
+        //   textColor: Colors.white,
+        // ),
       ],
     );
   }

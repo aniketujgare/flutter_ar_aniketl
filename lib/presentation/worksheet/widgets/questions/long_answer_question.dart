@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_ar/core/util/styles.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
@@ -34,6 +36,9 @@ class _LongAnswerQuestionState extends State<LongAnswerQuestion> {
 
   @override
   void initState() {
+    if (widget.markedAnswer != null) {
+      uploadedImgUrl = widget.markedAnswer;
+    }
     super.initState();
     _picker = ImagePicker();
   }
@@ -48,6 +53,8 @@ class _LongAnswerQuestionState extends State<LongAnswerQuestion> {
     return file?.path;
   }
 
+  String uploadedImgUrl = '';
+  bool _showPreview = false;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -58,38 +65,82 @@ class _LongAnswerQuestionState extends State<LongAnswerQuestion> {
       child: SingleChildScrollView(
         child: SizedBox(
           width: double.infinity,
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
+          child: Stack(
+            alignment: Alignment.center,
             children: [
-              DeviceType().isMobile
-                  ? 105.verticalSpacer
-                  : (widget.screenSize.height * 0.3).verticalSpacer,
-              QuestionText(question: widget.question.question),
-              DeviceType().isMobile ? 55.verticalSpacer : 85.verticalSpacer,
-              GestureDetector(
-                onTap: () async {
-                  try {
-                    XFile? file =
-                        await _picker.pickImage(source: ImageSource.camera);
+              if (_showPreview) ...[
+                BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
+                  child: Container(
+                    color: Colors.white.withOpacity(0.6),
+                  ),
+                ),
+                Container(
+                  child: Center(
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10.0.h),
+                      child: Image.network(uploadedImgUrl),
+                    ),
+                  ),
+                  height: 300.h,
+                  width: 300.h,
+                )
+              ],
+              if (uploadedImgUrl != '')
+                Transform.translate(
+                  offset: Offset(300.h, 55.h),
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: GestureDetector(
+                      onLongPressEnd: (details) => setState(() {
+                        // _showPreview = true;
+                      }),
+                      child: Container(
+                          height: 200.h,
+                          width: 200.h,
+                          decoration: BoxDecoration(
+                              image: DecorationImage(
+                                  image: NetworkImage(uploadedImgUrl)))),
+                    ),
+                  ),
+                ),
+              Column(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  DeviceType().isMobile
+                      ? 105.verticalSpacer
+                      : (widget.screenSize.height * 0.3).verticalSpacer,
+                  QuestionText(question: widget.question.question),
+                  DeviceType().isMobile ? 55.verticalSpacer : 85.verticalSpacer,
+                  GestureDetector(
+                    onTap: () async {
+                      try {
+                        XFile? file =
+                            await _picker.pickImage(source: ImageSource.camera);
 
-                    // Send the image to the dummy API
-                    if (file != null) {
-                      String url = await sendImageToAPI(file.path);
-                      if (context.mounted) {
-                        context
-                            .read<WorksheetSolverCubit>()
-                            .setAnswer(widget.questionIndex, url);
+                        // Send the image to the dummy API
+                        if (file != null) {
+                          String url = await sendImageToAPI(file.path);
+                          uploadedImgUrl = url;
+                          if (context.mounted) {
+                            context
+                                .read<WorksheetSolverCubit>()
+                                .setAnswer(widget.questionIndex, url);
+                          }
+                          setState(() {});
+                        }
+                      } catch (e) {
+                        debugPrint('Error taking picture: $e');
                       }
-                    }
-                  } catch (e) {
-                    debugPrint('Error taking picture: $e');
-                  }
-                },
-                child: SizedBox(
-                    height: 55,
-                    child: Image.asset('assets/images/PNG Icons/Cam 1.png')),
+                    },
+                    child: SizedBox(
+                        height: 55,
+                        child:
+                            Image.asset('assets/images/PNG Icons/Cam 1.png')),
+                  ),
+                ],
               ),
             ],
           ),

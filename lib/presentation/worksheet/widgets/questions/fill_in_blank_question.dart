@@ -40,10 +40,21 @@ class _FillInTheBlankQuestionState extends State<FillInTheBlankQuestion> {
   List<String> markedAnswers = [];
   int noOfTextFileds = 1;
   List<TextEditingController> textControllers = [];
-
+  String fibQuestion = '';
   @override
   void initState() {
     super.initState();
+    var wordsInQuestion = widget.question.question.trim().split(' ');
+    for (int idx in widget.question.index) {
+      print(
+          'blank indexes: ${widget.question.index} | word: ${wordsInQuestion[idx]}');
+      // int Wordlength = wordsInQuestion[idx].length;
+      // String underScoreStr = wordsInQuestion[idx].replaceRange(0, null, "_");
+      wordsInQuestion[idx] = '____';
+    }
+
+    fibQuestion = wordsInQuestion.join(' ');
+
     _picker = ImagePicker();
 
     /// Can be [MLKitTextRecognizer] or [TesseractTextRecognizer]
@@ -133,7 +144,7 @@ class _FillInTheBlankQuestionState extends State<FillInTheBlankQuestion> {
                 : (DeviceType().isMobile
                     ? 80.verticalSpacer
                     : (widget.screenSize.height * 0.23).verticalSpacer),
-            QuestionText(question: widget.question.question),
+            QuestionText(question: fibQuestion),
             DeviceType().isMobile ? 55.verticalSpacer : 85.verticalSpacer,
             ...List.generate(
               noOfTextFileds,

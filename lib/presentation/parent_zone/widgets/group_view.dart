@@ -50,9 +50,17 @@ class _GroupsViewState extends State<GroupsView> {
           case TeacherListStatus.loaded:
             if (state.teachersList.isEmpty) {
               return Center(
-                child: Text(
-                  'No Messages Available at the Moment',
-                  style: AppTextStyles.nunito105w700Text,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      'No Messages Available at the Moment',
+                      style: AppTextStyles.nunito105w700Text,
+                    ),
+                    SizedBox(
+                      height: DeviceType().isMobile ? kToolbarHeight : 80.h,
+                    ),
+                  ],
                 ),
               );
             }

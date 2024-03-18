@@ -60,6 +60,7 @@ class _WorksheetHistoryViewState extends State<WorksheetHistoryView> {
           ),
         ),
         body: ConnectionNotifierToggler(
+          loading: const SizedBox.shrink(),
           disconnected: const NetworkDisconnected(),
           connected: Stack(
             children: [
@@ -401,7 +402,7 @@ class Lesson extends StatelessWidget {
               Spacer(flex: DeviceType().isMobile ? 1 : 1),
               //!Remaining questions
               Text(
-                "$allQuestionCount/$allQuestionCount",
+                "$solvedQuestionCount/$allQuestionCount",
                 style: const TextStyle(
                   fontFamily: "Nunito",
                   fontSize: 12,

@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:size_config/size_config.dart';
@@ -11,7 +12,7 @@ import '../question_text.dart';
 class ReArrangeWordsQuestion extends StatefulWidget {
   final int questionIndex;
   final RearrangeQuestionType question;
-  final List<String> markedAnswer;
+  final dynamic markedAnswer;
   final Size screenSize;
   const ReArrangeWordsQuestion(
       {super.key,
@@ -31,7 +32,9 @@ class _ReArrangeWordsQuestionState extends State<ReArrangeWordsQuestion> {
   late double singleBoxSize;
   @override
   void initState() {
-    questionsList.addAll(widget.question.question.split(' '));
+    questionsList.addAll(widget.question.question.trim().split(' '));
+    //remove empty strings or spaces case: 'I'd Nah  Win
+    questionsList.removeWhere((element) => element == '');
     questionsList.shuffle();
     questionsLength = questionsList.length;
     //? Setting up size of box
@@ -45,12 +48,25 @@ class _ReArrangeWordsQuestionState extends State<ReArrangeWordsQuestion> {
       studentAnswersList.add(' ');
     }
     //? Fill marked answers
-    if (widget.markedAnswer.isNotEmpty) {
+    if (widget.markedAnswer != null && widget.markedAnswer.isNotEmpty) {
       for (var i = 0; i < widget.markedAnswer.length; i++) {
         studentAnswersList[i] = widget.markedAnswer[i];
       }
     }
-    if (studentAnswersList.length == questionsLength) {
+
+    for (var option in studentAnswersList) {
+      var optionFound =
+          questionsList.firstWhereOrNull((element) => element == option);
+      if (optionFound != null) {
+        int idx = questionsList.indexWhere((element) => element == optionFound);
+        questionsList[idx] = '!remove!';
+      }
+    }
+    questionsList.removeWhere((element) => element == '!remove!');
+
+    print('Re arrange student ans list: ${widget.question.question}');
+    if (studentAnswersList.length == questionsLength &&
+        !studentAnswersList.contains(' ')) {
       questionsList.clear();
     }
     super.initState();

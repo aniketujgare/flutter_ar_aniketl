@@ -38,8 +38,12 @@ class _ArithmeticQuestionUIState extends State<ArithmeticQuestionUI> {
     switch (operator) {
       case "Addition":
         return '+';
-      default:
+      case "Subtraction":
         return '-';
+      case "Multiplication":
+        return 'x';
+      default:
+        return 'NA';
     }
   }
 
@@ -48,8 +52,8 @@ class _ArithmeticQuestionUIState extends State<ArithmeticQuestionUI> {
     super.initState();
     number1 = widget.question.num1;
     number2 = widget.question.num2;
-    // number1 = '649';
-    // number2 = '728';
+    number1 = '172';
+    number2 = '22';
     operator = getOperator(widget.question.operator);
     _prepareData();
     //?
@@ -84,10 +88,15 @@ class _ArithmeticQuestionUIState extends State<ArithmeticQuestionUI> {
       int resultAddition =
           int.parse(number1.trim()) + int.parse(number2.trim());
       noOfansFields = resultAddition.toString().length;
-    } else {
+    } else if (operator == '-') {
+      noOfansFields = num1Boxes;
+    } else if (operator == 'x') {
+      //
       int resultSubtraction =
           int.parse(number1.trim()) - int.parse(number2.trim());
       noOfansFields = resultSubtraction.toString().length;
+    } else {
+      noOfansFields = num1Boxes;
     }
 
     carryControllers = List.generate(
@@ -113,13 +122,27 @@ class _ArithmeticQuestionUIState extends State<ArithmeticQuestionUI> {
   int focusedCarryField = -1;
   @override
   Widget build(BuildContext context) {
+    if (getOperator(widget.question.operator) == 'NA') {
+      return Center(
+        child: Text(
+          'Functionality is not there for Divison',
+          style: AppTextStyles.nunito120w700primary,
+        ),
+      );
+    }
+    return (operator == '+' || operator == '-')
+        ? _buildAdditionAndSubtraction()
+        : _buildMultiPlication();
+  }
+
+  Row _buildAdditionAndSubtraction() {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Expanded(
           flex: 5,
           child: Padding(
-            padding: EdgeInsets.only(top: 15, right: 10.h, left: 5.wp),
+            padding: EdgeInsets.zero,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -138,7 +161,7 @@ class _ArithmeticQuestionUIState extends State<ArithmeticQuestionUI> {
                             child: Row(
                               children: [
                                 SizedBox(
-                                    width: widget.screenSize.width * 0.05,
+                                    width: widget.screenSize.width * 0.06,
                                     child: index !=
                                                 carryControllers.length - 1 &&
                                             ansControllers[index + 2]
@@ -236,6 +259,215 @@ class _ArithmeticQuestionUIState extends State<ArithmeticQuestionUI> {
                               ),
                             ),
                           ),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Expanded(
+                      child: Container(
+                        height: 2,
+                        color: AppColors.textFieldTextColor,
+                      ),
+                    ),
+                  ],
+                ),
+                //! Ans TextFields
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    ...List.generate(num1Boxes + 1 - ansControllers.length,
+                        (index) => _buildEmptyBox()),
+                    ...List.generate(ansControllers.length, (index) {
+                      if (index < ansControllers.length - 1 &&
+                          ansControllers[index + 1].text.isEmpty) {
+                        return Expanded(
+                          child: SizedBox(
+                            height: 70.h,
+                          ),
+                        );
+                      }
+                      return Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8),
+                          child: SizedBox(
+                            height: 70.h,
+                            child: ReusableTextField2(
+                              readOnly: false,
+                              showCursor: false,
+                              controller: ansControllers[index],
+                              onChanged: (val) {
+                                debugPrint('controller idx: $index');
+                              },
+                              onTap: () {
+                                focusedCarryField = -1;
+                                focusedTextField = index;
+                                debugPrint('controller idx: $index');
+                              },
+                              textFieldImage:
+                                  'assets/images/PNG Icons/textfield_arithmetic_ans.png',
+                            ),
+                          ),
+                        ),
+                      );
+                    })
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+        //! numPad
+        Expanded(
+            flex: 2,
+            child: Container(
+              margin: EdgeInsets.all(30.h),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  _buildNumPadRow(1, 3),
+                  _buildNumPadRow(4, 6),
+                  _buildNumPadRow(7, 9),
+                  _buildNumPadZero(),
+                ],
+              ),
+            ))
+      ],
+    );
+  }
+
+  Row _buildMultiPlication() {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Expanded(
+          flex: 5,
+          child: Padding(
+            padding: EdgeInsets.zero,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                //!Carry fields
+                Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+                  ...List.generate(num1Boxes + 1 - ansControllers.length,
+                      (index) => _buildEmptyBox()),
+                  ...List.generate(
+                    ansControllers.length - 1,
+                    (index) {
+                      return Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8),
+                          child: SizedBox(
+                            height: 70.h,
+                            child: Row(
+                              children: [
+                                SizedBox(
+                                    width: widget.screenSize.width * 0.06,
+                                    child: index !=
+                                                carryControllers.length - 1 &&
+                                            ansControllers[index + 2]
+                                                .text
+                                                .isEmpty
+                                        ? null
+                                        : ReusableTextField2(
+                                            controller: carryControllers[index],
+                                            offset: Offset(3.w, -7.h),
+                                            onChanged: (val) {
+                                              debugPrint(val);
+                                            },
+                                            onTap: () {
+                                              focusedTextField = -1;
+                                              focusedCarryField = index;
+                                              debugPrint(
+                                                  'focusedCarryField idx: $index');
+                                            },
+                                            textFieldImage:
+                                                'assets/images/PNG Icons/Textfiled_small.png',
+                                          )),
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                  _buildEmptyBox()
+                ]),
+                //!num1
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    _buildEmptyBox(),
+                    ...List.generate(
+                      num1Boxes,
+                      (index) => Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8),
+                          child: Container(
+                            height: 75.h,
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(22.h)),
+                            child: Center(
+                              child: Text(
+                                number1[index],
+                                style: AppTextStyles.unitedRounded270w700
+                                    .copyWith(
+                                        color: Colors.black, fontSize: 122.sp),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8),
+                        child: SizedBox(
+                          height: 70.h,
+                          child: Center(
+                            child: Text(
+                              operator,
+                              style: AppTextStyles.unitedRounded270w700
+                                  .copyWith(
+                                      color: Colors.black, fontSize: 122.sp),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    //!num2
+                    ...List.generate(
+                      num2Boxes,
+                      (index) => Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8),
+                          child: index < widget.question.num2.length
+                              ? const SizedBox() // hide extra padded num2 digit box, keep it original num,length
+                              : Container(
+                                  height: 70.h,
+                                  decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius:
+                                          BorderRadius.circular(22.h)),
+                                  child: Center(
+                                    child: Text(
+                                      number2[index],
+                                      style: AppTextStyles.unitedRounded270w700
+                                          .copyWith(
+                                              color: Colors.black,
+                                              fontSize: 122.sp),
+                                    ),
+                                  ),
+                                ),
                         ),
                       ),
                     )
@@ -425,7 +657,7 @@ class _ArithmeticQuestionUIState extends State<ArithmeticQuestionUI> {
       ansTexts.forEach((ans) => answer += ans);
       String carry = '';
       carryControllers.forEach((carrContr) => carry += carrContr.text);
-      debugPrint('answer fields:  ans-> ${answer} carry-> $carry');
+      debugPrint('answer fields:  ans-> $answer carry-> $carry');
       context
           .read<WorksheetSolverCubit>()
           .setAnswer(widget.questionIndex, {'answer': answer, 'carry': carry});

@@ -23,17 +23,65 @@ part 'worksheet_cubit.freezed.dart';
 class WorksheetCubit extends Cubit<WorksheetState> {
   WorksheetCubit() : super(const WorksheetState.initial());
   //?API's using in UI
-  void updateWorksheets(int worksheetId) {
+  Future<void> updateWorksheets(int worksheetId) async {
     emit(state.copyWith(
       status: WorksheetStatus.loading,
     ));
     List<WorksheetDetailsModel> updatedWprlsheets = List.from(state.worksheets);
+    List<WorksheetDetailsModel> updatedHistoryWorksheets =
+        List.from(state.historyWorksheets);
     print('id is :${worksheetId}');
+    var changesWorksheet =
+        updatedWprlsheets.firstWhere((element) => element.id == worksheetId);
+    StudentProfileModel? studentProfile =
+        //Mark no of q solved on worksheet card
+        await AuthenticationRepository().getStudentProfile();
+    changesWorksheet.solvedQuestinCount =
+        await getSolvedQCount(worksheetId, studentProfile?.studentId ?? 0);
+    updatedHistoryWorksheets.add(changesWorksheet);
     updatedWprlsheets.removeWhere((element) => element.id == worksheetId);
     emit(state.copyWith(
         status: WorksheetStatus.loaded,
         worksheets: updatedWprlsheets,
-        historyWorksheets: state.historyWorksheets));
+        historyWorksheets: updatedHistoryWorksheets));
+  }
+
+  Future<bool> checkWorksheetStatus(int worksheetId, int studentId) async {
+    var headers = {'Content-Type': 'application/json'};
+    var request = http.Request(
+        'POST',
+        Uri.parse(
+            'https://cnpewunqs5.execute-api.ap-south-1.amazonaws.com/dev/getstudentworksheets'));
+    request.body = json
+        .encode({"worksheet_id": "$worksheetId", "student_id": "$studentId"});
+    request.headers.addAll(headers);
+
+    try {
+      http.StreamedResponse response = await request.send();
+
+      if (response.statusCode == 200) {
+        final dynamic responseString = await response.stream.bytesToString();
+        final dynamic responseStringg = jsonDecode(responseString);
+        if (responseStringg is String && responseStringg != "0") {
+          print(responseStringg);
+          if (responseStringg == 'submitted') {
+            return true;
+          } else {
+            return false;
+          }
+        } else {
+          debugPrint(
+              'Worksheet submit entry not found for WorksheetId: $worksheetId');
+          return false;
+        }
+      } else {
+        debugPrint('Request failed with status: ${response.statusCode}');
+        throw Exception('Failed to get worksheet status');
+      }
+    } catch (e) {
+      debugPrint('Error during request: $e');
+      throw Exception('Failed to get worksheet status');
+    }
   }
 
   void getWorksheets() async {
@@ -41,7 +89,10 @@ class WorksheetCubit extends Cubit<WorksheetState> {
     List<WorksheetDetailsModel> allWorksheetDetails = [];
     List<WorksheetDetailsModel> solvedWorksheets = [];
     List<PublishedWorksheets> publishedWorksheets =
-        await getPublishedWorksheet();
+        List.from(await getPublishedWorksheet());
+    print('published ws cnt: ${publishedWorksheets.length}');
+    //TODO: temp remove it later
+    publishedWorksheets.removeWhere((element) => element.worksheetId == 806);
     await Future.forEach(publishedWorksheets,
         (PublishedWorksheets sheet) async {
       List<WorksheetDetails> worksheetDetails =
@@ -49,12 +100,13 @@ class WorksheetCubit extends Cubit<WorksheetState> {
       worksheetDetails.removeWhere((element) => element.status != "active");
 
       //Remove worksheets marked with status 'submitted'
+      StudentProfileModel? studentProfile =
+          //Mark no of q solved on worksheet card
+          await AuthenticationRepository().getStudentProfile();
+
       // Perform your operation on worksheetDetails here, if needed
       await Future.forEach(worksheetDetails,
           (WorksheetDetails sheetDetail) async {
-        StudentProfileModel? studentProfile =
-            //Mark no of q solved on worksheet card
-            await AuthenticationRepository().getStudentProfile();
         int solvedQCnt = await getSolvedQCount(
             sheetDetail.id, studentProfile?.studentId ?? 0);
         // Get All Questions count
@@ -76,11 +128,22 @@ class WorksheetCubit extends Cubit<WorksheetState> {
             await getteachername(sheetDetail.teacherId.toString());
         worksheet.subject = subject;
         worksheet.teacher = teacherName;
-        if (solvedQCnt != allQuestionCnt || allQuestionCnt == 0) {
-          allWorksheetDetails.add(worksheet);
-        } else if (allQuestionCnt != 0) {
+
+        bool isSubmitted = await checkWorksheetStatus(
+            worksheet.id, studentProfile?.studentId ?? 0);
+        print(
+            'workshet id: ${worksheet.id} stdId:${studentProfile?.studentId} || status: {$isSubmitted}');
+        if (isSubmitted) {
+          // allWorksheetDetails.removeWhere((element) => element.id ==worksheet.id);
           solvedWorksheets.add(worksheet);
+        } else {
+          allWorksheetDetails.add(worksheet);
         }
+        // if (solvedQCnt != allQuestionCnt || allQuestionCnt == 0) {
+        //   allWorksheetDetails.add(worksheet);
+        // } else if (allQuestionCnt != 0) {
+        //   solvedWorksheets.add(worksheet);
+        // }
       });
     });
     // debugPrint('All WorkSheet: ${json.encode(allWorksheetDetails)}');
@@ -122,6 +185,7 @@ class WorksheetCubit extends Cubit<WorksheetState> {
   }
 
   Future<int> getSolvedQCount(int worksheetId, int studentId) async {
+    if (worksheetId == 805) return 0;
     emit(state.copyWith(status: WorksheetStatus.loading));
     var headers = {'Content-Type': 'application/json'};
     var request = http.Request(
@@ -138,26 +202,22 @@ class WorksheetCubit extends Cubit<WorksheetState> {
 
       if (response.statusCode == 200) {
         var responseString = await response.stream.bytesToString();
+        if (responseString == '0') return 0;
 
-        if (responseString != '0') {
-          List<Map<String, dynamic>> jsonList =
-              List<Map<String, dynamic>>.from(jsonDecode(responseString));
+        List<Map<String, dynamic>> jsonList =
+            List<Map<String, dynamic>>.from(jsonDecode(responseString));
 
-          List<StudentAnswer> studentAnswersList =
-              jsonList.asMap().entries.map((entry) {
-            // log('entry: ${entry.value}');
+        List<StudentAnswer> studentAnswersList =
+            jsonList.asMap().entries.map((entry) {
+          // log('entry: ${entry.value}');
 
-            return StudentAnswer.fromJson(entry.key.toString(), entry.value);
-          }).toList();
-          print('studentAnsSheet: ${jsonEncode(studentAnswersList)}');
+          return StudentAnswer.fromJson(entry.key.toString(), entry.value);
+        }).toList();
+        studentAnswersList
+            .removeWhere((element) => element.question.answer.answer == null);
+        print('studentAnsSheet: ${jsonEncode(studentAnswersList)}');
 
-          // Sorting the list based on questionNo
-          studentAnswersList
-              .sort((a, b) => a.questionNo.compareTo(b.questionNo));
-          return jsonList.length;
-        } else {
-          return 0;
-        }
+        return studentAnswersList.length;
       } else {
         debugPrint('Request failed with status: ${response.statusCode}');
         throw Exception('Failed to load student answers');
@@ -248,9 +308,8 @@ class WorksheetCubit extends Cubit<WorksheetState> {
 
       if (response.statusCode == 200) {
         final dynamic responseString = await response.stream.bytesToString();
-        if (responseString is int || responseString == "0") {
-          print('no list in the db');
-          return [];
+        if (responseString == '0') {
+          return []; // Return an empty list if no data exists
         }
         List<PublishedWorksheets> publishedworksheets =
             publishedworksheetsFromJson(responseString);

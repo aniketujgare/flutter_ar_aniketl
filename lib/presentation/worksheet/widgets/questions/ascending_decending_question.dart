@@ -11,7 +11,7 @@ import '../question_text.dart';
 class AscendingDecendingQuestion extends StatefulWidget {
   final int questionIndex;
   final AscDescOrderQuestion question;
-  final List<String>? markedAnswer;
+  final dynamic markedAnswer;
   final Size screenSize;
   const AscendingDecendingQuestion(
       {super.key,
@@ -68,13 +68,13 @@ class _AscendingDecendingQuestionState
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 20.wp),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: List.generate(widget.question.numbers.length, (index) {
                 for (var i = 0; i < selectedAnswer.length; i++) {
                   if (selectedAnswer.contains(widget.question.numbers[index])) {
                     return SizedBox(
                       height: 65.h,
-                      width: singleBoxSize,
+                      width: 0,
                     );
                   }
                 }
@@ -83,7 +83,7 @@ class _AscendingDecendingQuestionState
                   feedback: Container(
                     height: 65.h,
                     width: singleBoxSize,
-                    // margin: EdgeInsets.symmetric(horizontal: 2.wp),
+                    // padding: EdgeInsets.symmetric(horizontal: 2.wp),
                     decoration: ShapeDecoration(
                       color: const Color(0xFFF4F2FE),
                       shape: RoundedRectangleBorder(
@@ -113,7 +113,7 @@ class _AscendingDecendingQuestionState
                   childWhenDragging: Container(
                     height: 65.h,
                     width: singleBoxSize,
-                    // padding: EdgeInsets.symmetric(vertical: 2.wp),
+                    margin: EdgeInsets.symmetric(horizontal: 2.wp),
                     decoration: ShapeDecoration(
                       color: AppColors.hintTextColor,
                       shape: RoundedRectangleBorder(
@@ -136,6 +136,8 @@ class _AscendingDecendingQuestionState
                   child: Container(
                     height: 65.h,
                     width: singleBoxSize,
+                    margin: EdgeInsets.symmetric(horizontal: 2.wp),
+                    // padding: EdgeInsets.symmetric(horizontal: 1.wp),
                     decoration: ShapeDecoration(
                       color: const Color(0xFFF4F2FE),
                       shape: RoundedRectangleBorder(

@@ -47,6 +47,7 @@ class _CategoryModelsPageViewState extends State<CategoryModelsPageView> {
       child: Scaffold(
         backgroundColor: AppColors.parentZoneScaffoldColor,
         body: ConnectionNotifierToggler(
+            loading: const SizedBox.shrink(),
             disconnected: const NetworkDisconnected(),
             connected: Stack(
               children: [
@@ -54,9 +55,9 @@ class _CategoryModelsPageViewState extends State<CategoryModelsPageView> {
                   builder: (context, state) {
                     if (state.status == ModelsStatus.loaded) {
                       //?Set Maxlen of pages (don't remove)
-                      context
-                          .read<ModelsPageControllerCubit>()
-                          .setmaxLength((state.arModels.length / 6).ceil());
+                      // context
+                      //     .read<ModelsPageControllerCubit>()
+                      //     .setmaxLength((state.arModels.length / 6).ceil());
                       //?
                       return BlocBuilder<ModelsPageControllerCubit, int>(
                         builder: (context, index) {
@@ -131,13 +132,14 @@ class _CategoryModelsPageViewState extends State<CategoryModelsPageView> {
                                   : const EdgeInsets.all(0),
                               child: GestureDetector(
                                 onTap: () {
+                                  context
+                                      .read<ModelsPageControllerCubit>()
+                                      .setPreviousPage();
                                   if (isClicked == false) {
-                                    _startTimer();
                                     isClicked = true;
+                                    _startTimer();
+
                                     // Your other code which you want to execute on click.
-                                    context
-                                        .read<ModelsPageControllerCubit>()
-                                        .setPreviousPage();
                                   }
                                 },
                                 child: SizedBox(
@@ -177,13 +179,15 @@ class _CategoryModelsPageViewState extends State<CategoryModelsPageView> {
                               context.read<ModelsPageControllerCubit>().maxLen)
                             GestureDetector(
                               onTap: () {
+                                context
+                                    .read<ModelsPageControllerCubit>()
+                                    .setNextPage();
                                 if (isClicked == false) {
-                                  _startTimer();
                                   isClicked = true;
+
+                                  _startTimer();
+
                                   // Your other code which you want to execute on click.
-                                  context
-                                      .read<ModelsPageControllerCubit>()
-                                      .setNextPage();
                                 }
                               },
                               child: RotatedBox(

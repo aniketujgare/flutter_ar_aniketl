@@ -50,6 +50,7 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
             child: Scaffold(
               backgroundColor: AppColors.parentZoneScaffoldColor,
               body: ConnectionNotifierToggler(
+                loading: const SizedBox.shrink(),
                 disconnected: const NetworkDisconnected(),
                 connected: Column(
                   children: [

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ar/core/util/constants.dart';
 import 'package:flutter_ar/core/util/reusable_widgets/reusable_button.dart';
 import 'package:flutter_ar/core/util/reusable_widgets/reusable_textfield.dart';
 import 'package:flutter_ar/core/util/styles.dart';
@@ -60,17 +61,30 @@ class EditParentDetailsBox extends StatelessWidget {
               circularRadius: 30.h,
               fontSize: 100.sp,
               padding: EdgeInsets.symmetric(horizontal: 18.wp),
-              onPressed: () {
+              onPressed: () async {
                 //? Send data to Api
-
-                var newParent =
-                    parentDetails.copyWith(parentName: updatedProfileName);
-                oldContext
-                    .read<ParentDetailsCubit>()
-                    .updateParentDeatail(newParent);
-                print('updated');
-                if (context.mounted) {
-                  Navigator.of(context).pop();
+                if (updatedProfileName.isEmpty) {
+                  // Constants()
+                  //     .showAppSnackbar(context, 'Name should not be empty!');
+                  if (context.mounted) {
+                    print('empty parent name');
+                    Constants().showAppSnackbar(
+                        oldContext, 'Name should not be empty!');
+                    await Future.delayed(const Duration(seconds: 4)).then(
+                        (value) => ScaffoldMessenger.of(oldContext)
+                            .removeCurrentSnackBar());
+                  }
+                  // return;
+                } else {
+                  var newParent =
+                      parentDetails.copyWith(parentName: updatedProfileName);
+                  oldContext
+                      .read<ParentDetailsCubit>()
+                      .updateParentDeatail(newParent);
+                  print('updated');
+                  if (context.mounted) {
+                    Navigator.of(context).pop();
+                  }
                 }
               },
               buttonColor: AppColors.submitGreenColor,

@@ -37,6 +37,7 @@ class LoginScreenState extends State<LoginScreen>
     _animationController.controller.addListener(() {
       setState(() {});
     });
+
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light
         .copyWith(systemNavigationBarColor: AppColors.accentColor));
@@ -66,6 +67,7 @@ class LoginScreenState extends State<LoginScreen>
         extendBody: true,
         backgroundColor: const Color(0XffD1CBF9),
         body: ConnectionNotifierToggler(
+          loading: const SizedBox.shrink(),
           disconnected: const NetworkDisconnected(),
           connected: Padding(
             padding: EdgeInsets.fromLTRB(
@@ -202,9 +204,15 @@ class LoginScreenState extends State<LoginScreen>
                                 ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
                                         content: Text(state.errorMessage)));
-                                context.read<LoginBloc>().add(
-                                    const LoginEvent.updateStatus(
-                                        status: LoginStatus.phoneNo1));
+                                if (state.isGuest) {
+                                  context.read<LoginBloc>().add(
+                                      const LoginEvent.updateStatus(
+                                          status: LoginStatus.guest));
+                                } else {
+                                  context.read<LoginBloc>().add(
+                                      const LoginEvent.updateStatus(
+                                          status: LoginStatus.phoneNo1));
+                                }
                               }
                               if (state.status == LoginStatus.wrongOtp) {
                                 ScaffoldMessenger.of(context).showSnackBar(

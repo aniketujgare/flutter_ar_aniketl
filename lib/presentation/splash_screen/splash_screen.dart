@@ -72,6 +72,7 @@ class SplashScreenState extends State<SplashScreen>
         extendBodyBehindAppBar: true,
         backgroundColor: const Color(0XffD1CBF9),
         body: ConnectionNotifierToggler(
+          loading: const SizedBox.shrink(),
           disconnected: const NetworkDisconnected(),
           connected: Stack(
             alignment: Alignment.center,

@@ -17,6 +17,7 @@ import '../../../core/util/styles.dart';
 import '../bloc/question_timer_cubit/question_timer_cubit.dart';
 import '../bloc/worksheet_solver_cubit/worksheet_solver_cubit.dart';
 import '../models/questions.dart';
+import '../models/worksheet_ans_of_student.dart';
 import '../widgets/appbar_worksheet_solver.dart';
 import '../widgets/bottom_indicator_bar_questions.dart';
 import '../widgets/front_cam_recording.dart';
@@ -52,8 +53,8 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView> {
 
     context.read<WorksheetSolverCubit>().setCurrentQuestionZero();
     context.read<WorksheetSolverCubit>().init(widget.workSheetId);
-    context.read<QuestionTimerCubit>().initTimer();
-    context.read<FrontCamRecordingCubit>().initCameras();
+    //   context.read<QuestionTimerCubit>().initTimer();
+    //   context.read<FrontCamRecordingCubit>().initCameras();
   }
 
   @override
@@ -178,15 +179,14 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView> {
         return ReArrangeWordsQuestion(
           screenSize: screenSize,
           question: state.questions[i] as RearrangeQuestionType,
-          markedAnswer:
-              List<String>.from(markedAnswer), //markedAnswer as List<String>,
+          markedAnswer: markedAnswer, //markedAnswer as List<String>,
           questionIndex: i,
         );
       case QuestionType.identifyimage:
         return IdentifyImageQuestion(
           questionIndex: i,
           question: state.questions[i] as IdentifyImageQuestionType,
-          markedAnswer: markedAnswer as String,
+          markedAnswer: markedAnswer,
         );
 
       default:
@@ -239,6 +239,25 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView> {
                     padding: EdgeInsets.only(right: 8.wp),
                     child: IconButton(
                       onPressed: () {
+                        // if unanswered put null in ans sheet
+                        List<StudentAnswer> answerSheet = List.from(context
+                            .read<WorksheetSolverCubit>()
+                            .state
+                            .answerSheet);
+                        var isAlreadyAnswered = answerSheet.firstWhereOrNull(
+                            (question) =>
+                                question.questionNo == state.currentQuestion);
+                        if (isAlreadyAnswered == null) {
+                          context
+                              .read<WorksheetSolverCubit>()
+                              .setAnswer(state.currentQuestion, null);
+                        }
+                        print(
+                            'state ans sheet: currQIdx: ${state.currentQuestion}');
+
+                        print(
+                            'state ans sheet: ${jsonEncode(context.read<WorksheetSolverCubit>().state.answerSheet)}');
+
                         context.read<WorksheetSolverCubit>().loadNextQuestion();
 
                         // debugPrint('is last index: $isLastQuestion');
@@ -251,41 +270,58 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView> {
                       icon: isLastQuestin
                           ? GestureDetector(
                               onTap: () async {
-                                if (widget.isEditable) {
-                                  context
-                                      .read<WorksheetSolverCubit>()
-                                      .answerSubmit(true);
+                                int noOfSolvedQ = 0;
+                                for (var answer in state.answerSheet) {
+                                  if (answer.question.answer.answer != null) {
+                                    noOfSolvedQ++;
+                                  }
+                                }
 
-                                  context
-                                      .read<FrontCamRecordingCubit>()
-                                      .stopVideoRecording();
-                                  context.read<QuestionTimerCubit>().stopTime();
-                                  context
-                                      .read<WorksheetCubit>()
-                                      .updateWorksheets(widget.workSheetId);
-                                  await Future.delayed(
-                                          const Duration(milliseconds: 300))
-                                      .then((value) =>
-                                          Navigator.of(context).pop());
-                                  await Constants()
-                                      .showAlertDialog(context)
-                                      .then((value) =>
-                                          Navigator.of(context).pop());
+                                if (widget.isEditable) {
+                                  if (noOfSolvedQ == state.questions.length) {
+                                    context
+                                        .read<WorksheetSolverCubit>()
+                                        .answerSubmit(true);
+
+                                    // context
+                                    //     .read<FrontCamRecordingCubit>()
+                                    //     .stopVideoRecording();
+                                    // context.read<QuestionTimerCubit>().stopTime();
+                                    context
+                                        .read<WorksheetCubit>()
+                                        .updateWorksheets(widget.workSheetId);
+
+                                    await Constants()
+                                        .showAlertDialog(context)
+                                        .then((value) =>
+                                            Navigator.of(context).pop());
+                                  } else {
+                                    Constants().showAppSnackbar(context,
+                                        'Please Solve all the questions before submitting the Sheet!',
+                                        color: AppColors
+                                            .redMessageSharedFileContainerColor);
+                                  }
                                 }
                               },
-                              child: Container(
-                                width: 90.h,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(22.h),
-                                  color: AppColors.submitGreenColor,
-                                ),
-                                child: Center(
-                                    child: Text(
-                                  'Submit',
-                                  style: AppTextStyles.nunito100w400white
-                                      .copyWith(fontSize: 85.sp),
-                                )),
-                              ),
+                              child: !widget.isEditable
+                                  ? SizedBox.fromSize()
+                                  : Container(
+                                      width: 90.h,
+                                      decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(22.h),
+                                        color: AppColors.submitGreenColor,
+                                      ),
+                                      child: Center(
+                                          child: Text(
+                                        'Submit',
+                                        style: AppTextStyles.nunito100w400white
+                                            .copyWith(
+                                                fontSize: DeviceType().isMobile
+                                                    ? 85.sp
+                                                    : 65.sp),
+                                      )),
+                                    ),
                             )
 
                           // IconButton(
@@ -354,31 +390,31 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView> {
                 width: double.infinity,
                 color: Colors.white.withOpacity(0),
               ),
-            Positioned(
-                left: fabPosition.dx,
-                top: fabPosition.dy,
-                child: Draggable(
-                  feedback: Shimmer.fromColors(
-                    baseColor: Colors.grey.shade300,
-                    highlightColor: Colors.grey.shade100,
-                    child: Container(
-                      height: 100.h,
-                      width: 135.h,
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          border: Border.all(
-                              color: AppColors.primaryColor, width: 4.h)),
-                    ),
-                  ),
-                  onDragEnd: (details) {
-                    Offset newPos = details.offset;
-                    newPos = Offset(newPos.dx, newPos.dy - 65.h);
-                    setState(() {
-                      fabPosition = newPos; // Update FAB position when dragged
-                    });
-                  },
-                  child: const FrontCamRecording(),
-                )),
+            // Positioned(
+            //     left: fabPosition.dx,
+            //     top: fabPosition.dy,
+            //     child: Draggable(
+            //       feedback: Shimmer.fromColors(
+            //         baseColor: Colors.grey.shade300,
+            //         highlightColor: Colors.grey.shade100,
+            //         child: Container(
+            //           height: 100.h,
+            //           width: 135.h,
+            //           decoration: BoxDecoration(
+            //               color: Colors.white,
+            //               border: Border.all(
+            //                   color: AppColors.primaryColor, width: 4.h)),
+            //         ),
+            //       ),
+            //       onDragEnd: (details) {
+            //         Offset newPos = details.offset;
+            //         newPos = Offset(newPos.dx, newPos.dy - 65.h);
+            //         setState(() {
+            //           fabPosition = newPos; // Update FAB position when dragged
+            //         });
+            //       },
+            //       child: const FrontCamRecording(),
+            //     )),
           ],
         ),
       ),

@@ -21,6 +21,8 @@ class SelectCorrectWordQuestion extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // //!select the correct word  q ui
+    List<String> optionsList = question.question.trim().split(' ');
+    optionsList.shuffle();
     return Column(
       mainAxisSize: MainAxisSize.max,
       mainAxisAlignment: MainAxisAlignment.center,
@@ -32,19 +34,19 @@ class SelectCorrectWordQuestion extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             ...List.generate(
-                question.answer.length,
+                optionsList.length,
                 (index) => Expanded(
                       child: GestureDetector(
                         onTap: () {
                           context
                               .read<WorksheetSolverCubit>()
-                              .setAnswer(questionIndex, question.answer[index]);
+                              .setAnswer(questionIndex, optionsList[index]);
                         },
                         child: Container(
                           height: 80.h,
                           margin: EdgeInsets.symmetric(horizontal: 2.wp),
                           decoration: ShapeDecoration(
-                            color: question.answer[index] == markedAnswer
+                            color: optionsList[index] == markedAnswer
                                 ? AppColors.boxSelectedColor
                                 : AppColors.boxUnselectedolor,
                             shape: RoundedRectangleBorder(
@@ -57,7 +59,7 @@ class SelectCorrectWordQuestion extends StatelessWidget {
                             child: FittedBox(
                               fit: BoxFit.scaleDown,
                               child: Text(
-                                question.answer[index],
+                                optionsList[index],
                                 overflow: TextOverflow.ellipsis,
                                 textAlign: TextAlign.center,
                                 style: AppTextStyles.nunito120w700primary,

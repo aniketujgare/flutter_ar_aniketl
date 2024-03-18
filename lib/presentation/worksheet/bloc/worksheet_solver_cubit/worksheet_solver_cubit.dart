@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart' show debugPrint;
 import 'package:flutter_ar/domain/repositories/authentication_repository.dart';
+import 'package:flutter_ar/presentation/worksheet/repository/worksheet_solver_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:http/http.dart' as http;
@@ -19,35 +20,39 @@ part 'worksheet_solver_state.dart';
 class WorksheetSolverCubit extends Cubit<WorksheetSolverState> {
   int workSheetId = 0;
   int studentId = 0;
+  final repository = WorksheetSolverRepository();
   WorksheetSolverCubit() : super(const WorksheetSolverState.initial());
   void init(int workSheetId) async {
-    workSheetId = workSheetId;
+    this.workSheetId = workSheetId;
     StudentProfileModel? studentProfile =
         await AuthenticationRepository().getStudentProfile();
     studentId = studentProfile?.studentId ?? 0;
     emit(state.copyWith(status: WorkSheetSolverStatus.loading));
     //Load questions list
-    List<Question> questionsList = await getQuestionsList(workSheetId);
-    //Load student answer list
-    List<StudentAnswer> studentAnswerList =
-        await getStudentAnswerList(workSheetId, studentId);
-    debugPrint('final ans sheet1: ${jsonEncode(studentAnswerList)}');
-    //Generate final state answerlist
-    List<StudentAnswer> answerSheet = [];
-    // log(jsonEncode(studentAnswerList));
-    // map final answer sheet with studentsAnsweList
-    if (studentAnswerList.isNotEmpty) {
-      answerSheet.addAll(studentAnswerList);
+    List<Question> questionsSheet =
+        await repository.getQuestionsList(workSheetId);
+    debugPrint(
+        'Workshhet id: $workSheetId | stuID: $studentId => QSheet ${jsonEncode(questionsSheet.length)}');
+
+    //Load student submitted answer list
+    List<StudentAnswer> answerSheet =
+        await repository.getStudentAnswerList(workSheetId, studentId);
+    print('questions length: ${questionsSheet.length}');
+    if (answerSheet.isEmpty) {
+      answerSheet = List.generate(
+          questionsSheet.length,
+          (index) => StudentAnswer(
+              questionNo: index,
+              question: AnswerQuestion(
+                  questionType: questionsSheet[index].questionType,
+                  answer: Answer(answer: null))));
+      debugPrint(
+          'Workshhet id: $workSheetId | stuID: $studentId => ${jsonEncode(answerSheet)}');
     }
-    debugPrint('final ans sheet: ${jsonEncode(answerSheet)}');
-    /*
-        1) Question
-        2) Answer
-    */
 
     emit(state.copyWith(
         status: WorkSheetSolverStatus.loaded,
-        questions: questionsList,
+        questions: questionsSheet,
         answerSheet: answerSheet));
   }
 
@@ -169,6 +174,7 @@ class WorksheetSolverCubit extends Cubit<WorksheetSolverState> {
       http.StreamedResponse response = await request.send();
 
       if (response.statusCode == 200) {
+        print(request.body);
         debugPrint(await response.stream.bytesToString());
       } else {
         debugPrint(response.reasonPhrase);

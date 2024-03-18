@@ -86,6 +86,7 @@ class _WorksheetViewState extends State<WorksheetView> {
           ),
         ),
         body: ConnectionNotifierToggler(
+          loading: const SizedBox.shrink(),
           disconnected: const NetworkDisconnected(),
           connected: Stack(
             children: [

@@ -12,7 +12,7 @@ import '../../models/questions.dart';
 class IdentifyImageQuestion extends StatelessWidget {
   final int questionIndex;
   final IdentifyImageQuestionType question;
-  final String markedAnswer;
+  final dynamic markedAnswer;
   const IdentifyImageQuestion(
       {super.key,
       required this.questionIndex,

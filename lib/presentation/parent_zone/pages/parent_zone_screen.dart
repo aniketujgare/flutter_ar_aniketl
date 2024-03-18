@@ -91,6 +91,7 @@ class _ParentZoneScreenState extends State<ParentZoneScreen> {
               ),
             ),
             body: ConnectionNotifierToggler(
+              loading: const SizedBox.shrink(),
               disconnected: const NetworkDisconnected(),
               connected: PopScope(
                 canPop: false,

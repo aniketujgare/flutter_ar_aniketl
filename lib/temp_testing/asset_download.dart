@@ -38,6 +38,7 @@ class AssetDownloadState extends State<AssetDownload> {
           title: const Text('Asset Download test'),
         ),
         body: ConnectionNotifierToggler(
+          loading: const SizedBox.shrink(),
           disconnected: const NetworkDisconnected(),
           connected: Center(
             child: Column(
