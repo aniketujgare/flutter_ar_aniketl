@@ -22,7 +22,7 @@ class SelectCorrectWordQuestion extends StatelessWidget {
   Widget build(BuildContext context) {
     // //!select the correct word  q ui
     List<String> optionsList = question.question.trim().split(' ');
-    optionsList.shuffle();
+    // optionsList.shuffle();
     return Column(
       mainAxisSize: MainAxisSize.max,
       mainAxisAlignment: MainAxisAlignment.center,

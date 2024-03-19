@@ -85,9 +85,9 @@ class _ReArrangeWordsQuestionState extends State<ReArrangeWordsQuestion> {
           DeviceType().isMobile ? 55.verticalSpacer : 85.verticalSpacer,
           Padding(
             padding: EdgeInsets.symmetric(
-                horizontal: DeviceType().isMobile ? 20.wp : 5.wp),
+                horizontal: DeviceType().isMobile ? 10.wp : 5.wp),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: questionsList.isEmpty
                   ? [SizedBox(height: 70.h)]
                   : List.generate(questionsList.length, (index) {
@@ -123,7 +123,7 @@ class _ReArrangeWordsQuestionState extends State<ReArrangeWordsQuestion> {
                         childWhenDragging: Container(
                           height: 70.h,
                           width: singleBoxSize,
-                          // padding: EdgeInsets.symmetric(vertical: 2.wp),
+                          margin: EdgeInsets.symmetric(horizontal: 2.wp),
                           decoration: ShapeDecoration(
                             color: AppColors.hintTextColor,
                             shape: RoundedRectangleBorder(
@@ -146,6 +146,7 @@ class _ReArrangeWordsQuestionState extends State<ReArrangeWordsQuestion> {
                         child: Container(
                           height: 70.h,
                           width: singleBoxSize,
+                          margin: EdgeInsets.symmetric(horizontal: 2.wp),
                           decoration: ShapeDecoration(
                             color: const Color(0xFFF4F2FE),
                             shape: RoundedRectangleBorder(

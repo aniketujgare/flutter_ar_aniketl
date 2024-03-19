@@ -234,7 +234,9 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView> {
                       ),
                     ),
                   ),
-                  const BottomIndicatorQuestions(),
+                  SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.7,
+                      child: const BottomIndicatorQuestions()),
                   Padding(
                     padding: EdgeInsets.only(right: 8.wp),
                     child: IconButton(

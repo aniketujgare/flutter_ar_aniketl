@@ -75,15 +75,15 @@ class _LongAnswerQuestionState extends State<LongAnswerQuestion> {
                     color: Colors.white.withOpacity(0.6),
                   ),
                 ),
-                Container(
+                SizedBox(
+                  height: 300.h,
+                  width: 300.h,
                   child: Center(
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(10.0.h),
                       child: Image.network(uploadedImgUrl),
                     ),
                   ),
-                  height: 300.h,
-                  width: 300.h,
                 )
               ],
               if (uploadedImgUrl != '')
@@ -123,13 +123,15 @@ class _LongAnswerQuestionState extends State<LongAnswerQuestion> {
                         // Send the image to the dummy API
                         if (file != null) {
                           String url = await sendImageToAPI(file.path);
-                          uploadedImgUrl = url;
+
                           if (context.mounted) {
                             context
                                 .read<WorksheetSolverCubit>()
                                 .setAnswer(widget.questionIndex, url);
                           }
-                          setState(() {});
+                          setState(() {
+                            uploadedImgUrl = url;
+                          });
                         }
                       } catch (e) {
                         debugPrint('Error taking picture: $e');

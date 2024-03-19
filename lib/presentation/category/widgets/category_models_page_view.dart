@@ -184,7 +184,6 @@ class _CategoryModelsPageViewState extends State<CategoryModelsPageView> {
                                     .setNextPage();
                                 if (isClicked == false) {
                                   isClicked = true;
-
                                   _startTimer();
 
                                   // Your other code which you want to execute on click.
