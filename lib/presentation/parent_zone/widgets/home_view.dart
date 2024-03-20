@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ar/core/util/constants.dart';
+import 'package:flutter_ar/core/util/styles.dart';
 import 'package:flutter_ar/data/models/parent_details.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shimmer/shimmer.dart';
@@ -248,8 +250,8 @@ class ParentProfileCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Future<void> _showAlertDialog() async {
-      return showDialog<void>(
+    Future _showAlertDialog() async {
+      return showDialog(
         context: context,
         barrierDismissible: true,
         builder: (BuildContext _) {
@@ -297,7 +299,14 @@ class ParentProfileCard extends StatelessWidget {
                   height: 40.h,
                   width: 40.h,
                   child: IconButton(
-                      onPressed: () => _showAlertDialog(),
+                      onPressed: () => _showAlertDialog().then((value) {
+                            if (value == 'Name should not be empty!') {
+                              Constants().showAppSnackbar(
+                                  context, 'Name should not be empty!',
+                                  color: AppColors
+                                      .redMessageSharedFileContainerColor);
+                            }
+                          }),
                       icon: Image.asset(
                         'assets/images/reusable_icons/edit.png',
                         fit: BoxFit.cover,

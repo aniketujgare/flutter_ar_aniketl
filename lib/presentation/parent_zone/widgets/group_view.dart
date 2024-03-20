@@ -1,19 +1,13 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import '../../../core/util/device_type.dart';
-import '../../../core/util/styles.dart';
-import '../../../data/models/teacher_model.dart';
-import 'message_view.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:size_config/size_config.dart';
 
+import '../../../core/util/device_type.dart';
+import '../../../core/util/styles.dart';
+import '../../../data/models/teacher_model.dart';
 import '../bloc/teacher_list_bloc/teacher_list_bloc.dart';
-import '../bloc/navbar_cubit/app_navigator_cubit.dart';
-import '../pages/parent_zone_screen.dart';
+import 'message_view.dart';
 
 class GroupsView extends StatefulWidget {
   const GroupsView({super.key});
@@ -33,7 +27,6 @@ class _GroupsViewState extends State<GroupsView> {
   Widget build(BuildContext context) {
     return BlocBuilder<TeacherListBloc, TeacherListState>(
       builder: (context, state) {
-        print('parentmode state: ${state.runtimeType}');
         switch (state.status) {
           case TeacherListStatus.loading:
             return const Center(
@@ -69,6 +62,7 @@ class _GroupsViewState extends State<GroupsView> {
               itemBuilder: (BuildContext context, int index) {
                 // var notification = dummyNotification[index];
                 TeacherModel teacher = state.teachersList[index];
+                print('latests msg: ${state.teacherMessage[index]?.content}');
                 return GestureDetector(
                   onTap: () async {
                     Navigator.of(context).push(MaterialPageRoute(
@@ -101,20 +95,6 @@ class _GroupsViewState extends State<GroupsView> {
                     // teacher.teacherCreatedDate.toString().split(' ').first,
                   ),
                 );
-
-                // return GestureDetector(
-                //   onTap: () async {
-                //     Navigator.of(context).push(
-                //         MaterialPageRoute(builder: (context) => MessageView()));
-                //   },
-                //   child: GroupNotification(
-                //     subject: notification['subject'] as String,
-                //     title: notification['title'] as String,
-                //     subtitle: notification['subtitle'] as String,
-                //     isNow: notification['isNow'] as bool,
-                //     trailing: notification['trailing'] as String,
-                //   ),
-                // );
               },
               separatorBuilder: (BuildContext context, int index) {
                 return 4.verticalSpacer;
@@ -139,37 +119,6 @@ class _GroupsViewState extends State<GroupsView> {
     }
   }
 }
-
-// var dummyNotification = [
-//   {
-//     'subject': 'EVS',
-//     'title': 'Snehal Kulkarni',
-//     'subtitle': 'Sports day on the 18th of April 2023.',
-//     'isNow': true,
-//     'trailing': '',
-//   },
-//   {
-//     'subject': 'ENG',
-//     'title': 'Snehal Kulkarni',
-//     'subtitle': 'Sports day on the 18th of April 2023.',
-//     'isNow': false,
-//     'trailing': 'Mon',
-//   },
-//   {
-//     'subject': 'Math',
-//     'title': 'Snehal Kulkarni',
-//     'subtitle': 'Sports day on the 18th of April 2023.',
-//     'isNow': false,
-//     'trailing': '21/12',
-//   },
-//   {
-//     'subject': 'Hin',
-//     'title': 'Snehal Kulkarni',
-//     'subtitle': 'Sports day on the 18th of April 2023.',
-//     'isNow': false,
-//     'trailing': '11/11',
-//   },
-// ];
 
 class GroupNotification extends StatelessWidget {
   final String subject;

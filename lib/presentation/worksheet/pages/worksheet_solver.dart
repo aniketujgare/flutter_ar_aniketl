@@ -13,6 +13,7 @@ import 'package:shimmer/shimmer.dart';
 import 'package:size_config/size_config.dart';
 
 import '../../../../core/util/device_type.dart';
+import '../../../core/util/reusable_widgets/reusable_button.dart';
 import '../../../core/util/styles.dart';
 import '../bloc/question_timer_cubit/question_timer_cubit.dart';
 import '../bloc/worksheet_solver_cubit/worksheet_solver_cubit.dart';
@@ -236,7 +237,7 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView> {
                   ),
                   SizedBox(
                       width: MediaQuery.of(context).size.width * 0.7,
-                      child: const BottomIndicatorQuestions()),
+                      child: BottomIndicatorQuestions()),
                   Padding(
                     padding: EdgeInsets.only(right: 8.wp),
                     child: IconButton(
@@ -298,10 +299,29 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView> {
                                         .then((value) =>
                                             Navigator.of(context).pop());
                                   } else {
-                                    Constants().showAppSnackbar(context,
-                                        'Please Solve all the questions before submitting the Sheet!',
-                                        color: AppColors
-                                            .redMessageSharedFileContainerColor);
+                                    await showAllQNotAnsweredDialog(context)
+                                        .then((value) {
+                                      if (value == 'submit') {
+                                        context
+                                            .read<WorksheetSolverCubit>()
+                                            .answerSubmit(true);
+
+                                        // context
+                                        //     .read<FrontCamRecordingCubit>()
+                                        //     .stopVideoRecording();
+                                        // context.read<QuestionTimerCubit>().stopTime();
+                                        context
+                                            .read<WorksheetCubit>()
+                                            .updateWorksheets(
+                                                widget.workSheetId);
+
+                                        Navigator.pop(context);
+                                      }
+                                    });
+                                    // Constants().showAppSnackbar(context,
+                                    //     'Please Solve all the questions before submitting the Sheet!',
+                                    //     color: AppColors
+                                    //         .redMessageSharedFileContainerColor);
                                   }
                                 }
                               },
@@ -650,4 +670,125 @@ DateTime convertToDate(String dateString) {
   List<int> dateParts =
       dateString.split('-').map((part) => int.parse(part)).toList();
   return DateTime(dateParts[0], dateParts[1], dateParts[2]);
+}
+
+Future showAllQNotAnsweredDialog(BuildContext context) async {
+  var unAnswerdSheet = context.read<WorksheetSolverCubit>().state.answerSheet;
+  var unansweredQNo = [];
+  unAnswerdSheet.forEach((element) {
+    if (element.question.answer.answer == null) {
+      unansweredQNo.add(element.questionNo + 1);
+    }
+  });
+
+  return showDialog(
+    context: context,
+    barrierDismissible: false,
+    builder: (BuildContext context) {
+      return PopScope(
+        canPop: false,
+        child: Dialog(
+            child: Stack(
+          alignment: Alignment.center,
+          children: [
+            // SizedBox.expand(),
+            Container(
+              margin: EdgeInsets.only(top: 10.h),
+              height: DeviceType().isMobile ? 410.h : 550.h,
+              width: DeviceType().isMobile ? 75.wp : 60.wp,
+              decoration: BoxDecoration(
+                color: AppColors.primaryColor,
+                borderRadius: BorderRadius.circular(20.h),
+                border: Border.all(
+                  width: 60.sp,
+                  color: Color(0XFFBCBCBC),
+                  strokeAlign: BorderSide.strokeAlignOutside,
+                ),
+              ),
+            ),
+            Container(
+              height: DeviceType().isMobile ? 400.h : 540.h,
+              width: DeviceType().isMobile ? 75.wp : 60.wp,
+              decoration: BoxDecoration(
+                color: AppColors.primaryColor,
+                borderRadius: BorderRadius.circular(20.h),
+                border: Border.all(
+                  width: 60.sp,
+                  color: Colors.white,
+                  strokeAlign: BorderSide.strokeAlignOutside,
+                ),
+              ),
+              child: Container(
+                margin: EdgeInsets.only(
+                  top: 10.h,
+                ),
+                decoration: BoxDecoration(
+                  color: AppColors.accentColor,
+                  borderRadius: BorderRadius.circular(20.h),
+                ),
+                child: Padding(
+                  padding: EdgeInsets.only(
+                      top: 13.h, bottom: DeviceType().isMobile ? 13.h : 18.h),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Alert!',
+                        style: AppTextStyles.nunito120w700primary,
+                      ),
+                      Text(
+                        'You have not answered the following questions',
+                        textAlign: TextAlign.center,
+                        style: AppTextStyles.nunito105w700Text,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 20.h),
+                        child: Text(
+                          unansweredQNo.toString(),
+                          maxLines: 3,
+                          overflow: TextOverflow.ellipsis,
+                          style: AppTextStyles.nunito105w700Text
+                              .copyWith(fontSize: 85.sp),
+                        ),
+                      ),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: ReusableButton(
+                              circularRadius: 10.h,
+                              fontSize: DeviceType().isMobile ? 75.sp : 65.sp,
+                              padding: EdgeInsets.symmetric(horizontal: 2.wp),
+                              onPressed: () {
+                                Navigator.of(context).pop('submit');
+                              },
+                              buttonColor: AppColors.primaryColor,
+                              text: 'Submit',
+                              textColor: Colors.white,
+                            ),
+                          ),
+                          Expanded(
+                            child: ReusableButton(
+                              circularRadius: 10.h,
+                              fontSize: 90.sp,
+                              padding: EdgeInsets.symmetric(horizontal: 2.wp),
+                              onPressed: () {
+                                Navigator.of(context).pop('back');
+                              },
+                              buttonColor: AppColors.primaryColor,
+                              text: 'Back',
+                              textColor: Colors.white,
+                            ),
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
+        )),
+      );
+    },
+  );
 }

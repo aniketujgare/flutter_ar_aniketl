@@ -144,6 +144,7 @@ class _MessageViewState extends State<MessageView> {
                       },
                       itemBuilder: (BuildContext context, int index) {
                         var message = state.teachersMessages[index];
+                        print('Teacher userid: ${message.teacherUserId}');
                         switch (message.type) {
                           //! View Lesson
                           case "lesson":
@@ -155,12 +156,8 @@ class _MessageViewState extends State<MessageView> {
 
                           case 'polls':
                             return TeacherPoll(
-                              isOp1Checked: null,
                               pollQuestion: message.content,
-                              option1: 'Option 1',
-                              option2: 'Option 2',
-                              votes1: 1,
-                              votes2: 1,
+                              pollOptions: message.pollOptions!,
                             );
                           default:
                             return //!Message
@@ -481,20 +478,11 @@ class _MessageViewState extends State<MessageView> {
 
 class TeacherPoll extends StatefulWidget {
   final String pollQuestion;
-  final String option1;
-  final String option2;
-  final int votes1;
-  final int votes2;
-  final bool? isOp1Checked;
-
+  final Map<String, Datum> pollOptions;
   const TeacherPoll({
     Key? key,
     required this.pollQuestion,
-    required this.isOp1Checked,
-    required this.option1,
-    required this.option2,
-    required this.votes1,
-    required this.votes2,
+    required this.pollOptions,
   }) : super(key: key);
 
   @override
@@ -502,12 +490,10 @@ class TeacherPoll extends StatefulWidget {
 }
 
 class _TeacherPollState extends State<TeacherPoll> {
-  bool? isOp1CheckedCopy; // Track the state of the first checkbox
-  bool? isOp2CheckedCopy; // Track the state of the first checkbox
+  List<bool?> checkBoxes = [];
   @override
   void initState() {
-    isOp1CheckedCopy = widget.isOp1Checked;
-    isOp2CheckedCopy = isOp1CheckedCopy != null ? !isOp1CheckedCopy! : null;
+    checkBoxes = List.filled(widget.pollOptions.length, false);
     super.initState();
   }
 
@@ -530,104 +516,61 @@ class _TeacherPollState extends State<TeacherPoll> {
               ),
             ),
             child: Padding(
-              padding: EdgeInsets.only(right: 3.wp),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
-                    widget.pollQuestion,
-                    style: AppTextStyles.nunito88w600Text,
-                  ),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Transform.scale(
-                        scale: 1.5,
-                        child: Checkbox(
-                          value: isOp1CheckedCopy ?? false, //isOp1CheckedCopy,
-                          fillColor: (isOp1CheckedCopy == null ||
-                                  isOp1CheckedCopy == false)
-                              ? MaterialStateProperty.all(Colors.white)
-                              : null,
-                          onChanged: (val) {
-                            setState(() {
-                              isOp1CheckedCopy = val ?? false;
-                              if (isOp1CheckedCopy != null &&
-                                  isOp1CheckedCopy == true) {
-                                isOp2CheckedCopy = false;
-                              }
-                            });
-                          },
-                          side: BorderSide(
-                            width: 1.5,
-                            color: AppColors.primaryColor,
+                padding: EdgeInsets.only(right: 3.wp),
+                child: Column(
+                  children: [
+                    Text(
+                      widget.pollQuestion,
+                      style: AppTextStyles.nunito88w600Text,
+                    ),
+                    ...List.generate(
+                      widget.pollOptions.length,
+                      (index) => Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Transform.scale(
+                            scale: 1.5,
+                            child: Checkbox(
+                              checkColor: Colors.white,
+                              activeColor: AppColors.primaryColor,
+                              value: checkBoxes[
+                                  index], //isOp1CheckedCopy ?? false, //isOp1CheckedCopy,
+                              fillColor: checkBoxes[index]!
+                                  ? MaterialStateProperty.all(
+                                      AppColors.primaryColor)
+                                  : null,
+
+                              onChanged: (val) {
+                                setState(() {
+                                  checkBoxes.fillRange(
+                                      0, checkBoxes.length, false);
+                                  checkBoxes[index] = true;
+                                });
+                              },
+                              side: BorderSide(
+                                width: 1.5,
+                                color: AppColors.primaryColor,
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                            ),
                           ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(6),
+                          Text(
+                            widget.pollOptions['$index']!.option,
+                            style: AppTextStyles.nunito88w400Text,
                           ),
-                        ),
-                      ),
-                      Text(
-                        widget.option1,
-                        style: AppTextStyles.nunito88w400Text,
-                      ),
-                      const Spacer(),
-                      Text(
-                        'Votes: ${widget.votes1}',
-                        style: AppTextStyles.nunito75w400Text,
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Transform.scale(
-                        scale: 1.5,
-                        child: Checkbox(
-                          value: isOp2CheckedCopy ??
-                              false, // isOp1CheckedCopy != null ? !isOp1CheckedCopy! : null,
-                          fillColor: (isOp2CheckedCopy == null ||
-                                  isOp2CheckedCopy == false)
-                              ? MaterialStateProperty.all(Colors.white)
-                              : null,
-                          onChanged: (val) {
-                            setState(() {
-                              isOp2CheckedCopy = val ?? false;
-                              if (isOp2CheckedCopy != null &&
-                                  isOp2CheckedCopy == true) {
-                                isOp1CheckedCopy = false;
-                              }
-                              // if (isOp2CheckedCopy != null &&
-                              //     isOp2CheckedCopy == false) {
-                              //   isOp1CheckedCopy = !isOp2CheckedCopy!;
-                              // }
-                            });
-                          },
-                          side: BorderSide(
-                            width: 1.5,
-                            color: AppColors.primaryColor,
+                          const Spacer(),
+                          Text(
+                            'Votes: ${widget.pollOptions['$index']!.count}',
+                            style: AppTextStyles.nunito75w400Text,
                           ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(6),
-                          ),
-                        ),
+                        ],
                       ),
-                      Text(
-                        widget.option2,
-                        style: AppTextStyles.nunito88w400Text,
-                      ),
-                      const Spacer(),
-                      Text(
-                        'Votes: ${widget.votes2}',
-                        style: AppTextStyles.nunito75w400Text,
-                      ),
-                    ],
-                  )
-                ],
-              ),
-            ),
+                    )
+                  ],
+                )),
           ),
         ],
       ),

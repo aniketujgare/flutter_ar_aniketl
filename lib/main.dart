@@ -2,6 +2,7 @@ import 'package:connection_notifier/connection_notifier.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_ar/presentation/worksheet/bloc/front_cam_recording_cubit/front_cam_recording_cubit.dart';
 import 'package:flutter_ar/presentation/worksheet/widgets/front_cam_recording.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -70,7 +71,7 @@ void main() async {
 
   StudentProfileModel? studentProfile =
       await AuthenticationRepository().getStudentProfile();
-
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
   runApp(MyApp(
     studentProfile: studentProfile,
   ));

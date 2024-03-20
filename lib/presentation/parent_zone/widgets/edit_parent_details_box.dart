@@ -67,12 +67,7 @@ class EditParentDetailsBox extends StatelessWidget {
                   // Constants()
                   //     .showAppSnackbar(context, 'Name should not be empty!');
                   if (context.mounted) {
-                    print('empty parent name');
-                    Constants().showAppSnackbar(
-                        oldContext, 'Name should not be empty!');
-                    await Future.delayed(const Duration(seconds: 4)).then(
-                        (value) => ScaffoldMessenger.of(oldContext)
-                            .removeCurrentSnackBar());
+                    Navigator.of(context).pop('Name should not be empty!');
                   }
                   // return;
                 } else {
@@ -81,7 +76,6 @@ class EditParentDetailsBox extends StatelessWidget {
                   oldContext
                       .read<ParentDetailsCubit>()
                       .updateParentDeatail(newParent);
-                  print('updated');
                   if (context.mounted) {
                     Navigator.of(context).pop();
                   }

@@ -25,12 +25,6 @@ class CategoryModelsPageView extends StatefulWidget {
 }
 
 class _CategoryModelsPageViewState extends State<CategoryModelsPageView> {
-  var isClicked = false;
-  late Timer _timer;
-  _startTimer() {
-    _timer = Timer(const Duration(milliseconds: 400), () => isClicked = false);
-  }
-
   @override
   void initState() {
     context.read<ModelsPageControllerCubit>().setmaxLength(
@@ -55,9 +49,9 @@ class _CategoryModelsPageViewState extends State<CategoryModelsPageView> {
                   builder: (context, state) {
                     if (state.status == ModelsStatus.loaded) {
                       //?Set Maxlen of pages (don't remove)
-                      // context
-                      //     .read<ModelsPageControllerCubit>()
-                      //     .setmaxLength((state.arModels.length / 6).ceil());
+                      context
+                          .read<ModelsPageControllerCubit>()
+                          .setmaxLength((state.arModels.length / 6).ceil());
                       //?
                       return BlocBuilder<ModelsPageControllerCubit, int>(
                         builder: (context, index) {
@@ -135,12 +129,6 @@ class _CategoryModelsPageViewState extends State<CategoryModelsPageView> {
                                   context
                                       .read<ModelsPageControllerCubit>()
                                       .setPreviousPage();
-                                  if (isClicked == false) {
-                                    isClicked = true;
-                                    _startTimer();
-
-                                    // Your other code which you want to execute on click.
-                                  }
                                 },
                                 child: SizedBox(
                                   height: 75.h,
@@ -182,12 +170,6 @@ class _CategoryModelsPageViewState extends State<CategoryModelsPageView> {
                                 context
                                     .read<ModelsPageControllerCubit>()
                                     .setNextPage();
-                                if (isClicked == false) {
-                                  isClicked = true;
-                                  _startTimer();
-
-                                  // Your other code which you want to execute on click.
-                                }
                               },
                               child: RotatedBox(
                                 quarterTurns: 2,

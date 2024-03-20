@@ -32,21 +32,11 @@ class TeacherListBloc extends Bloc<TeacherListEvent, TeacherListState> {
           List<TeacherMessageModel>? tMessages =
               await _getTeachersMessages(teacher.teacherUserId.toString());
           if (tMessages != null && tMessages.isNotEmpty) {
-            teacherMessages.add(tMessages.first);
+            teacherMessages.add(tMessages.last);
           }
         }
       }
-      var emptyTm = TeacherMessageModel(
-          content: '',
-          date: '',
-          divisionName: '',
-          link: '',
-          messageId: '',
-          subject: '',
-          teacherName: '',
-          teacherUserId: '',
-          time: '',
-          type: '');
+
       debugPrint('Teacher Messages: ${teacherMessages.length}');
       emit(state.copyWith(
           status: TeacherListStatus.loaded,
