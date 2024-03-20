@@ -59,29 +59,64 @@ class _ArithmeticQuestionUIState extends State<ArithmeticQuestionUI> {
     super.initState();
     number1 = widget.question.num1;
     number2 = widget.question.num2;
-    number1 = '104';
-    number2 = '44';
+    // number1 = '100';
+    // number2 = '44';
     num2WithoutPad = number2;
 
     operator = getOperator(widget.question.operator);
     _prepareData();
     //?
-    // //? Fill answers
-    // debugPrint('markedAns: ${widget.markedAnswer}');
-    // if (widget.markedAnswer != null) {
-    //   String answerString = widget.markedAnswer['answer'];
-    //   String carryString = widget.markedAnswer['carry'];
-    //   if (answerString.isNotEmpty) {
-    //     for (var i = 0; i < answerString.length; i++) {
-    //       ansControllers[i].text = answerString[i];
-    //     }
-    //   }
-    //   if (carryString.isNotEmpty) {
-    //     for (var i = 0; i < carryString.length; i++) {
-    //       carryControllers[i].text = carryString[i];
-    //     }
-    //   }
-    // }
+    //? Fill answers
+    debugPrint('markedAns: ${widget.markedAnswer}');
+    if (widget.markedAnswer != null) {
+      //Set data for 2 digit multiplication
+      if (operator == 'x' && num2WithoutPad.length > 1) {
+        String answerString = widget.markedAnswer['answer'];
+        String carryString = widget.markedAnswer['carry'];
+        String carrySum = widget.markedAnswer['carrySum'];
+        String multi1Answer = widget.markedAnswer['multi1Answer'];
+        String multi2Answer = widget.markedAnswer['multi2Answer'];
+
+        if (answerString.isNotEmpty) {
+          for (var i = 0; i < answerString.length; i++) {
+            ansControllers[i].text = answerString[i];
+          }
+        }
+        if (carryString.isNotEmpty) {
+          for (var i = 0; i < carryString.length; i++) {
+            carryControllers[i].text = carryString[i];
+          }
+        }
+        if (carrySum.isNotEmpty) {
+          for (var i = 0; i < carrySum.length; i++) {
+            carrySumControlllers[i].text = carrySum[i];
+          }
+        }
+        if (multi1Answer.isNotEmpty) {
+          for (var i = 0; i < multi1Answer.length; i++) {
+            multiAns1Controlllers[i].text = multi1Answer[i];
+          }
+        }
+        if (multi2Answer.isNotEmpty) {
+          for (var i = 0; i < multi2Answer.length; i++) {
+            multiAns2Controlllers[i].text = multi2Answer[i];
+          }
+        }
+      } else {
+        String answerString = widget.markedAnswer['answer'];
+        String carryString = widget.markedAnswer['carry'];
+        if (answerString.isNotEmpty) {
+          for (var i = 0; i < answerString.length; i++) {
+            ansControllers[i].text = answerString[i];
+          }
+        }
+        if (carryString.isNotEmpty) {
+          for (var i = 0; i < carryString.length; i++) {
+            carryControllers[i].text = carryString[i];
+          }
+        }
+      }
+    }
   }
 
   void _prepareData() {
@@ -105,7 +140,7 @@ class _ArithmeticQuestionUIState extends State<ArithmeticQuestionUI> {
       String number3 = number2.trim();
       print('number2: ${num2WithoutPad}');
       int resultMulti = int.parse(number1.trim()) * int.parse(number2.trim());
-      noOfansFields = resultMulti.toString().length;
+      noOfansFields = max(resultMulti.toString().length, num2Boxes);
     } else {
       noOfansFields = num1Boxes;
     }
@@ -527,9 +562,10 @@ class _ArithmeticQuestionUIState extends State<ArithmeticQuestionUI> {
                       (index) => Expanded(
                         child: Padding(
                           padding: const EdgeInsets.all(8),
-                          child: number2
-                                  .substring(index + 1)
-                                  .contains(RegExp(r'[1-9]'))
+                          child: index != num2Boxes - 1 &&
+                                  !number2
+                                      .substring(0, index + 1)
+                                      .contains(RegExp(r'[1-9]'))
                               ? const SizedBox() // hide extra padded num2 digit box, keep it original num,length
                               : Container(
                                   height: 70.h,
@@ -684,30 +720,28 @@ class _ArithmeticQuestionUIState extends State<ArithmeticQuestionUI> {
                                 children: [
                                   SizedBox(
                                       width: widget.screenSize.width * 0.06,
-                                      child:
-                                          // index !=
-                                          //             carryControllers.length - 1 &&
-                                          //         ansControllers[index + 2]
-                                          //             .text
-                                          //             .isEmpty
-                                          //     ? null
-                                          //     :
-                                          ReusableTextField2(
-                                        controller: carryControllers[index],
-                                        offset: Offset(3.w, -7.h),
-                                        onChanged: (val) {
-                                          debugPrint(val);
-                                        },
-                                        onTap: () {
-                                          focusedTextField = -1;
-                                          focusedcarrySumField = -1;
-                                          focusedCarryField = index;
-                                          debugPrint(
-                                              'focusedCarryField idx: $index');
-                                        },
-                                        textFieldImage:
-                                            'assets/images/PNG Icons/Textfiled_small.png',
-                                      )),
+                                      child: index < carryTopLen - 1 &&
+                                              multiAns1Controlllers[index + 2]
+                                                  .text
+                                                  .isEmpty
+                                          ? null
+                                          : ReusableTextField2(
+                                              controller:
+                                                  carryControllers[index],
+                                              offset: Offset(3.w, -7.h),
+                                              onChanged: (val) {
+                                                debugPrint(val);
+                                              },
+                                              onTap: () {
+                                                focusedTextField = -1;
+                                                focusedcarrySumField = -1;
+                                                focusedCarryField = index;
+                                                debugPrint(
+                                                    'focusedCarryField idx: $index');
+                                              },
+                                              textFieldImage:
+                                                  'assets/images/PNG Icons/Textfiled_small.png',
+                                            )),
                                 ],
                               ),
                             ),
@@ -768,11 +802,11 @@ class _ArithmeticQuestionUIState extends State<ArithmeticQuestionUI> {
                           ),
                         ),
                       ),
-                      ...List.generate(
-                          gridCol - num2Boxes - 1, (index) => _buildEmptyBox()),
+                      ...List.generate(gridCol - num2WithoutPad.length - 1,
+                          (index) => _buildEmptyBox()),
                       //!num2
                       ...List.generate(
-                        num2Boxes,
+                        num2WithoutPad.length,
                         (index) => Expanded(
                           child: Padding(
                             padding: const EdgeInsets.all(8),
@@ -783,7 +817,7 @@ class _ArithmeticQuestionUIState extends State<ArithmeticQuestionUI> {
                                   borderRadius: BorderRadius.circular(22.h)),
                               child: Center(
                                 child: Text(
-                                  number2[index],
+                                  num2WithoutPad[index],
                                   style: AppTextStyles.unitedRounded270w700
                                       .copyWith(
                                           color: Colors.black,
@@ -827,30 +861,46 @@ class _ArithmeticQuestionUIState extends State<ArithmeticQuestionUI> {
                                 children: [
                                   SizedBox(
                                       width: widget.screenSize.width * 0.06,
-                                      child:
+                                      child: multiAns2Controlllers[0]
+                                              .text
+                                              .isEmpty
+                                          // &&
                                           // index !=
-                                          //             carryControllers.length - 1 &&
-                                          //         ansControllers[index + 2]
-                                          //             .text
-                                          //             .isEmpty
-                                          //     ? null
-                                          //     :
-                                          ReusableTextField2(
-                                        controller: carrySumControlllers[index],
-                                        offset: Offset(3.w, -7.h),
-                                        onChanged: (val) {
-                                          debugPrint(val);
-                                        },
-                                        onTap: () {
-                                          focusedTextField = -1;
-                                          focusedCarryField = -1;
-                                          focusedcarrySumField = index;
-                                          debugPrint(
-                                              'focusedCarryField idx: $index');
-                                        },
-                                        textFieldImage:
-                                            'assets/images/PNG Icons/Textfiled_small.png',
-                                      )),
+                                          //     carrySumControlllers.length -
+                                          //         1 &&
+                                          // ansControllers[index + 1]
+                                          //     .text
+                                          //     .isEmpty
+                                          ? null
+                                          : index !=
+                                                      carrySumControlllers
+                                                              .length -
+                                                          1 &&
+                                                  ansControllers[index + 1]
+                                                      .text
+                                                      .isEmpty
+                                              ? null
+                                              : ReusableTextField2(
+                                                  controller:
+                                                      carrySumControlllers[
+                                                          index],
+                                                  offset: Offset(3.w, -7.h),
+                                                  onChanged: (val) {
+                                                    debugPrint(val);
+                                                  },
+                                                  onTap: () {
+                                                    focusedTextField = -1;
+                                                    focusedCarryField = -1;
+                                                    focusedcarrySumField =
+                                                        index;
+                                                    focusedMultiAns2Field = -1;
+                                                    focusedMultiAns1Field = -1;
+                                                    debugPrint(
+                                                        'focusedCarryField idx: $index');
+                                                  },
+                                                  textFieldImage:
+                                                      'assets/images/PNG Icons/Textfiled_small.png',
+                                                )),
                                 ],
                               ),
                             ),
@@ -892,6 +942,7 @@ class _ArithmeticQuestionUIState extends State<ArithmeticQuestionUI> {
                                   focusedCarryField = -1;
                                   focusedcarrySumField = -1;
                                   focusedMultiAns2Field = -1;
+                                  focusedMultiAns1Field = index;
 
                                   debugPrint('controller idx: $index');
                                 },
@@ -952,8 +1003,11 @@ class _ArithmeticQuestionUIState extends State<ArithmeticQuestionUI> {
                                   debugPrint('controller idx: $index');
                                 },
                                 onTap: () {
+                                  focusedTextField = -1;
                                   focusedCarryField = -1;
-                                  focusedTextField = index;
+                                  focusedcarrySumField = -1;
+                                  focusedMultiAns2Field = index;
+                                  focusedMultiAns1Field = -1;
                                   debugPrint('controller idx: $index');
                                 },
                                 textFieldImage:
@@ -1025,8 +1079,11 @@ class _ArithmeticQuestionUIState extends State<ArithmeticQuestionUI> {
                                   debugPrint('controller idx: $index');
                                 },
                                 onTap: () {
-                                  focusedCarryField = -1;
                                   focusedTextField = index;
+                                  focusedCarryField = -1;
+                                  focusedcarrySumField = -1;
+                                  focusedMultiAns2Field = -1;
+                                  focusedMultiAns1Field = -1;
                                   debugPrint('controller idx: $index');
                                 },
                                 textFieldImage:
@@ -1123,13 +1180,33 @@ class _ArithmeticQuestionUIState extends State<ArithmeticQuestionUI> {
             child: GestureDetector(
           onTap: () {
             numPressed(0);
+            // if (focusedTextField != -1) {
+            //   ansControllers[focusedTextField].clear();
+            //   // focusedTextField = -1;
+            // }
+            // if (focusedCarryField != -1) {
+            //   carryControllers[focusedCarryField].clear();
+            //   // focusedCarryField == -1;
+            // }
             if (focusedTextField != -1) {
               ansControllers[focusedTextField].clear();
               // focusedTextField = -1;
+              // var v = List.generate(ansControllers.length,
+              //     (index) => ansControllers[index].text);
+              // print(
+              //     'focusedTextField: $focusedTextField || answer controller idx: $index && ans text: ${ansControllers[index].text} || ansContrller: ${v}');
             }
             if (focusedCarryField != -1) {
               carryControllers[focusedCarryField].clear();
-              // focusedCarryField == -1;
+            }
+            if (focusedcarrySumField != -1) {
+              carrySumControlllers[focusedcarrySumField].clear();
+            }
+            if (focusedMultiAns1Field != -1) {
+              multiAns1Controlllers[focusedMultiAns1Field].clear();
+            }
+            if (focusedMultiAns2Field != -1) {
+              multiAns2Controlllers[focusedMultiAns2Field].clear();
             }
             saveAnswer();
           },
@@ -1171,9 +1248,73 @@ class _ArithmeticQuestionUIState extends State<ArithmeticQuestionUI> {
       multiAns1Controlllers[focusedMultiAns1Field].text =
           numPressedint.toString();
     }
+    if (focusedMultiAns2Field != -1) {
+      multiAns2Controlllers[focusedMultiAns2Field].text =
+          numPressedint.toString();
+    }
   }
 
   void saveAnswer() {
+    //? Save Answer for 2 Digit Multiplication
+    if (operator == 'x' && num2WithoutPad.length > 1) {
+      var carryTexts = [];
+      var carrySumTexts = [];
+      var multi1AnsTexts = [];
+      var multi2AnsTexts = [];
+      var ansTexts = [];
+      for (var element in carryControllers) {
+        if (element.text.isNotEmpty) {
+          carryTexts.add(element.text);
+        }
+      }
+      for (var element in carrySumControlllers) {
+        if (element.text.isNotEmpty) {
+          carrySumTexts.add(element.text);
+        }
+      }
+      for (var element in multi1AnsTexts) {
+        if (element.text.isNotEmpty) {
+          multi1AnsTexts.add(element.text);
+        }
+      }
+      for (var element in multi2AnsTexts) {
+        if (element.text.isNotEmpty) {
+          multi2AnsTexts.add(element.text);
+        }
+      }
+      for (var element in ansControllers) {
+        if (element.text.isNotEmpty) {
+          ansTexts.add(element.text);
+        }
+      }
+
+      if (ansTexts.length == noOfansFields) {
+        // Store answer {answer: <String> answer, carry: <String> carry}
+        String answer = '';
+        ansTexts.forEach((ans) => answer += ans);
+        String carry = '';
+        carryControllers.forEach((carrContr) => carry += carrContr.text);
+        String carrySum = '';
+        carrySumControlllers.forEach((carrContr) => carrySum += carrContr.text);
+        String multi1Answer = '';
+        multiAns1Controlllers
+            .forEach((multi1Contr) => multi1Answer += multi1Contr.text);
+        String multi2Answer = '';
+        multiAns2Controlllers
+            .forEach((multi2Contr) => multi2Answer += multi2Contr.text);
+        debugPrint(
+            'answer fields:  ans-> $answer carry-> $carry carrySum-> $carrySum multi1Answer-> $multi1Answer multi2Answer-> $multi2Answer');
+        context.read<WorksheetSolverCubit>().setAnswer(widget.questionIndex, {
+          'answer': answer,
+          'carry': carry,
+          'carrySum': carrySum,
+          'multi1Answer': multi1Answer,
+          'multi2Answer': multi2Answer
+        });
+      }
+      return;
+    }
+
     //? Save Answer
     var ansTexts = [];
     var carryTexts = [];
