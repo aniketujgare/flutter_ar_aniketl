@@ -102,7 +102,7 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
                       right: 10.h,
                       child: Text(
                         context
-                                .read<StudentProfileCubit>()
+                                .watch<StudentProfileCubit>()
                                 .state
                                 .studentProfileModel
                                 ?.coins
@@ -133,7 +133,7 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
                       right: 10.h,
                       child: Text(
                         context
-                                .read<StudentProfileCubit>()
+                                .watch<StudentProfileCubit>()
                                 .state
                                 .studentProfileModel
                                 ?.gems

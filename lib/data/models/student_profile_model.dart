@@ -72,7 +72,51 @@ class StudentProfileModel {
       this.studentSubscriptionStatus,
       this.adminStandard,
       this.grade,
-      this.division});
+      this.division,
+      this.schoolName});
+// Define the copyWith method
+  StudentProfileModel copyWith({
+    int? coins,
+    int? divisionId,
+    int? gems,
+    int? parentId,
+    int? profilePicId,
+    int? schoolId,
+    String? secreteCode,
+    int? standardId,
+    int? studentActiveStatus,
+    DateTime? studentCreatedDate,
+    DateTime? studentExpiryDate,
+    int? studentId,
+    String? studentName,
+    int? studentSubscriptionStatus,
+    int? adminStandard,
+    String? grade,
+    String? division,
+    String? schoolName,
+  }) {
+    return StudentProfileModel(
+      coins: coins ?? this.coins,
+      divisionId: divisionId ?? this.divisionId,
+      gems: gems ?? this.gems,
+      parentId: parentId ?? this.parentId,
+      profilePicId: profilePicId ?? this.profilePicId,
+      schoolId: schoolId ?? this.schoolId,
+      secreteCode: secreteCode ?? this.secreteCode,
+      standardId: standardId ?? this.standardId,
+      studentActiveStatus: studentActiveStatus ?? this.studentActiveStatus,
+      studentCreatedDate: studentCreatedDate ?? this.studentCreatedDate,
+      studentExpiryDate: studentExpiryDate ?? this.studentExpiryDate,
+      studentId: studentId ?? this.studentId,
+      studentName: studentName ?? this.studentName,
+      studentSubscriptionStatus:
+          studentSubscriptionStatus ?? this.studentSubscriptionStatus,
+      adminStandard: adminStandard ?? this.adminStandard,
+      grade: grade ?? this.grade,
+      division: division ?? this.division,
+      schoolName: schoolName ?? this.schoolName,
+    );
+  }
 
   factory StudentProfileModel.fromJson(Map<String, dynamic> json) =>
       StudentProfileModel(

@@ -145,9 +145,7 @@ class MyAppState extends State<MyApp> {
             BlocProvider(
               create: (context) => WorksheetCubit(),
             ),
-            BlocProvider(
-              create: (context) => WorksheetSolverCubit(),
-            ),
+
             BlocProvider(
               create: (context) => ReportsPagecontrollerCubit(),
             ),
@@ -160,6 +158,11 @@ class MyAppState extends State<MyApp> {
             BlocProvider(
               create: (context) => StudentProfileCubit(),
             ),
+            BlocProvider(
+              create: (context) =>
+                  WorksheetSolverCubit(context.read<StudentProfileCubit>()),
+            ),
+
             BlocProvider(
               create: (context) => ParentDetailsCubit(),
             ),

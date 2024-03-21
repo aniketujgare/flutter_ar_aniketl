@@ -23,7 +23,9 @@ class WorksheetSolverCubit extends Cubit<WorksheetSolverState> {
   int workSheetId = 0;
   int studentId = 0;
   final repository = WorksheetSolverRepository();
-  WorksheetSolverCubit() : super(const WorksheetSolverState.initial());
+  final StudentProfileCubit studentProfileCubit;
+  WorksheetSolverCubit(this.studentProfileCubit)
+      : super(const WorksheetSolverState.initial());
 
   // WorksheetSolverCubit() : super(const WorksheetSolverState.initial());
   void init(int workSheetId) async {
@@ -115,16 +117,18 @@ class WorksheetSolverCubit extends Cubit<WorksheetSolverState> {
     switch (solvedPercentage) {
       case > 90.0:
         coinsEarned = 10;
-        break;
+        return;
       case > 75.0:
         coinsEarned = 6;
-        break;
+        return;
       case > 50.0:
         coinsEarned = 3;
-        break;
+        return;
+
       default:
         coinsEarned = 0;
     }
+    studentProfileCubit.incrementCoins(coinsEarned);
   }
 
   void answerSubmit(bool lastQuestion) async {

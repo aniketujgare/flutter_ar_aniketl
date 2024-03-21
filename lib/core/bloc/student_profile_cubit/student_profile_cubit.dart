@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart' show debugPrint;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
 
 import '../../../data/models/student_profile_model.dart';
@@ -26,6 +27,17 @@ class StudentProfileCubit extends Cubit<StudentProfileState> {
       emit(state.copyWith(
           status: StudentProfileStauts.loaded, studentProfileModel: profile));
     }
+    emit(state.copyWith(
+        status: StudentProfileStauts.loaded, studentProfileModel: profile));
+  }
+
+  void incrementCoins(int increment) {
+    emit(state.copyWith(status: StudentProfileStauts.loading));
+    StudentProfileModel profile = state.studentProfileModel!
+        .copyWith(coins: state.studentProfileModel!.coins! + increment);
+    var studentProfileBox = Hive.box<StudentProfileModel>('student_profile');
+    studentProfileBox.clear();
+    studentProfileBox.add(profile);
     emit(state.copyWith(
         status: StudentProfileStauts.loaded, studentProfileModel: profile));
   }

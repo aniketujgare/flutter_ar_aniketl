@@ -120,7 +120,9 @@ AppBar appBarWorksheetSolver(BuildContext context) {
       //   ),
       // ),
       GestureDetector(
-        onTap: () {},
+        onTap: () {
+          context.read<WorksheetSolverCubit>().updateCoins();
+        },
         child: Container(
           height: DeviceType().isMobile ? 8.wp : 6.5.wp,
           decoration: ShapeDecoration(
