@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_ar/core/util/constants.dart';
 import 'package:flutter_ar/presentation/worksheet/bloc/front_cam_recording_cubit/front_cam_recording_cubit.dart';
 import 'package:flutter_ar/presentation/worksheet/bloc/question_timer_cubit/question_timer_cubit.dart';
+import 'package:flutter_ar/presentation/worksheet/bloc/worksheet_cubit/worksheet_cubit.dart';
 import 'package:flutter_ar/presentation/worksheet/widgets/front_cam_recording.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:size_config/size_config.dart';
@@ -36,6 +37,8 @@ AppBar appBarWorksheetSolver(BuildContext context) {
         // context.read<QuestionTimerCubit>().stopTime();
         // context.read<FrontCamRecordingCubit>().stopVideoRecording();
         Navigator.pop(context);
+        //If new worksheet added from backend while app in use then add it
+        context.read<WorksheetCubit>().addNewlyUploadedWS();
       },
       child: UnconstrainedBox(
         child: Image.asset(

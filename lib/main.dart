@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_ar/presentation/worksheet/bloc/front_cam_recording_cubit/front_cam_recording_cubit.dart';
 import 'package:flutter_ar/presentation/worksheet/widgets/front_cam_recording.dart';
+import 'package:flutter_ar/temp_testing/arithmetic_temp.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:size_config/size_config.dart';
@@ -185,9 +186,12 @@ class MyAppState extends State<MyApp> {
           child: MaterialApp(
             debugShowCheckedModeBanner: false,
             themeMode: ThemeMode.light,
-            home: widget.studentProfile == null
-                ? const LoginScreen()
-                : const SplashScreen(),
+            home:
+                // TestingClass()
+
+                widget.studentProfile == null
+                    ? const LoginScreen()
+                    : const SplashScreen(),
             // theme: ThemeData(
             //     appBarTheme: AppBarTheme(
             //         systemOverlayStyle: SystemUiOverlayStyle(

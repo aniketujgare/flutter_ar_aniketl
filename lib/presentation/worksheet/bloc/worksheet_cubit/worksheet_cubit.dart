@@ -3,8 +3,10 @@ import 'dart:developer';
 
 import 'package:flutter/foundation.dart' show debugPrint;
 import 'package:flutter_ar/main.dart';
+import 'package:flutter_ar/presentation/worksheet/pages/worksheet_solver.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:pinput/pinput.dart';
 import '../../../../data/models/student_profile_model.dart';
 import '../../../../domain/repositories/authentication_repository.dart';
 import '../../models/published_worksheets.dart';
@@ -23,6 +25,62 @@ part 'worksheet_cubit.freezed.dart';
 class WorksheetCubit extends Cubit<WorksheetState> {
   WorksheetCubit() : super(const WorksheetState.initial());
   //?API's using in UI
+  Future<void> addNewlyUploadedWS() async {
+    emit(state.copyWith(
+      status: WorksheetStatus.loading,
+    ));
+    List<PublishedWorksheets> currentWS =
+        List.from(await getPublishedWorksheet());
+
+    if (state.worksheets.length + state.historyWorksheets.length <
+        currentWS.length) {
+      // get new added ws id
+      List<int> newWSIds = [];
+      List<int> prevWSIds = [];
+      List<int> currentWSIds = [];
+
+      for (var sheet in state.worksheets + state.historyWorksheets) {
+        prevWSIds.add(sheet.id);
+      }
+      for (var sheet in currentWS) {
+        //TODO: REmove this check its faulty worksheet
+        if (sheet.worksheetId != 806) {
+          currentWSIds.add(sheet.worksheetId);
+        }
+      }
+
+      for (var id in currentWSIds) {
+        if (!prevWSIds.contains(id)) {
+          newWSIds.add(id);
+        }
+      }
+      // add all new  WS  in state WS's
+      List<WorksheetDetailsModel> newWorksheets = [];
+      for (var id in newWSIds) {
+        var worksheetDetails = await getWorksheetDetails('$id');
+        WorksheetDetailsModel worksheet = WorksheetDetailsModel(
+          id: id,
+          status: worksheetDetails.first.status,
+          topic: worksheetDetails.first.topicId.toString(),
+          worksheetName: worksheetDetails.first.worksheetName,
+          subject:
+              await getsubjectname(worksheetDetails.first.subjectId.toString()),
+          teacher:
+              await getteachername(worksheetDetails.first.teacherId.toString()),
+          solvedQuestinCount: 0,
+          allQuestionCount: await getQuestionsCount(id),
+          deadline: DateFormat('dd MMM yy').format(currentWS
+              .firstWhere((element) => element.worksheetId == id)
+              .deadline),
+        );
+        newWorksheets.add(worksheet);
+      }
+      emit(state.copyWith(
+          status: WorksheetStatus.loaded,
+          worksheets: List.from(state.worksheets + newWorksheets)));
+    }
+  }
+
   Future<void> updateWorksheets(int worksheetId) async {
     emit(state.copyWith(
       status: WorksheetStatus.loading,
