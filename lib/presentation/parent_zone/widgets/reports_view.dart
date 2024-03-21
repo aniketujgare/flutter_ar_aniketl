@@ -52,7 +52,9 @@ class _ReportsViewState extends State<ReportsView> {
               bottom: 10.h,
               left: 0,
               right: 0,
-              height: DeviceType().isMobile ? 90 : 110.h,
+              height: DeviceType().isMobile
+                  ? 90
+                  : Constants.kparentZoneBottomBarHeight + 10.h,
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,

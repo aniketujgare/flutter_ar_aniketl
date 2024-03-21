@@ -125,6 +125,9 @@ class EverydaySkillsPage extends StatelessWidget {
                 ),
               );
             }),
+            SizedBox(
+              height: DeviceType().isMobile ? 0 : 120.h,
+            )
           ],
         ),
       ),

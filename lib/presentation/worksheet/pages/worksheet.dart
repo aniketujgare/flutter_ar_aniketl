@@ -27,6 +27,10 @@ class _WorksheetViewState extends State<WorksheetView> {
   late StudentProfileModel studentProfileModel;
   @override
   void initState() {
+    context.read<WorksheetPageCubit>().setmaxLength(
+        (BlocProvider.of<WorksheetCubit>(context).state.worksheets.length /
+                (DeviceType().isMobile ? 4 : 3))
+            .ceil());
     context.read<WorksheetPageCubit>().setPage(0);
 
     super.initState();
@@ -92,14 +96,15 @@ class _WorksheetViewState extends State<WorksheetView> {
             children: [
               BlocBuilder<WorksheetCubit, WorksheetState>(
                 builder: (context, state) {
+                  //?Set Maxlen of pages (don't remove)
                   if (state.status == WorksheetStatus.loaded) {
+                    print(
+                        'Worksheets cnt: ${(state.worksheets.length / (DeviceType().isMobile ? 4 : 3)).ceil()}');
                     context.read<WorksheetPageCubit>().setmaxLength(
-                        (BlocProvider.of<WorksheetCubit>(context)
-                                    .state
-                                    .worksheets
-                                    .length /
+                        (state.worksheets.length /
                                 (DeviceType().isMobile ? 4 : 3))
                             .ceil());
+                    //?
                     return BlocBuilder<WorksheetPageCubit, int>(
                       builder: (context, index) {
                         if (state.worksheets.isEmpty) {
@@ -121,11 +126,10 @@ class _WorksheetViewState extends State<WorksheetView> {
                             onPageChanged: (value) {
                               context.read<WorksheetPageCubit>().setPage(value);
                             },
-                            itemCount: context
-                                .read<WorksheetPageCubit>()
-                                .maxLen, // Number of pages
+                            itemCount:
+                                context.read<WorksheetPageCubit>().maxLen +
+                                    1, // Number of pages
                             itemBuilder: (context, page) {
-                              context.read<WorksheetPageCubit>().curridx = page;
                               int startIndex =
                                   page * (DeviceType().isMobile ? 4 : 3);
                               int endIndex =
@@ -241,9 +245,8 @@ class _WorksheetViewState extends State<WorksheetView> {
                                   builder: (context, state) {
                                     if (state ==
                                         context
-                                                .read<WorksheetPageCubit>()
-                                                .maxLen -
-                                            1) {
+                                            .read<WorksheetPageCubit>()
+                                            .maxLen) {
                                       return SizedBox(
                                           height: 45.h, width: 45.h);
                                     }

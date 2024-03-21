@@ -9,7 +9,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:size_config/size_config.dart';
 
 import '../../../core/reusable_widgets/network_disconnected.dart';
-import '../../../core/student_profile_cubit/student_profile_cubit.dart';
 import '../../../core/util/animations/login_screen_animation_controller.dart';
 import '../../../core/util/device_type.dart';
 import '../../../core/util/styles.dart';

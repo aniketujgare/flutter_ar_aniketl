@@ -4,8 +4,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:size_config/size_config.dart';
 
+import '../../../core/bloc/student_profile_cubit/student_profile_cubit.dart';
 import '../../../core/reusable_widgets/network_disconnected.dart';
-import '../../../core/student_profile_cubit/student_profile_cubit.dart';
 import '../../../core/util/device_type.dart';
 import '../../../core/util/styles.dart';
 import '../../parent_zone/pages/parent_zone_screen.dart';
@@ -67,39 +67,45 @@ class _SubjectScreenState extends State<SubjectScreen> {
                               child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              GestureDetector(
-                                onTap: () => context
-                                    .read<SubjectPageCubit>()
-                                    .setPreviousPage(),
-                                child: SizedBox(
-                                  height: 45.h,
-                                  width: 45.h,
-                                  child: Image.asset(
-                                    'assets/ui/Group.png', // right arrow
-                                    fit: BoxFit.scaleDown,
-                                    height: 45.h,
-                                    width: 45.h,
-                                  ),
-                                ),
-                              ),
-                              GestureDetector(
-                                onTap: () => context
-                                    .read<SubjectPageCubit>()
-                                    .setNextPage(),
-                                child: RotatedBox(
-                                  quarterTurns: 2,
-                                  child: SizedBox(
-                                    height: 45.h,
-                                    width: 45.h,
-                                    child: Image.asset(
-                                      'assets/ui/Group.png', // right arrow
-                                      fit: BoxFit.scaleDown,
-                                      height: 45.h,
-                                      width: 45.h,
+                              context.watch<SubjectPageCubit>().curridx == 0
+                                  ? SizedBox(height: 45.h, width: 45.h)
+                                  : GestureDetector(
+                                      onTap: () => context
+                                          .read<SubjectPageCubit>()
+                                          .setPreviousPage(),
+                                      child: SizedBox(
+                                        height: 45.h,
+                                        width: 45.h,
+                                        child: Image.asset(
+                                          'assets/ui/Group.png', // right arrow
+                                          fit: BoxFit.scaleDown,
+                                          height: 45.h,
+                                          width: 45.h,
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                ),
-                              ),
+                              context.watch<SubjectPageCubit>().curridx ==
+                                      context.watch<SubjectPageCubit>().maxLen -
+                                          1
+                                  ? SizedBox(height: 45.h, width: 45.h)
+                                  : GestureDetector(
+                                      onTap: () => context
+                                          .read<SubjectPageCubit>()
+                                          .setNextPage(),
+                                      child: RotatedBox(
+                                        quarterTurns: 2,
+                                        child: SizedBox(
+                                          height: 45.h,
+                                          width: 45.h,
+                                          child: Image.asset(
+                                            'assets/ui/Group.png', // right arrow
+                                            fit: BoxFit.scaleDown,
+                                            height: 45.h,
+                                            width: 45.h,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
                             ],
                           )),
                           //! Bottom
@@ -230,7 +236,7 @@ class _SubjectScreenState extends State<SubjectScreen> {
           onPageChanged: (value) {
             context.read<SubjectPageCubit>().setPage(value);
           },
-          itemCount: 3, // 6 containers per page (2 rows with 3 containers each)
+          itemCount: context.read<SubjectPageCubit>().maxLen,
           itemBuilder: (context, a) {
             return Stack(
               alignment: Alignment.center,

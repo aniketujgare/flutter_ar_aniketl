@@ -6,7 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:size_config/size_config.dart';
 
-import '../../../core/student_profile_cubit/student_profile_cubit.dart';
+import '../../../core/bloc/student_profile_cubit/student_profile_cubit.dart';
 import '../bloc/parent_details_cubit/parent_details_cubit.dart';
 import 'edit_parent_details_box.dart';
 

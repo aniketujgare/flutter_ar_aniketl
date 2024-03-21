@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ar/core/util/constants.dart';
 import 'package:flutter_ar/core/util/device_type.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:size_config/size_config.dart';
@@ -13,7 +14,7 @@ class AppBottomNavBar extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 40.w),
       width: double.infinity,
-      height: 100.h,
+      height: Constants.kparentZoneBottomBarHeight,
       color: AppColors.accentColor,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,

@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_ar/core/util/styles.dart';
+import 'package:size_config/size_config.dart';
 
 import '../../presentation/worksheet/widgets/worksheet_submitted_box.dart';
 import 'device_type.dart';
 
 class Constants {
+  static double kparentZoneAppBarHeight =
+      DeviceType().isMobile ? kToolbarHeight : 80.h;
+  static double kparentZoneBottomBarHeight = 100.h;
   static double appBarSizeWorksheet = DeviceType().isMobile ? 56 : 80;
   Future<void> showAlertDialog(BuildContext context) async {
     return showDialog<void>(

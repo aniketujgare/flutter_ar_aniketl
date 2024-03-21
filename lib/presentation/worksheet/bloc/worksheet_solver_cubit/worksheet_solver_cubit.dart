@@ -1,8 +1,10 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart' show debugPrint;
+import 'package:flutter_ar/core/bloc/student_profile_cubit/student_profile_cubit.dart';
 import 'package:flutter_ar/domain/repositories/authentication_repository.dart';
 import 'package:flutter_ar/presentation/worksheet/repository/worksheet_solver_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -22,6 +24,8 @@ class WorksheetSolverCubit extends Cubit<WorksheetSolverState> {
   int studentId = 0;
   final repository = WorksheetSolverRepository();
   WorksheetSolverCubit() : super(const WorksheetSolverState.initial());
+
+  // WorksheetSolverCubit() : super(const WorksheetSolverState.initial());
   void init(int workSheetId) async {
     this.workSheetId = workSheetId;
     StudentProfileModel? studentProfile =
@@ -95,6 +99,32 @@ class WorksheetSolverCubit extends Cubit<WorksheetSolverState> {
       status: WorkSheetSolverStatus.loaded,
       answerSheet: updatedAnswerSheet,
     ));
+  }
+
+  void updateCoins() {
+    int totalQCnt = state.questions.length;
+    int solvedQCnt = 0;
+
+    for (var qusetion in state.answerSheet) {
+      if (qusetion.question.answer.answer != null) {
+        solvedQCnt++;
+      }
+    }
+    double solvedPercentage = (solvedQCnt / totalQCnt) * 100;
+    int coinsEarned = 0;
+    switch (solvedPercentage) {
+      case > 90.0:
+        coinsEarned = 10;
+        break;
+      case > 75.0:
+        coinsEarned = 6;
+        break;
+      case > 50.0:
+        coinsEarned = 3;
+        break;
+      default:
+        coinsEarned = 0;
+    }
   }
 
   void answerSubmit(bool lastQuestion) async {

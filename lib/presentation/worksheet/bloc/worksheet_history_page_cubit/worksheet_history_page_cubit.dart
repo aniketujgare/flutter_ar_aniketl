@@ -2,43 +2,58 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class WorksheetHistoryPageCubit extends Cubit<int> {
+  bool isInTransit = false;
+
   PageController pageController = PageController();
   get pageCont => pageController;
 
   void goToPage(int page) {
-    pageController.animateToPage(
+    pageController
+        .animateToPage(
       page,
       duration: const Duration(milliseconds: 300),
       curve: Curves.easeInOut,
-    );
-    emit(curridx);
+    )
+        .whenComplete(() {
+      isInTransit = false;
+      emit(page);
+    });
   }
 
-  late int maxLen;
+  int maxLen = 0;
   WorksheetHistoryPageCubit() : super(0);
   int curridx = 0;
   void setPage(int pageIndex) {
     curridx = pageIndex;
     emit(curridx);
-    // if (pageIndex < maxLen && pageIndex > 0) {}
   }
 
   void setNextPage() {
     if (curridx < maxLen) {
-      ++curridx;
-      goToPage(curridx);
+      if (!isInTransit) {
+        isInTransit = true;
+
+        ++curridx;
+        goToPage(curridx);
+      }
     }
   }
 
   void setPreviousPage() {
     if (curridx > 0) {
-      --curridx;
-      goToPage(curridx);
+      if (!isInTransit) {
+        isInTransit = true;
+
+        --curridx;
+        goToPage(curridx);
+      }
     }
   }
 
   void setmaxLength(int len) {
-    maxLen = len;
+    if (maxLen == len - 1) return;
+    maxLen = len - 1;
     debugPrint('maxLen $maxLen');
+    emit(curridx);
   }
 }

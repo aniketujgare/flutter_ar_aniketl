@@ -18,7 +18,6 @@ class ComprehensionPage extends StatelessWidget {
         child: Column(
           children: [
             10.verticalSpacer,
-
             Text(
               'Comprehension',
               style: AppTextStyles.nunito100w700black
@@ -39,7 +38,6 @@ class ComprehensionPage extends StatelessWidget {
                 backgroundColor: Colors.white,
               ),
             ),
-
             (DeviceType().isMobile ? 20.h : 20.h).verticalSpacer,
             ...List.generate(3, (index) {
               var data = [
@@ -124,11 +122,9 @@ class ComprehensionPage extends StatelessWidget {
                 ),
               );
             }),
-            // const _buildProceduralKnowledge(),
-            // 20.verticalSpacer,
-            // const _buildProceduralKnowledge(),
-            // 20.verticalSpacer,
-            // const _buildProceduralKnowledge(),
+            SizedBox(
+              height: DeviceType().isMobile ? 0 : 120.h,
+            )
           ],
         ),
       ),

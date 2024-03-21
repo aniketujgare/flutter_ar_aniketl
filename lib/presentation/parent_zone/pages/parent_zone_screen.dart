@@ -2,6 +2,7 @@ import 'package:connection_notifier/connection_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_ar/core/reusable_widgets/network_disconnected.dart';
+import 'package:flutter_ar/core/util/constants.dart';
 import 'package:flutter_ar/presentation/parent_zone/bloc/parent_details_cubit/parent_details_cubit.dart';
 import '../../../core/util/styles.dart';
 import '../bloc/navbar_cubit/app_navigator_cubit.dart';
@@ -59,7 +60,7 @@ class _ParentZoneScreenState extends State<ParentZoneScreen> {
             appBar: AppBar(
               automaticallyImplyLeading: false,
               backgroundColor: AppColors.accentColor,
-              toolbarHeight: DeviceType().isMobile ? null : 80.h,
+              toolbarHeight: Constants.kparentZoneAppBarHeight,
               title: BlocBuilder<AppNavigatorCubit, AppNavigatorState>(
                 builder: (context, state) {
                   return Row(

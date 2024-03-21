@@ -67,10 +67,12 @@ class _WorksheetHistoryViewState extends State<WorksheetHistoryView> {
               BlocBuilder<WorksheetCubit, WorksheetState>(
                 builder: (context, state) {
                   if (state.status == WorksheetStatus.loaded) {
+                    //Set Max page length (don't remove)
                     context.read<WorksheetHistoryPageCubit>().setmaxLength(
                         (state.historyWorksheets.length /
                                 (DeviceType().isMobile ? 4 : 3))
                             .ceil());
+                    //
                     return BlocBuilder<WorksheetHistoryPageCubit, int>(
                       builder: (context, index) {
                         if (state.historyWorksheets.isEmpty) {
@@ -96,8 +98,9 @@ class _WorksheetHistoryViewState extends State<WorksheetHistoryView> {
                                   .setPage(value);
                             },
                             itemCount: context
-                                .read<WorksheetHistoryPageCubit>()
-                                .maxLen, // Number of pages
+                                    .read<WorksheetHistoryPageCubit>()
+                                    .maxLen +
+                                1, // Number of pages
                             itemBuilder: (context, page) {
                               int startIndex =
                                   page * (DeviceType().isMobile ? 4 : 3);
@@ -189,54 +192,57 @@ class _WorksheetHistoryViewState extends State<WorksheetHistoryView> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 //First page does'nt has back page btn
-                                // if (context
-                                //         .watch<WorksheetHistoryPageCubit>()
-                                //         .curridx !=
-                                //     0)
-                                Padding(
-                                  padding: Platform.isIOS && shortestSide < 600
-                                      ? EdgeInsets.only(left: 8.wp)
-                                      : const EdgeInsets.all(0),
-                                  child: GestureDetector(
-                                    onTap: () => context
-                                        .read<WorksheetHistoryPageCubit>()
-                                        .setPreviousPage(),
-                                    child: SizedBox(
-                                      height: 45.h,
-                                      width: 45.h,
-                                      child: Image.asset(
-                                        'assets/ui/Group.png', // right arrow
-                                        fit: BoxFit.scaleDown,
-                                        height: 45.h,
-                                        width: 45.h,
+                                context
+                                            .watch<WorksheetHistoryPageCubit>()
+                                            .curridx ==
+                                        0
+                                    ? SizedBox(height: 45.h, width: 45.h)
+                                    : Padding(
+                                        padding:
+                                            Platform.isIOS && shortestSide < 600
+                                                ? EdgeInsets.only(left: 8.wp)
+                                                : const EdgeInsets.all(0),
+                                        child: GestureDetector(
+                                          onTap: () => context
+                                              .read<WorksheetHistoryPageCubit>()
+                                              .setPreviousPage(),
+                                          child: SizedBox(
+                                            height: 45.h,
+                                            width: 45.h,
+                                            child: Image.asset(
+                                              'assets/ui/Group.png', // right arrow
+                                              fit: BoxFit.scaleDown,
+                                              height: 45.h,
+                                              width: 45.h,
+                                            ),
+                                          ),
+                                        ),
                                       ),
-                                    ),
-                                  ),
-                                ),
-                                //  if (context
-                                //     .watch<WorksheetHistoryPageCubit>()
-                                //     .curridx !=
-                                // context
-                                //     .read<WorksheetHistoryPageCubit>()
-                                //     .maxLen)
-                                GestureDetector(
-                                  onTap: () => context
-                                      .read<WorksheetHistoryPageCubit>()
-                                      .setNextPage(),
-                                  child: RotatedBox(
-                                    quarterTurns: 2,
-                                    child: SizedBox(
-                                      height: 45.h,
-                                      width: 45.h,
-                                      child: Image.asset(
-                                        'assets/ui/Group.png', // right arrow
-                                        fit: BoxFit.scaleDown,
-                                        height: 45.h,
-                                        width: 45.h,
+                                context
+                                            .watch<WorksheetHistoryPageCubit>()
+                                            .curridx ==
+                                        context
+                                            .read<WorksheetHistoryPageCubit>()
+                                            .maxLen
+                                    ? SizedBox(height: 45.h, width: 45.h)
+                                    : GestureDetector(
+                                        onTap: () => context
+                                            .read<WorksheetHistoryPageCubit>()
+                                            .setNextPage(),
+                                        child: RotatedBox(
+                                          quarterTurns: 2,
+                                          child: SizedBox(
+                                            height: 45.h,
+                                            width: 45.h,
+                                            child: Image.asset(
+                                              'assets/ui/Group.png', // right arrow
+                                              fit: BoxFit.scaleDown,
+                                              height: 45.h,
+                                              width: 45.h,
+                                            ),
+                                          ),
+                                        ),
                                       ),
-                                    ),
-                                  ),
-                                ),
                               ],
                             ),
                           ),

@@ -10,7 +10,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:size_config/size_config.dart';
 
-import 'core/student_profile_cubit/student_profile_cubit.dart';
+import 'core/bloc/student_profile_cubit/student_profile_cubit.dart';
 import 'core/util/device_type.dart';
 import 'core/util/styles.dart';
 import 'data/models/student_profile_model.dart';
@@ -38,7 +38,6 @@ import 'presentation/splash_screen/splash_screen.dart';
 import 'presentation/subject/bloc/subject_page_cubit.dart';
 import 'presentation/worksheet/bloc/question_timer_cubit/question_timer_cubit.dart';
 import 'presentation/worksheet/bloc/worksheet_cubit/worksheet_cubit.dart';
-import 'presentation/worksheet/bloc/worksheet_history_cubit/worksheet_history_cubit.dart';
 import 'presentation/worksheet/bloc/worksheet_history_page_cubit/worksheet_history_page_cubit.dart';
 import 'presentation/worksheet/bloc/worksheet_page_cubit/worksheet_page_cubit.dart';
 import 'presentation/worksheet/bloc/worksheet_solver_cubit/worksheet_solver_cubit.dart';
@@ -166,9 +165,6 @@ class MyAppState extends State<MyApp> {
             ),
             BlocProvider(
               create: (context) => WorksheetHistoryPageCubit(),
-            ),
-            BlocProvider(
-              create: (context) => WorksheetHistoryCubit(),
             ),
             BlocProvider(
               create: (context) => LessonModeCubit(),

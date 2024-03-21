@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:http/http.dart' as http;
 
-import '../../data/models/student_profile_model.dart';
+import '../../../data/models/student_profile_model.dart';
 
 part 'student_profile_cubit.freezed.dart';
 part 'student_profile_state.dart';
