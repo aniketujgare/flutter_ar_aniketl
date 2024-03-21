@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
@@ -8,23 +9,58 @@ import '../../../core/util/device_type.dart';
 import '../../../core/util/styles.dart';
 import '../bloc/worksheet_solver_cubit/worksheet_solver_cubit.dart';
 
-class BottomIndicatorQuestions extends StatelessWidget {
-  const BottomIndicatorQuestions({
+class BottomIndicatorQuestions extends StatefulWidget {
+  BottomIndicatorQuestions({
     super.key,
   });
+  double maxScrollPos = 0.0;
 
+  @override
+  State<BottomIndicatorQuestions> createState() =>
+      _BottomIndicatorQuestionsState();
+}
+
+class _BottomIndicatorQuestionsState extends State<BottomIndicatorQuestions> {
+  final controller = ScrollController();
+  // void scrollLeft() {
+  //   controller.jumpTo(widget.maxScrollPos);
+  // }
+
+  // void scrollLeftWithAnimation() {
+  //   controller.animateTo(controller.position.maxScrollExtent,
+  //       duration: Duration(microseconds: 100), curve: Curves.fastOutSlowIn);
+  //   print('scroll offse: ${controller.offset}');
+  // }
+  bool isScrollToLast = false;
   @override
   Widget build(BuildContext context) {
     return Align(
       alignment: Alignment.bottomCenter,
       child: SizedBox(
         height: DeviceType().isMobile ? 56 : 80,
-        child: BlocBuilder<WorksheetSolverCubit, WorksheetSolverState>(
+        child: BlocConsumer<WorksheetSolverCubit, WorksheetSolverState>(
+          listener: (context, state) {
+            var cubit = context.read<WorksheetSolverCubit>().state;
+            int currQIdx = cubit.currentQuestion;
+            int maxQCnt = cubit.questions.length;
+            if (currQIdx > maxQCnt / 2) {
+              var v = controller.position.maxScrollExtent;
+              widget.maxScrollPos = max(v, widget.maxScrollPos);
+
+              if (controller.offset != widget.maxScrollPos) {
+                print('scroll offse: ${widget.maxScrollPos}');
+                // scrollLeft();
+              }
+
+              // scrollLeftWithAnimation();
+            }
+          },
           builder: (context, state) {
             if (state.status == WorkSheetSolverStatus.loading) {
               return const SizedBox();
             }
             return ListView.builder(
+              controller: controller,
               scrollDirection: Axis.horizontal,
               shrinkWrap: true,
               itemCount: state.questions.length,

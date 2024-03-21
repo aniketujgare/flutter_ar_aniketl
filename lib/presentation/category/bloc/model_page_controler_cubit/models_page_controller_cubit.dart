@@ -20,7 +20,7 @@ class ModelsPageControllerCubit extends Cubit<int> {
     });
   }
 
-  late int maxLen;
+  int maxLen = 0;
 
   int curridx = 0;
   get activePageIdx => curridx;
@@ -54,6 +54,7 @@ class ModelsPageControllerCubit extends Cubit<int> {
   void setmaxLength(int len) {
     if (maxLen == len - 1) {
       emit(curridx);
+      debugPrint('maxLen $maxLen');
       return;
     }
     maxLen = len - 1;
