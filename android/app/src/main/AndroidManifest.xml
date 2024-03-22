@@ -4,7 +4,7 @@
 <uses-permission android:name="android.permission.INTERNET" />
 <!-- Limits app visibility in the Google Play Store to ARCore supported devices
      (https://developers.google.com/ar/devices). -->
-<uses-feature android:name="android.hardware.camera.ar" />
+<!-- <uses-feature android:name="android.hardware.camera.ar" /> -->
     <application
         android:label="Kids V2"
         android:name="${applicationName}"
@@ -42,7 +42,7 @@
             android:value="2" />
                 <!-- "AR Required" app, requires "Google Play Services for AR" (ARCore)
          to be installed, as the app does not include any non-AR features. -->
-    <meta-data android:name="com.google.ar.core" android:value="optional"   tools:replace="android:value"/>
+    <!-- <meta-data android:name="com.google.ar.core" android:value="optional"   tools:replace="android:value"/> -->
     </application>
     <!-- Provide required visibility configuration for API level 30 and above -->
     <queries>
