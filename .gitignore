@@ -4,6 +4,7 @@
 # Unity repo-specific
 **/android/unity-classes
 **/android/unityLibrary
+**/unity
 
 # Temp testing
 # **/lib/temp_testing

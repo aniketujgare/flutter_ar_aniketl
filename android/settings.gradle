@@ -21,6 +21,5 @@ include ":app"
 apply from: "${settings.ext.flutterSdkPath}/packages/flutter_tools/gradle/app_plugin_loader.gradle"
 
 
-// include ":unityLibrary"
-// include ':unityLibrary:xrmanifest.androidlib'
-// project(":unityLibrary").projectDir = file("./unityLibrary")
+include ":unityLibrary"
+project(":unityLibrary").projectDir = file("./unityLibrary")

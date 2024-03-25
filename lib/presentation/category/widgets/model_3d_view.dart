@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:connection_notifier/connection_notifier.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_ar/unity_ar_screen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 // import 'package:flutter_ar/temp_testing/asset_download.dart';
 // import 'package:flutter_ar/temp_testing/unityScene.dart';
@@ -142,8 +143,12 @@ class _ModelViewState extends State<ModelView> {
                       alignment: Alignment.bottomRight,
                       child: GestureDetector(
                         //? IOS AR View
-                        onTap: () => _launchUrl(Uri.parse(
-                            "https://d3ag5oij4wsyi3.cloudfront.net/load_model/index.html?id=${widget.imageFileName}")),
+                        onTap: () => Navigator.of(context).push(
+                            MaterialPageRoute(
+                                builder: (context) => const UnityARScreen())),
+
+                        // _launchUrl(Uri.parse(
+                        //     "https://d3ag5oij4wsyi3.cloudfront.net/load_model/index.html?id=${widget.imageFileName}")),
 
                         child: SizedBox(
                             height: 65.h,
