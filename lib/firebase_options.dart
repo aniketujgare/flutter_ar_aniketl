@@ -51,7 +51,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyBaxHyuOYcSoWeewXZE4MCMln1Z0rc5G54',
-    appId: '1:159319816092:android:e878497c4b7e228327ba59',
+    appId: '1:159319816092:android:74bb6b72c81875dd27ba59',
     messagingSenderId: '159319816092',
     projectId: 'smartxr-kids',
     storageBucket: 'smartxr-kids.appspot.com',
@@ -59,10 +59,10 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyBTjeQ2hd-vl8p8C1KcGtVCRsmEpUTYZvE',
-    appId: '1:159319816092:ios:2a47ad6a8fac132327ba59',
+    appId: '1:159319816092:ios:90beb0f346999c7b27ba59',
     messagingSenderId: '159319816092',
     projectId: 'smartxr-kids',
     storageBucket: 'smartxr-kids.appspot.com',
-    iosBundleId: 'com.example.flutterAr',
+    iosBundleId: 'com.smartxr.kidsv2',
   );
 }

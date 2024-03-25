@@ -1,5 +1,5 @@
 import 'package:connection_notifier/connection_notifier.dart';
-import 'package:firebase_app_check/firebase_app_check.dart';
+// import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -14,8 +14,8 @@ import 'core/bloc/student_profile_cubit/student_profile_cubit.dart';
 import 'core/util/device_type.dart';
 import 'core/util/styles.dart';
 import 'data/models/student_profile_model.dart';
-import 'demo/firebase_options.dart';
 import 'domain/repositories/authentication_repository.dart';
+import 'firebase_options.dart';
 import 'presentation/ar_core/flutter_ar.dart';
 import 'presentation/category/bloc/category_new_cubit/category_new_cubit.dart';
 import 'presentation/category/bloc/category_page_cubit/category_page_cubit.dart';
@@ -58,10 +58,10 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  await FirebaseAppCheck.instance.activate(
-    appleProvider: AppleProvider.debug,
-    androidProvider: AndroidProvider.debug,
-  );
+  // await FirebaseAppCheck.instance.activate(
+  //   appleProvider: AppleProvider.debug,
+  //   androidProvider: AndroidProvider.playIntegrity,
+  // );
   await Hive.initFlutter();
   // Registering the adapter
   Hive.registerAdapter(StudentProfileModelAdapter());
