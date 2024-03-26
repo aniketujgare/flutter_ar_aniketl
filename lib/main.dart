@@ -14,8 +14,8 @@ import 'core/bloc/student_profile_cubit/student_profile_cubit.dart';
 import 'core/util/device_type.dart';
 import 'core/util/styles.dart';
 import 'data/models/student_profile_model.dart';
-import 'demo/firebase_options.dart';
 import 'domain/repositories/authentication_repository.dart';
+import 'firebase_options.dart';
 import 'presentation/ar_core/flutter_ar.dart';
 import 'presentation/category/bloc/category_new_cubit/category_new_cubit.dart';
 import 'presentation/category/bloc/category_page_cubit/category_page_cubit.dart';
@@ -60,7 +60,7 @@ void main() async {
   );
   await FirebaseAppCheck.instance.activate(
     appleProvider: AppleProvider.debug,
-    androidProvider: AndroidProvider.debug,
+    androidProvider: AndroidProvider.playIntegrity,
   );
   await Hive.initFlutter();
   // Registering the adapter

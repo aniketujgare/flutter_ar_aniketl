@@ -13,18 +13,6 @@ import '../bloc/worksheet_solver_cubit/worksheet_solver_cubit.dart';
 import 'worksheet_submitted_box.dart';
 
 AppBar appBarWorksheetSolver(BuildContext context) {
-  Future<void> _showAlertDialog() async {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return const Dialog(
-          child: WorksheetSubmittedBox(),
-        );
-      },
-    );
-  }
-
   return AppBar(
     titleSpacing: 0.0,
     centerTitle: true,
@@ -48,7 +36,7 @@ AppBar appBarWorksheetSolver(BuildContext context) {
         ),
       ),
     ),
-    actions: [
+    actions: const [
       // Padding(
       //   padding: EdgeInsets.only(right: 50.h),
       //   child: BlocBuilder<WorksheetSolverCubit, WorksheetSolverState>(
@@ -119,23 +107,23 @@ AppBar appBarWorksheetSolver(BuildContext context) {
       //     },
       //   ),
       // ),
-      GestureDetector(
-        onTap: () {
-          context.read<WorksheetSolverCubit>().updateCoins();
-        },
-        child: Container(
-          height: DeviceType().isMobile ? 8.wp : 6.5.wp,
-          decoration: ShapeDecoration(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(13),
-            ),
-          ),
-          child: Padding(
-            padding: EdgeInsets.only(right: 50.h),
-            child: Image.asset('assets/images/PNG Icons/info.png'),
-          ),
-        ),
-      ),
+      // GestureDetector(
+      //   onTap: () {
+      //     context.read<WorksheetSolverCubit>().updateCoins();
+      //   },
+      //   child: Container(
+      //     height: DeviceType().isMobile ? 8.wp : 6.5.wp,
+      //     decoration: ShapeDecoration(
+      //       shape: RoundedRectangleBorder(
+      //         borderRadius: BorderRadius.circular(13),
+      //       ),
+      //     ),
+      //     child: Padding(
+      //       padding: EdgeInsets.only(right: 50.h),
+      //       child: Image.asset('assets/images/PNG Icons/info.png'),
+      //     ),
+      //   ),
+      // ),
     ],
     title: BlocBuilder<WorksheetSolverCubit, WorksheetSolverState>(
       builder: (context, state) {

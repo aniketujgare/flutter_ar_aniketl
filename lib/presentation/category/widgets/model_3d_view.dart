@@ -127,16 +127,16 @@ class _ModelViewState extends State<ModelView> {
                         loading: Loading.eager,
                       ),
                     ),
-                    Align(
-                      alignment: Alignment.bottomLeft,
-                      child: SizedBox(
-                          height: 65.h,
-                          width: 65.h,
-                          child: Image.asset(
-                            'assets/ui/fi-br-volume 2.png',
-                            fit: BoxFit.cover,
-                          )),
-                    ),
+                    // Align(
+                    //   alignment: Alignment.bottomLeft,
+                    //   child: SizedBox(
+                    //       height: 65.h,
+                    //       width: 65.h,
+                    //       child: Image.asset(
+                    //         'assets/ui/fi-br-volume 2.png',
+                    //         fit: BoxFit.cover,
+                    //       )),
+                    // ),
                     // if (Platform.isIOS)
                     Align(
                       alignment: Alignment.bottomRight,
@@ -144,7 +144,6 @@ class _ModelViewState extends State<ModelView> {
                         //? IOS AR View
                         onTap: () => _launchUrl(Uri.parse(
                             "https://d3ag5oij4wsyi3.cloudfront.net/load_model/index.html?id=${widget.imageFileName}")),
-
                         child: SizedBox(
                             height: 65.h,
                             width: 65.h,

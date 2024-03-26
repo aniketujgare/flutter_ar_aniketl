@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:size_config/size_config.dart';
 
+import '../../../core/reusable_widgets/feature_coming_soon_alertbox.dart';
 import '../../../core/reusable_widgets/network_disconnected.dart';
 import '../../../core/util/styles.dart';
 import '../bloc/category_new_cubit/category_new_cubit.dart';
@@ -55,9 +56,14 @@ class CategoryScreen extends StatelessWidget {
                           SizedBox(
                             width: 75.h,
                             height: 75.h,
-                            child: Image.asset(
-                              'assets/ui/image 40.png', // User Icon
-                              fit: BoxFit.contain,
+                            child: GestureDetector(
+                              onTap: () async => await showFeatureComingSoonAertBox(
+                                  context,
+                                  'User Profile and Management feature coming soon...'),
+                              child: Image.asset(
+                                'assets/ui/image 40.png', // User Icon
+                                fit: BoxFit.contain,
+                              ),
                             ),
                           ),
                           Padding(

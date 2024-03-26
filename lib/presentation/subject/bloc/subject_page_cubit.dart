@@ -52,7 +52,6 @@ class SubjectPageCubit extends Cubit<int> {
   void setmaxLength(int len) {
     if (maxLen == len - 1) return;
     maxLen = len - 1;
-    debugPrint('maxLen $maxLen');
     emit(curridx);
   }
 }

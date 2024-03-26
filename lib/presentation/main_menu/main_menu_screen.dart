@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:connection_notifier/connection_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_ar/core/reusable_widgets/feature_coming_soon_alertbox.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:size_config/size_config.dart';
 
@@ -82,9 +83,13 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Image.asset(
-            'assets/ui/image 40.png', // User Icon
-            fit: BoxFit.contain,
+          GestureDetector(
+            onTap: () async => await showFeatureComingSoonAertBox(
+                context, 'User Profile and Management feature coming soon...'),
+            child: Image.asset(
+              'assets/ui/image 40.png', // User Icon
+              fit: BoxFit.contain,
+            ),
           ),
           const Spacer(),
           Row(
@@ -221,7 +226,7 @@ class buildBottom extends StatelessWidget {
                 onTap: () => Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) => const ParentZoneScreen())),
                 child: Image.asset(
-                  'assets/images/PNG Icons/CustomButtonsParents.png', // User Icon
+                  'assets/images/PNG Icons/CustomButtonsParents.png',
                   fit: BoxFit.contain,
                 ),
               ),
@@ -234,7 +239,7 @@ class buildBottom extends StatelessWidget {
                   }));
                 },
                 child: Image.asset(
-                  'assets/images/PNG Icons/CustomButtonsMenu.png', // User Icon
+                  'assets/images/PNG Icons/CustomButtonsMenu.png',
                   fit: BoxFit.contain,
                 ),
               ),
@@ -243,14 +248,22 @@ class buildBottom extends StatelessWidget {
           const Spacer(),
           Row(
             children: [
-              Image.asset(
-                'assets/images/PNG Icons/CustomButtonsStore.png', // User Icon
-                fit: BoxFit.contain,
+              GestureDetector(
+                onTap: () async => await showFeatureComingSoonAertBox(
+                    context, 'Store feature coming soon...'),
+                child: Image.asset(
+                  'assets/images/PNG Icons/CustomButtonsStore.png',
+                  fit: BoxFit.contain,
+                ),
               ),
               8.horizontalSpacerPercent,
-              Image.asset(
-                'assets/images/PNG Icons/CustomButtonsTrophy.png', // User Icon
-                fit: BoxFit.contain,
+              GestureDetector(
+                onTap: () async => await showFeatureComingSoonAertBox(
+                    context, 'Trophies and Perks Feature coming soon...'),
+                child: Image.asset(
+                  'assets/images/PNG Icons/CustomButtonsTrophy.png',
+                  fit: BoxFit.contain,
+                ),
               ),
             ],
           ),

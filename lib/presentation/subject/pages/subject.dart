@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:size_config/size_config.dart';
 
 import '../../../core/bloc/student_profile_cubit/student_profile_cubit.dart';
+import '../../../core/reusable_widgets/feature_coming_soon_alertbox.dart';
 import '../../../core/reusable_widgets/network_disconnected.dart';
 import '../../../core/util/device_type.dart';
 import '../../../core/util/styles.dart';
@@ -85,8 +86,7 @@ class _SubjectScreenState extends State<SubjectScreen> {
                                       ),
                                     ),
                               context.watch<SubjectPageCubit>().curridx ==
-                                      context.watch<SubjectPageCubit>().maxLen -
-                                          1
+                                      context.watch<SubjectPageCubit>().maxLen
                                   ? SizedBox(height: 45.h, width: 45.h)
                                   : GestureDetector(
                                       onTap: () => context
@@ -236,7 +236,7 @@ class _SubjectScreenState extends State<SubjectScreen> {
           onPageChanged: (value) {
             context.read<SubjectPageCubit>().setPage(value);
           },
-          itemCount: context.read<SubjectPageCubit>().maxLen,
+          itemCount: context.read<SubjectPageCubit>().maxLen + 1,
           itemBuilder: (context, a) {
             return Stack(
               alignment: Alignment.center,
@@ -303,14 +303,22 @@ class buildBottom extends StatelessWidget {
           const Spacer(),
           Row(
             children: [
-              Image.asset(
-                'assets/images/PNG Icons/CustomButtonsStore.png', // User Icon
-                fit: BoxFit.contain,
+              GestureDetector(
+                onTap: () async => await showFeatureComingSoonAertBox(
+                    context, 'Store feature coming soon...'),
+                child: Image.asset(
+                  'assets/images/PNG Icons/CustomButtonsStore.png',
+                  fit: BoxFit.contain,
+                ),
               ),
               8.horizontalSpacerPercent,
-              Image.asset(
-                'assets/images/PNG Icons/CustomButtonsTrophy.png', // User Icon
-                fit: BoxFit.contain,
+              GestureDetector(
+                onTap: () async => await showFeatureComingSoonAertBox(
+                    context, 'Trophies and Perks Feature coming soon...'),
+                child: Image.asset(
+                  'assets/images/PNG Icons/CustomButtonsTrophy.png',
+                  fit: BoxFit.contain,
+                ),
               ),
             ],
           ),
