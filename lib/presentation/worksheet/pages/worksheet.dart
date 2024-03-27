@@ -14,6 +14,7 @@ import '../../../data/models/student_profile_model.dart';
 import '../../../domain/repositories/authentication_repository.dart';
 import '../bloc/worksheet_cubit/worksheet_cubit.dart';
 import '../bloc/worksheet_page_cubit/worksheet_page_cubit.dart';
+import '../bloc/worksheet_solver_cubit/worksheet_solver_cubit.dart';
 import 'worksheet_history.dart';
 import 'worksheet_solver.dart';
 
@@ -151,9 +152,16 @@ class _WorksheetViewState extends State<WorksheetView> {
                                       onTap: () {
                                         Navigator.of(context).push(
                                           MaterialPageRoute(
-                                            builder: (context) =>
-                                                WorksheetSolverView(
-                                                    workSheetId: workSheet.id),
+                                            builder: (context) {
+                                              context
+                                                  .read<WorksheetSolverCubit>()
+                                                  .init(workSheet.id);
+                                              context
+                                                  .read<WorksheetSolverCubit>()
+                                                  .setCurrentQuestionZero();
+                                              return WorksheetSolverView(
+                                                  workSheetId: workSheet.id);
+                                            },
                                           ),
                                         );
                                       },

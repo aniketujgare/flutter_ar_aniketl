@@ -1,19 +1,16 @@
-import 'dart:convert';
-import 'dart:math';
-
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/util/device_type.dart';
-import '../../../core/util/styles.dart';
+import '../bloc/bottom_indicator_cubit/bottom_indicator_cubit.dart';
 import '../bloc/worksheet_solver_cubit/worksheet_solver_cubit.dart';
 
 class BottomIndicatorQuestions extends StatefulWidget {
-  BottomIndicatorQuestions({
+  const BottomIndicatorQuestions({
     super.key,
   });
-  double maxScrollPos = 0.0;
 
   @override
   State<BottomIndicatorQuestions> createState() =>
@@ -21,58 +18,58 @@ class BottomIndicatorQuestions extends StatefulWidget {
 }
 
 class _BottomIndicatorQuestionsState extends State<BottomIndicatorQuestions> {
-  final controller = ScrollController();
-  // void scrollLeft() {
-  //   controller.jumpTo(widget.maxScrollPos);
-  // }
+  ScrollController sc = ScrollController();
 
-  // void scrollLeftWithAnimation() {
-  //   controller.animateTo(controller.position.maxScrollExtent,
-  //       duration: Duration(microseconds: 100), curve: Curves.fastOutSlowIn);
-  //   print('scroll offse: ${controller.offset}');
-  // }
-  bool isScrollToLast = false;
+  @override
+  void dispose() {
+    sc.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Align(
-      alignment: Alignment.bottomCenter,
-      child: SizedBox(
-        height: DeviceType().isMobile ? 56 : 80,
-        child: BlocConsumer<WorksheetSolverCubit, WorksheetSolverState>(
-          listener: (context, state) {
-            var cubit = context.read<WorksheetSolverCubit>().state;
-            int currQIdx = cubit.currentQuestion;
-            int maxQCnt = cubit.questions.length;
-            if (currQIdx > maxQCnt / 2) {
-              var v = controller.position.maxScrollExtent;
-              widget.maxScrollPos = max(v, widget.maxScrollPos);
-
-              if (controller.offset != widget.maxScrollPos) {
-                print('scroll offse: ${widget.maxScrollPos}');
-                // scrollLeft();
-              }
-
-              // scrollLeftWithAnimation();
-            }
-          },
-          builder: (context, state) {
-            if (state.status == WorkSheetSolverStatus.loading) {
-              return const SizedBox();
-            }
-            return ListView.builder(
-              controller: controller,
+    return BlocListener<BottomIndicatorCubit, BottomIndicatorState>(
+      listener: (context, state) {
+        state.map(
+            animate: (an) {
+              var cubit = context.read<WorksheetSolverCubit>().state;
+              context
+                  .read<BottomIndicatorCubit>()
+                  .scrollBottomIndicatorPosition(
+                      cubit.currentQuestion,
+                      cubit.questions.length,
+                      sc,
+                      MediaQuery.of(context).size.width);
+            },
+            initial: (an) {},
+            shouldTransit: (an) {
+              SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+                sc.animateTo(an.animateOffse,
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.bounceInOut);
+              });
+            });
+      },
+      child: Align(
+        alignment: Alignment.bottomCenter,
+        child: SizedBox(
+            height: DeviceType().isMobile ? 56 : 80,
+            child: ListView(
+              controller: sc,
               scrollDirection: Axis.horizontal,
               shrinkWrap: true,
-              itemCount: state.questions.length,
-              itemBuilder: (BuildContext context, int index) {
-                return WormIndicator(
-                  index: index,
-                  currentQuestion: state.currentQuestion,
-                );
-              },
-            );
-          },
-        ),
+              children: [
+                ...List.generate(
+                    context.read<WorksheetSolverCubit>().state.questions.length,
+                    (index) => WormIndicator(
+                          index: index,
+                          currentQuestion: context
+                              .read<WorksheetSolverCubit>()
+                              .state
+                              .currentQuestion,
+                        ))
+              ],
+            )),
       ),
     );
   }
@@ -94,9 +91,9 @@ class WormIndicator extends StatelessWidget {
     if (index == currentQuestion) {
       size = 18;
     } else if (index == currentQuestion - 1 || index == currentQuestion + 1) {
-      size = 15;
+      size = 13;
     } else if (index != 0 && (index + 1) % 5 == 0) {
-      size = 14;
+      size = 12;
     } else {
       size = 9;
     }
@@ -121,12 +118,22 @@ class WormIndicator extends StatelessWidget {
           shape: BoxShape.circle,
           color: _pickColor(index, context),
         ),
-        child: getCoin(index, size),
+        child: getCoin(index, size, context),
       ),
     );
   }
 
-  Widget? getCoin(int index, double size) {
+  Widget? getCoin(int index, double size, BuildContext context) {
+    if (context
+            .read<WorksheetSolverCubit>()
+            .state
+            .answerSheet[index]
+            .question
+            .answer
+            .answer !=
+        null) {
+      return null;
+    }
     if (index == currentQuestion) {
       if (index != 0 && (index + 1) % 5 == 0) {
         return Image.asset(
@@ -151,44 +158,9 @@ class WormIndicator extends StatelessWidget {
     var worsheetBloc = context.read<WorksheetSolverCubit>().state;
     var answerAtIndex = worsheetBloc.answerSheet
         .firstWhereOrNull((element) => element.questionNo == index);
-    // if (answerAtIndex != null) {
-    //   answerAtIndex = answerAtIndex.question.answer.answer;
-    // }
-
-    // debugPrint(
-    //     'worksheet index: $index ${jsonEncode(worsheetBloc.answerSheet)}');
     if (answerAtIndex != null && answerAtIndex.question.answer.answer != null) {
       return Colors.green;
     }
-    // return Colors.green;
-    // Check if the current index is greater than or equal to the number of answered questions
-    // if (worsheetBloc.currentQuestion >= worsheetBloc.answerSheet.length) {
-    //   // If so, return amber color for the current index
-    //   if (index == worsheetBloc.currentQuestion) {
-    //     return AppColors.accentColor;
-    //   }
-    // } else {
-    //   // If the current index is less than the number of answered questions,
-    //   // return submit green color if the current index is the marked answer
-    //   if (index == worsheetBloc.currentQuestion &&
-    //       worsheetBloc.answerSheet[index].question.answer.answer != null) {
-    //     return AppColors.submitGreenColor;
-    //   }
-    // }
-
-    // // If the current index is marked in the answer sheet, return submit green color
-    // if (worsheetBloc.answerSheet.length > index &&
-    //     worsheetBloc.answerSheet[index].question.answer.answer != null) {
-    //   return AppColors.submitGreenColor;
-    // }
-
-    // // For every fifth index, return transparent color
-    // if ((index + 1) % 5 == 0) {
-    //   return Colors.transparent;
-    // }
-
-    // // For other cases, return the default color
-    // return Colors.green;
     return const Color(0XFFE9E9E9);
   }
 }

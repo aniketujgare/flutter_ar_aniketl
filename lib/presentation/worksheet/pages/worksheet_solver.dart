@@ -2,12 +2,13 @@ import 'dart:convert';
 
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_ar/core/util/constants.dart';
-import 'package:flutter_ar/presentation/worksheet/bloc/front_cam_recording_cubit/front_cam_recording_cubit.dart';
-import 'package:flutter_ar/presentation/worksheet/bloc/worksheet_cubit/worksheet_cubit.dart';
-import 'package:flutter_ar/presentation/worksheet/pages/worksheet.dart';
-import 'package:flutter_ar/presentation/worksheet/widgets/questions/odd_one_out_img_question.dart';
-import 'package:flutter_ar/presentation/worksheet/widgets/worksheet_submitted_box.dart';
+import '../../../core/util/constants.dart';
+import '../bloc/bottom_indicator_cubit/bottom_indicator_cubit.dart';
+import '../bloc/front_cam_recording_cubit/front_cam_recording_cubit.dart';
+import '../bloc/worksheet_cubit/worksheet_cubit.dart';
+import 'worksheet.dart';
+import '../widgets/questions/odd_one_out_img_question.dart';
+import '../widgets/worksheet_submitted_box.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:size_config/size_config.dart';
@@ -37,168 +38,147 @@ import '../widgets/questions/select_correct_word_question.dart';
 import '../widgets/questions/sort_question.dart';
 import '../widgets/questions/true_or_false_question.dart';
 
-class WorksheetSolverView extends StatefulWidget {
+class WorksheetSolverView extends StatelessWidget {
   final int workSheetId;
   final bool isEditable;
-  const WorksheetSolverView(
+  WorksheetSolverView(
       {super.key, required this.workSheetId, this.isEditable = true});
 
-  @override
-  State<WorksheetSolverView> createState() => _WorksheetSolverViewState();
-}
-
-class _WorksheetSolverViewState extends State<WorksheetSolverView> {
-  @override
-  void initState() {
-    super.initState();
-
-    context.read<WorksheetSolverCubit>().setCurrentQuestionZero();
-    context.read<WorksheetSolverCubit>().init(widget.workSheetId);
-    //   context.read<QuestionTimerCubit>().initTimer();
-    //   context.read<FrontCamRecordingCubit>().initCameras();
-  }
-
-  @override
-  void dispose() {
-    // context.read<FrontCamRecordingCubit>().dispose();
-    super.dispose();
-  }
-
   List<Map<String, dynamic>> answers = [];
-
-  Widget getQuestion(WorksheetSolverState state, int i) {
-    dynamic markedAnswer = state.answerSheet
-        .firstWhereOrNull(
-          (element) => element.questionNo == i,
-        )
-        ?.question
-        .answer
-        .answer;
-    debugPrint('markedAnswer: $i$markedAnswer');
-    debugPrint('questionType: ${state.questions[i].questionType}');
-    switch (state.questions[i].questionType) {
-      case QuestionType.mcqText:
-        return MCQTextQuestion(
-          questionIndex: i,
-          question: state.questions[i] as McqTextQuestion,
-          markedAnswer: markedAnswer,
-        );
-      case QuestionType.mcqImage:
-        Size screenSize = MediaQuery.of(context).size;
-        return MCQImageQuestion(
-            questionIndex: i,
-            question: state.questions[i] as McqImageQuestion,
-            markedAnswer: markedAnswer,
-            screenSize: screenSize);
-      case QuestionType.fillBlank:
-        Size screenSize = MediaQuery.of(context).size;
-        return FillInTheBlankQuestion(
-            question: state.questions[i] as FillBlankQuestion,
-            markedAnswer: markedAnswer,
-            questionIndex: i,
-            screenSize: screenSize);
-
-      case QuestionType.multiplefillblank:
-        return const Text('Multiple FillBlank not available');
-      case QuestionType.trueFalse:
-        return TrueOrFalseQuestion(
-          questionIndex: i,
-          question: state.questions[i] as TrueFalseQuestion,
-          markedAnswer: markedAnswer,
-        );
-
-      case QuestionType.matchTheFollowing:
-        Size screenSize = MediaQuery.of(context).size;
-        return MatchFollowingQuestion(
-          question: state.questions[i] as MatchTheFollowingQuestion,
-          markedAnswer: markedAnswer,
-          screenSize: screenSize,
-        );
-      case QuestionType.oneWord:
-        Size screenSize = MediaQuery.of(context).size;
-        // String? ans = markedAnswer;
-
-        return OneWordQuestion(
-            questionIndex: i,
-            context: context,
-            oneWordQuestion: state.questions[i] as OneWordQuestionType,
-            markedAnswer: markedAnswer,
-            screenSize: screenSize);
-      case QuestionType.selectWord:
-        return SelectCorrectWordQuestion(
-          questionIndex: i,
-          question: state.questions[i] as SelectWordQuestion,
-          markedAnswer: markedAnswer,
-        );
-      case QuestionType.oddOneOutText:
-        return OddOneOutQuestion(
-          questionIndex: i,
-          question: state.questions[i] as OddOneOutTextQuestion,
-          markedAnswer: markedAnswer,
-        );
-
-      case QuestionType.oddOneOutimage:
-        OddOneOutImageQuestion oddOneOutImageQuestion =
-            state.questions[i] as OddOneOutImageQuestion;
-        return _buildOddOneOutImageQuestion(
-            i, oddOneOutImageQuestion, markedAnswer);
-      case QuestionType.ascDescOrder:
-        Size screenSize = MediaQuery.of(context).size;
-
-        return AscendingDecendingQuestion(
-            questionIndex: i,
-            question: state.questions[i] as AscDescOrderQuestion,
-            markedAnswer: markedAnswer,
-            screenSize: screenSize);
-      case QuestionType.arithmetic:
-        Size screenSize = MediaQuery.of(context).size;
-        return ArithmeticQuestionUI(
-          questionIndex: i,
-          screenSize: screenSize,
-          markedAnswer: markedAnswer,
-          question: state.questions[i] as ArithmeticQuestion,
-        );
-
-      case QuestionType.longAnswer:
-        Size screenSize = MediaQuery.of(context).size;
-        return LongAnswerQuestion(
-            questionIndex: i,
-            question: state.questions[i] as LongAnswerQuestionType,
-            markedAnswer: markedAnswer,
-            screenSize: screenSize);
-      case QuestionType.srotingquestion:
-        Size screenSize = MediaQuery.of(context).size;
-        //TODO: code markedAnswer
-        return SortQuestion(
-            question: state.questions[i] as SortingQuestionType,
-            markedAnswer: markedAnswer,
-            questionIndex: i,
-            screenSize: screenSize);
-      case QuestionType.rearrange:
-        debugPrint('answer fields: marked ans $markedAnswer');
-        Size screenSize = MediaQuery.of(context).size;
-        return ReArrangeWordsQuestion(
-          screenSize: screenSize,
-          question: state.questions[i] as RearrangeQuestionType,
-          markedAnswer: markedAnswer, //markedAnswer as List<String>,
-          questionIndex: i,
-        );
-      case QuestionType.identifyimage:
-        return IdentifyImageQuestion(
-          questionIndex: i,
-          question: state.questions[i] as IdentifyImageQuestionType,
-          markedAnswer: markedAnswer,
-        );
-
-      default:
-        return Text(
-            'UI for ${state.questions[i].questionType.toString()} doesn\'t exists');
-    }
-  }
 
   Offset fabPosition = Offset(20.h, 20.h);
   @override
   Widget build(BuildContext context) {
+    Widget getQuestion(WorksheetSolverState state, int i) {
+      dynamic markedAnswer = state.answerSheet
+          .firstWhereOrNull(
+            (element) => element.questionNo == i,
+          )
+          ?.question
+          .answer
+          .answer;
+      debugPrint('markedAnswer: $i$markedAnswer');
+      debugPrint('questionType: ${state.questions[i].questionType}');
+      switch (state.questions[i].questionType) {
+        case QuestionType.mcqText:
+          return MCQTextQuestion(
+            questionIndex: i,
+            question: state.questions[i] as McqTextQuestion,
+            markedAnswer: markedAnswer,
+          );
+        case QuestionType.mcqImage:
+          Size screenSize = MediaQuery.of(context).size;
+          return MCQImageQuestion(
+              questionIndex: i,
+              question: state.questions[i] as McqImageQuestion,
+              markedAnswer: markedAnswer,
+              screenSize: screenSize);
+        case QuestionType.fillBlank:
+          Size screenSize = MediaQuery.of(context).size;
+          return FillInTheBlankQuestion(
+              question: state.questions[i] as FillBlankQuestion,
+              markedAnswer: markedAnswer,
+              questionIndex: i,
+              screenSize: screenSize);
+
+        case QuestionType.multiplefillblank:
+          return const Text('Multiple FillBlank not available');
+        case QuestionType.trueFalse:
+          return TrueOrFalseQuestion(
+            questionIndex: i,
+            question: state.questions[i] as TrueFalseQuestion,
+            markedAnswer: markedAnswer,
+          );
+
+        case QuestionType.matchTheFollowing:
+          Size screenSize = MediaQuery.of(context).size;
+          return MatchFollowingQuestion(
+            question: state.questions[i] as MatchTheFollowingQuestion,
+            markedAnswer: markedAnswer,
+            screenSize: screenSize,
+          );
+        case QuestionType.oneWord:
+          Size screenSize = MediaQuery.of(context).size;
+          // String? ans = markedAnswer;
+
+          return OneWordQuestion(
+              questionIndex: i,
+              context: context,
+              oneWordQuestion: state.questions[i] as OneWordQuestionType,
+              markedAnswer: markedAnswer,
+              screenSize: screenSize);
+        case QuestionType.selectWord:
+          return SelectCorrectWordQuestion(
+            questionIndex: i,
+            question: state.questions[i] as SelectWordQuestion,
+            markedAnswer: markedAnswer,
+          );
+        case QuestionType.oddOneOutText:
+          return OddOneOutQuestion(
+            questionIndex: i,
+            question: state.questions[i] as OddOneOutTextQuestion,
+            markedAnswer: markedAnswer,
+          );
+
+        case QuestionType.oddOneOutimage:
+          OddOneOutImageQuestion oddOneOutImageQuestion =
+              state.questions[i] as OddOneOutImageQuestion;
+          return _buildOddOneOutImageQuestion(
+              i, oddOneOutImageQuestion, markedAnswer);
+        case QuestionType.ascDescOrder:
+          Size screenSize = MediaQuery.of(context).size;
+
+          return AscendingDecendingQuestion(
+              questionIndex: i,
+              question: state.questions[i] as AscDescOrderQuestion,
+              markedAnswer: markedAnswer,
+              screenSize: screenSize);
+        case QuestionType.arithmetic:
+          Size screenSize = MediaQuery.of(context).size;
+          return ArithmeticQuestionUI(
+            questionIndex: i,
+            screenSize: screenSize,
+            markedAnswer: markedAnswer,
+            question: state.questions[i] as ArithmeticQuestion,
+          );
+
+        case QuestionType.longAnswer:
+          Size screenSize = MediaQuery.of(context).size;
+          return LongAnswerQuestion(
+              questionIndex: i,
+              question: state.questions[i] as LongAnswerQuestionType,
+              markedAnswer: markedAnswer,
+              screenSize: screenSize);
+        case QuestionType.srotingquestion:
+          Size screenSize = MediaQuery.of(context).size;
+          //TODO: code markedAnswer
+          return SortQuestion(
+              question: state.questions[i] as SortingQuestionType,
+              markedAnswer: markedAnswer,
+              questionIndex: i,
+              screenSize: screenSize);
+        case QuestionType.rearrange:
+          debugPrint('answer fields: marked ans $markedAnswer');
+          Size screenSize = MediaQuery.of(context).size;
+          return ReArrangeWordsQuestion(
+            screenSize: screenSize,
+            question: state.questions[i] as RearrangeQuestionType,
+            markedAnswer: markedAnswer, //markedAnswer as List<String>,
+            questionIndex: i,
+          );
+        case QuestionType.identifyimage:
+          return IdentifyImageQuestion(
+            questionIndex: i,
+            question: state.questions[i] as IdentifyImageQuestionType,
+            markedAnswer: markedAnswer,
+          );
+
+        default:
+          return Text(
+              'UI for ${state.questions[i].questionType.toString()} doesn\'t exists');
+      }
+    }
+
     bool isFirstQuestin =
         context.watch<WorksheetSolverCubit>().state.currentQuestion == 0;
     bool isLastQuestin =
@@ -211,36 +191,40 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView> {
           height: DeviceType().isMobile ? 56 : 80,
           width: double.infinity,
           color: AppColors.primaryColor,
-          child: BlocBuilder<WorksheetSolverCubit, WorksheetSolverState>(
-            builder: (context, state) {
-              if (state.status == WorkSheetSolverStatus.loading) {
-                return const SizedBox();
-              }
-              return Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(left: 8.wp),
-                    child: IconButton(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Padding(
+                padding: EdgeInsets.only(left: 8.wp),
+                child: BlocBuilder<WorksheetSolverCubit, WorksheetSolverState>(
+                  builder: (context, state) {
+                    return IconButton(
                       onPressed: () {
                         context
                             .read<WorksheetSolverCubit>()
                             .loadPreviousQuestion();
+                        context
+                            .read<BottomIndicatorCubit>()
+                            .shouldScrollState();
                       },
                       icon: Image.asset(
                         'assets/ui/Group.png',
                         height: 40,
                         color: isFirstQuestin ? Colors.transparent : null,
                       ),
-                    ),
-                  ),
-                  SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.7,
-                      child: BottomIndicatorQuestions()),
-                  Padding(
-                    padding: EdgeInsets.only(right: 8.wp),
-                    child: IconButton(
+                    );
+                  },
+                ),
+              ),
+              SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.7,
+                  child: BottomIndicatorQuestions()),
+              Padding(
+                padding: EdgeInsets.only(right: 8.wp),
+                child: BlocBuilder<WorksheetSolverCubit, WorksheetSolverState>(
+                  builder: (context, state) {
+                    return IconButton(
                       onPressed: () {
                         // if unanswered put null in ans sheet
                         List<StudentAnswer> answerSheet = List.from(context
@@ -262,7 +246,9 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView> {
                             'state ans sheet: ${jsonEncode(context.read<WorksheetSolverCubit>().state.answerSheet)}');
 
                         context.read<WorksheetSolverCubit>().loadNextQuestion();
-
+                        context
+                            .read<BottomIndicatorCubit>()
+                            .shouldScrollState();
                         // debugPrint('is last index: $isLastQuestion');
                         if (!isLastQuestin) {
                           context
@@ -280,7 +266,7 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView> {
                                   }
                                 }
 
-                                if (widget.isEditable) {
+                                if (isEditable) {
                                   if (noOfSolvedQ == state.questions.length) {
                                     context
                                         .read<WorksheetSolverCubit>()
@@ -292,7 +278,7 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView> {
                                     // context.read<QuestionTimerCubit>().stopTime();
                                     context
                                         .read<WorksheetCubit>()
-                                        .updateWorksheets(widget.workSheetId);
+                                        .updateWorksheets(workSheetId);
 
                                     await Constants()
                                         .showAlertDialog(context)
@@ -312,8 +298,7 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView> {
                                         // context.read<QuestionTimerCubit>().stopTime();
                                         context
                                             .read<WorksheetCubit>()
-                                            .updateWorksheets(
-                                                widget.workSheetId);
+                                            .updateWorksheets(workSheetId);
 
                                         Navigator.pop(context);
                                       }
@@ -325,7 +310,7 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView> {
                                   }
                                 }
                               },
-                              child: !widget.isEditable
+                              child: !isEditable
                                   ? SizedBox.fromSize()
                                   : Container(
                                       width: 90.h,
@@ -372,11 +357,11 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView> {
                                 height: 40,
                               ),
                             ),
-                    ),
-                  ),
-                ],
-              );
-            },
+                    );
+                  },
+                ),
+              ),
+            ],
           ),
         ),
         backgroundColor: const Color(0XFFD1CBF9),
@@ -406,7 +391,7 @@ class _WorksheetSolverViewState extends State<WorksheetSolverView> {
               },
             ),
             //Prevent touch on body for viewing history
-            if (!widget.isEditable)
+            if (!isEditable)
               Container(
                 height: double.infinity,
                 width: double.infinity,

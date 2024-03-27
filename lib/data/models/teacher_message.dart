@@ -77,15 +77,16 @@ class TeacherMessageModel {
         teacherUserId: json["teacher_user_id"],
         time: json["time"],
         type: json["type"],
-        pollOptions:
-            json["data"] != null && json["data"] is Map<String, dynamic>
-                ? (json["data"] as Map<String, dynamic>).map(
-                    (k, v) => MapEntry<String, Datum>(
-                      k,
-                      Datum.fromJson(v as Map<String, dynamic>),
-                    ),
-                  )
-                : null,
+        pollOptions: json["data"] != null &&
+                json["data"] is Map<String, dynamic> &&
+                json["data"]["polldata"] != null
+            ? (json["data"]["polldata"] as List<dynamic>)
+                .map((data) => Datum.fromJson(data))
+                .fold<Map<String, Datum>>(
+                {},
+                (map, datum) => map..[datum.option] = datum,
+              )
+            : null,
       );
 
   Map<String, dynamic> toJson() => {
@@ -105,31 +106,37 @@ class TeacherMessageModel {
 }
 
 class Datum {
-  final String count;
+  int count;
   final String option;
+  String? name;
 
   Datum({
     required this.count,
     required this.option,
+    this.name,
   });
 
   Datum copyWith({
-    String? count,
+    int? count,
     String? option,
+    String? name,
   }) =>
       Datum(
         count: count ?? this.count,
         option: option ?? this.option,
+        name: name ?? this.name,
       );
 
   factory Datum.fromJson(Map<String, dynamic> json) => Datum(
-        count: json["count"],
+        count: int.parse(json["count"]),
         option: json["option"],
+        name: json["name"],
       );
 
   Map<String, dynamic> toJson() => {
-        "count": count,
+        "count": count.toString(),
         "option": option,
+        "name": name,
       };
 }
 

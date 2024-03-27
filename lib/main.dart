@@ -3,6 +3,7 @@ import 'package:connection_notifier/connection_notifier.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_ar/presentation/worksheet/bloc/bottom_indicator_cubit/bottom_indicator_cubit.dart';
 import 'package:flutter_ar/presentation/worksheet/bloc/front_cam_recording_cubit/front_cam_recording_cubit.dart';
 import 'package:flutter_ar/presentation/worksheet/widgets/front_cam_recording.dart';
 import 'package:flutter_ar/temp_testing/arithmetic_temp.dart';
@@ -174,6 +175,9 @@ class MyAppState extends State<MyApp> {
             ),
             BlocProvider(
               create: (context) => LessonPageCubit(),
+            ),
+            BlocProvider(
+              create: (context) => BottomIndicatorCubit(),
             ),
             // BlocProvider(
             //   create: (context) => QuestionTimerCubit(),

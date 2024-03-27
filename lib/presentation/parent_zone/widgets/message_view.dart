@@ -156,8 +156,8 @@ class _MessageViewState extends State<MessageView> {
 
                           case 'polls':
                             return TeacherPoll(
-                              pollQuestion: message.content,
-                              pollOptions: message.pollOptions!,
+                              message: message,
+                              messageIndexInState: index,
                             );
                           default:
                             return //!Message
@@ -461,7 +461,7 @@ class _MessageViewState extends State<MessageView> {
                   padding: const EdgeInsets.symmetric(horizontal: 0),
                   onPressed: () {
                     Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => LessonModePage()));
+                        builder: (context) => const LessonModePage()));
                   },
                   buttonColor: AppColors.primaryColor,
                   text: 'View Lesson',
@@ -477,12 +477,12 @@ class _MessageViewState extends State<MessageView> {
 }
 
 class TeacherPoll extends StatefulWidget {
-  final String pollQuestion;
-  final Map<String, Datum> pollOptions;
+  final TeacherMessageModel message;
+  final int messageIndexInState;
   const TeacherPoll({
     Key? key,
-    required this.pollQuestion,
-    required this.pollOptions,
+    required this.message,
+    required this.messageIndexInState,
   }) : super(key: key);
 
   @override
@@ -493,7 +493,7 @@ class _TeacherPollState extends State<TeacherPoll> {
   List<bool?> checkBoxes = [];
   @override
   void initState() {
-    checkBoxes = List.filled(widget.pollOptions.length, false);
+    checkBoxes = List.filled(widget.message.pollOptions!.length, false);
     super.initState();
   }
 
@@ -520,12 +520,12 @@ class _TeacherPollState extends State<TeacherPoll> {
                 child: Column(
                   children: [
                     Text(
-                      widget.pollQuestion,
+                      widget.message.content,
                       style: AppTextStyles.nunito88w600Text,
                     ),
                     ...List.generate(
-                      widget.pollOptions.length,
-                      (index) => Row(
+                      widget.message.pollOptions!.length,
+                      (pollOptionIndex) => Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -535,8 +535,8 @@ class _TeacherPollState extends State<TeacherPoll> {
                               checkColor: Colors.white,
                               activeColor: AppColors.primaryColor,
                               value: checkBoxes[
-                                  index], //isOp1CheckedCopy ?? false, //isOp1CheckedCopy,
-                              fillColor: checkBoxes[index]!
+                                  pollOptionIndex], //isOp1CheckedCopy ?? false, //isOp1CheckedCopy,
+                              fillColor: checkBoxes[pollOptionIndex]!
                                   ? MaterialStateProperty.all(
                                       AppColors.primaryColor)
                                   : null,
@@ -545,8 +545,19 @@ class _TeacherPollState extends State<TeacherPoll> {
                                 setState(() {
                                   checkBoxes.fillRange(
                                       0, checkBoxes.length, false);
-                                  checkBoxes[index] = true;
+                                  checkBoxes[pollOptionIndex] = true;
                                 });
+                                var pollOptionEntry = widget
+                                    .message.pollOptions![pollOptionIndex];
+                                context
+                                    .read<TeacherMessageCubit>()
+                                    .answerPollQuestion(
+                                        pollOptionIndex,
+                                        widget.message,
+                                        widget.messageIndexInState);
+                                // TODO: context. add teacher name
+                                print(
+                                    'element: ${pollOptionEntry?.name ?? '__'}');
                               },
                               side: BorderSide(
                                 width: 1.5,
@@ -558,12 +569,15 @@ class _TeacherPollState extends State<TeacherPoll> {
                             ),
                           ),
                           Text(
-                            widget.pollOptions['$index']!.option,
+                            widget.message.pollOptions!.entries
+                                .toList()[pollOptionIndex]
+                                .value
+                                .option,
                             style: AppTextStyles.nunito88w400Text,
                           ),
                           const Spacer(),
                           Text(
-                            'Votes: ${widget.pollOptions['$index']!.count}',
+                            'Vote: ${widget.message.pollOptions!.entries.toList()[pollOptionIndex].value.count}',
                             style: AppTextStyles.nunito75w400Text,
                           ),
                         ],
