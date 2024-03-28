@@ -76,12 +76,31 @@ class TeacherMessageCubit extends Cubit<TeacherMessageState> {
 
     //Message ID
 
-    print(
-        'poll saved $optionIndex || ${jsonEncode(convertToApiFormat(updatedMsg.toJson()))} || preMarked: $isPreMarked');
+    // print(
+    //     'poll saved $optionIndex || ${jsonEncode(convertToApiFormat(updatedMsg.toJson()))} || preMarked: $isPreMarked');
+    await updatePoll(updatedMsg);
     var msgList = List<TeacherMessageModel>.from(state.teachersMessages);
     msgList.removeAt(messageStateIndex);
     msgList.insert(messageStateIndex, updatedMsg);
     emit(state.copyWith(teachersMessages: msgList));
+  }
+
+  Future<void> updatePoll(TeacherMessageModel pollMessage) async {
+    var headers = {'Content-Type': 'application/json'};
+    var request = http.Request(
+        'POST',
+        Uri.parse(
+            'https://cnpewunqs5.execute-api.ap-south-1.amazonaws.com/devUpdateMessageCount'));
+    request.body = json.encode(pollMessage);
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200) {
+      print(await response.stream.bytesToString());
+    } else {
+      print(response.reasonPhrase);
+    }
   }
 
   Map<String, dynamic> convertToApiFormat(Map<String, dynamic> data) {
