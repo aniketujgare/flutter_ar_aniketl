@@ -17,7 +17,7 @@ class BottomIndicatorCubit extends Cubit<BottomIndicatorState> {
   void scrollBottomIndicatorPosition(
       int currentQ, int totalQ, ScrollController sc, double width) {
     emit(const BottomIndicatorState.initial());
-
+    print('offset: ${sc.offset}');
     if (sc.offset > 5 && currentQ < totalQ ~/ 2) {
       emit(const BottomIndicatorState.shouldTransit(animateOffse: 0.0));
       return;

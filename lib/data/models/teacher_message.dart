@@ -108,7 +108,7 @@ class TeacherMessageModel {
 class Datum {
   int count;
   final String option;
-  String? name;
+  List<String>? name;
 
   Datum({
     required this.count,
@@ -119,7 +119,7 @@ class Datum {
   Datum copyWith({
     int? count,
     String? option,
-    String? name,
+    List<String>? name,
   }) =>
       Datum(
         count: count ?? this.count,
@@ -130,7 +130,7 @@ class Datum {
   factory Datum.fromJson(Map<String, dynamic> json) => Datum(
         count: int.parse(json["count"]),
         option: json["option"],
-        name: json["name"],
+        name: json["name"] == null ? null : List.from(json["name"]),
       );
 
   Map<String, dynamic> toJson() => {

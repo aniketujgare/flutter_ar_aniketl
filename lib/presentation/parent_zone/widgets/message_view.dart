@@ -2,6 +2,7 @@ import 'package:connection_notifier/connection_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_ar/presentation/lesson_mode/pages/lesson_mode_page.dart';
+import 'package:flutter_ar/presentation/parent_zone/bloc/parent_details_cubit/parent_details_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:size_config/size_config.dart';
@@ -494,6 +495,25 @@ class _TeacherPollState extends State<TeacherPoll> {
   @override
   void initState() {
     checkBoxes = List.filled(widget.message.pollOptions!.length, false);
+
+    // //? if its already marked then assign the tick
+    // var keys = widget.message.pollOptions!.keys.toList();
+    // for (var i = 0; i < keys.length; i++) {
+    //   var parentName = context
+    //       .read<ParentDetailsCubit>()
+    //       .state
+    //       .parentDetails
+    //       .first
+    //       .parentName;
+
+    //   widget.message.pollOptions!.forEach((key, value) {
+    //     if (value.name == parentName) {
+    //       var idx = keys.indexOf(key);
+    //       checkBoxes[idx] = true;
+    //     }
+    //   });
+    // }
+    // //?
     super.initState();
   }
 

@@ -5,6 +5,8 @@
 **/android/unity-classes
 **/android/unityLibrary
 **/unity
+**/ios/UnityLibrary
+**/ios/UnityLibrary_BurstDebugInformation_DoNotShip
 
 # Temp testing
 # **/lib/temp_testing

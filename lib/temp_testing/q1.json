@@ -1,145 +1,29 @@
 {
-    "11": {
-        "selectword": {
-            "answer": "africa"
-        }
-    },
-    "22": {
-        "oneword": {
-            "answer": "asdsd"
-        }
-    },
-    "12": {
-        "selectword": {
-            "answer": "jurassic park"
-        }
-    },
-    "23": {
-        "oddoneouttext": {
-            "answer": "Chair"
-        }
-    },
-    "13": {
-        "ascdesc": {
-            "answer": [
-                "4",
-                "8",
-                "10",
-                "3",
-                "1",
-                "0",
-                "9",
-                "11"
-            ]
-        }
-    },
-    "24": {
-        "oddoneouttext": {
-            "answer": "Donkey"
-        }
-    },
-    "14": {
-        "ascdesc": {
-            "answer": [
-                "A",
-                "Z",
-                "W",
-                "T",
-                "B",
-                "X",
-                "H",
-                "C"
-            ]
-        }
-    },
-    "25": {
-        "oddoneoutimg": {
-            "answer": "https://d3ag5oij4wsyi3.cloudfront.net/mcq_images/mysurroundings/sand.png"
-        }
-    },
-    "17": {
-        "mtf": {
-            "answer": {
-                "0": "Lion",
-                "1": "Crow",
-                "2": "Dog",
-                "3": "Goat"
-            }
-        }
-    },
-    "18": {
-        "longanswer": {
-            "answer": "https://smartxruserfiles1.s3.ap-south-1.amazonaws.com/studentfiles/11/687/18.jpg"
-        }
-    },
-    "19": {
-        "oneword": {
-            "answer": "sdsdsds"
-        }
-    },
-    "0": {
-        "truefalse": {
-            "answer": "False"
-        }
-    },
-    "1": {
-        "truefalse": {
-            "answer": "False"
-        }
-    },
-    "2": {
-        "truefalse": {
-            "answer": "True"
-        }
-    },
-    "3": {
-        "truefalse": {
-            "answer": "True"
-        }
-    },
-    "4": {
-        "fillblank": {
-            "answer": "hh"
-        }
-    },
-    "5": {
-        "mcqtext": {
-            "answer": "Tree"
-        }
-    },
-    "6": {
-        "mcqimg": {
-            "answer": "https://d3ag5oij4wsyi3.cloudfront.net/mcq_images/mysurroundings/cement.png"
-        }
-    },
-    "7": {
-        "mcqtext": {
-            "answer": "Shrub"
-        }
-    },
-    "8": {
-        "mcqtext": {
-            "answer": "Living things need water."
-        }
-    },
-    "9": {
-        "selectword": {
-            "answer": "house"
-        }
-    },
-    "20": {
-        "oneword": {
-            "answer": "sfgddsf"
-        }
-    },
-    "10": {
-        "selectword": {
-            "answer": "lawn"
-        }
-    },
-    "21": {
-        "oneword": {
-            "answer": "asdsad"
+    "content": "this is polls test question",
+    "date": "2024-2-22",
+    "division_name": "'A'",
+    "link": "",
+    "message_id": "277",
+    "subject": "Teacher Message",
+    "teacher_name": "'Mr.Vedang Tembe'",
+    "teacher_user_id": "1",
+    "time": "12:51 pm",
+    "type": "polls",
+    "data": {
+        "yes": {
+            "count": "1",
+            "option": "yes",
+            "name": "andr8oid"
+        },
+        "no": {
+            "count": "10",
+            "option": "no",
+            "name": null
+        },
+        "may be": {
+            "count": "0",
+            "option": "may be",
+            "name": null
         }
     }
 }

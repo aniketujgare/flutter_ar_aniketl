@@ -14,6 +14,22 @@ import '../../../../domain/repositories/authentication_repository.dart';
 part 'teacher_message_cubit.freezed.dart';
 part 'teacher_message_state.dart';
 
+class PollData {
+  final String count;
+  final String option;
+  List<String>? name;
+
+  PollData({required this.count, required this.option, this.name});
+
+  Map<String, dynamic> toJson() {
+    return {
+      'count': count,
+      'option': option,
+      'name': name,
+    };
+  }
+}
+
 class TeacherMessageCubit extends Cubit<TeacherMessageState> {
   TeacherMessageCubit() : super(const TeacherMessageState());
 
@@ -28,20 +44,31 @@ class TeacherMessageCubit extends Cubit<TeacherMessageState> {
     String parentName = studentProfile.first.parentName; //"andr8oid";
 
     //if any option is preselected with currParentName
-    bool isPreMarked =
-        copiedMessages.values.any((element) => element.name == parentName);
+    bool isPreMarked = false;
+
+    for (var element in copiedMessages.values) {
+      if (element.name != null) {
+        element.name!.contains(parentName);
+        isPreMarked = true;
+        break;
+      }
+    }
+
     //isPreMarked is true-> remove the name and cnt--
     if (isPreMarked) {
       copiedMessages.forEach((k, v) {
-        if (v.name == parentName) {
-          v.name = null;
-          v.count = v.count - 1;
+        if (v.name != null && v.name!.contains(parentName)) {
+          v.name!.removeWhere((element) => element == parentName);
+          v.count = v.count - 1; // Decreasing count
+          return; // Exit the loop after decrementing count once
         }
       });
     }
     //isPreMarked is false-> add the name and cnt++
+    var names = copiedMessages[keys[optionIndex]]?.name ?? [];
+    names.add(parentName);
     copiedMessages.update(keys[optionIndex],
-        (upda) => upda.copyWith(count: upda.count + 1, name: parentName));
+        (upda) => upda.copyWith(count: upda.count + 1, name: names));
 
     var updatedMsg = message.copyWith(pollOptions: copiedMessages);
 
@@ -50,11 +77,42 @@ class TeacherMessageCubit extends Cubit<TeacherMessageState> {
     //Message ID
 
     print(
-        'poll saved $optionIndex || ${jsonEncode(updatedMsg)} || preMarked: $isPreMarked');
+        'poll saved $optionIndex || ${jsonEncode(convertToApiFormat(updatedMsg.toJson()))} || preMarked: $isPreMarked');
     var msgList = List<TeacherMessageModel>.from(state.teachersMessages);
     msgList.removeAt(messageStateIndex);
     msgList.insert(messageStateIndex, updatedMsg);
     emit(state.copyWith(teachersMessages: msgList));
+  }
+
+  Map<String, dynamic> convertToApiFormat(Map<String, dynamic> data) {
+    // Extract necessary fields from the original data
+    final content = data['content'];
+    final time = data['time'];
+    final messageId = data['message_id'];
+    final pollData = data['data'] as Map<String, dynamic>;
+
+    // Map your poll data to the API structure
+    final apiPollData = pollData.entries.map((entry) {
+      return PollData(
+              count: entry.value['count'],
+              option: entry.key,
+              name: entry.value['name'])
+          .toJson();
+    }).toList();
+
+    // Construct the API-compatible payload
+    final apiPayload = {
+      'teacher_user_id': data['teacher_user_id'],
+      'subject': data['subject'],
+      'content': content,
+      'time': time,
+      'type': data['type'],
+      'data': {'polldata': apiPollData},
+      'link': data['link'],
+      'message_id': messageId,
+    };
+
+    return apiPayload;
   }
 
   void loadMessages(String teacherUserId) async {

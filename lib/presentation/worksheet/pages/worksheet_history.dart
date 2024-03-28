@@ -10,6 +10,7 @@ import '../../../../core/util/styles.dart';
 import '../../../core/reusable_widgets/network_disconnected.dart';
 import '../bloc/worksheet_cubit/worksheet_cubit.dart';
 import '../bloc/worksheet_history_page_cubit/worksheet_history_page_cubit.dart';
+import '../bloc/worksheet_solver_cubit/worksheet_solver_cubit.dart';
 import 'worksheet_solver.dart';
 
 class WorksheetHistoryView extends StatefulWidget {
@@ -124,11 +125,18 @@ class _WorksheetHistoryViewState extends State<WorksheetHistoryView> {
                                       onTap: () {
                                         Navigator.of(context).push(
                                           MaterialPageRoute(
-                                            builder: (context) =>
-                                                WorksheetSolverView(
-                                              workSheetId: workSheet.id,
-                                              isEditable: false,
-                                            ),
+                                            builder: (context) {
+                                              context
+                                                  .read<WorksheetSolverCubit>()
+                                                  .init(workSheet.id);
+                                              context
+                                                  .read<WorksheetSolverCubit>()
+                                                  .setCurrentQuestionZero();
+                                              return WorksheetSolverView(
+                                                workSheetId: workSheet.id,
+                                                isEditable: false,
+                                              );
+                                            },
                                           ),
                                         );
                                       },
